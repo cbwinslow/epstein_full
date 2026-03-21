@@ -210,7 +210,7 @@
 | 8.12 | Migrate prosecutorial.db | ✅ Done | 257 subpoenas, 2,018 clauses |
 | 8.13 | Migrate redaction_analysis_v2.db | ✅ Done | 2.59M redactions, 849K summaries |
 | 8.14 | Migrate full_text_corpus.db | ✅ Done | 1.4M docs, 2.9M pages |
-| 8.15 | Populate FTS (search_vector) | 🔄 Running | 2.25M / 2.9M (77.8%), background process |
+| 8.15 | Populate FTS (search_vector) | ✅ Done | 2,892,730 pages indexed (100%) |
 | 8.16 | Create .pgpass file | ✅ Done | ~/.pgpass with localhost auth |
 | 8.17 | Set up Datasette | ✅ Done | Running on port 8001 |
 
@@ -218,7 +218,7 @@
 
 | Table | Rows | Status |
 |-------|------|--------|
-| pages | 2,892,730 | ✅ FTS 77.8% |
+| pages | 2,892,730 | ✅ FTS 100% |
 | documents | 1,397,649 | ✅ |
 | redactions | 2,587,447 | ✅ |
 | entities | 606 | ✅ |
