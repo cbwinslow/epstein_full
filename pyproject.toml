@@ -57,7 +57,7 @@ dependencies = [
 gpu = [
     "torch==2.3.1+cu118",              # PyTorch for Tesla K80 (CC 3.7), driver 470+
     "torchaudio==2.3.1+cu118",
-    "torchvision==0.18.1+cu118",
+    "torchvision==0.25.0",
     "onnxruntime-gpu>=1.16",            # GPU-accelerated ONNX (all GPUs including K40m)
 ]
 ocr = [
