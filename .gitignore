@@ -55,3 +55,4 @@ hf-parquet/
 # Node (from submodules)
 package.json
 package-lock.json
+.env

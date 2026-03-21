@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/cbwinslow/epstein_full/blob/main/docs/ARCHITECTURE.md
+    about: Check the architecture docs before opening an issue
+  - name: TASKS.md
+    url: https://github.com/cbwinslow/epstein_full/blob/main/TASKS.md
+    about: Check existing tasks and status before creating new issues

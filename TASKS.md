@@ -140,7 +140,7 @@
 | # | Task | Status | Dependencies |
 |---|------|--------|--------------|
 | 9.1 | Test OCR pipeline on small batch | ⬜ TODO | Downloads complete |
-| 9.2 | Process HF parquet into structured DB | ⬜ TODO | HF download complete ✅ |
+| 9.2 | Process HF parquet into structured DB | 🔄 Partial | 10.9M rows migrated from SQLite to PostgreSQL, parquet processing pending |
 | 9.3 | Run NER extraction on all text | ⬜ TODO | 9.1 or 9.2 |
 | 9.4 | Run facial recognition on images | ⬜ TODO | Install InsightFace + ONNX |
 | 9.5 | Transcribe audio/video files | ⬜ TODO | Install faster-whisper |
@@ -213,20 +213,40 @@
 | 8.15 | Populate FTS (search_vector) | ✅ Done | 2,892,730 pages indexed (100%) |
 | 8.16 | Create .pgpass file | ✅ Done | ~/.pgpass with localhost auth |
 | 8.17 | Set up Datasette | ✅ Done | Running on port 8001 |
+| 8.18 | Comprehensive SQLite-to-PG migration with validation | ✅ Done | `scripts/migrate_sqlite_to_pg.py` — 27 tables, 10.9M rows, all verified |
 
 ## PostgreSQL Data Summary
 
 | Table | Rows | Status |
 |-------|------|--------|
 | pages | 2,892,730 | ✅ FTS 100% |
-| documents | 1,397,649 | ✅ |
-| redactions | 2,587,447 | ✅ |
-| entities | 606 | ✅ |
-| relationships | 2,302 | ✅ |
-| emails | 41,924 | ✅ |
+| documents | 1,397,821 | ✅ |
+| redactions | 2,587,102 | ✅ |
+| document_classification | 1,380,964 | ✅ |
+| efta_crosswalk | 1,380,964 | ✅ |
+| document_summary | 849,655 | ✅ |
+| redaction_entities | 107,422 | ✅ |
+| email_participants | 90,204 | ✅ |
+| reconstructed_pages | 39,588 | ✅ |
+| ocr_results | 38,955 | ✅ |
 | images | 38,955 | ✅ |
+| transcript_segments | 25,129 | ✅ |
+| clause_fulfillment | 3,813 | ✅ |
+| graph_edges | 2,745 | ✅ |
+| relationships | 2,302 | ✅ |
+| rider_clauses | 2,018 | ✅ |
 | transcripts | 1,628 | ✅ |
-| **Total** | **~7M rows** | ✅ |
+| resolved_identities | 1,139 | ✅ |
+| edge_sources | 905 | ✅ |
+| investigative_gaps | 779 | ✅ |
+| graph_nodes | 677 | ✅ |
+| entities | 606 | ✅ |
+| emails | 41,924 | ✅ |
+| communication_pairs | 271 | ✅ |
+| subpoenas | 257 | ✅ |
+| returns | 304 | ✅ |
+| subpoena_return_links | 304 | ✅ |
+| **Total** | **10,889,161 rows** | ✅ All 27 tables verified |
 
 ## PostgreSQL Extensions
 
@@ -236,3 +256,27 @@
 | pg_trgm | 1.6 | Fuzzy text matching |
 | unaccent | 1.1 | Accent-insensitive search |
 | pg_stat_statements | 1.10 | Query monitoring |
+
+## Phase 11: Server Hardening & Tooling ✅
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 11.1 | Enable UFW firewall | ✅ Done | Deny incoming, allow ssh (22) + http (80), enabled on boot |
+| 11.2 | Harden nginx | ✅ Done | TLSv1.2+ only, `server_tokens off`, security headers (X-Frame-Options, nosniff, XSS, Referrer-Policy, Permissions-Policy) |
+| 11.3 | Tune PHP-FPM | ✅ Done | max_children 5→20, start_servers 2→5, max_requests=500 |
+| 11.4 | Switch cloudflared to HTTP/2 | ✅ Done | Added `protocol: http2` to config.yml, fixed QUIC timeout errors |
+| 11.5 | SSH agent forwarding | ✅ Done | `ForwardAgent yes` added to Host windows in ~/.ssh/config |
+| 11.6 | Install Go | ✅ Done | Go 1.26.1 via snap, added to .zshrc.local PATH |
+| 11.7 | Install Rust | ✅ Done | Rust 1.94.0 via rustup, ~/.cargo/bin in PATH |
+| 11.8 | Install fnm | ✅ Done | fnm 1.39.0 alongside nvm in .zshrc.local |
+| 11.9 | Global git config | ✅ Done | user.name=cbwinslow, user.email=blaine.winslow@gmail.com |
+| 11.10 | Cron jobs | ✅ Done | pg_dump daily 2am (epstein + nextcloud), backup cleanup 7d, log cleanup 30d |
+| 11.11 | Fix kilocode CLI | ✅ Done | Replaced stub kilocode@1.2.0 with @kilocode/cli@7.1.0 |
+| 11.12 | Configure Cline | ✅ Done | ClineBot provider (claude-sonnet-4-6), Groq fallback |
+| 11.13 | Install OpenClaw | ✅ Done | v2026.3.13, gateway daemon on port 18789 via systemd |
+| 11.14 | Cline MCP servers | ✅ Done | postgres, filesystem, github servers in cline_mcp_settings.json |
+| 11.15 | Cline agent workflows | ✅ Done | ~/Cline/Rules/epstein.md + ~/Cline/Workflows/epstein-pipeline.md |
+| 11.16 | Devcontainer | ✅ Done | .devcontainer/devcontainer.json: Python 3.12, Node 24, VS Code extensions |
+| 11.17 | GitHub Actions CI | ✅ Done | .github/workflows/ci.yml: ruff lint + pytest with PostgreSQL service |
+| 11.18 | AI tool reference | ✅ Done | ~/.ai-tools.md: cline, kilo, opencode, openclaw usage guide |
+| 11.19 | Disk monitoring | ✅ Done | ~/.local/bin/disk-alert.sh + daily 8am cron |
