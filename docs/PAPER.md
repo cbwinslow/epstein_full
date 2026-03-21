@@ -73,15 +73,43 @@ The corpus consists of documents released under the Epstein Files Transparency A
 
 **Total**: ~301,963 unique EFTA numbers mapping to ~1.4 million documents.
 
-### 3.2 Data Sources
+### 3.2 Primary Data Sources
 
-| Source | Type | Size | Access |
-|--------|------|------|--------|
-| DOJ (justice.gov/epstein) | Original PDFs | ~218 GB | Age-gated web |
-| RollCall CDN | Mirror PDFs | ~218 GB | Public HTTP |
-| HuggingFace (AfricanKillshot/Epstein-Files) | Pre-extracted text (Parquet) | ~317 GB | HF API |
-| GitHub (rhowardstone/Epstein-research-data) | Pre-built SQLite databases | ~8 GB | GitHub Releases |
-| Archive.org | Bulk archives (DS9, DS11) | ~130 GB | Public HTTP |
+| Source | Type | Size | Access | Status |
+|--------|------|------|--------|--------|
+| DOJ (justice.gov/epstein) | Original PDFs | ~218 GB | Age-gated web | Acquired |
+| RollCall CDN | Mirror PDFs | ~218 GB | Public HTTP | Acquired (265K+ files) |
+| HuggingFace (AfricanKillshot/Epstein-Files) | Pre-extracted text (Parquet) | ~317 GB | HF API | Acquired (634/634 files, 318GB) |
+| GitHub (rhowardstone/Epstein-research-data) | Pre-built SQLite databases | ~8 GB | GitHub Releases | Acquired (8 databases) |
+
+### 3.3 Supplementary Data Sources (Cross-Reference)
+
+These datasets are NOT contained in the primary DOJ releases or HuggingFace
+parquet and must be acquired separately for cross-referencing analysis:
+
+**Flight Logs:**
+- Epstein Exposed API (epsteinexposed.com): 3,615 structured flight records (1991–2019), REST API with 27 endpoints
+- Scribd, Journal 425: 72-page handwritten pilot manifests
+- Aircraft: Boeing 727 "Lolita Express" (N908JE), Gulfstream II/IV, helicopters
+
+**Political Donations (FEC):**
+- OpenSecrets.org: 46 documented federal donation records (1991–1997)
+- Recipients include both major parties: Bush (R), Kerry (D), Schumer (D), Gephardt (D)
+
+**Financial Records:**
+- SEC EDGAR: Insider trading (Form 4) filings for connected executives
+- Court filings: JPMorgan processed $1B+ (1998–2013); Leon Black paid $158M (2012–2017)
+- Bloomberg: 18,000+ Yahoo email cache (reporting, not public dataset)
+
+**Email & Correspondence:**
+- House Oversight Committee: Congressional email dumps
+- FBI Vault: Investigative files (vault.fbi.gov)
+- Epstein Exposed curated: 9,900+ emails with full body text
+
+**Entity Databases:**
+- Epstein Web Tracker (epsteinweb.org): Entity relationship graph with degree-of-separation paths
+- EpsteinWiki (epsteinwiki.com): OSINT resource directory
+- Pre-built knowledge graph: 606 entities, 2,302 relationships (from Epstein-research-data)
 
 ### 3.3 Data Quality Assessment
 

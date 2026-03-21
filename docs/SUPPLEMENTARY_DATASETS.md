@@ -2,10 +2,36 @@
 
 ## Overview
 
-Beyond the DOJ EFTA releases, multiple public datasets can be cross-referenced
-to build a more complete picture of Epstein's network, financial flows, political
-connections, and activities. This document catalogs available supplementary
-datasets organized by category.
+The HF parquet dataset (AfricanKillshot/Epstein-Files, 634 files, 318GB)
+contains **only DOJ EFTA data** — PDF text extractions and images from
+the 12 DOJ data sets. It does NOT contain flight logs, emails, political
+donations, financial records, or any supplementary sources.
+
+The following datasets are **NOT covered by our current data** and must
+be acquired separately to enable cross-referencing analysis.
+
+### What We Already Have (Covered)
+
+| Source | Status | Size |
+|--------|--------|------|
+| DOJ EFTA PDFs (DS1-12) | ✅ Downloaded (265K+ files) | ~58GB |
+| HF Parquet (pre-extracted text) | ✅ Complete (634/634) | 318GB |
+| Pre-built SQLite databases | ✅ Downloaded (8 DBs) | 8.4GB |
+| Knowledge graph (606 entities) | ✅ Available | 892KB |
+
+### What We Still Need (Not Covered)
+
+| Source | Status | Priority |
+|--------|--------|----------|
+| Flight logs (structured) | ❌ Not acquired | HIGH |
+| FEC political donations | ❌ Not acquired | HIGH |
+| Epstein Exposed API | ❌ Not queried | HIGH |
+| SEC insider trading filings | ❌ Not acquired | MEDIUM |
+| Bloomberg email cache | ❌ Not available (reporting only) | LOW |
+| Court records (structured) | ❌ Partial | MEDIUM |
+| Epstein Web Tracker data | ❌ Not queried | MEDIUM |
+
+This document catalogs all available supplementary datasets organized by category.
 
 ---
 
