@@ -55,7 +55,10 @@ dependencies = [
 # Optional dependency groups (install with: uv sync --group <name>)
 [project.optional-dependencies]
 gpu = [
-    "onnxruntime-gpu>=1.16",        # GPU-accelerated ONNX (InsightFace, OCR)
+    "torch==2.3.1+cu118",              # PyTorch for Tesla K80 (CC 3.7), driver 470+
+    "torchaudio==2.3.1+cu118",
+    "torchvision==0.18.1+cu118",
+    "onnxruntime-gpu>=1.16",            # GPU-accelerated ONNX (all GPUs including K40m)
 ]
 ocr = [
     "surya-ocr>=0.4",               # GPU-accelerated OCR for scanned pages
@@ -87,6 +90,10 @@ metrics = "scripts.metrics:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+# PyTorch cu118 index (for Tesla K80 CC 3.7 compatibility)
+# Install: uv pip install torch==2.3.1+cu118 --index-url https://download.pytorch.org/whl/cu118
+# CUDA_VISIBLE_DEVICES=1,2 (exclude K40m CC 3.5 — too old for PyTorch)
 
 # uv configuration
 [tool.uv]

@@ -90,9 +90,23 @@
 | Python | 3.12 (system) | Managed by uv |
 | uv | 0.10.12 | Package manager |
 | Node | 24.14.0 | For JS tools |
-| CUDA | 11.4 | Kepler architecture |
+| CUDA | 11.4 (driver 470.256.02) | Kepler architecture |
+| PyTorch | 2.3.1+cu118 | Works on K80 (CC 3.7), NOT K40m (CC 3.5) |
+| ONNX Runtime | GPU | Works on ALL GPUs (K80 + K40m) |
 | aria2c | 1.37.0 | Parallel downloads |
 | SQLite | 3.x | Built-in Python |
+
+## GPU Configuration
+
+| GPU | Device | Model | CC | PyTorch? | ONNX? | Use For |
+|-----|--------|-------|-----|----------|-------|---------|
+| 0 | cuda:0 | Tesla K40m | 3.5 | ❌ NO | ✅ Yes | ONNX only (InsightFace, Surya) |
+| 1 | cuda:1 | Tesla K80 | 3.7 | ✅ Yes | ✅ Yes | PyTorch (spaCy, whisper, embeddings) |
+| 2 | cuda:2 | Tesla K80 | 3.7 | ✅ Yes | ✅ Yes | PyTorch (spaCy, whisper, embeddings) |
+
+**PyTorch 2.3.1+cu118 works on K80s WITHOUT driver upgrade.** Driver 470 supports CUDA 11.8 runtime. K40m (CC 3.5) is too old for PyTorch — use ONNX Runtime GPU for it.
+
+**Set `CUDA_VISIBLE_DEVICES=1,2` to exclude K40m from PyTorch workloads.**
 
 ---
 

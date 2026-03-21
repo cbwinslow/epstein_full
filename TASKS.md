@@ -179,5 +179,15 @@
 | epstein-ripper hangs at auth validation | ✅ Fixed | Built custom download_doj.py with direct EFTA URLs |
 | Some CDN URLs return 403 | ✅ Expected | These are confirmed-removed files (67,784 known) |
 | HF parquet covers only DOJ data | ✅ Documented | Supplementary datasets cataloged separately |
-| Tesla K80 PyTorch deprecation (CC 3.7) | ✅ Planned | Use ONNX Runtime GPU instead of PyTorch |
+| PyTorch 2.10+cu128 CUDA not available | ✅ Fixed | Downgraded to PyTorch 2.3.1+cu118 (works with driver 470) |
+| Tesla K40m (CC 3.5) too old for PyTorch | ✅ Workaround | Use ONNX Runtime GPU for K40m, PyTorch on K80s only |
 | tracker.py format_bytes applied to file counts | ⚠️ Minor | Cosmetic — shows "B" instead of "files" |
+
+## PyTorch + Tesla K80 Compatibility
+
+**CONFIRMED WORKING WITHOUT DRIVER UPGRADE:**
+- Driver: 470.256.02 (latest for Kepler, cannot upgrade beyond this)
+- PyTorch: 2.3.1+cu118 (CUDA 11.8 runtime, compatible with driver 470)
+- Tesla K80 (CC 3.7): ✅ Works — matrix multiply test passes on both GPUs
+- Tesla K40m (CC 3.5): ❌ Too old — "no kernel image available"
+- **No driver upgrade needed.** Set `CUDA_VISIBLE_DEVICES=1,2` to exclude K40m.
