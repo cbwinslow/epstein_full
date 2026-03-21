@@ -1,0 +1,12 @@
+[submodule "Epstein-Pipeline"]
+	path = Epstein-Pipeline
+	url = https://github.com/stonesalltheway1/Epstein-Pipeline.git
+[submodule "Epstein-research-data"]
+	path = Epstein-research-data
+	url = https://github.com/rhowardstone/Epstein-research-data.git
+[submodule "epstein-ripper"]
+	path = epstein-ripper
+	url = https://github.com/prizmatik666/epstein-ripper.git
+[submodule "EpsteinLibraryMediaScraper"]
+	path = EpsteinLibraryMediaScraper
+	url = https://github.com/lukegosnellranken/EpsteinLibraryMediaScraper.git

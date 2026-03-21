@@ -1,0 +1,123 @@
+# Epstein Full — Complete Download, Processing & Analysis Pipeline
+
+A comprehensive toolkit for downloading, processing, and analyzing the DOJ Jeffrey Epstein document releases (Epstein Files Transparency Act, H.R. 4405).
+
+## What This Does
+
+- **Downloads** all 12 DOJ datasets (~1.4M documents, ~218GB) using CDN mirrors and parallel aria2c
+- **Processes** PDFs with OCR, extracts entities with NLP, builds knowledge graphs
+- **Analyzes** extracted text, images, communications, and redactions
+- **Exposes** pre-built SQLite databases with FTS5 full-text search
+
+## Architecture
+
+```
+DOJ Website / RollCall CDN / Archive.org / HuggingFace
+        │
+        ▼
+  Download Layer (Playwright + aria2c)
+        │
+        ▼
+  Raw PDFs + HF Parquet (pre-extracted text)
+        │
+        ▼
+  Processing Layer (OCR → NER → Embeddings → KG)
+        │
+        ▼
+  SQLite Databases (FTS5 search, knowledge graph, analytics)
+```
+
+## Quick Start
+
+```bash
+# Clone with submodules
+git clone --recurse-submodules https://github.com/cbwinslow/epstein_full.git
+cd epstein_full
+
+# Set up Python environment
+python3 -m venv venv
+source venv/bin/activate
+pip install -e Epstein-Pipeline[all] spacy pymupdf aiohttp playwright rich huggingface_hub datasets pyarrow
+python -m spacy download en_core_web_sm
+playwright install chromium
+
+# Download databases (pre-built, ~8GB)
+# See docs/DATA_SOURCES.md for download commands
+
+# Launch live dashboard
+python scripts/dashboard.py
+
+# Start CDN downloads
+python scripts/download_cdn.py --datasets 9,10,11
+
+# Explore knowledge graph
+python scripts/explore_kg.py "Epstein"
+```
+
+## Project Structure
+
+```
+epstein_full/
+├── scripts/                    # Our download and analysis tools
+│   ├── tracker.py              # SQLite-backed progress tracker
+│   ├── dashboard.py            # Rich terminal dashboard
+│   ├── download_cdn.py         # CDN downloader (aria2c)
+│   ├── download_doj.py         # Playwright downloader
+│   ├── download_chunked.py     # Chunked parallel downloader
+│   ├── explore_kg.py           # Knowledge graph explorer
+│   ├── file_watcher.py         # Filesystem progress monitor
+│   ├── launch_downloads.sh     # Multi-process launcher
+│   └── run_downloads.py        # Download runner with monitoring
+├── docs/                       # Documentation
+│   ├── ARCHITECTURE.md         # System design
+│   ├── DATA_SOURCES.md         # Data sources and URLs
+│   └── WORKFLOW.md             # Processing pipeline
+├── Epstein-Pipeline/           # [submodule] Main processing pipeline
+├── Epstein-research-data/      # [submodule] Pre-built databases + tools
+├── epstein-ripper/             # [submodule] DOJ downloader
+├── EpsteinLibraryMediaScraper/ # [submodule] Media URL scraper
+├── AGENTS.md                   # Agent architecture
+├── CONTEXT.md                  # Living memory / current state
+├── RULES.md                    # Coding standards and conventions
+├── PROJECT.md                  # Quick-start guide
+└── VALIDATION_REPORT.md        # Validation results
+```
+
+## Data Sources
+
+| Source | URL | Datasets | Size |
+|--------|-----|----------|------|
+| DOJ | justice.gov/epstein | DS1-12 | ~218GB |
+| RollCall CDN | media-cdn.rollcall.com | DS1-12 | ~218GB |
+| Archive.org | archive.org/details/* | DS9, DS11, FBI Vault | ~130GB |
+| HuggingFace | AfricanKillshot/Epstein-Files | 4.11M rows, parquet | ~317GB |
+| GitHub Releases | rhowardstone/Epstein-research-data | Pre-built DBs | ~8GB |
+
+## Pre-built Databases
+
+| Database | Size | Rows | Description |
+|----------|------|------|-------------|
+| full_text_corpus.db | 7.0GB | 1.4M docs, 2.9M pages | Full OCR text, FTS5 search |
+| redaction_analysis_v2.db | 940MB | 2.59M redactions | Redaction detection + text recovery |
+| image_analysis.db | 389MB | 38,955 images | AI image descriptions |
+| communications.db | 30MB | 41,924 emails | Email thread analysis |
+| knowledge_graph.db | 892KB | 606 entities, 2,302 relationships | Entity relationship graph |
+
+## GPU Support
+
+- **Tesla K80 (x2)**: OCR (Surya), Image Analysis, Transcription
+- **Tesla K40m (x1)**: Embeddings, Classification
+- CUDA 11.4, Kepler architecture
+
+## Upstream Repos (submodules)
+
+| Repo | Stars | Purpose |
+|------|-------|---------|
+| [Epstein-Pipeline](https://github.com/stonesalltheway1/Epstein-Pipeline) | 95 | Full processing pipeline |
+| [Epstein-research-data](https://github.com/rhowardstone/Epstein-research-data) | 157 | Pre-built databases + tools |
+| [epstein-ripper](https://github.com/prizmatik666/epstein-ripper) | 3 | DOJ downloader with Playwright |
+| [EpsteinLibraryMediaScraper](https://github.com/lukegosnellranken/EpsteinLibraryMediaScraper) | 23 | Media URL scraper |
+
+## License
+
+MIT — See [LICENSE](LICENSE)

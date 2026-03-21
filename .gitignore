@@ -1,0 +1,57 @@
+# =============================================================================
+# Epstein Files Analysis Project - .gitignore
+# =============================================================================
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# Data files (too large for git — downloaded separately)
+*.pdf
+*.parquet
+*.zip
+*.tar.bz2
+*.tar.gz
+*.db
+*.db.gz
+*.db.wal
+
+# Logs and state (runtime artifacts)
+logs/
+*.log
+state/
+*_state.json
+progress.json
+progress.db
+cdn_urls.txt
+efta_to_download.json
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# HuggingFace cache
+.hf_cache/
+hf-parquet/
+
+# Playwright cache
+.cache/ms-playwright/
+
+# OS
+.Trashes
+
+# Node (from submodules)
+package.json
+package-lock.json
