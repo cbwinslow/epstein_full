@@ -289,6 +289,70 @@ These get merged into the existing knowledge graph via:
 
 ---
 
+## Anti-Drift Protocol
+
+### Before Starting Any Task
+1. **Read CONTEXT.md** — understand current state, paths, status
+2. **Read TASKS.md** — check if task is already done or in progress
+3. **Search existing code** — don't duplicate scripts or logic
+4. **Check upstream repos** — don't reinvent what Epstein-Pipeline already does
+
+### During Work
+1. **Update TASKS.md** — set status to `in_progress`, log decisions
+2. **Log to CONTEXT.md** — note any new paths, configs, or state changes
+3. **Use same patterns** — match existing code style, imports, error handling
+4. **Ask if uncertain** — don't assume, don't skip, don't guess
+
+### After Work
+1. **Update TASKS.md** — set status to `done` with solution/notes
+2. **Update CONTEXT.md** — reflect new state
+3. **Commit with descriptive message** — what changed and why
+4. **Push to GitHub** — keep remote in sync
+
+### Memory Preservation
+| Mechanism | Purpose |
+|-----------|---------|
+| `CONTEXT.md` | Living memory — included in every prompt |
+| `TASKS.md` | All tasks, status, solutions |
+| `.python-version` | Pin Python version |
+| `pyproject.toml` | Pin dependency versions |
+| `.env.example` | Document required secrets |
+| `setup.sh` | Reproducible environment bootstrap |
+
+### Context Refresh Protocol
+- **Re-read CONTEXT.md** at the start of every new session
+- **Re-read TASKS.md** before starting any work
+- **Update both** after any significant change
+- **If confused**: re-read all .md files before proceeding
+
+---
+
+## Agent Boundaries
+
+| Agent | Can Do | Cannot Do |
+|-------|--------|-----------|
+| Download | Run download scripts, monitor progress | Modify processing code |
+| OCR | Run pipeline CLI on PDFs | Modify pipeline source |
+| NER | Call spaCy/GLiNER | Retrain models |
+| Face | Run InsightFace on images | Modify model weights |
+| KG | Query/update SQLite graph | Delete upstream data |
+| Eval | Run metrics.py | Modify evaluation formulas |
+
+### What Counts as "Upstream"
+- `Epstein-Pipeline/` — processing pipeline
+- `epstein-ripper/` — DOJ downloader
+- `Epstein-research-data/` — pre-built databases
+- `EpsteinLibraryMediaScraper/` — media scraper
+
+### What Counts as "Ours"
+- `scripts/` — our download, tracking, analysis tools
+- `docs/` — our documentation
+- Root `.md` files — our project docs
+- `pyproject.toml` — our dependency config
+- `setup.sh` — our bootstrap script
+
+---
+
 ## Validation Procedures
 
 ### After Every Code Change

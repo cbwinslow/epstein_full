@@ -1,0 +1,106 @@
+[project]
+name = "epstein-full"
+version = "0.1.0"
+description = "Epstein Files Analysis Pipeline — download, process, and analyze DOJ document releases"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.12"
+
+# Core dependencies (required)
+dependencies = [
+    # PDF & Document Processing
+    "pymupdf>=1.24",                # PDF text extraction (fitz)
+    "pyarrow>=14.0",                # Apache Parquet reader
+    "pandas>=2.0",                  # DataFrames for parquet/CSV
+
+    # Web & Downloads
+    "aiohttp>=3.9",                 # Async HTTP client
+    "playwright>=1.40",             # Browser automation (DOJ age gate)
+    "httpx>=0.25",                  # HTTP client
+
+    # NLP & Entity Extraction
+    "spacy>=3.7",                   # NER (en_core_web_trf)
+    "gliner>=0.1",                  # Zero-shot entity extraction
+    "rapidfuzz>=3.0",               # Fuzzy string matching (entity resolution)
+
+    # Facial Recognition
+    "insightface>=0.7",             # Face detection + ArcFace embeddings
+    "opencv-python-headless>=4.8",  # Image I/O, preprocessing
+
+    # Data & ML
+    "numpy>=1.24",                  # Numerical computing
+    "scikit-learn>=1.3",            # Metrics, clustering, ML utils
+    "scipy>=1.11",                  # Statistical tests, interpolation
+
+    # Evaluation Metrics
+    "jiwer>=3.0",                   # OCR evaluation (CER, WER)
+    "nervaluate>=0.1",              # NER evaluation (4 schemas)
+
+    # Graph & Knowledge
+    "networkx>=3.0",                # Graph analysis
+
+    # CLI & UI
+    "click>=8.0",                   # CLI framework
+    "rich>=13.0",                   # Terminal UI, dashboard
+    "tqdm>=4.65",                   # Progress bars
+
+    # HuggingFace
+    "datasets>=2.16",               # HF dataset loading
+    "huggingface_hub>=0.20",        # HF API client
+
+    # Data Formats
+    "jsonlines>=4.0",               # JSON Lines reader
+]
+
+# Optional dependency groups (install with: uv sync --group <name>)
+[project.optional-dependencies]
+gpu = [
+    "onnxruntime-gpu>=1.16",        # GPU-accelerated ONNX (InsightFace, OCR)
+]
+ocr = [
+    "surya-ocr>=0.4",               # GPU-accelerated OCR for scanned pages
+]
+transcription = [
+    "faster-whisper>=1.0",          # Speech-to-text (Whisper large-v3)
+]
+embedding = [
+    "sentence-transformers>=2.2",   # Text embeddings (nomic-embed-text-v2-moe)
+]
+classification = [
+    "transformers>=4.35",           # BART-large-mnli zero-shot classification
+    "torch>=2.0",                   # PyTorch (for transformers)
+]
+all = [
+    "epstein-full[gpu,ocr,transcription,embedding,classification]",
+]
+
+# CLI entry points
+[project.scripts]
+tracker = "scripts.tracker:main"
+dashboard = "scripts.dashboard:main"
+download-cdn = "scripts.download_cdn:main"
+download-doj = "scripts.download_doj:main"
+explore-kg = "scripts.explore_kg:main"
+metrics = "scripts.metrics:main"
+
+# Build system
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# uv configuration
+[tool.uv]
+
+# Ruff linting
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+# MyPy type checking
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true

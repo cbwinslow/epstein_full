@@ -117,3 +117,35 @@
 2. Log all data quality issues
 3. Document API changes and URL pattern discoveries
 4. Track dataset version changes (DOJ removes/alters files)
+
+## Environment & Tooling Rules
+1. **Python version**: 3.12 pinned in `.python-version` and `pyproject.toml`
+2. **Package manager**: `uv` only — never `pip install` directly
+   - Add deps: `uv add <package>`
+   - Run scripts: `uv run python scripts/foo.py`
+   - Sync all: `uv sync`
+3. **Node**: Use `npx` for one-off tools, never global installs
+4. **Config files**: All in project root — `pyproject.toml`, `.python-version`, `.env`
+5. **Secrets**: In `.env` (git-ignored), template in `.env.example`
+6. **Setup**: `./setup.sh` creates entire environment from scratch
+7. **Verification**: Run `uv run python scripts/setup_dev.py` after setup
+
+## Deployment Checklist
+Before pushing any code:
+1. [ ] Code runs without errors (`uv run python scripts/foo.py`)
+2. [ ] No hardcoded paths — use constants from config
+3. [ ] No secrets in code — use `.env` variables
+4. [ ] Docstrings on all public functions
+5. [ ] Updated TASKS.md if task status changed
+6. [ ] Updated CONTEXT.md if state changed
+7. [ ] Git commit with descriptive message
+8. [ ] Push to GitHub
+
+## Anti-Drift Rules
+1. **Check TASKS.md** before starting — don't duplicate work
+2. **Check CONTEXT.md** for current state — don't assume old paths/configs
+3. **Check existing scripts/** — don't reinvent tools
+4. **Use same patterns** — match existing code style and conventions
+5. **Ask if uncertain** — better to clarify than to waste time
+6. **Update memory files** — CONTEXT.md + TASKS.md after every session
+7. **Single source of truth** — pyproject.toml for deps, .python-version for Python, .env for secrets

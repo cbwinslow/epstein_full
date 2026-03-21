@@ -1,235 +1,152 @@
-# Epstein Files Analysis Project — CONTEXT (Living Document)
+# Epstein Files Analysis — CONTEXT (Living Document)
 
-> Include this file in every prompt. Update after every session.
-> Last updated: 2026-03-20
-
----
-
-## Infrastructure
-
-| Component | Details |
-|-----------|---------|
-| Server | Ubuntu, RAID5 md0 (5× drives, 4.4TB), LVM |
-| Storage mount | `/mnt/data/epstein-project/` on `vg-data/lv-nextcloud` (2.5TB, 2.3TB free) |
-| GPUs | 2× Tesla K80 (12GB, CUDA 11.4) + 1× Tesla K40m (11GB) — Kepler |
-| Python | 3.12.3 at `/home/cbwinslow/workspace/epstein/venv/bin/python3` |
-| Node | v24.14.0 |
-| Workspace | `/home/cbwinslow/workspace/epstein/` |
+> **Include this file in every prompt.** Update after every session.
+> This is the agent's persistent memory.
 
 ---
 
-## Project Directory Layout
+## Quick Reference
+
+| Item | Value |
+|------|-------|
+| GitHub | https://github.com/cbwinslow/epstein_full |
+| Project root | `/home/cbwinslow/workspace/epstein` |
+| Data mount | `/mnt/data/epstein-project/` |
+| Python | 3.12 via uv (`.venv/`) |
+| Package manager | `uv` (never pip directly) |
+| GPUs | 2× Tesla K80 (12GB) + 1× Tesla K40m (11GB), CUDA 11.4 |
+
+---
+
+## Critical Paths
 
 ```
-/home/cbwinslow/workspace/epstein/
-├── CONTEXT.md                  ← THIS FILE (living memory)
-├── AGENTS.md                   ← Agent architecture, workflow pipeline
-├── RULES.md                    ← Rules including codebase separation + validation loop
-├── PROJECT.md                  ← Quick-start guide
-├── VALIDATION_REPORT.md        ← Latest validation results (30/30 passed)
-├── venv/                       ← Python venv (epstein-pipeline + deps installed)
-├── scripts/                    ← OUR CODE (tracker.py, file_watcher.py, explore_kg.py)
-├── Epstein-Pipeline/           ← UPSTREAM: processing pipeline (DO NOT MODIFY)
-├── Epstein-research-data/      ← UPSTREAM: pre-built databases + tools (DO NOT MODIFY)
-├── epstein-ripper/             ← UPSTREAM: DOJ downloader (DO NOT MODIFY)
-├── EpsteinLibraryMediaScraper/ ← UPSTREAM: media URL scraper (DO NOT MODIFY)
-└── ...                         ← Any new workers/tools WE write go in scripts/ or workers/
+/home/cbwinslow/workspace/epstein/         # Project root
+├── .venv/                                  # Python venv (uv-managed)
+├── pyproject.toml                          # Dependencies, Python version, scripts
+├── .python-version                         # Pins 3.12
+├── .env.example                            # Environment variable template
+├── setup.sh                                # One-command bootstrap
+├── scripts/
+│   ├── tracker.py                          # SQLite progress tracker
+│   ├── dashboard.py                        # Rich terminal dashboard
+│   ├── download_cdn.py                     # CDN downloader (aria2c)
+│   ├── download_doj.py                     # Playwright downloader
+│   ├── explore_kg.py                       # Knowledge graph explorer
+│   ├── file_watcher.py                     # Filesystem monitor
+│   ├── metrics.py                          # Evaluation metrics (CER, F1, EER)
+│   └── setup_dev.py                        # Environment verification
+├── docs/
+│   ├── ARCHITECTURE.md                     # System design
+│   ├── DATA_SOURCES.md                     # Data sources and URLs
+│   ├── WORKFLOW.md                         # Processing pipeline
+│   ├── METHODOLOGY.md                      # CRISP-DM, data model, stack
+│   ├── PAPER.md                            # Academic paper draft
+│   └── SUPPLEMENTARY_DATASETS.md           # Cross-reference sources
+├── Epstein-Pipeline/                       # [submodule] Processing pipeline
+├── Epstein-research-data/                  # [submodule] Pre-built databases
+├── epstein-ripper/                         # [submodule] DOJ downloader
+└── EpsteinLibraryMediaScraper/             # [submodule] Media scraper
 
 /mnt/data/epstein-project/
-├── raw-files/                  ← Downloaded PDFs (data1/, data2/, ...)
-├── databases/                  ← Pre-built SQLite databases (8.4GB)
-├── processed/                  ← OCR output, entities, embeddings (empty, ready)
-├── knowledge-graph/            ← Custom KG exports (empty, ready)
-└── logs/                       ← progress.json + processing logs
+├── raw-files/                              # Downloaded PDFs (~268K files)
+│   ├── data1/ through data12/              # Per-dataset directories
+├── databases/                              # Pre-built SQLite databases (8.4GB)
+│   ├── full_text_corpus.db                 # 7.0GB, 1.4M docs, FTS5
+│   ├── redaction_analysis_v2.db            # 940MB, 2.59M redactions
+│   ├── image_analysis.db                   # 389MB, 38K images
+│   ├── ocr_database.db                     # 68MB, 38K OCR results
+│   ├── communications.db                   # 30MB, 41K emails
+│   ├── transcripts.db                      # 4.8MB, 1.6K transcriptions
+│   ├── prosecutorial_query_graph.db        # 2.5MB, 257 subpoenas
+│   └── knowledge_graph.db                  # 892KB, 606 entities, 2.3K relationships
+├── hf-parquet/                             # HuggingFace parquet (634 files, 318GB) ✅ COMPLETE
+├── processed/                              # OCR output (empty, ready)
+├── knowledge-graph/                        # KG exports (empty, ready)
+└── logs/                                   # Download logs, state files
+    ├── progress.db                         # SQLite tracker
+    ├── aria2c.log                          # CDN download log
+    └── download.log                        # General download log
 ```
 
 ---
 
-## Installed Packages (in venv)
+## Data Status (Live)
 
-- `epstein-pipeline` (editable install from local clone)
-- `spacy` + `en_core_web_sm` (NER ready, `en_core_web_trf` for GPU later)
-- `pymupdf` (PDF text extraction)
-- `aiohttp` (async HTTP)
-- `playwright` + Chromium headless (DOJ age-gate bypass)
-- Core: click, rich, pydantic, httpx, datasketch, rapidfuzz
-
-Not yet installed (will need later):
-- `surya-ocr` (GPU OCR, needs torch)
-- `faster-whisper` (GPU transcription)
-- `sentence-transformers` + `torch` (embeddings)
-- `psycopg` + `pgvector` (Neon export)
+| Source | Status | Size | Details |
+|--------|--------|------|---------|
+| HF Parquet | ✅ **COMPLETE** | 318GB | 634/634 files, 0 missing, pre-extracted text |
+| CDN PDFs | 🔄 **RUNNING** | ~58GB | 268K+ files, aria2c active |
+| Pre-built DBs | ✅ Complete | 8.4GB | 8 SQLite databases |
+| Knowledge graph | ✅ Available | 892KB | 606 entities, 2,302 relationships |
+| **Total disk** | **408GB used** | | **2.1TB free** |
 
 ---
 
-## Databases Downloaded (8.4GB total)
+## Environment
 
-| Database | Size | Rows | Key Content |
-|----------|------|------|-------------|
-| full_text_corpus.db | 7.0GB | 1,397,821 docs, 2,892,730 pages | Full OCR text, FTS5 search |
-| redaction_analysis_v2.db | 940MB | 2.59M redactions, 849K summaries | Redaction detection, text recovery |
-| image_analysis.db | 389MB | 38,955 images | AI descriptions of extracted images |
-| ocr_database.db | 68MB | 38,955 OCR results | Per-page extraction data |
-| communications.db | 30MB | 41,924 emails, 90K participants | Email threads, communication pairs |
-| transcripts.db | 4.8MB | 1,628 media files | Audio/video transcriptions |
-| prosecutorial_query_graph.db | 2.5MB | 257 subpoenas | Legal document tracking |
-| knowledge_graph.db | 892KB | 606 entities, 2,302 relationships | Entity relationship graph |
+| Component | Version | Notes |
+|-----------|---------|-------|
+| Python | 3.12 (system) | Managed by uv |
+| uv | 0.10.12 | Package manager |
+| Node | 24.14.0 | For JS tools |
+| CUDA | 11.4 | Kepler architecture |
+| aria2c | 1.37.0 | Parallel downloads |
+| SQLite | 3.x | Built-in Python |
 
 ---
 
-## Knowledge Graph Summary
+## Upstream Submodules
 
-**Entity types:** person (571), shell_company (12), organization (9), property (7), aircraft (4), location (3)
+| Repo | Remote | Branch |
+|------|--------|--------|
+| Epstein-Pipeline | stonesalltheway1/Epstein-Pipeline | main |
+| Epstein-research-data | rhowardstone/Epstein-research-data | v5.0 |
+| epstein-ripper | prizmatik666/epstein-ripper | main |
+| EpsteinLibraryMediaScraper | lukegosnellranken/EpsteinLibraryMediaScraper | main |
 
-**Relationship types:** traveled_with (1,449), associated_with (589), communicated_with (215), owned_by (23), victim_of (13), employed_by (7)
-
-**Top entities by connections:**
-1. Jeffrey Epstein: 493 connections, weight 4,789
-2. Ghislaine Maxwell: 283 connections, weight 1,479
-3. Emmy Tayler: 130 connections
-4. Sarah Kellen: 127 connections
-5. Larry Visoski (pilot): 86 connections
-
-**Top email pairs:**
-- Boris Nikolic ↔ Epstein: 680 emails (2009-2017)
-- Richard Kahn ↔ Epstein: 437 emails (2011-2019)
-- Lesley Groff ↔ Epstein: 208 emails (2014-2019)
-- Noam Chomsky ↔ Epstein: 194 emails
-- Deepak Chopra ↔ Epstein: 184 emails
+**DO NOT MODIFY** upstream repos. Call via CLI or import public APIs only.
 
 ---
 
-## DOJ Data Structure
+## Current Focus
 
-- **12 Data Sets** (DS1–DS12), ~2.8M pages, ~1.4M documents, ~218GB raw
-- **URL pattern:** `https://www.justice.gov/epstein/files/DataSet%20{N}/EFTA{8digits}.pdf`
-- **Pagination:** 50 files/page, `?page=N` (0-indexed)
-- **Age gate:** JavaScript cookie required (Playwright handles this)
-- **EFTA numbering:** Per-PAGE, not per-document. Multi-page docs consume consecutive numbers.
-
-| Dataset | EFTA Start | EFTA End | Est Files |
-|---------|-----------|----------|-----------|
-| 1 | 00000001 | 00003158 | ~3,158 |
-| 2 | 00003159 | 00003857 | ~699 |
-| 3 | 00003858 | 00005586 | ~1,729 |
-| 4 | 00005705 | 00008320 | ~2,616 |
-| 5 | 00008409 | 00008528 | ~120 |
-| 6 | 00008529 | 00008998 | ~470 |
-| 7 | 00009016 | 00009664 | ~649 |
-| 8 | 00009676 | 00039023 | ~29,348 |
-| 9 | 00039025 | 01262781 | ~103,608 |
-| 10 | 01262782 | 02205654 | ~94,287 |
-| 11 | 02205655 | 02730264 | ~52,459 |
-| 12 | 02730265 | 02858497 | ~12,820 |
+- [x] Dev environment setup (uv, pyproject.toml, setup.sh)
+- [ ] Run setup.sh and verify
+- [ ] Continue CDN PDF downloads
+- [ ] Process HF parquet into structured database
+- [ ] Begin OCR/NER pipeline
 
 ---
 
-## Workflow: Download → OCR → Analyze → Knowledge Graph
+## Key Decisions
 
-### The Integration Plan
-
-```
-┌──────────────────────┐         ┌──────────────────────────┐
-│   epstein-ripper     │         │   Epstein-Pipeline       │
-│   (UPSTREAM)         │         │   (UPSTREAM)             │
-│                      │         │                          │
-│   Downloads PDFs     │───────▶│   ocr ./raw-files/data1/ │
-│   from DOJ website   │  files  │   extract-entities ...   │
-│   with Playwright    │  on     │   embed ...              │
-│   age-gate bypass    │  disk   │   build-graph ...        │
-│                      │         │   export sqlite ...      │
-└──────────────────────┘         └──────────────────────────┘
-         │                                  │
-         ▼                                  ▼
-  /mnt/data/epstein-project/        /mnt/data/epstein-project/
-  raw-files/data{N}/                processed/
-    ├── EFTA00000001.pdf              ├── ocr/
-    ├── EFTA00000002.pdf              ├── entities/
-    ├── ...                           ├── embeddings/
-    └── index_data{N}.json            └── knowledge-graph/
-```
-
-### Commands (in order)
-
-```bash
-# 1. DOWNLOAD — epstein-ripper (NOT pipeline's broken download command)
-cd /home/cbwinslow/workspace/epstein/epstein-ripper
-python3 auto_ep_rip.py --datasets 1 --out-dir /mnt/data/epstein-project/raw-files
-
-# 2. OCR — pipeline reads PDFs from disk, outputs JSON
-epstein-pipeline ocr /mnt/data/epstein-project/raw-files/data1/ \
-  -o /mnt/data/epstein-project/processed/ocr/data1/ \
-  --backend surya --workers 4
-
-# 3. ENTITY EXTRACTION — NER on OCR text
-epstein-pipeline extract-entities /mnt/data/epstein-project/processed/ocr/data1/ \
-  -o /mnt/data/epstein-project/processed/entities/
-
-# 4. EMBEDDINGS — vector representations for semantic search
-epstein-pipeline embed /mnt/data/epstein-project/processed/ocr/data1/ \
-  -o /mnt/data/epstein-project/processed/embeddings/
-
-# 5. KNOWLEDGE GRAPH — build from extracted entities
-epstein-pipeline build-graph /mnt/data/epstein-project/processed/ \
-  -o /mnt/data/epstein-project/knowledge-graph/
-
-# 6. EXPORT — to SQLite/JSON/CSV
-epstein-pipeline export sqlite /mnt/data/epstein-project/processed/ \
-  -o /mnt/data/epstein-project/databases/processed_corpus.db
-```
-
-### Why This Works
-- **epstein-ripper** saves standard PDF files to disk
-- **Epstein-Pipeline's `ocr` command** accepts a directory of PDF files as input
-- They don't need to know about each other — the filesystem is the interface
-- We can swap downloaders or processors independently
+| Decision | Date | Rationale |
+|----------|------|-----------|
+| Use uv instead of pip | 2026-03-21 | Faster, reproducible, lock file support |
+| Python 3.12 (not 3.11) | 2026-03-21 | Already on system, upstream supports it |
+| RollCall CDN over Playwright | 2026-03-20 | 2-5x faster, no age-gate issues |
+| SQLite tracker over JSON | 2026-03-20 | WAL mode handles concurrent writes |
+| InsightFace/ArcFace for faces | 2026-03-20 | 99.83% LFW, ONNX Runtime (K80 compatible) |
+| Rich over curses for dashboard | 2026-03-20 | Works in non-TTY environments |
 
 ---
 
-## Our Custom Code (scripts/)
+## Rules Summary
 
-| File | Purpose |
-|------|---------|
-| `scripts/tracker.py` | Shared-state progress tracker (JSON-backed, multi-process safe) |
-| `scripts/file_watcher.py` | Background file-size monitor that feeds tracker |
-| `scripts/explore_kg.py` | Knowledge graph exploration CLI |
-
-These are OUR code. They call upstream tools but don't modify them.
-
----
-
-## Status
-
-- [x] Storage mounted (2.3TB free)
-- [x] All repos cloned (4 upstream repos)
-- [x] Pipeline installed (core + spaCy + pymupdf + playwright)
-- [x] All databases downloaded (8.4GB)
-- [x] Knowledge graph explored (606 entities, 2,302 relationships)
-- [x] Progress tracker built
-- [x] Codebase separation rules defined
-- [ ] DOJ file downloads started
-- [ ] OCR processing pipeline tested
-- [ ] GPU workers configured for surya/faster-whisper
-- [ ] Embedding generation tested
-- [ ] Custom knowledge graph extensions built
+1. **Never modify upstream repos** — extend via composition
+2. **Always use uv** — `uv run python`, `uv add`, never `pip install`
+3. **Update CONTEXT.md** after every significant change
+4. **Update TASKS.md** with status and solutions
+5. **Validate code** — execute, test, verify before marking done
+6. **Parameterized SQL** — never string interpolation in queries
+7. **Error handling** — try/except with specific types, cleanup in finally
+8. **Docstrings** — every public function
 
 ---
 
-## Session Log
+## Tokens & Secrets
 
-### 2026-03-20
-- Mounted LVM volume, cloned 4 repos, installed pipeline + deps
-- Downloaded 8 pre-built databases (8.4GB)
-- Explored knowledge graph, communications, redaction data
-- Built progress tracker (tracker.py + file_watcher.py)
-- Established codebase separation rules
-- Identified workflow: ripper downloads → pipeline processes → our scripts track/extend
-- **Full validation completed**: 30/30 tests passed, 3 issues found and fixed
-- Fixed: Playwright system deps, file_watcher glob patterns, pipeline CLI invocation
-- Playwright confirmed working: navigated DOJ site, clicked age gate, extracted 50 PDF links
-- Full validation report at `VALIDATION_REPORT.md`
-
-### Next Session TODOs
-- [ ] Start DOJ file downloads (epstein-ripper)
-- [ ] Test OCR pipeline on small batch
-- [ ] Install GPU packages (surya-ocr, faster-whisper, sentence-transformers)
+Stored in `.env` (git-ignored). See `.env.example` for template.
+- HF_TOKEN: `hf_RnYDalp...` (in .env)
+- GITHUB_TOKEN: `ghp_ktqW...` (in .env)
