@@ -514,3 +514,87 @@ Python 3.12
 - Pre-built DBs: ~8GB
 - Processed output: ~50GB estimated
 - **Total: ~600GB** (2.3TB available)
+
+---
+
+## Community Analysis Techniques (From External Projects)
+
+### Louvain Community Detection
+
+Used by multiple projects to find distinct social circles in the Epstein network:
+- Shereshevsky: Found 5 communities in 25,800 documents
+- Tim Smith: Found 12 communities with 714 entities, 8,604 relationships
+- Academic research: Structural analysis of broker roles
+
+```python
+from networkx.algorithms.community import louvain_communities
+communities = louvain_communities(G, resolution=1.0)
+```
+
+### Six Centrality Metrics
+
+Tim Smith's approach (Graph-Aware RAG paper):
+1. **Degree Centrality** — Number of direct connections
+2. **Betweenness Centrality** — How often this node lies on shortest paths (identifies brokers)
+3. **Closeness Centrality** — Average distance to all other nodes
+4. **Eigenvector Centrality** — Influence (connected to other influential nodes)
+5. **PageRank** — Importance ranking (Google's algorithm)
+6. **Clustering Coefficient** — How connected are this node's neighbors to each other
+
+```python
+import networkx as nx
+degree = nx.degree_centrality(G)
+betweenness = nx.betweenness_centrality(G)
+closeness = nx.closeness_centrality(G)
+eigenvector = nx.eigenvector_centrality(G, max_iter=1000)
+pagerank = nx.pagerank(G)
+clustering = nx.clustering(G)
+```
+
+### Graph-Aware RAG
+
+Tim Smith's innovative retrieval approach:
+1. Detect entities in query via FTS5 keyword search
+2. Walk the knowledge graph outward from detected entities
+3. Follow weighted edges to discover intermediary entities
+4. Re-rank results using vector cosine similarity
+5. Entire platform ships as single 75MB SQLite file
+
+### Congressional Document Scoring
+
+From `congressional_scorer.py`:
+```
+REVEAL_SCORE = estimated_redacted_names × crime_severity × novelty_factor
+```
+
+- Layer 1A: Crime keywords (3 severity tiers with weights ×3/×2/×1)
+- Layer 1B: Redaction density per page
+- Layer 1C: Name entity density
+- Name-proximity patterns: redactions near "Mr. [", "trafficked to", "raped by", etc.
+
+### Person Integrity Auditor (5-Phase)
+
+From `build_person_registry.py` and Epstein-Pipeline:
+1. **Dedup**: rapidfuzz name similarity + alias cross-check
+2. **Wikidata**: Cross-reference occupation, dates, nationality
+3. **Fact-Check**: Decompose bios into atomic claims, verify against corpus
+4. **Coherence**: Sample linked docs, detect merged identities
+5. **Score**: Composite severity (0-100), create leads for review
+
+### DOJ Document Removal Monitoring
+
+Epstein Exposed's automated approach:
+- Weekly comparison against DOJ website
+- Detected 892 removed documents
+- GitHub Actions CI for automation
+- Status codes: LIVE (200+PDF), REMOVED (404), AGE_GATE (200+HTML), RATE_LIMITED (401), FORBIDDEN (403)
+
+### External Cross-References (Available via Pipeline)
+
+| Source | Dataset | Records | Pipeline Command |
+|--------|---------|---------|-----------------|
+| OpenSanctions | OFAC SDN, EU, UN | Variable | `check-sanctions` |
+| ICIJ Offshore Leaks | Panama/Paradise/Pandora Papers | 810K entities | `check-icij` |
+| FEC Donations | Political contributions | 55K+ | `check-fec` |
+| IRS 990 | Nonprofit officers/grants | Variable | `check-nonprofits` |
+| Wikidata | Person fact-checking | Free API | Built into auditor |
