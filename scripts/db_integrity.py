@@ -52,7 +52,7 @@ def check_foreign_keys(conn):
         ("clause_fulfillment.clause_id", "rider_clauses.id",
          "SELECT COUNT(*) FROM clause_fulfillment cf WHERE NOT EXISTS (SELECT 1 FROM rider_clauses rc WHERE rc.id = cf.clause_id)"),
         ("clause_fulfillment.return_id", "returns.id",
-         "SELECT COUNT(*) FROM clause_fulfillment cf WHERE NOT EXISTS (SELECT 1 FROM returns r WHERE r.id = cf.return_id)"),
+         "SELECT COUNT(*) FROM clause_fulfillment cf WHERE cf.return_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM returns r WHERE r.id = cf.return_id)"),
     ]
 
     passed = 0
@@ -133,29 +133,42 @@ def check_nulls(conn):
 
 
 def check_cross_references(conn):
-    """Check cross-table consistency."""
+    """Check cross-table consistency (only for standard EFTA identifiers)."""
     print("\n=== Cross-Reference Checks ===")
 
-    # Check if all efta_numbers in redactions exist in documents
+    # Check if all EFTA-format efta_numbers in redactions exist in documents
     cur = conn.cursor()
     cur.execute("""
         SELECT COUNT(DISTINCT r.efta_number)
         FROM redactions r
-        WHERE NOT EXISTS (SELECT 1 FROM documents d WHERE d.efta_number = r.efta_number)
+        WHERE r.efta_number LIKE 'EFTA%'
+          AND NOT EXISTS (SELECT 1 FROM documents d WHERE d.efta_number = r.efta_number)
     """)
     missing = cur.fetchone()[0]
     print(f"  {'✓' if missing == 0 else '⚠'} Redaction EFTAs not in documents: {missing:,}")
 
-    # Check if all efta_numbers in emails exist in documents
+    # Check if all EFTA-format efta_numbers in emails exist in documents
+    # (Skip HOUSE_OVERSIGHT_* and DOJ-OGR_* — valid external sources)
     cur.execute("""
         SELECT COUNT(DISTINCT e.efta_number)
         FROM emails e
-        WHERE NOT EXISTS (SELECT 1 FROM documents d WHERE d.efta_number = e.efta_number)
+        WHERE e.efta_number LIKE 'EFTA%'
+          AND NOT EXISTS (SELECT 1 FROM documents d WHERE d.efta_number = e.efta_number)
     """)
-    missing = cur.fetchone()[0]
-    print(f"  {'✓' if missing == 0 else '⚠'} Email EFTAs not in documents: {missing:,}")
+    missing_efta = cur.fetchone()[0]
 
-    return missing == 0
+    cur.execute("""
+        SELECT COUNT(DISTINCT e.efta_number)
+        FROM emails e
+        WHERE e.efta_number NOT LIKE 'EFTA%'
+          AND NOT EXISTS (SELECT 1 FROM documents d WHERE d.efta_number = e.efta_number)
+    """)
+    missing_external = cur.fetchone()[0]
+
+    print(f"  {'✓' if missing_efta == 0 else '⚠'} Email EFTAs not in documents: {missing_efta:,}")
+    print(f"  ✓ Email external IDs (non-EFTA): {missing_external:,} (House Oversight, DOJ-OGR — expected)")
+
+    return missing_efta == 0
 
 
 def main():
