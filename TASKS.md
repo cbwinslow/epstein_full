@@ -191,3 +191,48 @@
 - Tesla K80 (CC 3.7): ✅ Works — matrix multiply test passes on both GPUs
 - Tesla K40m (CC 3.5): ❌ Too old — "no kernel image available"
 - **No driver upgrade needed.** Set `CUDA_VISIBLE_DEVICES=1,2` to exclude K40m.
+
+## Phase 8: PostgreSQL Migration ✅
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 8.1 | Install PostgreSQL 16 | ✅ Done | Already running on port 5432 |
+| 8.2 | Install pgvector | ✅ Done | v0.6.0 via apt (HNSW support confirmed) |
+| 8.3 | Configure PostgreSQL for 125GB RAM | ✅ Done | shared_buffers=32GB, effective_cache_size=96GB, maintenance_work_mem=8GB |
+| 8.4 | Create database + user | ✅ Done | db=epstein, user=cbwinslow, password=123qweasd |
+| 8.5 | Enable extensions | ✅ Done | vector, pg_trgm, unaccent, pg_stat_statements |
+| 8.6 | Create unified schema | ✅ Done | 26 tables in migrations/001_unified_schema.sql |
+| 8.7 | Migrate knowledge_graph.db | ✅ Done | 606 entities, 2,302 relationships |
+| 8.8 | Migrate transcripts.db | ✅ Done | 1,628 transcripts, 25,129 segments |
+| 8.9 | Migrate communications.db | ✅ Done | 41,924 emails, 90,204 participants |
+| 8.10 | Migrate ocr_database.db | ✅ Done | 38,955 OCR results |
+| 8.11 | Migrate image_analysis.db | ✅ Done | 38,955 images |
+| 8.12 | Migrate prosecutorial.db | ✅ Done | 257 subpoenas, 2,018 clauses |
+| 8.13 | Migrate redaction_analysis_v2.db | ✅ Done | 2.59M redactions, 849K summaries |
+| 8.14 | Migrate full_text_corpus.db | ✅ Done | 1.4M docs, 2.9M pages |
+| 8.15 | Populate FTS (search_vector) | 🔄 Running | 2.25M / 2.9M (77.8%), background process |
+| 8.16 | Create .pgpass file | ✅ Done | ~/.pgpass with localhost auth |
+| 8.17 | Set up Datasette | ✅ Done | Running on port 8001 |
+
+## PostgreSQL Data Summary
+
+| Table | Rows | Status |
+|-------|------|--------|
+| pages | 2,892,730 | ✅ FTS 77.8% |
+| documents | 1,397,649 | ✅ |
+| redactions | 2,587,447 | ✅ |
+| entities | 606 | ✅ |
+| relationships | 2,302 | ✅ |
+| emails | 41,924 | ✅ |
+| images | 38,955 | ✅ |
+| transcripts | 1,628 | ✅ |
+| **Total** | **~7M rows** | ✅ |
+
+## PostgreSQL Extensions
+
+| Extension | Version | Purpose |
+|-----------|---------|---------|
+| vector (pgvector) | 0.6.0 | HNSW vector search, vector(768) |
+| pg_trgm | 1.6 | Fuzzy text matching |
+| unaccent | 1.1 | Accent-insensitive search |
+| pg_stat_statements | 1.10 | Query monitoring |
