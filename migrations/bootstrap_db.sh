@@ -32,7 +32,7 @@ SCRIPTS_DIR="$PROJECT_DIR/scripts"
 PG_HOST="${PG_HOST:-localhost}"
 PG_PORT="${PG_PORT:-5432}"
 PG_USER="${PG_USER:-cbwinslow}"
-PG_PASS="${PG_PASS:-123qweasd}"
+PG_PASS="${PG_PASS:-}"
 PG_DB="${PG_DB:-epstein}"
 PG_CONN="postgresql://${PG_USER}:${PG_PASS}@${PG_HOST}:${PG_PORT}/${PG_DB}"
 
@@ -221,10 +221,16 @@ migrate_data() {
 populate_fts() {
     log "Populating full-text search vectors..."
 
-    python3 << 'PYEOF'
-import psycopg2, time
+    python3 << PYEOF
+import psycopg2, time, os
 
-conn = psycopg2.connect(host="localhost", port=5432, user="cbwinslow", password="123qweasd", dbname="epstein")
+conn = psycopg2.connect(
+    host=os.environ.get("PG_HOST", "localhost"),
+    port=int(os.environ.get("PG_PORT", "5432")),
+    user=os.environ.get("PG_USER", "cbwinslow"),
+    password=os.environ.get("PG_PASSWORD", ""),
+    dbname=os.environ.get("PG_DBNAME", "epstein"),
+)
 conn.autocommit = True
 cur = conn.cursor()
 
@@ -261,10 +267,16 @@ PYEOF
 validate() {
     log "Validating database..."
 
-    python3 << 'PYEOF'
-import psycopg2
+    python3 << PYEOF
+import psycopg2, os
 
-conn = psycopg2.connect(host="localhost", port=5432, user="cbwinslow", password="123qweasd", dbname="epstein")
+conn = psycopg2.connect(
+    host=os.environ.get("PG_HOST", "localhost"),
+    port=int(os.environ.get("PG_PORT", "5432")),
+    user=os.environ.get("PG_USER", "cbwinslow"),
+    password=os.environ.get("PG_PASSWORD", ""),
+    dbname=os.environ.get("PG_DBNAME", "epstein"),
+)
 cur = conn.cursor()
 
 tables = [

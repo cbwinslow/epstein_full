@@ -21,12 +21,12 @@ import sqlite3
 import argparse
 from datetime import datetime
 
-PG_HOST = "localhost"
-PG_PORT = 5432
-PG_USER = "cbwinslow"
-PG_PASS = "123qweasd"
-PG_DB = "epstein"
-DB_DIR = "/mnt/data/epstein-project/databases"
+PG_HOST = os.environ.get("PG_HOST", "localhost")
+PG_PORT = int(os.environ.get("PG_PORT", "5432"))
+PG_USER = os.environ.get("PG_USER", "cbwinslow")
+PG_PASS = os.environ.get("PG_PASSWORD", "")
+PG_DB = os.environ.get("PG_DBNAME", "epstein")
+DB_DIR = os.environ.get("EPSTEIN_DB_DIR", "/mnt/data/epstein-project/databases")
 BATCH = 200000
 
 # Master table mapping: (sqlite_db, sqlite_table, pg_table, column_map)

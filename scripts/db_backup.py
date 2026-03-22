@@ -13,9 +13,13 @@ Usage:
 """
 
 import os
+import os
 import sys
+import os
 import argparse
+import os
 import subprocess
+import os
 from datetime import datetime
 from pathlib import Path
 from glob import glob
@@ -27,7 +31,7 @@ from glob import glob
 PG_HOST = "localhost"
 PG_PORT = 5432
 PG_USER = "cbwinslow"
-PG_PASS = "123qweasd"
+PG_PASS = os.environ.get("PG_PASSWORD", "")
 PG_DB = "epstein"
 BACKUP_DIR = "/mnt/data/epstein-project/backups"
 DEFAULT_ROTATE = 5

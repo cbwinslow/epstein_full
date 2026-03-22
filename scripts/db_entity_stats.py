@@ -12,9 +12,13 @@ Usage:
 """
 
 import sys
+import os
 import argparse
+import os
 import json
+import os
 import psycopg2
+import os
 
 # =============================================================================
 # Configuration
@@ -23,7 +27,7 @@ import psycopg2
 PG_HOST = "localhost"
 PG_PORT = 5432
 PG_USER = "cbwinslow"
-PG_PASS = "123qweasd"
+PG_PASS = os.environ.get("PG_PASSWORD", "")
 PG_DB = "epstein"
 
 
