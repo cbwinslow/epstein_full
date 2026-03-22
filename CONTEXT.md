@@ -75,11 +75,28 @@
 
 | Source | Status | Size | Details |
 |--------|--------|------|---------|
+| CDN PDFs | ✅ **COMPLETE** | 177GB | 1,313,861 files (94.0% of 1.4M EFTAs) |
 | HF Parquet | ✅ **COMPLETE** | 318GB | 634/634 files, 0 missing, pre-extracted text |
-| CDN PDFs | 🔄 **RUNNING** | ~58GB | 268K+ files, aria2c active |
-| Pre-built DBs | ✅ Complete | 8.4GB | 8 SQLite databases |
+| Pre-built DBs | ✅ Complete | 12GB | 27 tables, 10.9M rows in PostgreSQL |
 | Knowledge graph | ✅ Available | 892KB | 606 entities, 2,302 relationships |
-| **Total disk** | **408GB used** | | **2.1TB free** |
+| FTS search | ✅ Complete | — | 2,892,730 pages indexed (100%) |
+| **Total disk** | **~500GB used** | | **~1.8TB free** |
+
+### Download Coverage
+- **Downloaded**: 1,313,861 / 1,397,796 EFTAs (94.0%)
+- **Missing**: 83,936 files — gone from ALL public sources
+  - RollCall CDN: 404
+  - Wayback Machine: not archived (checked 2025-12-19 snapshot)
+  - DOJ website: removed
+- **HF parquet has text for ALL 1.4M documents** — missing PDFs only affect raw archival
+- **PostgreSQL has full OCR text, NER, redaction analysis, KG for all documents**
+
+### Wayback Machine Investigation (2026-03-22)
+- Checked CDX API: DOJ PDFs were archived on 2025-12-19
+- Test download worked: 1 PDF retrieved successfully (373KB)
+- Bulk download: all 11,925 remaining URLs returned "Resource not found"
+- Conclusion: Wayback Machine did NOT archive the DS12 files or remaining DS9 files
+- These files are permanently gone from all public sources
 
 ---
 

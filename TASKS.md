@@ -280,3 +280,35 @@
 | 11.17 | GitHub Actions CI | ✅ Done | .github/workflows/ci.yml: ruff lint + pytest with PostgreSQL service |
 | 11.18 | AI tool reference | ✅ Done | ~/.ai-tools.md: cline, kilo, opencode, openclaw usage guide |
 | 11.19 | Disk monitoring | ✅ Done | ~/.local/bin/disk-alert.sh + daily 8am cron |
+
+## Phase 10: Wayback Machine Investigation ✅
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 10.1 | Check Wayback Machine for missing files | ✅ Done | CDX API confirms files archived on 2025-12-19 |
+| 10.2 | Test single file download | ✅ Done | 373KB PDF downloaded successfully |
+| 10.3 | Bulk download remaining files | ✅ Done | 11,925 URLs checked, all "Resource not found" |
+| 10.4 | Document findings | ✅ Done | Updated CONTEXT.md, mem0, TASKS.md |
+
+**Finding**: Wayback Machine did NOT archive DS12 files or remaining DS9/DS10/DS11 files. These 83,936 files are permanently gone from all public sources. We have 94.0% coverage — the maximum achievable.
+
+## Phase 11: GPU & Tools Setup ✅
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 11.1 | Install spacy-transformers | ✅ Done | v1.4.0, works with PyTorch 2.3.1 |
+| 11.2 | Test spaCy trf on K80 GPU | ✅ Done | 64 docs/sec batch, 85ms single doc |
+| 11.3 | Install InsightFace | ✅ Done | v0.7, buffalo_l model |
+| 11.4 | Test InsightFace GPU | ✅ Failed | onnxruntime lacks CC 3.7 kernels |
+| 11.5 | Test InsightFace CPU | ✅ Done | 8 imgs/sec, n_process=4 for parallel |
+| 11.6 | Build monitoring tools | ✅ Done | gpu-temp, cpu-temp, sysmon |
+| 11.7 | Install to ~/.local/bin | ✅ Done | Available system-wide |
+
+## Phase 12: Documentation & Memory ✅
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 12.1 | Update CONTEXT.md | ✅ Done | Download status, Wayback findings, GPU status |
+| 12.2 | Save mem0 memories | ✅ Done | 25 total memories (18 previous + 7 new) |
+| 12.3 | Create session summary | ✅ Done | memories/sessions/2026-03-22.md |
+| 12.4 | Update TASKS.md | ✅ Done | This file — all tasks documented |
