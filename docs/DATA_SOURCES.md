@@ -79,3 +79,41 @@ wget https://archive.org/download/Epstein-Dataset-9-2026-01-30/full.tar.bz2
 # Pre-built databases
 wget https://github.com/rhowardstone/Epstein-research-data/releases/download/v4.0/knowledge_graph.db
 ```
+
+## Secondary Sources
+
+### 6. Epstein Exposed API
+- **URL**: `https://epsteinexposed.com/api/v2`
+- **Auth**: None (anonymous: 100 req/hr), or issued key for 5,000 req/hr
+- **Content**: 27 REST endpoints covering persons, flights, emails, locations, orgs, network analysis
+- **Docs**: `https://epsteinexposed.com/api-docs`
+- **Download script**: `scripts/fetch_epstein_exposed.py`
+- **Bulk exports available**: persons, flights, locations, organizations (JSON, single request each)
+
+| Endpoint | Records | Status | PG Table |
+|----------|---------|--------|----------|
+| `/export/persons` | 1,578 | Downloaded | exposed_persons |
+| `/export/flights` | 3,615 | Downloaded | exposed_flights |
+| `/export/locations` | 83 | Downloaded | exposed_locations |
+| `/export/organizations` | 55 | Downloaded | exposed_organizations |
+| `/emails` (paginated) | 100/11,280 | Partial | exposed_emails |
+| `/nonprofits` | 33 | Downloaded | exposed_nonprofits |
+| `/stats` | — | Pending | — |
+| `/network/graph` | — | Pending | — |
+| `/doj-audit` (4 views) | — | Pending | — |
+
+### 7. FEC Open Data API
+- **URL**: `https://api.open.fec.gov/v1/`
+- **Auth**: Free API key (`FpB5TzG4hjf7W9IwjBsdTKGyQImqhhidMKRLDXFm`)
+- **Content**: Campaign finance records (donations, disbursements)
+- **Rate limit**: 1,000 req/hr with key
+
+| Endpoint | Records | Status | PG Table |
+|----------|---------|--------|----------|
+| Schedule A (donations) | 400 | Downloaded | fec_donations |
+| Schedule B (disbursements) | 3,600 | Downloaded | fec_disbursements |
+
+### 8. FBI Vault
+- **URL**: `https://vault.fbi.gov/jeffrey-epstein/`
+- **Content**: 22 PDF parts of FBI investigative files
+- **Status**: Available on Archive.org mirror

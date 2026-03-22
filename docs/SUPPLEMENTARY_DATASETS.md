@@ -14,20 +14,30 @@ be acquired separately to enable cross-referencing analysis.
 
 | Source | Status | Size |
 |--------|--------|------|
-| DOJ EFTA PDFs (DS1-12) | ✅ Downloaded (265K+ files) | ~58GB |
+| DOJ EFTA PDFs (DS1-12) | ✅ Downloaded (583K+ files) | ~106GB |
 | HF Parquet (pre-extracted text) | ✅ Complete (634/634) | 318GB |
-| Pre-built SQLite databases | ✅ Downloaded (8 DBs) | 8.4GB |
-| Knowledge graph (606 entities) | ✅ Available | 892KB |
+| Pre-built SQLite databases | ✅ Downloaded (8 DBs) → migrated to PG | 8.4GB |
+| Epstein Exposed persons | ✅ Downloaded (1,578) | 733KB |
+| Epstein Exposed flights | ✅ Downloaded (3,615) | 1.2MB |
+| Epstein Exposed locations | ✅ Downloaded (83) | 47KB |
+| Epstein Exposed organizations | ✅ Downloaded (55) | 18KB |
+| Epstein Exposed nonprofits | ✅ Downloaded (33) | 19KB |
+| Epstein Exposed emails | 🔄 Partial (100/11,280) | 28KB |
+| FEC donations | ✅ Downloaded (400) | 1.8MB |
+| FEC disbursements | ✅ Downloaded (3,600) | 16MB |
+| Knowledge graph (606 entities) | ✅ Migrated to PG | 892KB |
 
-### What We Still Need (Not Covered)
+### What We Still Need
 
 | Source | Status | Priority |
 |--------|--------|----------|
-| Flight logs (structured) | ❌ Not acquired | HIGH |
-| FEC political donations | ❌ Not acquired | HIGH |
-| Epstein Exposed API | ❌ Not queried | HIGH |
+| Epstein Exposed emails (remaining 11,180) | 🔄 Pending (rate limited) | HIGH |
+| Epstein Exposed network graph | 🔄 Pending | MEDIUM |
+| Epstein Exposed DOJ audit data | 🔄 Pending | MEDIUM |
+| Epstein Exposed stats | 🔄 Pending | LOW |
 | SEC insider trading filings | ❌ Not acquired | MEDIUM |
-| Bloomberg email cache | ❌ Not available (reporting only) | LOW |
+| FBI Vault PDFs | ❌ Available on Archive.org | MEDIUM |
+| Court records (CourtListener) | ❌ Not queried | MEDIUM |
 | Court records (structured) | ❌ Partial | MEDIUM |
 | Epstein Web Tracker data | ❌ Not queried | MEDIUM |
 
