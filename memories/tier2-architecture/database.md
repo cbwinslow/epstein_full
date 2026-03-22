@@ -7,10 +7,10 @@
 
 - **PostgreSQL 16 + pgvector + tsvector/GIN** — one unified database
 - **pgvector 0.6.0** (from apt): HNSW index handles 2.67M 768-dim vectors
+- **42 tables:** 27 core DOJ + 6 Epstein Exposed + 2 FEC + 4 app + 3 system
+- **10,894,625 total rows** across all tables
 - **Why NOT ChromaDB/Qdrant:** Integrated into PostgreSQL, no extra infra, ACID transactions, can JOIN vector+text in one query
 - **Why NOT Elasticsearch:** PostgreSQL FTS sufficient for 2.9M pages, 50-200ms latency acceptable
-- **Why NOT Apache Kafka/Spark/Druid:** Scale doesn't justify complexity
-- **Why NOT Supabase/Neon:** 600GB+ data = $75-210/mo cloud cost vs $0 self-hosted
 
 ## PostgreSQL Configuration
 
@@ -21,21 +21,35 @@
 - `max_connections = 200`
 - Config: `/etc/postgresql/16/main/postgresql.conf`
 
+## Data Sources (Complete List)
+
+| Source | Tables | Rows | Status |
+|--------|--------|------|--------|
+| DOJ EFTA (SQLite migration) | 27 | 10,889,161 | Complete |
+| Epstein Exposed API | 6 | 5,464 | Partial (emails need retry) |
+| FEC Open Data | 2 | 4,000 | Complete |
+| HF Parquet (318GB) | — | — | On disk, not ingested |
+
+## Epstein Exposed API
+
+- Base: `https://epsteinexposed.com/api/v2`
+- 27 endpoints, anonymous: 100 req/hr
+- Bulk exports: persons, flights, locations, organizations (1 call each)
+- Script: `scripts/fetch_epstein_exposed.py` (with --check, --force, --load-only)
+- Remaining: 11,180 emails (paginated), network graph, DOJ audit, stats
+
+## Processing Pipeline (Ready to Run)
+
+| Command | Data | Status |
+|---------|------|--------|
+| `epstein-pipeline ocr` | 583K PDFs | Ready |
+| `epstein-pipeline extract-entities` | 2.9M pages | Ready |
+| `epstein-pipeline embed` | 2.9M pages | Ready (sentence-transformers installed) |
+| `epstein-pipeline classify` | 2.9M pages | Ready |
+| `epstein-pipeline transcribe` | Audio/video files | Ready (faster-whisper installed) |
+
 ## UI Stack
 
-- **Current:** Datasette on port 8001 (instant web UI over SQLite export)
-- **Upgrade path:** Streamlit → React/shadcn (when needed)
-- Datasette uses SQLite export, not direct PostgreSQL connection
-
-## Data Coverage
-
-- **full_text_corpus.db:** 1.4M docs, 2.9M pages (most comprehensive)
-- **HF parquet:** Subset of SQLite databases (not worth migrating separately)
-- **Pre-built DBs:** 8 SQLite databases migrated to PostgreSQL
-- **CDN downloads:** Raw PDFs for archival (separate from processed data)
-
-## Memory System
-
-- **mem0 cloud:** 18 ranked memories stored (semantic search across sessions)
-- **Folder-based:** `memories/` directory (git-trackable, structured)
-- Both systems active — mem0 for search, folders for structured reference
+- **Datasette** on port 8001 (instant web UI over SQLite export)
+- **Letta** on port 8283 (stateful AI agent with persistent memory)
+- **OpenClaw** on port 18789 (multi-channel AI gateway)
