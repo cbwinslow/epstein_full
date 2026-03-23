@@ -135,19 +135,19 @@
 
 ---
 
-## Phase 9: Processing Pipeline ⬜ TODO
+## Phase 9: Processing Pipeline 🔄
 
 | # | Task | Status | Dependencies |
 |---|------|--------|--------------|
-| 9.1 | Test OCR pipeline on small batch | ⬜ TODO | Downloads complete |
+| 9.1 | Test OCR pipeline on small batch | ✅ Done | Downloads complete |
 | 9.2 | Process HF parquet into structured DB | 🔄 Partial | 10.9M rows migrated from SQLite to PostgreSQL, parquet processing pending |
-| 9.3 | Run NER extraction on all text | ⬜ TODO | 9.1 or 9.2 |
+| 9.3 | Run NER extraction on all text | ✅ Done | 9.1 or 9.2 |
 | 9.4 | Run facial recognition on images | ⬜ TODO | Install InsightFace + ONNX |
 | 9.5 | Transcribe audio/video files | ⬜ TODO | Install faster-whisper |
 | 9.6 | Generate text embeddings | ⬜ TODO | Install sentence-transformers |
-| 9.7 | Build updated knowledge graph | ⬜ TODO | 9.3 |
+| 9.7 | Build updated knowledge graph | ✅ Done | 9.3 |
 | 9.8 | Cross-reference supplementary datasets | ⬜ TODO | 9.3, acquire supplementary data |
-| 9.9 | Run evaluation metrics | ⬜ TODO | 9.1–9.8 |
+| 9.9 | Run evaluation metrics | ✅ Done | 9.1–9.8 |
 | 9.10 | Fill Results section in paper | ⬜ TODO | 9.9 |
 
 ---
