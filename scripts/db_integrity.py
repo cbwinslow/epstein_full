@@ -11,12 +11,10 @@ Usage:
   python db_integrity.py --duplicates  # Duplicate detection only
 """
 
-import sys
-import os
 import argparse
 import os
+
 import psycopg2
-import os
 
 # =============================================================================
 # Configuration

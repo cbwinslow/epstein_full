@@ -250,6 +250,69 @@ For parallel processing:
 - `workers/` — background processing agents (future)
 - Root level — config files, docs
 
+## Memory Management
+
+### Centralized Skills System
+All memory operations use the centralized AI skills system located at `/home/cbwinslow/dotfiles/ai/skills/`. 
+
+**DO NOT** implement memory management logic directly in this project. Use the skills instead.
+
+### Available Memory Skills
+
+| Skill | Location | Purpose |
+|-------|----------|---------|
+| `letta_server` | `~/dotfiles/ai/skills/letta_server/` | Core memory operations, advanced search |
+| `cli_operations` | `~/dotfiles/ai/skills/cli_operations/` | CLI wrappers for Letta commands |
+| `conversation_logging` | `~/dotfiles/ai/skills/conversation_logging/` | Conversation logging with decision extraction |
+| `memory_sync` | `~/dotfiles/ai/skills/memory_sync/` | PostgreSQL to Letta server synchronization |
+| `memory` | `~/dotfiles/ai/skills/memory/` | General memory management (Letta, PostgreSQL, SQLite) |
+
+### Using Memory Skills
+
+```python
+# Import from skills, not from local scripts
+from letta_server import store_conversation, advanced_memory_search
+from cli_operations import run_letta_command, search_postgres_memories
+from conversation_logging import log_conversation, extract_decisions
+from memory_sync import sync_postgres_to_letta, backup_agent_data
+
+# Store a conversation
+log_conversation(
+    messages=conversation_messages,
+    agent_name="epstein_processor",
+    tags=["processing", "decision"]
+)
+
+# Search memories
+results = advanced_memory_search(
+    query="entity extraction",
+    search_type="semantic",
+    limit=10
+)
+
+# Sync memories
+sync_postgres_to_letta(
+    agent_id="agent-xxx",
+    memory_types=["conversation", "decision"]
+)
+```
+
+### Memory Scripts (Legacy)
+The following scripts in `scripts/` are **legacy** and should not be used for new development. They are being phased out in favor of the skills system:
+
+- `letta_memory.py` — Use `letta_server` skill instead
+- `memory_search.py` — Use `cli_operations` skill instead
+- `search_letta_memories.py` — Use `cli_operations.search_postgres_memories` instead
+- `sync_to_letta_server.py` — Use `memory_sync.sync_postgres_to_letta` instead
+- `save_conversation_to_letta.py` — Use `conversation_logging.log_conversation` instead
+
+### Agent Configuration
+All agents use the centralized configuration at `/home/cbwinslow/dotfiles/ai/agents/opencode/config.yaml`. This includes:
+- Memory backend configuration
+- Skill paths
+- Letta server settings
+- Conversation logging preferences
+
 ---
 
 ## Data Storage Strategy

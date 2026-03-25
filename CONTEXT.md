@@ -80,6 +80,9 @@
 | Pre-built DBs | ✅ Complete | 12GB | 27 tables, 10.9M rows in PostgreSQL |
 | Knowledge graph | ✅ Available | 892KB | 606 entities, 2,302 relationships |
 | FTS search | ✅ Complete | — | 2,892,730 pages indexed (100%) |
+| **File registry** | ✅ **COMPLETE** | — | 1,313,841 files with SHA-256 hashes |
+| **Text content** | ✅ **COMPLETE** | — | 1,380,935 documents with consolidated text (98.8%) |
+| **Entity extraction** | 🔄 **IN PROGRESS** | — | 2,146 entities extracted (3M expected) |
 | **Total disk** | **~500GB used** | | **~1.8TB free** |
 
 ### Download Coverage
@@ -143,10 +146,29 @@
 ## Current Focus
 
 - [x] Dev environment setup (uv, pyproject.toml, setup.sh)
-- [ ] Run setup.sh and verify
-- [ ] Continue CDN PDF downloads
-- [ ] Process HF parquet into structured database
-- [ ] Begin OCR/NER pipeline
+- [x] Run setup.sh and verify
+- [x] Continue CDN PDF downloads (94% complete, 1.3M files)
+- [x] Process HF parquet into structured database (318GB complete)
+- [x] Begin OCR/NER pipeline (Dataset 8 complete)
+- [x] PostgreSQL integration and memory system (45 tables migrated)
+- [x] Dataset 8 processing (100% complete)
+- [x] Letta memory management system (custom implementation)
+- [x] File registry population script created and tested
+- [x] Verification procedures documented (docs/verification_procedures.md)
+- [x] Added verification memories to Letta memory system
+- [x] **File registry population complete** (1,313,841 files with SHA-256 hashes)
+- [x] **CRITICAL FINDING: OCR processing already complete!** No need to re-run OCR
+- [x] **Text content population complete** (1,380,935 documents, 98.8% coverage)
+- [x] **NER entity extraction in progress** (2,146 entities extracted so far)
+- [x] **AI Skills Integration complete** - OpenCode configured with centralized skills from `/home/cbwinslow/dotfiles/ai/`
+- [x] **Memory search protocols created** - `memory_search.py` with semantic, tag, text, recent, cross-agent search
+- [x] **Conversation saving scripts created** - `save_conversation_to_letta.py` and `recall_conversation.py`
+- [x] **Conversation saved to Letta memory** - AI skills integration session and decisions stored
+- [ ] Build knowledge graph from extracted entities
+- [ ] Scale to remaining datasets (1-7, 9-10)
+- [ ] Cross-database integration and analysis
+- [ ] Advanced entity relationship mapping
+- [ ] Comprehensive report generation
 
 ---
 
@@ -160,6 +182,7 @@
 | SQLite tracker over JSON | 2026-03-20 | WAL mode handles concurrent writes |
 | InsightFace/ArcFace for faces | 2026-03-20 | 99.83% LFW, ONNX Runtime (K80 compatible) |
 | Rich over curses for dashboard | 2026-03-20 | Works in non-TTY environments |
+| Centralized AI skills system | 2026-03-24 | Single source of truth for all AI agent configurations and skills |
 
 ---
 

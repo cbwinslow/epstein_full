@@ -1,0 +1,15 @@
+{
+  "total_files": 0,
+  "processed_files": 350,
+  "total_chars": 663725,
+  "total_entities": 8827,
+  "entity_type_counts": {
+    "CARDINAL": 2052,
+    "PERSON": 2158,
+    "ORG": 1934,
+    "DATE": 1581,
+    "GPE": 603,
+    "MONEY": 499
+  },
+  "processing_times": []
+}

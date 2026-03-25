@@ -12,14 +12,11 @@ Usage:
   python db_vacuum.py --analyze    # ANALYZE only (no vacuum)
 """
 
-import sys
-import os
 import argparse
 import os
 import time
-import os
+
 import psycopg2
-import os
 
 # =============================================================================
 # Configuration

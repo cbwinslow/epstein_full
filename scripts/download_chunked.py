@@ -6,10 +6,12 @@ Each chunk gets its own Playwright context and downloads independently.
 State is tracked per-chunk for resume support.
 """
 
-import os, sys, json, time, signal, argparse, asyncio, subprocess
+import argparse
+import asyncio
+import json
+import os
+import signal
 from datetime import datetime
-from glob import glob
-from pathlib import Path
 
 RAW_DIR = "/mnt/data/epstein-project/raw-files"
 TRACKER = "/home/cbwinslow/workspace/epstein/scripts/tracker.py"

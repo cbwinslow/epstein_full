@@ -1,0 +1,6596 @@
+[
+  {
+    "filename": "EFTA00008429.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.10371565818786621,
+    "sample_text": "EFTA00008429\n"
+  },
+  {
+    "filename": "EFTA00008423.pdf",
+    "char_count": 26,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "cioNe 40/4",
+        "label": "PERSON",
+        "start": 0,
+        "end": 10
+      }
+    ],
+    "processing_time": 0.229506254196167,
+    "sample_text": "cioNe 40/4, \nEFTA00008423\n"
+  },
+  {
+    "filename": "EFTA00008454.pdf",
+    "char_count": 31,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.2367105484008789,
+    "sample_text": "SOW mos \nu\u2022\u2022\u2022\u2022\u2022\u2022 \nEFTA00008454\n"
+  },
+  {
+    "filename": "EFTA00008490.pdf",
+    "char_count": 42,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "JESUS",
+        "label": "ORG",
+        "start": 0,
+        "end": 5
+      }
+    ],
+    "processing_time": 0.24905991554260254,
+    "sample_text": "JESUS \nmrs \njovqiif .4 EVES \nEFTA00008490\n"
+  },
+  {
+    "filename": "EFTA00008456.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.07179021835327148,
+    "sample_text": "EFTA00008456\n"
+  },
+  {
+    "filename": "EFTA00008465.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.16674184799194336,
+    "sample_text": "EFTA00008465\n"
+  },
+  {
+    "filename": "EFTA00008420.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.07916855812072754,
+    "sample_text": "EFTA00008420\n"
+  },
+  {
+    "filename": "EFTA00008508.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.08434605598449707,
+    "sample_text": "EFTA00008508\n"
+  },
+  {
+    "filename": "EFTA00008418.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.20218873023986816,
+    "sample_text": "EFTA00008418\n"
+  },
+  {
+    "filename": "EFTA00008414.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.08433675765991211,
+    "sample_text": "EFTA00008414\n"
+  },
+  {
+    "filename": "EFTA00008510.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.04223990440368652,
+    "sample_text": "EFTA00008510\n"
+  },
+  {
+    "filename": "EFTA00008432.pdf",
+    "char_count": 17,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.044480323791503906,
+    "sample_text": "I- \nEFTA00008432\n"
+  },
+  {
+    "filename": "EFTA00008518.pdf",
+    "char_count": 24,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 0,
+        "end": 2
+      }
+    ],
+    "processing_time": 0.09285688400268555,
+    "sample_text": "\u2022\u2022 \u2022 0 \n\u2022 \nEFTA00008518\n"
+  },
+  {
+    "filename": "EFTA00008439.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.02212071418762207,
+    "sample_text": "EFTA00008439\n"
+  },
+  {
+    "filename": "EFTA00008472.pdf",
+    "char_count": 17,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.026124000549316406,
+    "sample_text": "IN \nEFTA00008472\n"
+  },
+  {
+    "filename": "EFTA00008457.pdf",
+    "char_count": 69,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "AP",
+        "label": "ORG",
+        "start": 19,
+        "end": 21
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 40,
+        "end": 41
+      },
+      {
+        "text": "1'",
+        "label": "CARDINAL",
+        "start": 46,
+        "end": 48
+      }
+    ],
+    "processing_time": 0.5014934539794922,
+    "sample_text": "\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022\n\u2022 lit AP \n\u2022 \n\u2022 \nIt \n\u2022 \n\u2022W \n4 \n. *1' \nt \n. \nEFTA00008457\n"
+  },
+  {
+    "filename": "EFTA00008449.pdf",
+    "char_count": 100,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "8403",
+        "label": "DATE",
+        "start": 34,
+        "end": 38
+      },
+      {
+        "text": "N.01.53",
+        "label": "GPE",
+        "start": 78,
+        "end": 85
+      }
+    ],
+    "processing_time": 0.1739790439605713,
+    "sample_text": "i0 Nun be, ___ \n\"\u2022\".0\n- \n- \nHq90, 8403\nr \ntz7z=n3t,\nM00019135 - \n.001,33 ,\n- \nN.01.53 \nEFTA00008449\n"
+  },
+  {
+    "filename": "EFTA00008495.pdf",
+    "char_count": 88,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.2270035743713379,
+    "sample_text": "\u2022\n \n.\n \n\u2022\n \n.\n \n\u2022\n \n\u2022\u2022r \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 ' \n\u2022 \n;\n \n\u2022\n \n\u2022\n \n\u2022\n \n.\n \n\u2022\n \n\u2022\n \n\u2022 \nEFTA00008495\n"
+  },
+  {
+    "filename": "EFTA00008468.pdf",
+    "char_count": 234,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "gg0iL'oN \n03ZIWY080 I1OA ONId33",
+        "label": "PERSON",
+        "start": 0,
+        "end": 31
+      },
+      {
+        "text": "Copt",
+        "label": "PERSON",
+        "start": 53,
+        "end": 57
+      },
+      {
+        "text": "2.0",
+        "label": "CARDINAL",
+        "start": 101,
+        "end": 104
+      },
+      {
+        "text": "crepe \nW \nI \n",
+        "label": "ORG",
+        "start": 117,
+        "end": 130
+      },
+      {
+        "text": "1110",
+        "label": "DATE",
+        "start": 130,
+        "end": 134
+      },
+      {
+        "text": "INK \n&so",
+        "label": "ORG",
+        "start": 156,
+        "end": 164
+      }
+    ],
+    "processing_time": 0.6049487590789795,
+    "sample_text": "gg0iL'oN \n03ZIWY080 I1OA ONId33)( \nCONTENTS: \nMaster Copt. Arcnive Of OVR Main \nController Images \nl\n2.0TB \nsAl.tea. crepe \nW \nI \n1110 111,1111M \nM020EARS \nINK \n&so wcsfiolesotis \n\u2022 \u2014in\u2014. \ntnn \nNip III t il\u2022 \naiqQ026637 \nEFTA00008468\n"
+  },
+  {
+    "filename": "EFTA00008415.pdf",
+    "char_count": 239,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4a4",
+        "label": "CARDINAL",
+        "start": 10,
+        "end": 13
+      },
+      {
+        "text": "9.999440",
+        "label": "CARDINAL",
+        "start": 30,
+        "end": 38
+      },
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 43,
+        "end": 44
+      },
+      {
+        "text": "2.9.1",
+        "label": "CARDINAL",
+        "start": 48,
+        "end": 53
+      },
+      {
+        "text": "Rifle",
+        "label": "ORG",
+        "start": 69,
+        "end": 74
+      },
+      {
+        "text": "11",
+        "label": "CARDINAL",
+        "start": 94,
+        "end": 96
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 121,
+        "end": 122
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 124,
+        "end": 125
+      },
+      {
+        "text": "Fly \u2022 '",
+        "label": "ORG",
+        "start": 150,
+        "end": 157
+      },
+      {
+        "text": "14",
+        "label": "CARDINAL",
+        "start": 178,
+        "end": 180
+      }
+    ],
+    "processing_time": 0.742175817489624,
+    "sample_text": ":C19 \nML \n4a4 :-:'t R \u2022',.\nV. 9.999440 \n. \n2.. (2.9.1t. \nltec. \n-99k Rifle. \n' \u2022 \nJ.. -\u2022 P9' )11 tt. \n.(StV \n\u2022 \n^ .9.,,f 1 \n9\n' \n. \n,i\u2022I irly \u2022 tint \nFly \u2022 'tool SP\u2018 \n''.)UM , . 14 '0( 9 F.FI Al l.nryy \\ \nr! .0 .. ti.xy 3 si \nEFTA00008415\n"
+  },
+  {
+    "filename": "EFTA00008425.pdf",
+    "char_count": 66,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "ISIV9P4131",
+        "label": "CARDINAL",
+        "start": 24,
+        "end": 34
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 48,
+        "end": 50
+      }
+    ],
+    "processing_time": 0.15391993522644043,
+    "sample_text": "ea. \nLISA *el \nTIMM \u2022\u2022 \nISIV9P4131 \nI \n.IP* \n\u2022 \n41. \nEFTA00008425\n"
+  },
+  {
+    "filename": "EFTA00008447.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.03550219535827637,
+    "sample_text": "EFTA00008447\n"
+  },
+  {
+    "filename": "EFTA00008469.pdf",
+    "char_count": 159,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "9011-- -3tsi 22",
+        "label": "DATE",
+        "start": 40,
+        "end": 55
+      }
+    ],
+    "processing_time": 0.7711842060089111,
+    "sample_text": "\u2022 \n\u2022\n \n, \n\u2022 \u2022 \n\u2022 \n\u2022 \u2022 \u2022 \n\u2022 \". \u2022 a \n\u2022\na \n9011-- -3tsi 22 \nI  \nAA \n\u2022 \n\u2022\u2022\u2022 \n- \u2022 \n\u2022 to-\np \nI \n\u2022 \n\u2022 \u2022\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \nI \n\u2022 \n` \n\u2022 \n\u2022\n\u2022 \ne \u2022 \n\u2022 \n\u2022 \n\u2022 \nir \nEFTA00008469\n"
+  },
+  {
+    "filename": "EFTA00008458.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.04606008529663086,
+    "sample_text": "EFTA00008458\n"
+  },
+  {
+    "filename": "EFTA00008474.pdf",
+    "char_count": 493,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "990",
+        "label": "CARDINAL",
+        "start": 43,
+        "end": 46
+      },
+      {
+        "text": "LL",
+        "label": "GPE",
+        "start": 47,
+        "end": 49
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 196,
+        "end": 197
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 211,
+        "end": 212
+      },
+      {
+        "text": "Oren",
+        "label": "PERSON",
+        "start": 312,
+        "end": 316
+      },
+      {
+        "text": "06/21/2021",
+        "label": "ORG",
+        "start": 326,
+        "end": 336
+      },
+      {
+        "text": "Copy",
+        "label": "PERSON",
+        "start": 344,
+        "end": 348
+      },
+      {
+        "text": "Mal",
+        "label": "PERSON",
+        "start": 357,
+        "end": 360
+      },
+      {
+        "text": "NO11V'JI133A.\\'130",
+        "label": "GPE",
+        "start": 424,
+        "end": 442
+      }
+    ],
+    "processing_time": 0.6157324314117432,
+    "sample_text": "PCCIONFISZ/OIMINON01/0 \nirmayserie \n3990a \n990 LL \u2022ON \n03ZINTORO AOA ON My \naV 31^IS \nontioduted \nonv unoothontra tur-pu\u2022r, \u2022 \nFBI-NY Computer Analysis Response Team \n90A-NY-3151227\n(Mundtion Two 1) Ultrwm t TO 0 lap'. tent)) ming the CART \nArtwork archive ed video images taken horn MCC NY video \nRtnorde/ hard Oren, , as of 06/21/2021 Master Copy \nFOR Of Mal USE ONLY - \nENFORCEMENT SENSITIVE \nACKLSI13 \nE NIVH3 3.3N3WA3 \nNO11V'JI133A.\\'130 IlV3IIFIR11(8303.1 \n/// \nFrozii,uoi \nEFTA00008474\n"
+  },
+  {
+    "filename": "EFTA00008476.pdf",
+    "char_count": 24,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.047952890396118164,
+    "sample_text": "\u2022 \u2022 \n\u2022 \n\u2022 \nEFTA00008476\n"
+  },
+  {
+    "filename": "EFTA00008412.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.02612590789794922,
+    "sample_text": "EFTA00008412\n"
+  },
+  {
+    "filename": "EFTA00008509.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.025982141494750977,
+    "sample_text": "EFTA00008509\n"
+  },
+  {
+    "filename": "EFTA00008463.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.03317618370056152,
+    "sample_text": "EFTA00008463\n"
+  },
+  {
+    "filename": "EFTA00008453.pdf",
+    "char_count": 229,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 31,
+        "end": 32
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 37,
+        "end": 38
+      },
+      {
+        "text": "11/4",
+        "label": "CARDINAL",
+        "start": 42,
+        "end": 46
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 57,
+        "end": 58
+      },
+      {
+        "text": "Nit",
+        "label": "PERSON",
+        "start": 60,
+        "end": 63
+      },
+      {
+        "text": "Air  \u2022",
+        "label": "ORG",
+        "start": 155,
+        "end": 161
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 188,
+        "end": 189
+      }
+    ],
+    "processing_time": 0.8495736122131348,
+    "sample_text": "\u2022 Ise a \n\u2022 \n\u2022\n \n0 \n \n\u2022 \n\u2022 \nAP \n4  \n) 4 \u2022 \n11/4 \nu \n\u2022\u2022\u2022e \n4 \nNit \n, \n\u2022 \n\u2022 k \n- \n\u2022 \n\u2022 ,,, \n, \u2022\n\u2022 14 \nt 'A\u2022 r\n- \nI \nIr 0 . \n\u2022 \nink \nSP \n' \n-11 \n\u2022\n. \n\u2022 ./..; \nAir  \u2022 . \n*.\u2022 \u2022 \nI \n\u2022A a. \n\u2022 \n\u2022 \n5. 4' \n. \n\u2022 , \n.0. \n\u2022 \n, \u2022 \nEFTA00008453\n"
+  },
+  {
+    "filename": "EFTA00008443.pdf",
+    "char_count": 223,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "8\u20221",
+        "label": "CARDINAL",
+        "start": 36,
+        "end": 39
+      },
+      {
+        "text": "L.",
+        "label": "PERSON",
+        "start": 192,
+        "end": 194
+      }
+    ],
+    "processing_time": 0.8540997505187988,
+    "sample_text": "\u2022 \n'le \n\u2022 \n\u2022 \u2022 \n' \n\u2022\u2022 \n1 % \n\u2022 \nlir \n8\u20221 \n\u2022 \nr \nr \n\u2022 \nr \u2022 \u2022 \n4\u20229\n\u2022 \ngb\u2022  \ntr\"\n \nt \u2022 \nr . \u2022 -\u2022\u2022\u2022 \ns \n\u2022 \n\u2022 \u2022 \u2022 \n* \n\u2022\n.ar \n- \n7:010 \n\u2022 \n..e \n. s \n. \n,.\n\u2022 \n\u2022\u2022\u2022 \u2022 \n\u2022 \nr \n\u2022\nre, \nr \nIr , \n\u2022 . \u2022 \ns et L. \nfo. \ne \n\u2022 \n- \nEFTA00008443\n"
+  },
+  {
+    "filename": "EFTA00008428.pdf",
+    "char_count": 55,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.1818556785583496,
+    "sample_text": "S \n\u00b0L\nas \u2022 \nti\u2022\ns \n, \n\u2022 \n!it \ne, \n* \nNr, \nEFTA00008428\n"
+  },
+  {
+    "filename": "EFTA00008507.pdf",
+    "char_count": 18,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "ley \nEFTA00008507\n",
+        "label": "ORG",
+        "start": 0,
+        "end": 18
+      }
+    ],
+    "processing_time": 0.06902074813842773,
+    "sample_text": "ley \nEFTA00008507\n"
+  },
+  {
+    "filename": "EFTA00008513.pdf",
+    "char_count": 47,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 24,
+        "end": 25
+      }
+    ],
+    "processing_time": 0.15111041069030762,
+    "sample_text": "\u2022\n\u2022\n \n\u2022 \u2022 .\u2022 \ns  \n/-\n' \n4 \npa, \u2022 \nEFTA00008513\n"
+  },
+  {
+    "filename": "EFTA00008516.pdf",
+    "char_count": 47,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.07960987091064453,
+    "sample_text": "FRAGILE \n. \n' \nHANDLE \nWITH CARE \nEFTA00008516\n"
+  },
+  {
+    "filename": "EFTA00008523.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.02216649055480957,
+    "sample_text": "EFTA00008523\n"
+  },
+  {
+    "filename": "EFTA00008462.pdf",
+    "char_count": 168,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "GI",
+        "label": "ORG",
+        "start": 75,
+        "end": 77
+      },
+      {
+        "text": "40.10",
+        "label": "CARDINAL",
+        "start": 148,
+        "end": 153
+      }
+    ],
+    "processing_time": 0.19015884399414062,
+    "sample_text": "NYCO25654 \nDigital VV\nn. \nD2500 \nmow \nWit \nWisIMAIWOWM \ndab. \nT In \n\u2022 9f00 GI \nIII IWIIIBMIILII!III:IIII~IIIII \no \n!L to,c4c5654 \nAu\u00ab \nIN \nim\"\" \n- \n40.10 \nEFTA00008462\n"
+  },
+  {
+    "filename": "EFTA00008477.pdf",
+    "char_count": 108,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 28,
+        "end": 29
+      },
+      {
+        "text": "4P",
+        "label": "CARDINAL",
+        "start": 43,
+        "end": 45
+      },
+      {
+        "text": "\u2022\n \n\u2022\n \n",
+        "label": "ORG",
+        "start": 73,
+        "end": 81
+      }
+    ],
+    "processing_time": 0.14214849472045898,
+    "sample_text": "\u2022 , \n\u2022 \u2022 \n\u2022 SA, ' \nI'S \n\u2022\u2022 \n9 \n\u2022 \nJ .  \n\u2022 \n4P \n1 - \u2022 \u2022 \nF..-% \n\u2022 \n\u2022 \u2022 a \n\u2022\n \n\u2022\n \n.\n \n\u2022 \nV-\n,\n \nEFTA00008477\n"
+  },
+  {
+    "filename": "EFTA00008470.pdf",
+    "char_count": 297,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "INS",
+        "label": "ORG",
+        "start": 31,
+        "end": 34
+      },
+      {
+        "text": "111",
+        "label": "CARDINAL",
+        "start": 80,
+        "end": 83
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 162,
+        "end": 163
+      },
+      {
+        "text": "CAW",
+        "label": "ORG",
+        "start": 186,
+        "end": 189
+      },
+      {
+        "text": "2111311",
+        "label": "DATE",
+        "start": 271,
+        "end": 278
+      }
+    ],
+    "processing_time": 0.37242960929870605,
+    "sample_text": "OA-\n.3c-co6 \nSSO L 'ON \n0 V' 3 INS /il \nea\noNTINTS: \na\n\u201dCONtlICOM \nMO'\u2022 \nfPnOtE 111. \n/Intl \n04111611 \n'r.l\u2022 \n',I  \n%.0\nHI I /I I a' Irr\nI A \nIPPP411 \nOil \nr\nNA% 1:Wi \nsematelm \n`tarter CAW: Asynot \nlod./e,\nLob \nHQQ190\u2022111001 \nUC'N: 90A-A .3151227 \nExaminer: \nSPECIMEN: \n2111311 \nRI \nEFTA00008470\n"
+  },
+  {
+    "filename": "EFTA00008487.pdf",
+    "char_count": 1071,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "el Original",
+        "label": "ORG",
+        "start": 40,
+        "end": 51
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 98,
+        "end": 99
+      },
+      {
+        "text": "IDA",
+        "label": "PERSON",
+        "start": 189,
+        "end": 192
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 197,
+        "end": 198
+      },
+      {
+        "text": "Tape/Disk",
+        "label": "ORG",
+        "start": 211,
+        "end": 220
+      },
+      {
+        "text": "Supervising Title III Intercepts",
+        "label": "PERSON",
+        "start": 229,
+        "end": 261
+      },
+      {
+        "text": "CMN",
+        "label": "ORG",
+        "start": 348,
+        "end": 351
+      },
+      {
+        "text": "Crtii",
+        "label": "PERSON",
+        "start": 368,
+        "end": 373
+      },
+      {
+        "text": "Telephonic",
+        "label": "PERSON",
+        "start": 386,
+        "end": 396
+      },
+      {
+        "text": "TCM",
+        "label": "ORG",
+        "start": 398,
+        "end": 401
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 403,
+        "end": 404
+      },
+      {
+        "text": "Nontelephonic",
+        "label": "ORG",
+        "start": 406,
+        "end": 419
+      },
+      {
+        "text": "NTCM",
+        "label": "ORG",
+        "start": 421,
+        "end": 425
+      },
+      {
+        "text": "NTCM Specify Device",
+        "label": "ORG",
+        "start": 431,
+        "end": 450
+      },
+      {
+        "text": "an Interview \nK Volunteered/",
+        "label": "ORG",
+        "start": 474,
+        "end": 502
+      },
+      {
+        "text": "Data Transferred for",
+        "label": "ORG",
+        "start": 612,
+        "end": 632
+      },
+      {
+        "text": "1110 3",
+        "label": "DATE",
+        "start": 723,
+        "end": 729
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 754,
+        "end": 755
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 885,
+        "end": 886
+      },
+      {
+        "text": "Lvrr",
+        "label": "PERSON",
+        "start": 906,
+        "end": 910
+      },
+      {
+        "text": "03",
+        "label": "CARDINAL",
+        "start": 933,
+        "end": 935
+      },
+      {
+        "text": "AO",
+        "label": "ORG",
+        "start": 936,
+        "end": 938
+      },
+      {
+        "text": "30",
+        "label": "CARDINAL",
+        "start": 989,
+        "end": 991
+      },
+      {
+        "text": "1.1 01.1",
+        "label": "CARDINAL",
+        "start": 1021,
+        "end": 1029
+      },
+      {
+        "text": "MIMI",
+        "label": "PERSON",
+        "start": 1040,
+        "end": 1044
+      }
+    ],
+    "processing_time": 1.3580882549285889,
+    "sample_text": "Oras.4t \nEvidence Envelope \nEnclosure: \nel Original \n0 \nDuplicate \n0 \nEnhanced Original \nMedium: \n0 \nMagnetic Tape \n0 \nComputer Disk \n0 \nPrinted Material \nCase Filers 1X - MS1 -  tnIa-7 \n \nIDA  it 4 \nCast Agt. \nTape/Disk*: \nAgt. Supervising Title III Intercepts:  \nO Court Authorized Intercept Source/SymboIN:  \n\u2022 \nConsensual Monitoring Intercept- CMN (if assigned):  Crtii \n,64P \npiSe Telephonic (TCM) 0 \nNontelephonic (NTCM) \nIf NTCM Specify Device Used:  \nK Recording of an Interview \nK Volunteered/Subpoenaed Medium - Not FBI ELSUR \nO Other Type of Recordin Interception, Specify:  \nIntercept Date: \nPlace: \nData Transferred for Permanent Storage \nDate; \n\u2022 \nConsensual: List Interceptees Below \nOM re A hm ibeA( Az FL \n1110 3 /0 9 \n Time: (P. 5 ipm \n0 \nCourt Authorized: Enter\" See Log\" Below \nSignatu \nDate: it \nented Custody \n',pleated\nSignature: \nrustodv \njul 10\\ Time: \nDate: )4../#1\n. \n \nReason: \nLvrr jit4Gf4 \nReason: \n/C \n03 AO \n-1-1\u20221\nSignature \nDate: \nReason: \nNOLLVOI1S3ANI \n30 \nSignatu"
+  },
+  {
+    "filename": "EFTA00008455.pdf",
+    "char_count": 17,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.031249046325683594,
+    "sample_text": "-\n \nEFTA00008455\n"
+  },
+  {
+    "filename": "EFTA00008440.pdf",
+    "char_count": 177,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 9,
+        "end": 10
+      },
+      {
+        "text": "4 \u2022 \nIr",
+        "label": "CARDINAL",
+        "start": 20,
+        "end": 27
+      },
+      {
+        "text": "1Pb",
+        "label": "CARDINAL",
+        "start": 45,
+        "end": 48
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 62,
+        "end": 63
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 90,
+        "end": 91
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 108,
+        "end": 109
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 121,
+        "end": 122
+      }
+    ],
+    "processing_time": 0.31623148918151855,
+    "sample_text": "' Jr \nn \n4; \u2022 \n) \u2022 \n4 \u2022 \nIr\nsr \n\u2666\n\u2022 \u2022 \nv \ne \n1Pb. \n\u2022 _ St \n$ \n4  ' \n\u2022..\n\u2022 \n1 \u2022 \n. \na. \n\u2022 \n1 \nr \n, \na \n# \n.\n 4\n\u2022 . \u2022\u2022\u2022 \n.\n1 \n' \n\u2022. \n\u2022 \u2022,!.\" \nz \nmiv \n, ii , \u2022 \n. \nIt\nEFTA00008440\n"
+  },
+  {
+    "filename": "EFTA00008413.pdf",
+    "char_count": 185,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "Se",
+        "label": "PERSON",
+        "start": 33,
+        "end": 35
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 161,
+        "end": 162
+      }
+    ],
+    "processing_time": 0.3359394073486328,
+    "sample_text": ". \n. \n.. \n# \u2022 \nI. \n. \u2022 \n. \n\u2022 \n., Se. \n\u2022\n \n. \n. \nc \n- \n. \n. \u2022 \n. \n \n. \nr \n... \n\u201dM \u2022 . \n\u2022\u2022 \n% \nIP . . \n .\nII \nit , \n\u2022 \n\u2022 \n\u2022 \n_. \n.-\n\u2022 \nS \n. \nw. \n... \n\u2022 \niii % \n\u2022 \n4. \n. \nta \nEFTA00008413\n"
+  },
+  {
+    "filename": "EFTA00008450.pdf",
+    "char_count": 42,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "1 410",
+        "label": "CARDINAL",
+        "start": 11,
+        "end": 16
+      }
+    ],
+    "processing_time": 0.10566830635070801,
+    "sample_text": "\u2022 \u2022 I A \nf 1 410 \n\u2022 \n\u2022\n0 \n\u2022 \nEFTA00008450\n"
+  },
+  {
+    "filename": "EFTA00008503.pdf",
+    "char_count": 665,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "al\nl 01111(1",
+        "label": "PERSON",
+        "start": 146,
+        "end": 158
+      },
+      {
+        "text": "04",
+        "label": "CARDINAL",
+        "start": 304,
+        "end": 306
+      },
+      {
+        "text": "44",
+        "label": "DATE",
+        "start": 313,
+        "end": 315
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 321,
+        "end": 322
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 356,
+        "end": 357
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 426,
+        "end": 427
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 490,
+        "end": 491
+      }
+    ],
+    "processing_time": 1.7519752979278564,
+    "sample_text": "latto \n\u2022..... \n..... \nA IP \n\u2022 \n' \n\u2022 \n\u2022\u2022; \n. \n. \n, \n\u2022 \n\u2022 \n, \n. , \n\u2022 \n, -\u2022 \nill' \n.. \n\u2022 \n\u2022 \n\u201e, \u2022., \u2022 ., \n\u2022 \n\u2022 ,,,..\u2022 .... \nA \n\u2022\u2022\u2022\u2022 \n. II \n\u2022 ' \n\u2022 . \nal\nl 01111(1 \nI \n. \n\u2022 \nP \n\u2022 \n\u2022 \n\u2022 \n. \na\nt  \n\u2022 \n. \n. . \n\u2022 \n.. \n\u2022 \n,r \u2022 \n\u2022 \n\u2022 .0' \n... \n\u2022\u2022\u2022 \n\u2022 \nP\n \n\u2022\n \n\u2022\n \n\u2022\n \n.\n \n.\n \nl\nb\n \n.\nA\n \n\u2022\n \n\u2022\n \nd\nB\n \n\u2022\n \ng\u2022 \n. \n\u2022 \n04: \n. . 44. \n\u2022 \n4: ja\n \n\u2022 ,m. \nll \n' \n\u2022 \nS\n. \u2022 \n\u2022 \n4.  \n* \u2022 \u2022 \n\u2022 \n. \n\u2022 \nI! \n. \u2022.4 \n. \u2022\nft\n \n\u2022 \n.\n\u2022\n\u2022 \nm \n' \nI F \n\u2022\u2022\u2022 \n\u2022 \n1 \n\u2022\n\u2022\n\u2022\nL\n. \n. \n\u2022 \n. \nAl \n`,. \nII\n\u2022 ti\n\u2022\u2022 \n\u2022 \n\u2022 \n. \n\u2022 \n\u2022 \n\u2022'1 \n4, \n\u2022 \nIS \n\u2022 \n\u2022 \n..\u2022\u2022\u2022 \n\u2022 \np \u2022 \nr. \u2022 \n\u2022 . \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022: \n \n\u2022 \n\u2022\u2022 \n\u201e \n\u2022 \n\u2022 \n\u2022 \n\u2022 \nm\u2022 \n\u2022 \ni \u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n. \n\u2022\nSal . \n. \nop \n\u2022.; \n\u2022 \n\u2022 \n\u2022\n\u2022 \n\u2022 \n\u2022 1 \na \n:1 \u2022\n\u2022\nEFTA00008503\n"
+  },
+  {
+    "filename": "EFTA00008482.pdf",
+    "char_count": 1244,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "FD-5044",
+        "label": "PERSON",
+        "start": 53,
+        "end": 60
+      },
+      {
+        "text": "S-31-2017",
+        "label": "DATE",
+        "start": 67,
+        "end": 76
+      },
+      {
+        "text": "Case File",
+        "label": "ORG",
+        "start": 79,
+        "end": 88
+      },
+      {
+        "text": "5 9",
+        "label": "DATE",
+        "start": 107,
+        "end": 110
+      },
+      {
+        "text": "9 \n \n#",
+        "label": "MONEY",
+        "start": 115,
+        "end": 121
+      },
+      {
+        "text": "nitre \nCase Agent/Task Force Officer",
+        "label": "PERSON",
+        "start": 141,
+        "end": 177
+      },
+      {
+        "text": "SR",
+        "label": "ORG",
+        "start": 180,
+        "end": 182
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 184,
+        "end": 185
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 202,
+        "end": 203
+      },
+      {
+        "text": "Consensual Monitoring \n0",
+        "label": "PERSON",
+        "start": 226,
+        "end": 250
+      },
+      {
+        "text": "El/Video Surveillance \nK PR/IT \n",
+        "label": "ORG",
+        "start": 270,
+        "end": 302
+      },
+      {
+        "text": "ErOriginat",
+        "label": "PERSON",
+        "start": 465,
+        "end": 475
+      },
+      {
+        "text": "3.2",
+        "label": "CARDINAL",
+        "start": 637,
+        "end": 640
+      },
+      {
+        "text": "1995",
+        "label": "DATE",
+        "start": 662,
+        "end": 666
+      },
+      {
+        "text": "Title Ill/CM Interceptees",
+        "label": "ORG",
+        "start": 672,
+        "end": 697
+      },
+      {
+        "text": "Sec",
+        "label": "PERSON",
+        "start": 720,
+        "end": 723
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 747,
+        "end": 748
+      },
+      {
+        "text": "Lei.",
+        "label": "PERSON",
+        "start": 887,
+        "end": 891
+      },
+      {
+        "text": "Ye",
+        "label": "PERSON",
+        "start": 893,
+        "end": 895
+      },
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 964,
+        "end": 965
+      },
+      {
+        "text": "1 2",
+        "label": "CARDINAL",
+        "start": 985,
+        "end": 988
+      },
+      {
+        "text": "LA",
+        "label": "GPE",
+        "start": 1021,
+        "end": 1023
+      },
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 1203,
+        "end": 1204
+      }
+    ],
+    "processing_time": 1.6956346035003662,
+    "sample_text": "Chain of Custody - ELSUR Evidcatt Mc\n Snip Envelope \nFD-5044 (Rev. S-31-2017) \nCase File #:  \n7 6 - 04- 3) 5 9 .5q 9 \n \n#: \nDoc# \n Total #  ,nitre \nCase Agent/Task Force Officer.  SR \n4\nEvidence Type: \n0 Title 111 \nK FISA \n0 \nConsensual Monitoring \n0 Computer Trespass \nEl/Video Surveillance \nK PR/IT \nK Aerial Survelliance \n0 Object T \nEI/ Ijon-Custodial \u2014 Overt Interview \n0 Custodial \u2014 Interview \n0 Non-Custodial \u2014 Surreptitious Interview \n0 \nOther \nEnclosure: \nErOriginat \n0 Enhanced Original \nMedia Type: \nlia(CD/DVD/Blue Ray \n0 Hard Drive \n0 SD Card \n0 \nOther \nIntercept Date(s):  \n.eil li RI \n \nLocation:\nDownload Date:  \nI3. it( 3.2, \n \nDownload Time:  \n1995 pen \nTitle Ill/CM Interceptees \u2014Er/Listed Below or 0 Sec Attached \n'Chat- a is_ 1-1-ar ric \nPrint Name: \nSignature: ,\nDate:  \nT. Mime: \nReason:  TR\" \nTracking ti  -\nPrint Name: \nSignature: \nDate: \nReason: \nTracking #: \n_Lei., Ye ky\nPrint Name: \nSignature:  \n \nSignature: \nPrint Name: \nDate:  \nIS) 2 i ff \n Time:  \nt O 1 2 \nDate:  1 /"
+  },
+  {
+    "filename": "EFTA00008522.pdf",
+    "char_count": 285,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 106,
+        "end": 108
+      },
+      {
+        "text": "3c",
+        "label": "CARDINAL",
+        "start": 213,
+        "end": 215
+      },
+      {
+        "text": "7511",
+        "label": "DATE",
+        "start": 242,
+        "end": 246
+      }
+    ],
+    "processing_time": 0.6533620357513428,
+    "sample_text": "\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u00b0Pc% \nI 4- \nF'IIeI$ \n506- lijk/-3O:27571 \n-. \n\u2022 \n\u2022\u2022\u2022 \n.\n \n\u2022\n,\n \n'Sr \n. \n\u2022 \n, \n, st \n\u2022 \ns \n=\u2022\u2022:, \n- \n\u2022 \n.4 \n\u2022 \n\u2022\n \n. \n\u2022 \n. \n\u2022 \n-\n \n\u2022\n\u2022\n \n\u2022\n \n-\n \n\u2022\n \nI\n.\n \n\u2022\n \n\u2022\n \nP. \n- \n\u2022 \n\u2022 \u2022 \n\u2022\n \n-\n \na_Fc \u2022 \n\u2022\n \n(3c, \n,P4(7 \n\u2022 \n\u2022 \noct kii 7; 7511 \n\u2022 \n\u2022 \n\u2022 1.. \n\u2022 \n\u2022 - \n\u2022 \nEFTA00008522\n"
+  },
+  {
+    "filename": "EFTA00008422.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.07393050193786621,
+    "sample_text": "EFTA00008422\n"
+  },
+  {
+    "filename": "EFTA00008483.pdf",
+    "char_count": 1206,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "04040",
+        "label": "DATE",
+        "start": 58,
+        "end": 63
+      },
+      {
+        "text": "IVW",
+        "label": "ORG",
+        "start": 106,
+        "end": 109
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 187,
+        "end": 188
+      },
+      {
+        "text": "15r",
+        "label": "CARDINAL",
+        "start": 415,
+        "end": 418
+      },
+      {
+        "text": "Non-Custodial - Oven Interview \nCustodial - Interview \n0",
+        "label": "ORG",
+        "start": 419,
+        "end": 475
+      },
+      {
+        "text": "Non-Custodial - Surreptitious Interview",
+        "label": "ORG",
+        "start": 477,
+        "end": 516
+      },
+      {
+        "text": "Signat Lac",
+        "label": "PERSON",
+        "start": 818,
+        "end": 828
+      },
+      {
+        "text": "g:33140/",
+        "label": "ORG",
+        "start": 964,
+        "end": 972
+      },
+      {
+        "text": "14",
+        "label": "CARDINAL",
+        "start": 1004,
+        "end": 1006
+      },
+      {
+        "text": "31",
+        "label": "CARDINAL",
+        "start": 1184,
+        "end": 1186
+      },
+      {
+        "text": "1.1",
+        "label": "CARDINAL",
+        "start": 1188,
+        "end": 1191
+      }
+    ],
+    "processing_time": 1.3114433288574219,
+    "sample_text": "( itai oire\u2022Rody - ELSUR Et \nMt \n&Kati &Sot* \n\u2022\u2022\u2022\u2022\u2022 \nM \ni 04040 (Rev. S\u202231.201n \nCase File a:  ,31E- -MM- IVW ey \n \nID a:  \ni \n \nc.) nee \nO warm \nc4\nGam. \nDoc, \n Total al of Discs  /  \nc 0 o\u2014 \nCase Agent/Task Force Officer: \n \nNs \nto\na awn. \nEvidence Type: \n0 \nTitle III \n0 \nFISA \n0 \nConsensual Monitoring \nEnclosure: \nla -Video Surveillance \nK Pwrr \n0 Computer Trespasser \n0 Aerial Surveillance \n0 Object Tracker \n15r Non-Custodial - Oven Interview \nCustodial - Interview \n0 \nNon-Custodial - Surreptitious Interview \n[g Other \nla Original \n0 Enhanced Original \nMedia Type: \nK CD'DVD/Blue Ray \n0 Hard Drive \n0 SD Card \n0 \nOther \n0.  \nIntercept Date(s):  O4 I'-\\ I acs\u2265.\\ \n \nLocation:  UR \nDownload Date:  clA ;\u2018-\u2018 I aim :A- \nDownload Time:  \n\u2022 L \nlow or O See Attached \n\u2018ccepted Custody \nReleased Custody \nPrint \\,u, \nSignat Lac \nDate: \nReason: \\ \nTmcking gt: \nPrint Name: \nSignatu \nDate: s \na \nReason: \nTracking #: \nPrint Name:\nSignature: \nDate:  \n)(pc- \n Time:  g:33140/\nReason:  \nate \"pie4f \nTrack"
+  },
+  {
+    "filename": "EFTA00008409.pdf",
+    "char_count": 44,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.055310964584350586,
+    "sample_text": "PHOTOGRAPHER \nLOCATION \n/14.0 \nEFTA00008409\n"
+  },
+  {
+    "filename": "EFTA00008445.pdf",
+    "char_count": 266,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 0,
+        "end": 2
+      },
+      {
+        "text": "3",
+        "label": "CARDINAL",
+        "start": 106,
+        "end": 107
+      },
+      {
+        "text": "7 .4",
+        "label": "CARDINAL",
+        "start": 120,
+        "end": 124
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 126,
+        "end": 127
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 158,
+        "end": 159
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 196,
+        "end": 197
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 201,
+        "end": 202
+      },
+      {
+        "text": "164",
+        "label": "CARDINAL",
+        "start": 239,
+        "end": 242
+      }
+    ],
+    "processing_time": 0.6075296401977539,
+    "sample_text": "\u2022\u2022 \n\u2022 \n\u2022 \n\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \n...Am yF\n\u2666I \u2022 \nr. \nP. \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022\n- \n\u2022 \n\u2022\u2022\u2022\u2022\u2022 \u2022 \nI \np\nOOP \nOr \n\u2022 \ne \n\u2022 \n\u2022 \n\", 3 \n... \n\u2022 \n. \n7 .4.\n4 \nPee \nCP\nP. .11 \n\u2022 \n\u2022 \n\u2022 \n, a\n1\n,\n \n1\n \n\u2022 \n\u2022\u2022\u2022 \n\u2022 \n\u2022 \nr'\" \n\u2022 \nr \n\u2022 \n1\n. \n4\n\u2022 \n' \nJ. \nI \n\u2022 \nP\u2022I ! \n\u2022 \nr \nel \n\u2022 \n164, \n. a \na \nEFTA00008445\n"
+  },
+  {
+    "filename": "EFTA00008426.pdf",
+    "char_count": 15,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.0551149845123291,
+    "sample_text": "-\nEFTA00008426\n"
+  },
+  {
+    "filename": "EFTA00008475.pdf",
+    "char_count": 725,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 99,
+        "end": 100
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 117,
+        "end": 118
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 128,
+        "end": 129
+      },
+      {
+        "text": "10",
+        "label": "CARDINAL",
+        "start": 138,
+        "end": 140
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 156,
+        "end": 157
+      },
+      {
+        "text": "161",
+        "label": "CARDINAL",
+        "start": 179,
+        "end": 182
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 257,
+        "end": 258
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 265,
+        "end": 266
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 271,
+        "end": 272
+      },
+      {
+        "text": "IL",
+        "label": "ORG",
+        "start": 302,
+        "end": 304
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 324,
+        "end": 325
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 347,
+        "end": 348
+      },
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 350,
+        "end": 352
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 365,
+        "end": 366
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 394,
+        "end": 395
+      },
+      {
+        "text": "4 0",
+        "label": "CARDINAL",
+        "start": 480,
+        "end": 483
+      },
+      {
+        "text": "4%4",
+        "label": "CARDINAL",
+        "start": 516,
+        "end": 519
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 557,
+        "end": 558
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 626,
+        "end": 627
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 632,
+        "end": 633
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 665,
+        "end": 666
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 686,
+        "end": 687
+      }
+    ],
+    "processing_time": 1.5874037742614746,
+    "sample_text": "\u2022 \nfi e \u2022\nl\u2022\n\u2022 \n4 e-'\u2022 \n1. 151,C#\nX7\n- \n\u20227'.1t\n\u2022 \n\u2022 \nlo\u2022 \n..- \n. \n' 1,1( \u2022 \n. \n.\u201e. \u2022 i \ne \n\u2022 \nN i \n4 \n' \n. \n-\nt.  \nr 9 \u2022\u2022 a' \u2022 \n1. \n...) \n10 \n\u2022  \n& I  \nIt \n1 \n/ \n\u2022 \n- \n* \n\u2022 \n. \u2022 \n161 \n\u2022\n\u2022 \u2022 \n \n\u2022 \ne 4 \n\u2022 \n\u2022 it \n. \n\u2022 \u2022 144O i t \n\u2022 . \n\u2022 \nla \n\u2022 \na \n\u2022 \nlit . , \n1 . \n# \n4 \net 4 -' \n\u2022 \n4 \nii \n\u2022\nAlt \ni  \nj.  IL_ \n\u2022 \nA\nsli \nI  \na \n4 _ ,,,, \n\u2022 at ., \n, \u2018 4, 44 \n' \n- \nili \n1 \n- \n. \n- \n. \n\u2022 .\u2022 0 , \ni, \n0 \nI \n.'\"\"Vt . \n\u2022,'' \nlbsyy-\n__, \n\u2022 .., \" . \nI \n- ' itt \ni . \n. .. . \n.. \nN 11 2 \n.' \n4 0 \n\u2022 \n. \nla a \n\u2022 \n4 V. \n, is. \n' '4%4 \n, ' v,t \n-. \u2022 7 .\n. a \n' \n''' \n\u2022 \u2022 \n4 \n:! 'r \nOh \u2022 \nlb \n. \n\u2022 \n- \ncii \n. \n.\u2022 - ft -,, \n,s \u2022or \n. \nA \ni \np 4 \n\u2022 \n4. \n, , \n, % \n\u2022.`\u2022 -.4.i \"' \n, ..1.,. . \n.... Ito \n\u2022 \n4. \n\u2022 \u2022 \nA, i - \u2022\u2022\u2022 \n'-\u2022 \nEFTA00008475\n"
+  },
+  {
+    "filename": "EFTA00008433.pdf",
+    "char_count": 86,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 0,
+        "end": 1
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 23,
+        "end": 24
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 57,
+        "end": 58
+      }
+    ],
+    "processing_time": 0.2649862766265869,
+    "sample_text": "4 \n\u2022\n \n. \nv.\n\u2022-\n\u2018t\u2022 \n \n1 \n_ \u2022 \nX. \n\u2018\u2022\n\u20227 \n\u2022 \n\u2022 \nI \n.\u2022 \u2022 \n4 \n\u2022 \n\u2022\n \nr \n\u2022 \nEFTA00008433\n"
+  },
+  {
+    "filename": "EFTA00008435.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.021333694458007812,
+    "sample_text": "EFTA00008435\n"
+  },
+  {
+    "filename": "EFTA00008488.pdf",
+    "char_count": 1327,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "Data Transferred for Permanent Storage - Date",
+        "label": "ORG",
+        "start": 17,
+        "end": 62
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 191,
+        "end": 192
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 259,
+        "end": 260
+      },
+      {
+        "text": "Tape/Diskth \nAgt",
+        "label": "ORG",
+        "start": 312,
+        "end": 328
+      },
+      {
+        "text": "Supervising Title III Intercepts",
+        "label": "PERSON",
+        "start": 330,
+        "end": 362
+      },
+      {
+        "text": "Consensual Monitoring Intercept - CM",
+        "label": "ORG",
+        "start": 415,
+        "end": 451
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 473,
+        "end": 474
+      },
+      {
+        "text": "Telephonic",
+        "label": "PERSON",
+        "start": 481,
+        "end": 491
+      },
+      {
+        "text": "TCM",
+        "label": "ORG",
+        "start": 493,
+        "end": 496
+      },
+      {
+        "text": "Nontelcphonie",
+        "label": "PERSON",
+        "start": 501,
+        "end": 514
+      },
+      {
+        "text": "NTCM",
+        "label": "ORG",
+        "start": 516,
+        "end": 520
+      },
+      {
+        "text": "NTCM Specify Device",
+        "label": "ORG",
+        "start": 526,
+        "end": 545
+      },
+      {
+        "text": "Tim",
+        "label": "PERSON",
+        "start": 741,
+        "end": 744
+      },
+      {
+        "text": "11",
+        "label": "CARDINAL",
+        "start": 755,
+        "end": 757
+      },
+      {
+        "text": "64-1-4",
+        "label": "CARDINAL",
+        "start": 844,
+        "end": 850
+      },
+      {
+        "text": "vAtifedo Choir",
+        "label": "PERSON",
+        "start": 867,
+        "end": 881
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 888,
+        "end": 889
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 987,
+        "end": 988
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1012,
+        "end": 1013
+      },
+      {
+        "text": "AC Cantina",
+        "label": "ORG",
+        "start": 1186,
+        "end": 1196
+      },
+      {
+        "text": "FEDEFU Lr \nTime",
+        "label": "PERSON",
+        "start": 1284,
+        "end": 1299
+      }
+    ],
+    "processing_time": 1.588608741760254,
+    "sample_text": "Intercept Date: \nData Transferred for Permanent Storage - Date: \nChain of Custody-ELSUR Evidence Envelope \nFri-aothotev. \nEnclosure: \ni\n Original \n0 Duplicate \n0 \nEnhanced Original \nMedium: \n0 \nMagnetic Tape \n0 Computer Disk \n0 \nPrinted Material \nCase Filc4: 1 \n\u2014 AllA/14\"113377 \n \nI Da:  \niii) --. \nCase Agt.: \nTape/Diskth \nAgt. Supervising Title III Intercepts:  \nO Court Authorized Intercept - Souree/Symbol#:  \nConsensual Monitoring Intercept - CM# (if assigned):  &s4 6-5-41 \nTelephonic (TCM) 0 \nNontelcphonie (NTCM) \nIf NTCM Specify Device Used:  \nO Recording of an Interview \nO Volunteered/Subpoenaed Medium - Not FBI ELSUR \nO Other Type of Recording/Inteeption. Specify:  \n/0/V1101\nrc\n \nPlace: Vil/ S \nAle\\ \nbeacl\n,/  pz-\n/obi foci \nTim d : 447// 11 \nO Consensual: List Interceptees Below \n0 \nCourt Authorized: Enter \" See Log\" Below \n*64-1-4-c-brA tetaiLni \nvAtifedo Choir; c7- \n5\u201c \neleased Custody \nSignature \nDate: \nReasorTill *SCA \nSignature \nDate: \nTime: L31,2___ \n!WTI ie, 7 lime: \nReas"
+  },
+  {
+    "filename": "EFTA00008444.pdf",
+    "char_count": 72,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "AiU4t3 MLA/ JTWOL.ft.krii \n\u2022.",
+        "label": "ORG",
+        "start": 20,
+        "end": 49
+      }
+    ],
+    "processing_time": 0.10549211502075195,
+    "sample_text": "lel , Na,i; \n. :r \n,AiU4t3 MLA/ JTWOL.ft.krii \n\u2022.[ \n\u2022 \nvm \nEFTA00008444\n"
+  },
+  {
+    "filename": "EFTA00008491.pdf",
+    "char_count": 25,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.040550947189331055,
+    "sample_text": "ri ;: 'R S;\nEFTA00008491\n"
+  },
+  {
+    "filename": "EFTA00008526.pdf",
+    "char_count": 73,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "441",
+        "label": "CARDINAL",
+        "start": 7,
+        "end": 10
+      },
+      {
+        "text": "1e-'c",
+        "label": "CARDINAL",
+        "start": 54,
+        "end": 59
+      }
+    ],
+    "processing_time": 0.11379146575927734,
+    "sample_text": "tit!e \n441 \n\u2022\n \na-06\n\u2022 \n\u2022-T. \nito \nNc, \nP.i-n \nM44-\u2022 \n1e-'c\nEFTA00008526\n"
+  },
+  {
+    "filename": "EFTA00008502.pdf",
+    "char_count": 68,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.1230311393737793,
+    "sample_text": "e \n- 302 s \ni \n- .\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0 - \n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \nEFTA00008502\n"
+  },
+  {
+    "filename": "EFTA00008438.pdf",
+    "char_count": 187,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "BOA",
+        "label": "ORG",
+        "start": 0,
+        "end": 3
+      },
+      {
+        "text": "Reqoest ID",
+        "label": "ORG",
+        "start": 15,
+        "end": 25
+      },
+      {
+        "text": "112043 1833",
+        "label": "DATE",
+        "start": 26,
+        "end": 37
+      },
+      {
+        "text": "1000Gt4",
+        "label": "CARDINAL",
+        "start": 100,
+        "end": 107
+      }
+    ],
+    "processing_time": 0.2171788215637207,
+    "sample_text": "BOA NY-3t5t227 Reqoest ID 112043 1833 \n08/12/2019 NPC02'=t1, PC 111,11V3(A \nOne (I) Western tNottet 1000Gt4 \n'!'\nWD1003FZEK 0CSIK2A;) Sirr \n--Ontainflig \nCloy , C,((( '-f ! \nEFTA00008438\n"
+  },
+  {
+    "filename": "EFTA00008448.pdf",
+    "char_count": 47,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "11",
+        "label": "CARDINAL",
+        "start": 23,
+        "end": 25
+      }
+    ],
+    "processing_time": 0.15919017791748047,
+    "sample_text": "\u2022 \n\u2022 \n\u2022 \n\u201e. \n\u2022 \n\u2022\naro \n11, \n\u2022 \n. \nEFTA00008448\n"
+  },
+  {
+    "filename": "EFTA00008461.pdf",
+    "char_count": 60,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 30,
+        "end": 31
+      }
+    ],
+    "processing_time": 0.11687588691711426,
+    "sample_text": "\u2022 \n- \n\u2022 \n\u2022 \n\u2022 \u2022 \u2022 \n\u2022 \nI\n\\ .\u2022 \n4.'\u2018 \u2022 \n\u2022 \n\u2022 \n\u2022 \nEFTA00008461\n"
+  },
+  {
+    "filename": "EFTA00008437.pdf",
+    "char_count": 93,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.20781660079956055,
+    "sample_text": "\u2022 \n\u2022 \nOr \n\u2022 \n\u2022\n\u2022\n\u2022 \n' \n\u2022 \n\u2022 \nr \n-11 \n. \na \nI, \na\n\u2022 \n\u2022 \n'A\n\u2022 \n\u2022 \u2022 \n\u2022 \nIL\n.\n\u2022 \n\u2022 \nEFTA00008437\n"
+  },
+  {
+    "filename": "EFTA00008484.pdf",
+    "char_count": 1165,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "547.01",
+        "label": "MONEY",
+        "start": 56,
+        "end": 62
+      },
+      {
+        "text": "Supervising Title III Intercepts",
+        "label": "PERSON",
+        "start": 123,
+        "end": 155
+      },
+      {
+        "text": "TCM",
+        "label": "ORG",
+        "start": 280,
+        "end": 283
+      },
+      {
+        "text": "Nontelephonic",
+        "label": "ORG",
+        "start": 286,
+        "end": 299
+      },
+      {
+        "text": "NTCM",
+        "label": "ORG",
+        "start": 301,
+        "end": 305
+      },
+      {
+        "text": "NTCM Specify Device",
+        "label": "ORG",
+        "start": 311,
+        "end": 330
+      },
+      {
+        "text": "Tapc/Diskft",
+        "label": "ORG",
+        "start": 457,
+        "end": 468
+      },
+      {
+        "text": "56",
+        "label": "CARDINAL",
+        "start": 475,
+        "end": 477
+      },
+      {
+        "text": "ADV",
+        "label": "ORG",
+        "start": 647,
+        "end": 650
+      },
+      {
+        "text": "Akebh \nData Transferred for Permanent Storage - Date",
+        "label": "ORG",
+        "start": 653,
+        "end": 705
+      },
+      {
+        "text": "1 \n ",
+        "label": "CARDINAL",
+        "start": 718,
+        "end": 722
+      },
+      {
+        "text": "40",
+        "label": "CARDINAL",
+        "start": 1033,
+        "end": 1035
+      },
+      {
+        "text": "E02782875 \nTIG1i",
+        "label": "PERSON",
+        "start": 1134,
+        "end": 1150
+      }
+    ],
+    "processing_time": 1.2124264240264893,
+    "sample_text": "Chain of Custody-ELSUR Evidence Envelope \nFB-504b (Rev. 547.01) \nEnclosure: \nMedium: \nCase Filen: \n33?--7\nCase Agt.: \nAgt. Supervising Title III Intercepts:  \nO Court Authorized Intercept - Source/Symbolii: \nJ2f Consensual Monitoring Intercept - CM# (if assigned): \nO Telephonic (TCM) \nNontelephonic (NTCM) \nIf NTCM Specify Device Used:  \nf:13/fi \nNg Original \nO Magnetic Tape \nO Duplicate \nO Computer Disk \nO Enhanced Original \nO Printed Material \nI DU:  \nTapc/Diskft:  \nGm 56-41 \nO Recording of an Interview \nO Volunteered/Subpoenaed Medium - Not FBI ELSUR \nO Other Type of Recording/Interception, Specify:  \nIntercept Date:  0/103/D9 \n Place:  ADV., Akebh \nData Transferred for Permanent Storage - Date:  I t /03/0 1 \n Time: \nO Consensual: List Intercept= Below \nO Court Authorized: Enter \" See Log\" Below \n\u2022 \ntirtdo fiodrisuet \nAc \nReleased \n to\nSignature: \nSignature: \nDate:  \n0 \n0 \n Time: \n \nDate: \nReason:  \n/\nReason: \nSignatu \nDate:  \n \nsen : \n.4\nRe.1501)\n.\nan \nL. \nVE \nSignature. \nDate: \nRea"
+  },
+  {
+    "filename": "EFTA00008496.pdf",
+    "char_count": 1086,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 33,
+        "end": 36
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 66,
+        "end": 67
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 73,
+        "end": 74
+      },
+      {
+        "text": "11",
+        "label": "CARDINAL",
+        "start": 311,
+        "end": 313
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 321,
+        "end": 322
+      },
+      {
+        "text": "11",
+        "label": "CARDINAL",
+        "start": 425,
+        "end": 427
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 437,
+        "end": 438
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 497,
+        "end": 498
+      },
+      {
+        "text": "I. \u2022 \n\u2022 \n\u2022 \n\u2022",
+        "label": "PERSON",
+        "start": 513,
+        "end": 526
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 552,
+        "end": 553
+      },
+      {
+        "text": "C. \ne. '",
+        "label": "PERSON",
+        "start": 636,
+        "end": 644
+      },
+      {
+        "text": "24",
+        "label": "CARDINAL",
+        "start": 798,
+        "end": 800
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 808,
+        "end": 809
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 927,
+        "end": 928
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 947,
+        "end": 948
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1032,
+        "end": 1033
+      },
+      {
+        "text": "3",
+        "label": "CARDINAL",
+        "start": 1051,
+        "end": 1052
+      }
+    ],
+    "processing_time": 2.4932761192321777,
+    "sample_text": "\u2022 \n\u2022 st \n\u2022'\u2022 `\" \u2022 \u2022 \u2022  \n- \n:- . \n\u2022\u2022\u2022 4%.-\n\u2666\nt\u2022 \n- \n' \n\" . \nlo be \n4 . \n\u2022 4 \n- \ni \n..., \n. \n. \n\u2022 \n! \nP' \ne'. \n\u2022 \u2022 \n \n- \n. \u2022 \n .\n\u2666 \nr\n\u2022 \n\u2022 \n\u2022 II.. \n. a \u2022 \n'\u201e, \u2022 - \n-et \n. \n. \n. \n_ . \n' \n, \n. \n' .I. \n\u2022 . in\" I. t \n\u2022 \n- ...,\u2022\". \u2022 ',.. \n. \n\u2022 . \n. ' . \n\u2022 . \u2022.--... - .\u2022 \n' \u2022 'ga l. \n\u2022 \nj e, \n, \n.- \u2022 \n. \nes \n; . \n$ . 11. \n. % \n4 \n..\n. .. \n.. e \n\u2022 \n. \n. .. \n\u2022 \n.\n..t \n.0 \n\u2022\u2022 \n's \n. Ii S' \u2022 \n' 4 \n\"' C . \n. \n\u2022 , \n\u2022 \n. . .. \n. \nes \u2022 \n11 \u2022 \n\u2022 \n- \n1\". \n.\n. \n.\n. \n. \n... \n.\u2022. , \n\u2022 \n\u2022\u2022 \n\u2022 \n\u2022 \n\u2022 \n... \n. \n\u2022 .\u2022 \n4 \n\u2022 \nt\u2022 \n\u2022 \n. \nI. \u2022 \n\u2022 \n\u2022 \n\u2022 \n. \n\u2022 \n. \nI \n\u2022\n. . \u2022 \n. \n1. \n' \n';/ & \n\u2022 \n. \n\u2022 \nr \n.. / \u2022 \n;. \n.... \n\u2022 \nw  :I \n\u2022 \na \u2022  \nT. \n\u2022 \n. . \n\u2022\u2022 \n.....C. \ne. '\u2022\u2022\u2022?:\u2022\u2022\n \n\u2022 \n.\u2022 4 \u2022 ' - \n.\n. \n\u2022\u2022\u2022\u2022-\u2022\u2022 \n' \n\u2022 \n' \u2022 a \n. \n. ,\n\u2022\n\u2022 \n. \n: \u2022 \n' . \n\u2022 \n' -. \u2022 . \n- \u2022 \n. . . . \n\u2022 . \n. - \n. \n\u2022 . \n\u2022 \n\u2022 \u2022 \n\u2022 \n. \n_ \n. \n. \u2022 \u201e \n\u2022 \n' 24 \n- \n\u2022 \n4. \n, -.I\u2022 \n. \nst ... , \u2022 \n\u2022 4.' \na% - \n. I, -:- ' \u2022 \" \nI ..#\u2022\u2022 \n- \u2022\u2022\u2022 \n' -. \u2022 \u2022 \u2022' \n- \nt: \n' . \n. \n.... \n\u2022 .. . \n. \n\u201e,4 \n. \u201eit, .. \n. \n.. 4 \n- \u2022 \u2022 \n\u2022 \na . . \nr ., ai\ni \n. \n' \n. \u2022 \n, \n.. ... \n"
+  },
+  {
+    "filename": "EFTA00008499.pdf",
+    "char_count": 458,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "Pion",
+        "label": "PERSON",
+        "start": 27,
+        "end": 31
+      },
+      {
+        "text": "%Ivey",
+        "label": "ORG",
+        "start": 149,
+        "end": 154
+      },
+      {
+        "text": "Ile",
+        "label": "PERSON",
+        "start": 195,
+        "end": 198
+      },
+      {
+        "text": "4131.A11$44",
+        "label": "CARDINAL",
+        "start": 200,
+        "end": 211
+      },
+      {
+        "text": "3214-1AW.A.",
+        "label": "DATE",
+        "start": 213,
+        "end": 224
+      },
+      {
+        "text": "1.",
+        "label": "CARDINAL",
+        "start": 226,
+        "end": 228
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 252,
+        "end": 253
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 288,
+        "end": 289
+      },
+      {
+        "text": "II",
+        "label": "CARDINAL",
+        "start": 344,
+        "end": 346
+      },
+      {
+        "text": "20",
+        "label": "CARDINAL",
+        "start": 383,
+        "end": 385
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 396,
+        "end": 397
+      },
+      {
+        "text": "4,v",
+        "label": "CARDINAL",
+        "start": 428,
+        "end": 431
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 435,
+        "end": 436
+      }
+    ],
+    "processing_time": 0.8274121284484863,
+    "sample_text": "N.. Y,ah CANT I at, \niffin Pion i \nNYC024373 \nO Fy<\n \n3:47571 \nItem 33 S/17-\n31E-N9- WriS\", I \nLithe St\u202294 Acmes U it \nVI 1h, iclaKtIS )b* Pees( \nin %Ivey YAM vosoWer 19 \ntAhtt-i Sarver \nNit ID: Ile. 4131.A11$44 \n3214-1AW.A. \n1.\u00b0e ID: \nt \nO \nSA \n\u2022 \n, \n1 \n, \n\u2022 \u2022 \n\u2022 \n\u2014 \n\u2022 \n\u2022\n.\n, \n-41 11,  4. \n\u2022 \u2022 \nAs- \nIIP \n.11. \n\u2022 \nC. \n'\n\u2022`\n\u2022 \nli \n' IP II \net II \n.. \n\u2022 \nit\n\u2022 \ni s\"... \u2022 \nf.. \n. \n. \n20. eV \u2022 \n\u2022 \n1 \n.(\u00b0. S \n\u2022 \u2022 \n'S \u2022 \n., \u2022 \n\u2022 \n;4,v a \n4 \n\u2022 \u2022 ' \nEFTA00008499\n"
+  },
+  {
+    "filename": "EFTA00008416.pdf",
+    "char_count": 32,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "10",
+        "label": "CARDINAL",
+        "start": 13,
+        "end": 15
+      }
+    ],
+    "processing_time": 0.08758735656738281,
+    "sample_text": "\u2022y\n \n'a \nIn \n10\n\u2022 \nEFTA00008416\n"
+  },
+  {
+    "filename": "EFTA00008517.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.022626876831054688,
+    "sample_text": "EFTA00008517\n"
+  },
+  {
+    "filename": "EFTA00008520.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.02249288558959961,
+    "sample_text": "EFTA00008520\n"
+  },
+  {
+    "filename": "EFTA00008485.pdf",
+    "char_count": 1221,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "7d-Mtif\\--It3311",
+        "label": "CARDINAL",
+        "start": 194,
+        "end": 210
+      },
+      {
+        "text": "TCM",
+        "label": "ORG",
+        "start": 423,
+        "end": 426
+      },
+      {
+        "text": "Nontelephonic",
+        "label": "ORG",
+        "start": 431,
+        "end": 444
+      },
+      {
+        "text": "NTCM",
+        "label": "ORG",
+        "start": 446,
+        "end": 450
+      },
+      {
+        "text": "NTCM Specify Device",
+        "label": "ORG",
+        "start": 456,
+        "end": 475
+      },
+      {
+        "text": "an Interview \nK Volunteered/Subpoenaed Medium - Not FBI",
+        "label": "ORG",
+        "start": 508,
+        "end": 563
+      },
+      {
+        "text": "Data Transferred for Pemument Storage - Date",
+        "label": "ORG",
+        "start": 667,
+        "end": 711
+      },
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 721,
+        "end": 723
+      },
+      {
+        "text": "n/03/191 \n Time",
+        "label": "PERSON",
+        "start": 732,
+        "end": 747
+      },
+      {
+        "text": "LI:406pm",
+        "label": "PERSON",
+        "start": 749,
+        "end": 757
+      },
+      {
+        "text": "04",
+        "label": "CARDINAL",
+        "start": 760,
+        "end": 762
+      }
+    ],
+    "processing_time": 1.2173442840576172,
+    "sample_text": "lain of Custody- ELSUR Evidence Envelope \n(Rev. $.17A1) \n\u2022 \nEnclosure: k Original \nO \nDuplicate \nO Enhanced Original \nMedium: \nO \nMagnetic Tape \nO Computer Disk \nO Printed Material \nCase Ei RN: 7d-Mtif\\--It3311 \n \nION:  \n/D \n---C2 ' \nCase Agt.: \nTape/Disk/1: \nAv. Supervising Title III Intercepts:  \nO Court Authorized Intercept- Source/Symbota: \nr\ne\n,\n \nConsensual Monitoring Intercept - CM# (if assigned): \nO Telephonic (TCM) pa Nontelephonic (NTCM) \nIf NTCM Specify Device Used:  \nCC.,r v \nO Recording of an Interview \nK Volunteered/Subpoenaed Medium - Not FBI ELSUR \nO Other Type of Recording/Interception, Specify:  \nfriga 5644 \nIntercept Date: iiiO3/01\nPlace: \nData Transferred for Pemument Storage - Date: \n/30ca. 44-inn Fi-\nn/03/191 \n Time. LI:406pm, \n04 Consensual: List Interceptees Below \nO Court Authorized: Enter\" See Log\" Below \nIfainsieeAdS. \nAMQ \nVAlictdo \nAorirty(C7-\nSignatu \nDate:  \nReason:  F v t r f.Lot \nSignature: \nDate: \nReason:  \nTime: \nJ-\nTime: \nSignature:\nac\nDate:  \nitt fr"
+  },
+  {
+    "filename": "EFTA00008419.pdf",
+    "char_count": 65,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "UPC TIM",
+        "label": "PERSON",
+        "start": 18,
+        "end": 25
+      }
+    ],
+    "processing_time": 0.06220078468322754,
+    "sample_text": "SMEAD \u2022\nMw 741St \nUPC TIM \nalmiliam\u2022\u2022AsaaSibi\u2022Mak\u2022 \nEFTA00008419\n"
+  },
+  {
+    "filename": "EFTA00008451.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.05117392539978027,
+    "sample_text": "EFTA00008451\n"
+  },
+  {
+    "filename": "EFTA00008479.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.021142959594726562,
+    "sample_text": "EFTA00008479\n"
+  },
+  {
+    "filename": "EFTA00008430.pdf",
+    "char_count": 31,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.029354333877563477,
+    "sample_text": "-iliftr`\u2018J\\ \nagt \nEFTA00008430\n"
+  },
+  {
+    "filename": "EFTA00008421.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.021620750427246094,
+    "sample_text": "EFTA00008421\n"
+  },
+  {
+    "filename": "EFTA00008459.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.018843650817871094,
+    "sample_text": "EFTA00008459\n"
+  },
+  {
+    "filename": "EFTA00008521.pdf",
+    "char_count": 34,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.03462576866149902,
+    "sample_text": "I tAVIIII \nIV \nIV,I \nEFTA00008521\n"
+  },
+  {
+    "filename": "EFTA00008505.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.023023128509521484,
+    "sample_text": "EFTA00008505\n"
+  },
+  {
+    "filename": "EFTA00008481.pdf",
+    "char_count": 171,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "3 \n11",
+        "label": "CARDINAL",
+        "start": 6,
+        "end": 11
+      },
+      {
+        "text": "2o2,5",
+        "label": "CARDINAL",
+        "start": 15,
+        "end": 20
+      },
+      {
+        "text": "15,-C-1-(S99 3",
+        "label": "CARDINAL",
+        "start": 36,
+        "end": 50
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 68,
+        "end": 69
+      },
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 79,
+        "end": 80
+      }
+    ],
+    "processing_time": 0.2692131996154785,
+    "sample_text": "DATE  3 \n11  , 2o2,5\nCIOC- - NY-  '\n15,-C-1-(S99 3/e- AIM-\nCASE ID  5\u00b0P- NY -3\u00b02-771\nPHOTOGRAPHER_ \nLOCATION \nf),qtv \nluD \nZO6 \nns-1-149-1--i-3() \nLinc:Ati; \nEFTA00008481\n"
+  },
+  {
+    "filename": "EFTA00008410.pdf",
+    "char_count": 1272,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "\u2022 \u2022 \u2022\u2022 \u2022 \n\u2022 \n\u2022 \u2022",
+        "label": "ORG",
+        "start": 0,
+        "end": 16
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 124,
+        "end": 125
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 175,
+        "end": 177
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 303,
+        "end": 304
+      },
+      {
+        "text": "Mk",
+        "label": "PERSON",
+        "start": 316,
+        "end": 318
+      },
+      {
+        "text": "lib \ntit \nt",
+        "label": "PERSON",
+        "start": 478,
+        "end": 489
+      },
+      {
+        "text": "540",
+        "label": "CARDINAL",
+        "start": 503,
+        "end": 506
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 555,
+        "end": 556
+      },
+      {
+        "text": "\u2022 I. \n..",
+        "label": "PERSON",
+        "start": 572,
+        "end": 580
+      },
+      {
+        "text": "01",
+        "label": "DATE",
+        "start": 583,
+        "end": 585
+      },
+      {
+        "text": "AI",
+        "label": "GPE",
+        "start": 602,
+        "end": 604
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 644,
+        "end": 645
+      },
+      {
+        "text": "4 \u2022",
+        "label": "CARDINAL",
+        "start": 650,
+        "end": 653
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 668,
+        "end": 669
+      },
+      {
+        "text": "I. \n.- 4 \n- r\u2022l",
+        "label": "PERSON",
+        "start": 703,
+        "end": 718
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 755,
+        "end": 756
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 809,
+        "end": 810
+      },
+      {
+        "text": "\u2022.",
+        "label": "ORG",
+        "start": 850,
+        "end": 852
+      },
+      {
+        "text": "4 .",
+        "label": "CARDINAL",
+        "start": 872,
+        "end": 875
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 897,
+        "end": 898
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 910,
+        "end": 911
+      },
+      {
+        "text": "46",
+        "label": "CARDINAL",
+        "start": 948,
+        "end": 950
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 973,
+        "end": 974
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 1001,
+        "end": 1002
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1010,
+        "end": 1011
+      },
+      {
+        "text": "4 .",
+        "label": "CARDINAL",
+        "start": 1029,
+        "end": 1032
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1135,
+        "end": 1136
+      }
+    ],
+    "processing_time": 2.9447364807128906,
+    "sample_text": "\u2022 \u2022 \u2022\u2022 \u2022 \n\u2022 \n\u2022 \u2022 \n\u2022\u2022 \n\u2022 \u2022 \n\u2022 \u2022 '119 \n\u2022 \n\u2022 ' \n\u2022 \n\u2022 \n\u2022 \n\u2022/ \n.'\u2022 \n# \n\u2022 \n\u2022 ift\u2022\n\u2022~ \n\u2022 \n\u00b0 t i c \nr \n\u2022 \n, \u2022 \n\u2022-\u2022 \u2022 \n\u2022\n. -\u2022 \n, \n\u2022 \n9 \n\u2022 \n\u2022\u2022 \u2022\u2022 \n,: .r \u2022 * e \n: \n. \n. \n..., \u2022 \n. \n\u2022 p \n41. \n\u2022 \n. \n\u2022 \n\u2022\u2022\u2022 \n\u2022 \u2022 \n\u2022\u2022\u2022 \u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n'\u2022 \n% \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 . \n\u2022 \n\u2022 \n\u2022 \nol, \n'' .. \u2022 % \n' \" \nAs \n' \u2022 \" it \n, \n, \n. \u2022 \ne . \n. 1, \n\u2022 \n# \n\u2022 \nMk \n' \n\u2022 \u2022 \nis . \u2022\u2022 \n\"Ito \n, \n\u2022 \nlil .. \n\u2022 \n. \n,..\u2022 \nAL_ \n. \u2022 \n. \n. \u2022 1 \nc\u2022 \" \n\u2022\n\u2014 .\u2022 , \u2022 \n\u2022 \u2022 \n\u2022 . \u2022 \u2022 \n\u2022 \n' \n\u2022 . \n. \u2022 \n\u2022 \u2022 \n\u2022 \u201e, \n. \n.\u2022 \n\u2022 \n, \n. lay \u2022 , te \n. \nlib \ntit \nt \u2022Is \n,., \n. \n540. \n.. \n' \u2022 \u2022 \n\u2022 \n\u2022 \na Iip \n\u2022\u2022 \n\u2022\n\u2666 \n\u2022\n\u2022\u2022\n \n\u2022 \n. \n1  . \n\u2022 '. \n.\n\u2022\u2022 \u2022 I. \n.., \n01)\n \nS \nAft \n\u2022\u2022\u2022 \nAI \nIP \n\u2022\u2022\n.\n \u2022 \n\u2022 \n\u2022\u2022 i \n\u2022 \nq, \n+\nIP \n\u2022 \n1 \ne \n4 \u2022 \n, \u2022 a I. \n\u2022 \n1 \n\u2022 \n\u2022 \u2022 \n- \n\u2022 \nIS \na, \nIII ' \n., I. \n.- 4 \n- r\u2022l \n''yy \n'-\nrill \nI \n; \nPe+.\n \n, \n.. \n4  \n\" ..,'\"e. - :f \n,.../. \n\u2022 \n?\" \n.\", \n: \n- \n\u2022. \u2022 \n \n4\n'7 \n\u2022 '\u2022 \n' . \n\u2022 \nI \n' \na ir \n''''' \n, \u2022., \n.\u2022 \n..\u201e \u2022 \n\u2022 \n...4 . i\n\u201e .\u2022 \u2022 \n'\u2022 \nk ad' \n1, \u2022 \n\u2022.1\u2022\u2022 \n4 \n\u2022 \n!., \u2022 \neV -. \n\u2022 \n\u2022 ..., \nII. \n\u2022 46` \" \n_ \nr \n\u2022 \u2022 \u2022 \n. \u2022 \n1 \n. I' \n\u2022 \n. \nop :. ...it "
+  },
+  {
+    "filename": "EFTA00008492.pdf",
+    "char_count": 119,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "FME",
+        "label": "ORG",
+        "start": 18,
+        "end": 21
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 23,
+        "end": 24
+      },
+      {
+        "text": "1Or",
+        "label": "CARDINAL",
+        "start": 37,
+        "end": 40
+      },
+      {
+        "text": "FOE",
+        "label": "ORG",
+        "start": 54,
+        "end": 57
+      },
+      {
+        "text": "501:-.NV.34127C",
+        "label": "CARDINAL",
+        "start": 71,
+        "end": 86
+      }
+    ],
+    "processing_time": 0.09782743453979492,
+    "sample_text": "\\TIEN:1OH \nS: 'R \nFME \u20184:Ns!il;c:4 : 1Or. \nDill \nITEM FOE DISni%'ElIZY 501:-.NV.34127C;! \nIICKLEtLZIrsig \nEFTA00008492\n"
+  },
+  {
+    "filename": "EFTA00008446.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.0376133918762207,
+    "sample_text": "EFTA00008446\n"
+  },
+  {
+    "filename": "EFTA00008464.pdf",
+    "char_count": 52,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.04409146308898926,
+    "sample_text": "MOM Oda \nliMNII 'ft \nOV31151 \n.\u2022 \n/// \nEFTA00008464\n"
+  },
+  {
+    "filename": "EFTA00008467.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.018526315689086914,
+    "sample_text": "EFTA00008467\n"
+  },
+  {
+    "filename": "EFTA00008471.pdf",
+    "char_count": 39,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.07073974609375,
+    "sample_text": "\u202244 \u2022 \n.tea-\nic\". ' \u2022 \n\u2022 \nEFTA00008471\n"
+  },
+  {
+    "filename": "EFTA00008514.pdf",
+    "char_count": 1237,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 34,
+        "end": 35
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 47,
+        "end": 48
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 76,
+        "end": 77
+      },
+      {
+        "text": "74",
+        "label": "CARDINAL",
+        "start": 194,
+        "end": 196
+      },
+      {
+        "text": "14",
+        "label": "CARDINAL",
+        "start": 263,
+        "end": 265
+      },
+      {
+        "text": "ill S",
+        "label": "PERSON",
+        "start": 273,
+        "end": 278
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 295,
+        "end": 296
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 300,
+        "end": 301
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 320,
+        "end": 321
+      },
+      {
+        "text": "1/4",
+        "label": "CARDINAL",
+        "start": 340,
+        "end": 343
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 392,
+        "end": 393
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 395,
+        "end": 396
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 457,
+        "end": 458
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 497,
+        "end": 498
+      },
+      {
+        "text": "1/4",
+        "label": "CARDINAL",
+        "start": 541,
+        "end": 544
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 658,
+        "end": 659
+      },
+      {
+        "text": "11",
+        "label": "DATE",
+        "start": 838,
+        "end": 840
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 902,
+        "end": 903
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 965,
+        "end": 967
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1043,
+        "end": 1044
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 1046,
+        "end": 1047
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 1051,
+        "end": 1052
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1098,
+        "end": 1099
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1128,
+        "end": 1129
+      }
+    ],
+    "processing_time": 2.6121933460235596,
+    "sample_text": "\u2022 \n \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022\u2022 \nr\n \n\u2022 \n4  \u2022 \n0 \n0. \n. \na \n1 \n\u2022 \n; \n% \n\u2022\u2022\n. \n\u2022 \n.0. \n. \n1 .'  \n' \nir ' \n' \u2022 \n.0 \n. \u2022 \n\u2022 . \n. \nI \n\u2022 \n. \n\u2022 \n\u2022 . \na \na \n. \n\u2022 \nAm \n' \n\u2022 \n. \u2022 . \n\u2022 \nv. e \ni \n. \n., \n,\u201e, \u2022 .,' /kr \n74 lc \n.. \n\u2022 \n. \ni \n, it \nl'\u2022\u2022 \n. \n\u2022 \n. \n\u2022\u2022 \nII . \nS. ...\n.\u2022 .s. \n' \n14. \n. . \nill S.. . \ns \u2022 \na \n- \n6.. \n1. : \n. \n. \n.. \"...\n7 \nV. \n. \n\u2022 \n.' \n\u2022 \n1/4,  \n.\u201e \n, \n. \n. \nt il \n, \nI \n\u2022 \n, \n. \ne\u201e  \n. \n. \n4 \n1....., \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n'\u2022 \n\u2022 \n\u2022 \n' \n\u2022 \n. \u2022 \n\u2022\u2022 \n,\u201e, \n\u2022 \n.1 \n'. \n4 ; \n\u2022 \n\u2022 \n. \n. \n\u2022 \nII\u2022 \nI. \u2022\n. \n.. \n. \n1 \n\u2022 \u2022 \n. \n\u2022 \n....\" \n0\n\u2022 \n\u2022 \n\u2022 \n\u2022 \n. \n. \n- \n1/4  \n... \u2022 \n...\u2022 \n- \ni \n. \n\u2022 \n\u2022 \n\u2022 a' -4' \n' \n \n. \n. \n. \n\u2022 \n\u2022 \n \u2022\n \u2022\n\u2022 \n.. \n\u2022 \u2022 \n'''' \n. \ni \n\u2022 \n\u2022 \n\u2022\n\u2022\n\u2022\u2022 \n.cii, \u2022 \n4 \nm \n\u2022\n\u2022\nlb \n\u2022\u2022 \na \n\u2022 ' \n-... \n. \u2022 . \n. \n\u201e \n, .4\u201e \n. . \u201e, \n.. \n\u2022 \n4, ' \nSe \n. \n\u2022\u2022 \nr ,.. . \n,.. \nii .o \n. \n- \n\u2022 \n\u2022 \n\u2022 \u2022 \n _ \n. \n' \n' \n\u2022 \n. \nP *C .!..\u2022 \u2022 \n% \u2022 \n3 I \nde \n. \n\u2022 \n4  \n,11. \n.\u2022 \u2022 \nS\n.\n. \n\u2022 \n\u2022 \n\". \n\u2022 \n. \n\u2022 \n. \n\u2022 \nii..... \u2022 \n.. \n/ \n\u2022 \n4 .  \n\u2022\u2022\u2022 \n\u2022 \n\u2022\u2022\u2022\u2022 .1 \ni \n* . \n.. \n0. t\u2022 ..., \n. \nI\nla \nt o - \n\u2022\u2022 a, \n. t- \u2022 .;-\u2022 \n-as ' \n\u2022 . \u2022 \nL"
+  },
+  {
+    "filename": "EFTA00008452.pdf",
+    "char_count": 385,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 16,
+        "end": 17
+      },
+      {
+        "text": "COPY",
+        "label": "PERSON",
+        "start": 54,
+        "end": 58
+      },
+      {
+        "text": "One",
+        "label": "CARDINAL",
+        "start": 60,
+        "end": 63
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 65,
+        "end": 66
+      },
+      {
+        "text": "FBI",
+        "label": "ORG",
+        "start": 68,
+        "end": 71
+      },
+      {
+        "text": "WV Black 3T8 '",
+        "label": "ORG",
+        "start": 78,
+        "end": 92
+      },
+      {
+        "text": "VVD3003FZEX-0024SAO",
+        "label": "GPE",
+        "start": 104,
+        "end": 123
+      },
+      {
+        "text": "SIN",
+        "label": "ORG",
+        "start": 125,
+        "end": 128
+      },
+      {
+        "text": "181",
+        "label": "CARDINAL",
+        "start": 189,
+        "end": 192
+      },
+      {
+        "text": "NYCO23579",
+        "label": "PERSON",
+        "start": 195,
+        "end": 204
+      },
+      {
+        "text": "182",
+        "label": "CARDINAL",
+        "start": 206,
+        "end": 209
+      },
+      {
+        "text": "183",
+        "label": "CARDINAL",
+        "start": 223,
+        "end": 226
+      },
+      {
+        "text": "184",
+        "label": "CARDINAL",
+        "start": 240,
+        "end": 243
+      },
+      {
+        "text": "160",
+        "label": "CARDINAL",
+        "start": 256,
+        "end": 259
+      },
+      {
+        "text": "NYC023584",
+        "label": "PERSON",
+        "start": 263,
+        "end": 272
+      },
+      {
+        "text": "187",
+        "label": "CARDINAL",
+        "start": 274,
+        "end": 277
+      },
+      {
+        "text": "199",
+        "label": "CARDINAL",
+        "start": 307,
+        "end": 310
+      },
+      {
+        "text": "1.101",
+        "label": "CARDINAL",
+        "start": 323,
+        "end": 328
+      },
+      {
+        "text": "1911",
+        "label": "DATE",
+        "start": 342,
+        "end": 346
+      },
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 362,
+        "end": 363
+      },
+      {
+        "text": "1815",
+        "label": "DATE",
+        "start": 365,
+        "end": 369
+      }
+    ],
+    "processing_time": 0.3685731887817383,
+    "sample_text": "90A-NY-3151227 \n1 B43 \n08/21/2019 NYCO23594 PC MASTER COPY \nOne (1) FBI-owned WV Black 3T8 'lard drive \nVVD3003FZEX-0024SAO, SIN MiCC13LZR5 (9P. \ncoNaming the vented E01 images NYCO23578 \n(181). NYCO23579 (182). NYCO23580 (183. \nNYCO23581 (184) NYCO23583 (160). \nNYC023584 (187) NYCO235851188). \n)00O23566 (199) NYCO23587 (1.101, \nNYCO23588 (1911). and NYCO235' 2 (1815' \nEFTA00008452\n"
+  },
+  {
+    "filename": "EFTA00008494.pdf",
+    "char_count": 107,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4:111",
+        "label": "CARDINAL",
+        "start": 76,
+        "end": 81
+      }
+    ],
+    "processing_time": 0.29938411712646484,
+    "sample_text": "& \u2022 \n4 \n\u2022\n-\u2022. \n\u2022 \n. . \n- \nIrk \n.' \n. \n\u2022 \n\u2022 \n. \n\u2022 \n... el\n \n \nIll\n\u2022\n. \nP... \n4:111.:.) \n\u2022 \n.. \nEFTA00008494\n"
+  },
+  {
+    "filename": "EFTA00008486.pdf",
+    "char_count": 1092,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "Consensual Monitoring Intercept - CMII",
+        "label": "ORG",
+        "start": 239,
+        "end": 277
+      },
+      {
+        "text": "GAO",
+        "label": "ORG",
+        "start": 293,
+        "end": 296
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 298,
+        "end": 299
+      },
+      {
+        "text": "16",
+        "label": "CARDINAL",
+        "start": 305,
+        "end": 307
+      },
+      {
+        "text": "TCM",
+        "label": "ORG",
+        "start": 320,
+        "end": 323
+      },
+      {
+        "text": "NTCM",
+        "label": "ORG",
+        "start": 342,
+        "end": 346
+      },
+      {
+        "text": "NTCM Specify Device",
+        "label": "ORG",
+        "start": 352,
+        "end": 371
+      },
+      {
+        "text": "5.7",
+        "label": "CARDINAL",
+        "start": 523,
+        "end": 526
+      },
+      {
+        "text": "Data Transferred for Permanent Storage - Date:  ",
+        "label": "ORG",
+        "start": 574,
+        "end": 622
+      },
+      {
+        "text": "1110",
+        "label": "DATE",
+        "start": 622,
+        "end": 626
+      },
+      {
+        "text": "JO \n Time",
+        "label": "ORG",
+        "start": 627,
+        "end": 636
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 639,
+        "end": 640
+      },
+      {
+        "text": "1,--z4",
+        "label": "CARDINAL",
+        "start": 764,
+        "end": 770
+      },
+      {
+        "text": "AG",
+        "label": "ORG",
+        "start": 791,
+        "end": 793
+      },
+      {
+        "text": "111Uffirsui",
+        "label": "CARDINAL",
+        "start": 1040,
+        "end": 1051
+      }
+    ],
+    "processing_time": 1.2606160640716553,
+    "sample_text": "REAL \nCase \nUR Evidence Envelope \ngina) \n0 \nDuplicate \n0 \nEnhanced Original \nnctic Tape \n0 Computer Disk \n0 \nPrinted Material \nIDa:  \nTape/Diskti:  \nAga SupervisingTitle III Intercepts:  \nO Court Authorized Intercept - Source/Symbola:  \ng Consensual Monitoring Intercept - CMII (if assigned): GAO' 5-94P \n16 Telephonic (TCM) K Nonteiephonie (NTCM) \nIf NTCM Specify Device Used:  \nO Recording of an Interview \nO Volunteered/Subpoenaed Medium - Not FBI ELSUR \nr \nO Other Type of Recordin Interception, Specify:  \nnn II \nilt \n5.7t  \niiekett\nIntercept Date: \na. \nPlace:  l\n, f \nData Transferred for Permanent Storage - Date:  1110 JO \n Time:  5 :aloe,. \nO Consensual: List interceptees Below \n0 \nCourt Authorized: Enter See Log\" Below \n17141'Sj ir-7-1-7h-runt-0- /Pad 1,--z4  \n41 I !tin \nAD r )(AG 2-\nSignature: \nSignature \nDate: \no \ntime: \nDate: /2/ \nReason:  \n. \n \nReason: \nSignature \nDate: \nime. \nReason:  \nLa-00\nSignature: \nDate: \nR \nTime: \nSignature: \nDate:  /\nReason:  \nSignature: \nDate: \nReson: \nt"
+  },
+  {
+    "filename": "EFTA00008512.pdf",
+    "char_count": 77,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 39,
+        "end": 40
+      }
+    ],
+    "processing_time": 0.29907703399658203,
+    "sample_text": "\u2022 \u2022 \u201e\n\u2022 \u201e tor \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 . \u2022 \n4.;\n\u2022 \nI. \n, \n\u2022 \n\u2022 \n\u2022 \u2022 \nEFTA00008512\n"
+  },
+  {
+    "filename": "EFTA00008511.pdf",
+    "char_count": 1388,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 27,
+        "end": 30
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 66,
+        "end": 67
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 119,
+        "end": 121
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 125,
+        "end": 128
+      },
+      {
+        "text": "\u2022.",
+        "label": "ORG",
+        "start": 155,
+        "end": 157
+      },
+      {
+        "text": "4.",
+        "label": "CARDINAL",
+        "start": 187,
+        "end": 189
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 211,
+        "end": 212
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 303,
+        "end": 304
+      },
+      {
+        "text": "4+ \n\u2022 - \nii",
+        "label": "DATE",
+        "start": 372,
+        "end": 383
+      },
+      {
+        "text": "1/4",
+        "label": "CARDINAL",
+        "start": 433,
+        "end": 436
+      },
+      {
+        "text": "li",
+        "label": "PERSON",
+        "start": 526,
+        "end": 528
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 580,
+        "end": 581
+      },
+      {
+        "text": "3",
+        "label": "CARDINAL",
+        "start": 625,
+        "end": 626
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 642,
+        "end": 643
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 702,
+        "end": 703
+      },
+      {
+        "text": "ots",
+        "label": "ORG",
+        "start": 740,
+        "end": 743
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 761,
+        "end": 762
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 841,
+        "end": 843
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 908,
+        "end": 909
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 951,
+        "end": 952
+      },
+      {
+        "text": "04",
+        "label": "CARDINAL",
+        "start": 955,
+        "end": 957
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1028,
+        "end": 1030
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1053,
+        "end": 1054
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1058,
+        "end": 1059
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1167,
+        "end": 1168
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1191,
+        "end": 1192
+      },
+      {
+        "text": "140",
+        "label": "CARDINAL",
+        "start": 1200,
+        "end": 1203
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1222,
+        "end": 1223
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1270,
+        "end": 1271
+      },
+      {
+        "text": "IP \u2022",
+        "label": "ORG",
+        "start": 1307,
+        "end": 1311
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1320,
+        "end": 1321
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1356,
+        "end": 1358
+      }
+    ],
+    "processing_time": 3.03930926322937,
+    "sample_text": "\u2022 \n\u2022 \n\u2022 \n# \n\u2022 \n\u2022 \n\u2022 \n, \n. \n\u2022\u2022\u2022 .\n\u2022 \n\u2022 \n, \n\u2022 ...\u2022. \n\u2022fr\n.\u2022:  .4  \n;1; \u2022 \n, \n\u2022 - \u2022 \n\u2022 \n. \n\u2022\u2022 \n. \n, \n\u2022 \ne \n\u2022 \n\u2022 \n\u2022 or' \ne\n\u2022\u2022 . \n\u2022\u2022\u2022 .. . \n. . \n. , \n.. .... , \u2022. \nv.:\u201e\u201e \n\u2022 \n. \n\u2022 \n. fi i\n. \n. 4. a \u2022 \n11,41 \na \n' \n\u2022 \n4  \n4. I,. \n. \n. \n. . \n\u2022 \n. . \n. , \n..-\n\u2022 \nde \nS \n\u2022 \n\u2022 \n\u2022 * \nJ. \u2022 \n'\u2022 \n\u2022 \nOt \u2022 \n- \nt \n\u2022 \n\u2022 \n1..\u2022 \n\u2022 \u2022\u2022 \n. \n\". \u2022 \nA. \"' \n-\u2022,, \u2022 G \n\u2022 \n\u2022 \n\u2022 \n0./ \n\u2022 \n\u2022 \n, \n\u2022 \n- \na 4+ \n\u2022 - \nii* - \n... \nI\nft . \u2022 \n- \n' \u2022 \n''' \nlib \n. \u2022 1 \u2022 \u2018, ,1/4  \n' \n...., .. \nb\n\u2022 \nI - .\u2022 .1 ' \n\u2022\u2022..- . . . \n\u2022 i \n\u2022 ,,\u2018 . \n\u2022 ii, \n., . I \nN., \n\u2022 \n\u2022 l\u2022 \nli, \nI. \n\u2022 \n\u2022 \ne at \n\u2022 \n, . a \n,. \u2022 . u* , \n, \n, \nI \u2022 4 \n7 :- \nA\" \n- \n' \n..' -1  \u2022 \n\u2022\n. \n.\n\u2022 \n. \n\u2022 3 \n-A. \n\u2022 \nA \n. \n4 \n''-' \n\u2022 \n\". \n\u2022 \n\u2022 \nif \n. ii \n\u2022# \na \n1.\u2022 _ \n. , \n. \n'.\u2022\u2022 \n4  \na \n\u2022\u2022\u2022 ' \u2022 \nII . \n\u2022 \u2022 \u2022 \n..\u2022 a \n..ots. ..\n\u2022 \n4, \n\u2022 \n. \n1 - \n, \ne , ` ; \n\u2022 a t' \nr. \n. \n... \n.. .4. \n, A \n. - \n\u2022 \u2022 \n\u2022 \nSI,. \n. \n. \n. \n' \u2022\u2022 \u2022\u2022 I \n\u2022 0 \n. \n.4t \nI \n- \nN \n. \n\u2022 \nIlt \n4 \nS ' \n\u2022 N. \n\u2022 \nA. \nA,\n\"4 \n.. \n' \nda. \u2022 \nr \n. \n\u2022 ' :it \n\u2022 \n\u2022 \n\u2022 \u2022 \n4 \n'04 \n. \nb' ' \nit ' \u2022 \u2014 . .....' - \u2014.\u2022,\u2022,..e, ^"
+  },
+  {
+    "filename": "EFTA00008436.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.02792215347290039,
+    "sample_text": "EFTA00008436\n"
+  },
+  {
+    "filename": "EFTA00008473.pdf",
+    "char_count": 556,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4\u2022\u2022",
+        "label": "CARDINAL",
+        "start": 17,
+        "end": 20
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 28,
+        "end": 29
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 58,
+        "end": 59
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 67,
+        "end": 68
+      },
+      {
+        "text": "n\u2022",
+        "label": "ORG",
+        "start": 78,
+        "end": 80
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 87,
+        "end": 88
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 108,
+        "end": 109
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 126,
+        "end": 127
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 134,
+        "end": 136
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 138,
+        "end": 139
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 156,
+        "end": 157
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 254,
+        "end": 256
+      },
+      {
+        "text": "ar t. \n.",
+        "label": "PERSON",
+        "start": 283,
+        "end": 291
+      },
+      {
+        "text": "4.",
+        "label": "CARDINAL",
+        "start": 309,
+        "end": 311
+      },
+      {
+        "text": "2.6",
+        "label": "CARDINAL",
+        "start": 335,
+        "end": 338
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 354,
+        "end": 355
+      },
+      {
+        "text": "4 4",
+        "label": "DATE",
+        "start": 371,
+        "end": 374
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 404,
+        "end": 405
+      },
+      {
+        "text": "Ailig",
+        "label": "ORG",
+        "start": 424,
+        "end": 429
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 506,
+        "end": 507
+      },
+      {
+        "text": "1/4",
+        "label": "CARDINAL",
+        "start": 519,
+        "end": 522
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 525,
+        "end": 526
+      }
+    ],
+    "processing_time": 1.1838150024414062,
+    "sample_text": "l\u2022 \nillbo \n\u2022 \n, \n4\u2022\u2022 ' \nA \n'4 \n' 4 \n\u2022 \u2022 \n\u2022 \n, \n- \u2022 \nii. \u2022 4 \n. \nO. 6 \n\u2022 \nor. \nn\u2022 ' \n\u2022 \n4. \n'.\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n1. . \n. . \n, \nI, \n4\n4 \n. \n\u2022\u2022 \n4 \n\u2022 \n\u2022 \n\u2022 \n. \n' \n4. \n\u2022 \n0 k \na  \n6: \n; \nI \n\u2022 ' \u2022 \nfAs \n1 \u2022\u2022\u2022 \u2022 fr.. . \nI \n\u2022 \n\u2022 \n\u2022 \n\u2022 \nc \nd \nlib \n. \"*. \nhi l \ni  \n:41' \n:I, \n\u2022\nf, ....;$ - ' . \nar t. \n._,. \n. \n' \n. \n; . 4. \n- \nit .  \n \n. l\nb  . \n2.6 \n\u2022\u2022 -Er \n...\n. 4 \nt \n...' \ni k \n4 4. \n, \n`..\" \n. \n. \nI \na \n\u2022 \n\u20220 4-1 \n-.M1dill \n. . \nAilig .  \n* al\u2022 -\u2022ii. r-... O.. ..a.o...iriDe -\u2022 \n...,  \n:-..... \n.. \n) .J. \n.,. \n1. \n. ., ' ..1/4. \n4: ci, ... \n. -1 \nEFTA00008473\n"
+  },
+  {
+    "filename": "EFTA00008478.pdf",
+    "char_count": 80,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "COW",
+        "label": "ORG",
+        "start": 62,
+        "end": 65
+      }
+    ],
+    "processing_time": 0.09946894645690918,
+    "sample_text": "\u2022 \n\u2022 \n- \n\u2022 \n. \n. \nYr =0\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022.\u2022 \n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \nOKANNO e VIVO COW \nEFTA00008478\n"
+  },
+  {
+    "filename": "EFTA00008525.pdf",
+    "char_count": 41,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.06230282783508301,
+    "sample_text": "II\nMVIKMMMW\naffiCnalefT\u00b0\n\u2022 \nEFTA00008525\n"
+  },
+  {
+    "filename": "EFTA00008417.pdf",
+    "char_count": 394,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "112048",
+        "label": "DATE",
+        "start": 22,
+        "end": 28
+      },
+      {
+        "text": "08112/2319",
+        "label": "CARDINAL",
+        "start": 35,
+        "end": 45
+      },
+      {
+        "text": "One",
+        "label": "CARDINAL",
+        "start": 77,
+        "end": 80
+      },
+      {
+        "text": "Seagate Barroomla 102008 MOO",
+        "label": "ORG",
+        "start": 85,
+        "end": 113
+      },
+      {
+        "text": "SIN",
+        "label": "ORG",
+        "start": 129,
+        "end": 132
+      },
+      {
+        "text": "Seagate \nConstellation FS",
+        "label": "ORG",
+        "start": 191,
+        "end": 216
+      },
+      {
+        "text": "HOD St5ClNt.4OO11 \nSrm 21#4,110'",
+        "label": "ORG",
+        "start": 223,
+        "end": 255
+      },
+      {
+        "text": "1x-1",
+        "label": "CARDINAL",
+        "start": 267,
+        "end": 271
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 348,
+        "end": 349
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 353,
+        "end": 356
+      },
+      {
+        "text": "4.",
+        "label": "CARDINAL",
+        "start": 367,
+        "end": 369
+      }
+    ],
+    "processing_time": 0.4791407585144043,
+    "sample_text": ".; \u2022 5.1222 Request10 112048 1832 \n08112/2319 NYCO22211. PC Derivative Coni \nOne cl) Seagate Barroomla 102008 MOO, \nST1000OM003, SIN W1O3826E. containing ttitt \nClone Copy o4 1812 hard ague (Seagate \nConstellation FS fOOGP HOD St5ClNt.4OO11 \nSrm 21#4,110': \n'ad via \n1x-1 \n;'N OODFC, \n\u2022 \n'V. \n\u2022 \nJR \n\u2022 \n. \u2022 \n,\nr \nr\n \n... \n* \n\u2022 \na\n\u2022 \u2022 \n. \n\u2022 \n\u2022\u2022 \n\u2022 \n1 \n.\n\u2022\u2022\u2022 \nt \nqi \n. 4. \nli  \n\u2022 \u2022 \nEFTA00008417\n"
+  },
+  {
+    "filename": "EFTA00008498.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.03556513786315918,
+    "sample_text": "EFTA00008498\n"
+  },
+  {
+    "filename": "EFTA00008434.pdf",
+    "char_count": 25,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.07446837425231934,
+    "sample_text": "\u2022 00,1\u2022\u2022\u2022\u2022 \nEFTA00008434\n"
+  },
+  {
+    "filename": "EFTA00008466.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.06882715225219727,
+    "sample_text": "EFTA00008466\n"
+  },
+  {
+    "filename": "EFTA00008489.pdf",
+    "char_count": 1331,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "Custody-ELSUR Evidence Envelope",
+        "label": "ORG",
+        "start": 3,
+        "end": 34
+      },
+      {
+        "text": "847",
+        "label": "CARDINAL",
+        "start": 41,
+        "end": 44
+      },
+      {
+        "text": "513",
+        "label": "CARDINAL",
+        "start": 49,
+        "end": 52
+      },
+      {
+        "text": "Supervising Title III Intercepts",
+        "label": "PERSON",
+        "start": 132,
+        "end": 164
+      },
+      {
+        "text": "54",
+        "label": "CARDINAL",
+        "start": 217,
+        "end": 219
+      },
+      {
+        "text": "Consensual Monitoring Intercept - CM",
+        "label": "ORG",
+        "start": 222,
+        "end": 258
+      },
+      {
+        "text": "Telephonic",
+        "label": "PERSON",
+        "start": 279,
+        "end": 289
+      },
+      {
+        "text": "TCM",
+        "label": "ORG",
+        "start": 291,
+        "end": 294
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 296,
+        "end": 297
+      },
+      {
+        "text": "Nontelephonic",
+        "label": "ORG",
+        "start": 299,
+        "end": 312
+      },
+      {
+        "text": "NTCM",
+        "label": "ORG",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "text": "NTCM Specify Device",
+        "label": "ORG",
+        "start": 324,
+        "end": 343
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 509,
+        "end": 510
+      },
+      {
+        "text": "lin",
+        "label": "PERSON",
+        "start": 533,
+        "end": 536
+      },
+      {
+        "text": "FL \nData Transferred for Permanent Storage - Date:",
+        "label": "ORG",
+        "start": 549,
+        "end": 599
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 621,
+        "end": 622
+      },
+      {
+        "text": "1D-6",
+        "label": "CARDINAL",
+        "start": 796,
+        "end": 800
+      },
+      {
+        "text": "Tape/Disk",
+        "label": "ORG",
+        "start": 802,
+        "end": 811
+      },
+      {
+        "text": "4441-_97fii",
+        "label": "CARDINAL",
+        "start": 816,
+        "end": 827
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 843,
+        "end": 844
+      },
+      {
+        "text": "VA",
+        "label": "GPE",
+        "start": 865,
+        "end": 867
+      },
+      {
+        "text": "8118",
+        "label": "DATE",
+        "start": 884,
+        "end": 888
+      },
+      {
+        "text": "Signatu \nSignatur",
+        "label": "ORG",
+        "start": 983,
+        "end": 1000
+      },
+      {
+        "text": "124.1-4:144",
+        "label": "CARDINAL",
+        "start": 1060,
+        "end": 1071
+      },
+      {
+        "text": "Time",
+        "label": "ORG",
+        "start": 1212,
+        "end": 1216
+      },
+      {
+        "text": "Jo",
+        "label": "PERSON",
+        "start": 1255,
+        "end": 1257
+      },
+      {
+        "text": "MO",
+        "label": "GPE",
+        "start": 1299,
+        "end": 1301
+      },
+      {
+        "text": "1111g71811,11",
+        "label": "CARDINAL",
+        "start": 1303,
+        "end": 1316
+      }
+    ],
+    "processing_time": 1.4789831638336182,
+    "sample_text": "of Custody-ELSUR Evidence Envelope \n(Rev 847-00 \n513 Original \n0 \nMagnetic Tape \nEnclosure: \nMedium: \nCase File/: \nCase Agt.: \nAgt. Supervising Title III Intercepts:  \nO Court Authorized Intercept - Souree/Symbolti: \n54\n \nConsensual Monitoring Intercept - CM# (if assigned): \npg Telephonic (TCM) 0 \nNontelephonic (NTCM) \nIf NTCM Specify Device Used:  \nO \nRecording of an Interview \nO Volunteered/Subpoenaed Medium - Not FBI ELSUR \nO \nOther Type of Recording/Interception, Specify:  \nIntercept Date:  /0/Th . \n0 CI \nPlace:  ki \n51 Pc,lin \nAtA(.\u2018t\ni  FL \nData Transferred for Permanent Storage - Date: /0 a-6\"/o 9 \n Time: \n9 :apt\", \nO \nConsensual: List Intereeptces Below \n0 \nCourt Authorized: Enter \" See Log\" Below \nO \nDuplicate \nO \nComputer Disk \nO \nEnhanced Original \nO Printed Material \nID#:  1D-6 \nTape/Disk#: \n(4441-_97fii \ne\n_iewkietr\n \n6 a. ei ley echourch \nVA/ire, \nAfm1 u C \n8118 1VEIT \n\u2022 \nSignature: \nSignature: \nDate: f \nTime: \nt \nDate: \nReason:  \nrSvi'dtAGC \n \nReason:  \nSignatu \nSignatur"
+  },
+  {
+    "filename": "EFTA00008460.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.08780789375305176,
+    "sample_text": "EFTA00008460\n"
+  },
+  {
+    "filename": "EFTA00008524.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.15750670433044434,
+    "sample_text": "EFTA00008524\n"
+  },
+  {
+    "filename": "EFTA00008528.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.03716135025024414,
+    "sample_text": "EFTA00008528\n"
+  },
+  {
+    "filename": "EFTA00008431.pdf",
+    "char_count": 21,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.15390849113464355,
+    "sample_text": "7 Moil \nEFTA00008431\n"
+  },
+  {
+    "filename": "EFTA00008515.pdf",
+    "char_count": 26,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.16957783699035645,
+    "sample_text": "MY PASSPORT \nEFTA00008515\n"
+  },
+  {
+    "filename": "EFTA00008424.pdf",
+    "char_count": 13,
+    "page_count": 1,
+    "entities": [],
+    "processing_time": 0.019723176956176758,
+    "sample_text": "EFTA00008424\n"
+  },
+  {
+    "filename": "EFTA00008442.pdf",
+    "char_count": 245,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "One",
+        "label": "CARDINAL",
+        "start": 59,
+        "end": 62
+      },
+      {
+        "text": "218",
+        "label": "CARDINAL",
+        "start": 80,
+        "end": 83
+      },
+      {
+        "text": "Mara Drat",
+        "label": "PERSON",
+        "start": 84,
+        "end": 93
+      },
+      {
+        "text": "lo3i IJPK3EADP09",
+        "label": "ORG",
+        "start": 98,
+        "end": 114
+      },
+      {
+        "text": "SIN Ana NrC0235g5",
+        "label": "ORG",
+        "start": 206,
+        "end": 223
+      }
+    ],
+    "processing_time": 0.2658705711364746,
+    "sample_text": "90A-NY 4151227 \n1B42 \n08/2112019 NYC023597 PC MASTER CC\u00b0Y \nOne \nFEllaaned Meade 218 Mara Drat \n0i lo3i IJPK3EADP09. Sm S9GMOPIF \nParsons; the veined E01 maces NYC023589 \nt1812) tr/C02359311816) NYC023594 \n!SIN Ana NrC0235g5, letat \nEFTA00008442\n"
+  },
+  {
+    "filename": "EFTA00008506.pdf",
+    "char_count": 306,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 4,
+        "end": 5
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 21,
+        "end": 22
+      },
+      {
+        "text": "11",
+        "label": "CARDINAL",
+        "start": 36,
+        "end": 38
+      },
+      {
+        "text": "\u2022\n \n\u2022\n \n\u2022\n \n\u2022",
+        "label": "ORG",
+        "start": 93,
+        "end": 106
+      },
+      {
+        "text": "'1",
+        "label": "DATE",
+        "start": 127,
+        "end": 129
+      }
+    ],
+    "processing_time": 0.609196662902832,
+    "sample_text": "\u2022 . 6 \n\" \n\u2022 \n\u2022 . \n\u2022 \n1 \n\u2022 \n\u2022 \n\u2022 \n' \n11\u201e \u2022 \n. \n. \n\u2022 \n\u2022 \n\u2022 .0 \n\u2022 . \" ...- - \n\u2022 \n.\u2022 \n. \n. \n. . \n\u2022\n \n\u2022\n \n\u2022\n \n\u2022 \n. \n. \n\u2022 \n\u2022 e\",\n. g '1\" \n\u2022 I, \n\u2022 \n40 \n\u2022 \n\u2022 \n\u2022, : \n\u2022 \n\u2022 \n. \n\u2022 \n \n\u2022 \n\u2022 \n\u2022 \n. \n. \n. \n\u2022\u2022\u2022. \u2022 \n. \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n'\u2022 \n\u2022 \n. \u2022 \u2022\u2022\u2022 \u2022\n\u2022 \n\u2022 \n' \u2022 \u2022 \n\u2022 , \n'\u2022\u2022 .%* \n. **.\u2022\u2022 S .\n\u2022 . \n_ \n\u2022 \n- \n. \n, \n\u2022 \nEFTA00008506\n"
+  },
+  {
+    "filename": "EFTA00008504.pdf",
+    "char_count": 587,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "d\u2022\n\u2022 \n'",
+        "label": "PERSON",
+        "start": 66,
+        "end": 73
+      },
+      {
+        "text": "\u2022 \u2022 \u2022 \u2022",
+        "label": "ORG",
+        "start": 112,
+        "end": 119
+      },
+      {
+        "text": "2,44",
+        "label": "CARDINAL",
+        "start": 358,
+        "end": 362
+      },
+      {
+        "text": "3",
+        "label": "CARDINAL",
+        "start": 364,
+        "end": 365
+      },
+      {
+        "text": "I. \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022",
+        "label": "ORG",
+        "start": 380,
+        "end": 402
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 415,
+        "end": 418
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 463,
+        "end": 464
+      },
+      {
+        "text": "\u2022\n \n\u2022 \n\u2022 \n\u2022 \u2022",
+        "label": "ORG",
+        "start": 493,
+        "end": 506
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 565,
+        "end": 568
+      }
+    ],
+    "processing_time": 1.2884035110473633,
+    "sample_text": "\u2022 \n\u2022 \n' \n' \nS..\n\u2022 e.- \n\u2022 . \n\u2022 \n\u2022 \n\u2022 \u2022 \n4 \n\u2022 \u2022 , \n\" \u2022 \u2022 \n\u2022 \n- - \n, d\u2022\n\u2022 \n' \n. \n. \u2022 \nr \n\u2022 :J\u201e\u2022\u2022 , \n- \n\u2022 \n\u2022 \n\u2022 \u2022\u2022 \n\u2022 \u2022 \u2022 \u2022 \n. \n\u2022 \n\u2022 . \n.1\u00b0 \n.\n \n\u2022\n \n\u2022\n \n\u2022\n \n\u2022\n \n\u2022\n \n\u2022\n \n\u2022\n \na\n \n_\n \n\u2022\n \n\u2022 \n\u2022\n \n\u2022\n \n-\n \n\u2022\n \n.\n \n\u2022\n \n\u2022\n \nI\n. \n.1 \u2022\n\u2022\n \n\u2022\n \n\u2022\n \n.\n \n\u2022\n \n. \n\u2022 \n\u2022\n \n1\n,\n \n\u2022\n \n\u2022\n \n-..............,\u201e \u2022 \n. \u2022 \u2022 \n\u2022 \n\u2022 \n\u2022\n '. \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n. . . \n, \n. \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 .\" \n2,44 \n3 I r \nSc21\n-7 \nI. \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n. \n\u2022 \n?it \n\u2022\u2022\u2022 \nAO: \u2022 \nj\n\u2022 \n\u2022 \n\u2022 t\" \n, \nI \nIfir \n\u2022 \n\u2022 \n\u2022\u2022 \n4 \n\u2022 \n\u2022 \n\u2022\u2022\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022\u2022 \n\u2022\n \n\u2022 \n\u2022 \n\u2022 \u2022 \nr: \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022\n \n\u2022 \u2022 \n\u2022 \u2022 \n\u2022 \na. \u2022 \n\u2022 \n\u2022\n\u2022 \n\u2022\u2022 \u2022 ; \n\u2022\u2022\u2022 \n\u2022\n \nEFTA00008504\n"
+  },
+  {
+    "filename": "EFTA00008501.pdf",
+    "char_count": 1477,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 28,
+        "end": 30
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 76,
+        "end": 77
+      },
+      {
+        "text": "4.1",
+        "label": "CARDINAL",
+        "start": 86,
+        "end": 89
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 99,
+        "end": 102
+      },
+      {
+        "text": "5.454.\u2022",
+        "label": "CARDINAL",
+        "start": 126,
+        "end": 133
+      },
+      {
+        "text": "40",
+        "label": "CARDINAL",
+        "start": 295,
+        "end": 297
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 1214,
+        "end": 1217
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1224,
+        "end": 1225
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1265,
+        "end": 1266
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1315,
+        "end": 1316
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1377,
+        "end": 1378
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1393,
+        "end": 1394
+      },
+      {
+        "text": "14",
+        "label": "CARDINAL",
+        "start": 1426,
+        "end": 1428
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1450,
+        "end": 1451
+      }
+    ],
+    "processing_time": 3.8613181114196777,
+    "sample_text": "\u2022 \n\u2022 \n\u2022 \n,\n \n\u2022\n \ns' \n_\u2022 \n\u2022 \n44 \u2022 \n\u2022 \n\u2022 \n\u2022 \n...' \n\u2022 \n\u2022 \n. \u2022 \nmirt\u2022\na\" \n; \n. \n4 \nI \n\u2022 \u2022\n4.1 \u2022 \n\u2022 \u2022\u2022 \n\u2022\u2022\u2022 \n\"\"\u2022 \n\u2022 \n) \n0 \n\u2022\n \n_\n \n5.454.\u2022 \n\u2022 \n.4 \nI \nII \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n,f\u2022 I \nI \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n.4 t.) P \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n40 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \na \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \nCCC.E.\u2022:\n-\n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \ni \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 s \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n"
+  },
+  {
+    "filename": "EFTA00008497.pdf",
+    "char_count": 2119,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4\u2022\u2022",
+        "label": "CARDINAL",
+        "start": 34,
+        "end": 37
+      },
+      {
+        "text": "\u2022 \u2022\u2022\u2022",
+        "label": "ORG",
+        "start": 79,
+        "end": 84
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 103,
+        "end": 106
+      },
+      {
+        "text": "re% \n#'\u2022",
+        "label": "MONEY",
+        "start": 115,
+        "end": 123
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 263,
+        "end": 264
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 293,
+        "end": 294
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 295,
+        "end": 296
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 359,
+        "end": 360
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 428,
+        "end": 430
+      },
+      {
+        "text": "6 4",
+        "label": "CARDINAL",
+        "start": 431,
+        "end": 434
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 441,
+        "end": 442
+      },
+      {
+        "text": "9 4",
+        "label": "CARDINAL",
+        "start": 508,
+        "end": 511
+      },
+      {
+        "text": "91",
+        "label": "CARDINAL",
+        "start": 593,
+        "end": 595
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 613,
+        "end": 614
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 667,
+        "end": 668
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 725,
+        "end": 726
+      },
+      {
+        "text": "t. \n\u2022\u2022",
+        "label": "ORG",
+        "start": 791,
+        "end": 797
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 929,
+        "end": 930
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 934,
+        "end": 935
+      },
+      {
+        "text": "4 4.11ii",
+        "label": "CARDINAL",
+        "start": 950,
+        "end": 958
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1006,
+        "end": 1007
+      },
+      {
+        "text": "1 ...",
+        "label": "CARDINAL",
+        "start": 1023,
+        "end": 1028
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1066,
+        "end": 1067
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1079,
+        "end": 1080
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1132,
+        "end": 1133
+      },
+      {
+        "text": "ILI",
+        "label": "ORG",
+        "start": 1136,
+        "end": 1139
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1158,
+        "end": 1159
+      },
+      {
+        "text": "4 1",
+        "label": "CARDINAL",
+        "start": 1205,
+        "end": 1208
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1336,
+        "end": 1337
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1380,
+        "end": 1381
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 1396,
+        "end": 1398
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 1405,
+        "end": 1406
+      },
+      {
+        "text": "il",
+        "label": "PERSON",
+        "start": 1479,
+        "end": 1481
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1484,
+        "end": 1485
+      },
+      {
+        "text": "11",
+        "label": "CARDINAL",
+        "start": 1490,
+        "end": 1492
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1532,
+        "end": 1533
+      },
+      {
+        "text": "14",
+        "label": "CARDINAL",
+        "start": 1612,
+        "end": 1614
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 1627,
+        "end": 1628
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1637,
+        "end": 1638
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1691,
+        "end": 1692
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1738,
+        "end": 1740
+      },
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 1742,
+        "end": 1743
+      },
+      {
+        "text": "1.1j",
+        "label": "DATE",
+        "start": 1771,
+        "end": 1775
+      },
+      {
+        "text": "4.1",
+        "label": "CARDINAL",
+        "start": 1803,
+        "end": 1806
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1814,
+        "end": 1815
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 1852,
+        "end": 1853
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1888,
+        "end": 1889
+      },
+      {
+        "text": "11",
+        "label": "CARDINAL",
+        "start": 1902,
+        "end": 1904
+      },
+      {
+        "text": ".\u2022",
+        "label": "ORG",
+        "start": 1906,
+        "end": 1908
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1918,
+        "end": 1919
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1943,
+        "end": 1945
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 1970,
+        "end": 1971
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1983,
+        "end": 1984
+      },
+      {
+        "text": "3",
+        "label": "CARDINAL",
+        "start": 2003,
+        "end": 2004
+      },
+      {
+        "text": "li",
+        "label": "PERSON",
+        "start": 2012,
+        "end": 2014
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2059,
+        "end": 2060
+      }
+    ],
+    "processing_time": 4.576172590255737,
+    "sample_text": "\u2022 \u2022 \u2022 \n.. \n\u2022 \u2022 . \u2022 ;a \u2022 \n\u2018,..,-. \n4\u2022\u2022 \n:, \u2022 \n. i\u2022 \u2022 \n. \n\u2022., \n, \u2022 \n, . . \ndi\", \n\u2022 \u2022\u2022\u2022 - \n\u2022 .... \n.. f\ni \u2022\u2022\u2022 \nWA' . \nre% \n#'\u2022 \n. \n..\n' \n\u2022\u2022\u2022 a\n..... \n\u2022 \n\u2022 \n\u2022 \n\u2022\u2022 .\u2022 \n. \nA .0. \u2022 \n\u2022 \n\u201eA \n\u2022 bi \u2022 \n\u2022 \nI'S \u2022 \n& \n\u2022 \n\u2022 \ni \n\u2022 \u201e . \n, \n. \n. \n\u2022 \nI \na \n\u2022 \n\u2022 \n\u2022\u2022\u2022 \n% \u2022 \n\u2022 \u2022 \u2022 \n\u2022 \n4. air \n* \n.. \n\u2022 \n. \n'.. \n\u2022 \n 1\n4\n't .: . \n\u2022 / \n. \n\u2022 \n\u2022 \n. \n. \n\u2022 \nbk . \nt' L \n\u2022\u2022 \nt  \n41\u2022 4\".. \n4., . \n\u2022\u2022 \n\u2022 \n... \n. \n\u2022 \n. \n; \np \n+1.* \n. 7 \n\u2022 \n- \n, \n\u2022 \n\u2022 \u2022 .1. \n:. \u2022\u2022 6 4  \n4, \n4 \n. \n. \nto ' \n-\u2022 \nC. \u2022 \u2022 \n.7.\u201e,. \n; \u2022 - 41,  \u2022 \n\u2022 \n' 1,\n_ \n\u2022 \n\u2022.' 9 4 \na \n' \nI \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \na \n\u2022\u2022\u2022\u2022 P\u2022 \n, \n\u2022 \n\u2022 \u2022 \n\u2022 \n. \n\u2022 \u2022 \nVD. \n\u2022 \n-et \u2022 -... \n. \n91 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 .\n4. \na \n. \n. \n.\n \n,\n \n.\n \nr\n \n\u2022\n \n\u2022 \nIlb \u2022 \nA \n\u2022 \n\u2022 \n? 4 \n. \u2022\u2022\u2022\nlb \n\u201e \n\u2022 \n0. , \n\u2022 \n. \n.5 \n. \n\u2022 V \n- i \n' \u2022 \u2022 \u2022 . 5 \n\u2022 \u2022\u2022 \n' 4 .- \u2022 ' \nih\ndr .:\n0 , \nir\n; \n, \nr \n, \n- \ntz \n\u2018. . \n, \nt. \n\u2022\u2022 In \n. \ni \nde\"' 6 A . . \n\u2022, . \ne \n- I', \n\u2022 \n. \n\u2022 ,a, \n;A \u2022 \n\u201e , \n\u2022 . \n\u2022 ). 4- \u2022-... . !\" 1', \n{ \ni p \n\u2022 \n1.- \nill, ' \n\u2022 \u2022 \n\u2022 . \nIr. 4 \n\u2022 9 \nu it \n\u2022 i g \n4 4.11ii . \n' \na \nv \n. \n, \nB \nis \n, < \nI\" ' \nf \n- "
+  },
+  {
+    "filename": "EFTA00008427.pdf",
+    "char_count": 740,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 6,
+        "end": 7
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 50,
+        "end": 51
+      },
+      {
+        "text": "44",
+        "label": "DATE",
+        "start": 104,
+        "end": 106
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 267,
+        "end": 268
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 415,
+        "end": 416
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 498,
+        "end": 499
+      },
+      {
+        "text": "lo",
+        "label": "PERSON",
+        "start": 509,
+        "end": 511
+      },
+      {
+        "text": "16A",
+        "label": "CARDINAL",
+        "start": 562,
+        "end": 565
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 698,
+        "end": 699
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 707,
+        "end": 708
+      }
+    ],
+    "processing_time": 1.0221173763275146,
+    "sample_text": "\u2022 >, \n2\n.41ruifit e:2\u2022\u2022 \u2022 ....t iat  \n\u2022 \n\u2022\u2022 \n\u2022Is \n1 \n, \n\u2022. \n\u2022 \n\u2022 \n. \ndi  \nel it \n. \n, \n..\u2022 e \n. \n\u2022\u2022 \n. \n44, \nire \u2022 <I, \n' \ngif ' \n. A -\u2022\u2022\u2022 \nv. \n.1 ..e. \u2022 \nm' \n\u2022 \n\u2022 \na* \n, \n..\u2022 \u2022 2, \n\u2022 \n, \n\u2022 , \nj... \u2022 \n\u2022 \n\u2022 \n\u2022\u2022\u2022\u2022 \n, \n. \n, \n. \n..,., \n\u2022 . S i. \ne -, \u2022 \n... IP .  \nPkir \n4 \n. \ne \n, it \u2022 \n. I.'. \u2022 \ng.' . \u2022 \n\u2022 \n\u2022 \n, \n\u2022 \n\u2022 \nI \nel  \n6 \n.\u2022 \n-r \n\u2022\u2022 \nr \n\u2022 \n\u2022\u2022\u2022 \n.. \n. I\n... \nA \nIC \n\u2022\n\u2022 \n. \n. \n/ \n. \n.. \n\u2022 \n\u2022 \nt \ng m; \n\u2022 \n.. \n4 \n4 \n. \na \na \na \n: \u2022 \n \nW \na \n.1 \nI\ni \n\u2022 \nI \u2022P, \n\u2022\u2022 \ni \n\u2022 \nI \n\u2022 ,.\u2022\u2018\u2022\u2022\u2022,. \n\u201e \n.. \n4. . \nI \n. lo. \n... \n. \nI  \n-.. \nm. \n.\n.....\n/\n.$ \n.. \n\"\nV \n-\u2022 \n16A\n. \ne \n\u2022 \n\u2022 \u2022 \n\u2022 \n. \n\u2022\n\u2022\n\u2022\n4- \n...- \n\u2022 \n\u2022.., \n:\n\u2022 \nC\n`if \n\u2022 ' \n\u2022\u2022\u2022 \u2022 \n. is \n\u2022 \n... \u2022 \n. . \nv.! cir. -\u2022. \nlit\u2022 \n. \n., \n. \n.... .\n \n; \n7 a\n\u2022 \n' 1. - \n\u2022 \ncr, \u2022 \n\u2022\n \nEFTA00008427\n"
+  },
+  {
+    "filename": "EFTA00008411.pdf",
+    "char_count": 1364,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 21,
+        "end": 22
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 28,
+        "end": 29
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 67,
+        "end": 68
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 101,
+        "end": 102
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 110,
+        "end": 111
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 130,
+        "end": 131
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 136,
+        "end": 137
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 143,
+        "end": 144
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 187,
+        "end": 188
+      },
+      {
+        "text": "1,-",
+        "label": "CARDINAL",
+        "start": 198,
+        "end": 201
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 251,
+        "end": 252
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 258,
+        "end": 261
+      },
+      {
+        "text": "414",
+        "label": "CARDINAL",
+        "start": 284,
+        "end": 287
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 419,
+        "end": 420
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 450,
+        "end": 451
+      },
+      {
+        "text": "4 \u2022",
+        "label": "CARDINAL",
+        "start": 502,
+        "end": 505
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 561,
+        "end": 562
+      },
+      {
+        "text": "I.",
+        "label": "ORG",
+        "start": 611,
+        "end": 613
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 622,
+        "end": 623
+      },
+      {
+        "text": "CAI",
+        "label": "ORG",
+        "start": 625,
+        "end": 628
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 654,
+        "end": 655
+      },
+      {
+        "text": "0 44",
+        "label": "DATE",
+        "start": 677,
+        "end": 681
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 694,
+        "end": 695
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 708,
+        "end": 709
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 711,
+        "end": 712
+      },
+      {
+        "text": "IP",
+        "label": "ORG",
+        "start": 720,
+        "end": 722
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 732,
+        "end": 733
+      },
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 756,
+        "end": 758
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 768,
+        "end": 769
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 779,
+        "end": 781
+      },
+      {
+        "text": "IP",
+        "label": "ORG",
+        "start": 795,
+        "end": 797
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 830,
+        "end": 831
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 840,
+        "end": 841
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 858,
+        "end": 859
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 868,
+        "end": 869
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 891,
+        "end": 892
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 925,
+        "end": 926
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 940,
+        "end": 941
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 944,
+        "end": 947
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 961,
+        "end": 963
+      },
+      {
+        "text": "ali",
+        "label": "PERSON",
+        "start": 997,
+        "end": 1000
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1046,
+        "end": 1047
+      },
+      {
+        "text": "j\u2022 .. ..",
+        "label": "PERSON",
+        "start": 1090,
+        "end": 1098
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1154,
+        "end": 1155
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1178,
+        "end": 1180
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1182,
+        "end": 1183
+      },
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 1259,
+        "end": 1261
+      }
+    ],
+    "processing_time": 2.175323009490967,
+    "sample_text": "\u2022 \n\u2022 \n.1 \n\u2022 \nII \n \n \n4, \n. \n4 \n. \na \n.... \ne \nl \n\u2022 \u2022 \n\u2022 \n\u2022\u2022\u2022 \n\u2022 - \n1. , ..\u201e \nir _ \n. \nN \n' \n\u2022 \n4\u2022 \n**4 \"\u2018\u2022 .* 1 \nI \n: \nlb \n\u2022 , , \n4 \ni \n0 \n.' \n1 \n,,,\u201e \u2022 \n. \n. \ns\ne \n. \nif \n...r\u2022 a \n...\u2022 \n4 \n\u2022 '\u2022 _ \n1,- \nill. \nbg \u2022 \ndr \n. \n\u2022 \nI . \u2022 \nS \n\u2022^14 \n\u2022 \ne.. \na\n4\n, \nm \u2022\u2022\u2022 . \n% \na \ne \n\u2022 . ,. \nA 414. \n\u2022 \n., \n\u2022 \n, \n.. \nPr- \u2022 \ndit \n0 \n\u2022\u2022\u2022 fi, . , \n, \nt \nit-\nA\n \n\u2022 -.- \n. \n\u2022\nI \nA \nIS \n\u2022' \n-C .  \u2022 \n' \nsilty\" \nA \n, \n\u2022 \nA \n\u2022 \n. \n\u2022 \n4, 1 \ne \n\u2022 \n.,. \n..,. \n, \nr \u2022\n\u2022\n. 1 \n. ... \u2022 \n- \u2022 , - , \",,, \n. \n, it \u2022 . \nt\u2022 \u2022 \n10- \n4 \u2022 \nit Y \u2022 e 4 \n.: \u2022 \u2022 1  . ! \nS a\n\u2022 , \nnr \n\u2022 \ni \n.- \n- , 4 \n\"it \nhit g \n- 4 \n\u2022 \"' \n, \n, \u2022 \u2022 \n\u2022 .\n\u2666\n, \nS\nit I., \nr \n \n\"0 \nCAI \n\u2022 \n\u2022 \n\u2022 \n. \u2022 \n\u2022 \n.\u2022 \n\u2022 \n4 \n-.% te. \n\u2022 ' \u2022 . \n\u2022 0 44 it. \nit \nt \n1 . .  ... \n. 4 \n5 \n' gip IP  \u2022 , \nr4\n9 \n\u201e \n\u2022 \na \nr \n\u2022 \n' \n:\" 44 \nc' \nIL \n4 \n4. \u2022 . ,\u2022\u2022 \n\u2022 \n\u2022 :-..., IP \n... \n\u2022\n_...,\u2022- ,. \n.. t \n.... \n1 \u2022\u2022\u2022 \n\u2022 \n4 \n..... .0, ., .\n4 \n\u2022 \n.\u2022 \n4 \n4 \n4  \ns \n''\\ \nV : \n7; . r, \ns - \nf \u2022 \u2022 \nN \ni \n\u2022 \n. . 1 ,),.., \n* \n, 9 A \u2022\u2022\u2022 i , \n\u2022 ' \nis 41 \ni \n\u2022 \na\u2022 \n\u2022 \ni\u2022 \u2022 \n\u2022 \n. \n\u2022\u2022 e . ali"
+  },
+  {
+    "filename": "EFTA00008441.pdf",
+    "char_count": 2162,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 94,
+        "end": 95
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 116,
+        "end": 117
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 150,
+        "end": 151
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 249,
+        "end": 250
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 267,
+        "end": 268
+      },
+      {
+        "text": "44",
+        "label": "DATE",
+        "start": 304,
+        "end": 306
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 384,
+        "end": 385
+      },
+      {
+        "text": "47",
+        "label": "CARDINAL",
+        "start": 408,
+        "end": 410
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 465,
+        "end": 466
+      },
+      {
+        "text": "19",
+        "label": "CARDINAL",
+        "start": 473,
+        "end": 475
+      },
+      {
+        "text": "I. \n\u2022",
+        "label": "PERSON",
+        "start": 501,
+        "end": 506
+      },
+      {
+        "text": "\u2022II \n\u2022\u2022 \n-\u2022\u2022 \n",
+        "label": "ORG",
+        "start": 553,
+        "end": 567
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 643,
+        "end": 646
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 676,
+        "end": 677
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 747,
+        "end": 748
+      },
+      {
+        "text": "al  i \u2022 \n\u2022",
+        "label": "PERSON",
+        "start": 780,
+        "end": 790
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 832,
+        "end": 833
+      },
+      {
+        "text": "1 \u2022",
+        "label": "CARDINAL",
+        "start": 837,
+        "end": 840
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 890,
+        "end": 891
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 940,
+        "end": 941
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 976,
+        "end": 977
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1066,
+        "end": 1067
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 1078,
+        "end": 1079
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1149,
+        "end": 1150
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1177,
+        "end": 1178
+      },
+      {
+        "text": "14",
+        "label": "CARDINAL",
+        "start": 1183,
+        "end": 1185
+      },
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 1208,
+        "end": 1210
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1224,
+        "end": 1225
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1285,
+        "end": 1286
+      },
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 1327,
+        "end": 1329
+      },
+      {
+        "text": "IP",
+        "label": "ORG",
+        "start": 1346,
+        "end": 1348
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1350,
+        "end": 1351
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 1371,
+        "end": 1372
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1442,
+        "end": 1443
+      },
+      {
+        "text": "al .\u2022",
+        "label": "PERSON",
+        "start": 1456,
+        "end": 1461
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1490,
+        "end": 1491
+      },
+      {
+        "text": "5\u20224",
+        "label": "CARDINAL",
+        "start": 1502,
+        "end": 1505
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1530,
+        "end": 1531
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 1546,
+        "end": 1547
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1595,
+        "end": 1596
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 1610,
+        "end": 1611
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1662,
+        "end": 1663
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1756,
+        "end": 1757
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 1788,
+        "end": 1789
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1798,
+        "end": 1799
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1815,
+        "end": 1816
+      },
+      {
+        "text": "00",
+        "label": "CARDINAL",
+        "start": 1820,
+        "end": 1822
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 1902,
+        "end": 1905
+      },
+      {
+        "text": "4te \u2022 \u2022",
+        "label": "ORG",
+        "start": 1967,
+        "end": 1974
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2010,
+        "end": 2011
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2109,
+        "end": 2110
+      }
+    ],
+    "processing_time": 3.560274124145508,
+    "sample_text": "\"; \n/ \\\nt \ni\nt\n \n- \n\u2022 \n' ... \n\u2022 \n\u2022 \nar\ne \n\u2022 \n\u2022 \n.\n \n. \nI \n. \u2022 \n\u2022\u2022 \n\u2022 \n.\n \n\u2022 \u2022 \na  . \n\u2022 \n\u2022 \n. \n1`  \n\" \n\u2014 \n. \n% \n\u2022 \u2022 \n4. \u2022 \nt \n' S \u2022 , \n\u2022 \n9 \n4% \n\u2022 \nV \n4. . \n\u2022 \u2022 \n46 \ni \na. \n\u2022 \n\u2022 \n\u2022 \n\u2022 it, \n\u2022 \n\u2022 \n. \ni . ,t.\u2022 \nA \n\u2022 ! \n, t \u2022 Ir \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n,rpt \n' \n4 \n\u2022 \n\u2022 \n\u2022 \n0 \n\u2022 \n4.. \n. \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \ni \u2022 \n\u2022se \nI \n44. \n\u2018..- \u2022 \n\u2022 JO \u2022 \n\u2022\n \n#\n \n\u2022\n \n0\n \n \n\u2022 \n4 \n \n\u2022 \n\u2022 \nI:\n.. \u2022 \n\u2022\n \nS\n \n\u2022\n \n0\n \n. 4\nis. \n\u2022 \n, .. I \n, \n\u2022 \n47 \n. \n\u2022 \n\u2022 hi a \n\u2022 \na \n\u2022 \n, \n- \nPe \n\u2022 `\u2022 \n\u2022 \n\u2022 \np \n... \n4  \n.4 \n19 fr  \n4 \nII.  \n4% \n. \n. \n,I. \n\u2022 sop \n.. \u2022 \u2022 \n\u2022-\u2022 - \n- \n\u2022 \n. \n\u2022 \nWY \u2022 ..i\u2022 \n* \n\u2022II \n\u2022\u2022 \n-\u2022\u2022 \n% \u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022\n\u2022 \n.\u2022 \n\u2022 Sr \nS\n.\n\u2022 *JIM \n\u2022 \n\u2022\u2022\u2022 \n\u2022 So \ni \n\u2022\u2022 \n\u2022 \nP \n..). \n\u2022\u2022\u2022 \ndi!\n'  \n1 \n\u2022 \n. \na  \n\u2022\n\u2022 \n_ 4 \nA at \nI, \n'\ni ll\n r ' - \n./ \n. \n\u2022 ;, \n( ,... \n\u2022 \n\u2022 \na  \nt\ne l\u2022 \n.. \n4. \u2022 \n0 \n\u2018. \n\u2022 \nI\n. \n.. \u2022 \n- \n? \nal  i \u2022 \n\u2022 \n* \n\u2022 \n\u2022 * \n\u2022 \u2022 1' swe \n. \nyr ..` i: \n\u2022 \n1*. \n1 \u2022 \n' / \n\u2022 \n\u2022 \u2022 Y, \n\u201e \n\u2022 i \n,,, \n \u2022\n\u2022 \n. \u2022 \n' !\".\u2022 \n4 \u2022 \u2022 \na ' \n\u2022 \n\u2022 \nit \n' I\u2022 \nt \n. \n7 \n\u2022 \nII \n\u2022 \n. \n4 \n. \n7 \n\u2022 \n. \nr \nI \n\u2022 \ni \n\u2022\u2022\u2022' \n\u2022 \n1 \n\u2022 \n. \n. , \n. \u2022 \u2022 ' \n,"
+  },
+  {
+    "filename": "EFTA00008500.pdf",
+    "char_count": 1905,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 0,
+        "end": 2
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 34,
+        "end": 35
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 66,
+        "end": 67
+      },
+      {
+        "text": "\u2022 \u2022 \u2022 \n\u2022",
+        "label": "ORG",
+        "start": 70,
+        "end": 78
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 84,
+        "end": 85
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 174,
+        "end": 175
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 181,
+        "end": 182
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 188,
+        "end": 189
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 204,
+        "end": 206
+      },
+      {
+        "text": "\u2022 %",
+        "label": "GPE",
+        "start": 214,
+        "end": 217
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 280,
+        "end": 281
+      },
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 294,
+        "end": 295
+      },
+      {
+        "text": "CAR\u20221 \u2022 \nVa",
+        "label": "ORG",
+        "start": 338,
+        "end": 349
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 395,
+        "end": 396
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 402,
+        "end": 403
+      },
+      {
+        "text": "44",
+        "label": "DATE",
+        "start": 1010,
+        "end": 1012
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1022,
+        "end": 1023
+      },
+      {
+        "text": "Avg",
+        "label": "PERSON",
+        "start": 1040,
+        "end": 1043
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1118,
+        "end": 1119
+      },
+      {
+        "text": "1\u2022-\u2022",
+        "label": "CARDINAL",
+        "start": 1163,
+        "end": 1167
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1725,
+        "end": 1726
+      },
+      {
+        "text": "1.v",
+        "label": "CARDINAL",
+        "start": 1744,
+        "end": 1747
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1774,
+        "end": 1776
+      }
+    ],
+    "processing_time": 3.2473959922790527,
+    "sample_text": "\u2022\u2022 \na- \n\u2022 . \u2022 . \n\u2022 \n\u2022 \n\u2022\u2022 \n\u2022 \u2022\u2022\u2022 \n4 \n\u2022\n \n\u2022\n \n\u2022\n \n\u2022\n \n\u20224\n\u2022\u2022\u2022\u2022\u2022 \n\u2022 \n4\n, \u2022 \u2022 \u2022 \n\u2022 fjp4 4 \n\u2014 \n--.' --\nI' \nA-Pd \n\u2022 \n, \u2022 s \n\u2014 ' \n. a \n,P \n\u2022N, \n\u2022 . \n4 .1\nF \n. \na.\n4' \n\u2022 \n\u201e \u2022 \n\u2022 \n: \n4 \n. \u2022 9* \n\u2022 \n4.\ne4\n\u2022 \n' \nt\u2022 \n41:' \nar \n\u2022 %. \n\u2022 \n\u2022 \n\u2022 OV \u2022 \nA \nF  \n\u2022 \n\u2022 \u2022 i \n4;4 \"xi \n\u2022 \nit'\n.40\n\u2022\u2022*, \n\u2022 \n4 \n, \n\"\n' \n\u2022 \n2\n1'4\n\u2022 'O1' \nV. \n\u2022 \u2022 \n\u2022 \nCAUTION \nd\u2022\u2022\u2022 Vt. CAR\u20221 \u2022 \nVa\nl\n\u2022 \n\u2022 \u2022 4 \n\u2022 \n\u2022\u2022\u2022 \nIt \n\u2022 \nt. \n\u2022\u2022\u2022 \n\u2022 \n4 \n\u2022 \n5\n4_, \n4 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 0 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022\u2022\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022 \n\u2022 \n\u2022 * \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \nti\n~ti\u2022' \n\u2022 \n\u2022 \n\u2022 "
+  },
+  {
+    "filename": "EFTA00008480.pdf",
+    "char_count": 2124,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 18,
+        "end": 19
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 21,
+        "end": 22
+      },
+      {
+        "text": "4\u2022\u2022\u2022",
+        "label": "CARDINAL",
+        "start": 97,
+        "end": 101
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 189,
+        "end": 190
+      },
+      {
+        "text": "1 \n$",
+        "label": "MONEY",
+        "start": 315,
+        "end": 319
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 402,
+        "end": 404
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 411,
+        "end": 412
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 440,
+        "end": 441
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 508,
+        "end": 509
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 607,
+        "end": 608
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 635,
+        "end": 636
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 697,
+        "end": 698
+      },
+      {
+        "text": "eu",
+        "label": "PERSON",
+        "start": 792,
+        "end": 794
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 853,
+        "end": 854
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 952,
+        "end": 954
+      },
+      {
+        "text": "24",
+        "label": "CARDINAL",
+        "start": 1016,
+        "end": 1018
+      },
+      {
+        "text": "40. 7",
+        "label": "DATE",
+        "start": 1043,
+        "end": 1048
+      },
+      {
+        "text": "a. \n- \n",
+        "label": "PERSON",
+        "start": 1081,
+        "end": 1088
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1116,
+        "end": 1117
+      },
+      {
+        "text": "4Th",
+        "label": "CARDINAL",
+        "start": 1180,
+        "end": 1183
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1281,
+        "end": 1282
+      },
+      {
+        "text": "10",
+        "label": "CARDINAL",
+        "start": 1347,
+        "end": 1349
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1362,
+        "end": 1363
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1537,
+        "end": 1538
+      },
+      {
+        "text": "\u2022\u2022 \u2022 \n",
+        "label": "ORG",
+        "start": 1580,
+        "end": 1586
+      },
+      {
+        "text": "10",
+        "label": "CARDINAL",
+        "start": 1586,
+        "end": 1588
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1606,
+        "end": 1607
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1629,
+        "end": 1631
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1651,
+        "end": 1652
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1663,
+        "end": 1664
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 1666,
+        "end": 1667
+      },
+      {
+        "text": "1,4",
+        "label": "CARDINAL",
+        "start": 1824,
+        "end": 1827
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1920,
+        "end": 1921
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 2016,
+        "end": 2017
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2059,
+        "end": 2060
+      },
+      {
+        "text": "\u2022 \u2022\u2022\u2022\u2022\u2022",
+        "label": "PERSON",
+        "start": 2102,
+        "end": 2109
+      }
+    ],
+    "processing_time": 1.514249563217163,
+    "sample_text": "\u2022 \n\u2022 \n\u2022\u2022 \ne \u2022 \nr \n4. 4  \n\u2022 \n\u2022 \nt \nIP \n. \na \u2022 \nV. \n\u2022 \n\u2022\u2022\u2022\u2022 , \nII \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \n\u2022\u2022 \n.. \n\u2022 \nS. \n. 4\u2022\u2022\u2022 \n. \n\u2022 \u2022 \nea \n.1 \n\u2022 \n\u25ba \n\".. \n. \nS \n. \n\u2022 \na .41 \u2022\n\u2022 \n. \nI \n- \na \n. - \n\u2022 \n\u2022St. \n.. \n. \n. \n4. \u2022 \n\u2022 \n0 , , \n. \n.\n\u2022\n. \n\u2022\u2022\u2022 \n\u2022 \n\u2022 \n. . . # \n\u2022 \n. \u201e \nr... \n\u2022 \nJr \nI \n\u2022 \n, \ng\u2022 \n\u2022\u2022 \nFI\"\n - . \nt \nIP \n\u2022 \n\u2022 \n0. \nIli \na. \u2022 \n. \u2022 1 \n$ \n' \n: i \n\u2022 \n. ... \u2022 \n\u2022 \n\u2022II \u2022 \n\" \ne \n\u2022 \n.I. . \n. \n. \u2022 \n) \nr . \n\u2022 \u2022 \n4 \n\u2022 4' . \n\u2022 \n41 \nsi\u2022 \n4. \u2022 \n\u2022 \na \n\u2014 \n\u2022\u2022 \nl_ \n\u2022 \n\u2022 \n4: a \n\u2022 \n. \n.\u2022 \n_ \u2022\u20224 \n\u2022 \n\u2022\u2022 , e \n. \u2022 \n. \ns \n, \n0  \n\u2022 \n. \n-\u2022 \n.. \n- 1 \n4 \n\u2022 \n, \n\u2022 \n... \n\u2022 \n. \n\u2022\u2022 \n\u2022\n. \u2022 \n\u2022 '. \u2022 \nis . \n... . \n\u2022 \u2022 \nj \ns  . \nA\u2022 \n\u2022 \n- fer \u2022 s \n. \n. \nt \n4 \n* \n\u2022 \n1 \u2022i\u201e. .\u2022 \ne. . \na 1 \n( \u2022 \n.. - \n.... \n. \n\u2022 \n...-\nz\u2018s k%z \nte6ets\u2018?'`Nle \noft \n. 4 N\nk\u2018 \nFederal eur \n-9. \nk/ \nmy4es,Acsat.k0 kS \nsN \nInv \nof \nes.\u2022 tigat \nr ed_ \nlelk \n, \ntrot eu \nI lk \nc. \nk\u2018 \nrkma \n% \nC \nin Veste't rea U \nigation\nIlk \n1 \n' \n\u2022 \u2022\u2022 \n\u2022 . \n\u2022 \n\u2022 \u2022 \n, I' \n\u201eor \n. \n\u2022 . r o. \ns \nS.. \u2018 \n....-0.\n, \n, \n\u2022 \n; \n. \n \ni \n k i0i \n- a\n41..0 II? \n0 \n\u2022 \". \n'' \n'\u202214; \n. \ne \n. . \n\u2022 i\u2022\n-"
+  },
+  {
+    "filename": "EFTA00008493.pdf",
+    "char_count": 2931,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 40,
+        "end": 41
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 71,
+        "end": 72
+      },
+      {
+        "text": "10 ih,\"\u2022\u2022.\u2022",
+        "label": "MONEY",
+        "start": 212,
+        "end": 223
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 331,
+        "end": 332
+      },
+      {
+        "text": "\u2022 \u2022 \n -I",
+        "label": "ORG",
+        "start": 361,
+        "end": 369
+      },
+      {
+        "text": "04",
+        "label": "DATE",
+        "start": 400,
+        "end": 402
+      },
+      {
+        "text": "IP \u2022 \n\u2022",
+        "label": "ORG",
+        "start": 474,
+        "end": 481
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 496,
+        "end": 497
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 602,
+        "end": 603
+      },
+      {
+        "text": "\u2022.",
+        "label": "ORG",
+        "start": 636,
+        "end": 638
+      },
+      {
+        "text": "41041",
+        "label": "DATE",
+        "start": 640,
+        "end": 645
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 647,
+        "end": 648
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 671,
+        "end": 672
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 739,
+        "end": 740
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 826,
+        "end": 828
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 866,
+        "end": 867
+      },
+      {
+        "text": "4 1",
+        "label": "DATE",
+        "start": 893,
+        "end": 896
+      },
+      {
+        "text": "\u20224",
+        "label": "ORG",
+        "start": 951,
+        "end": 953
+      },
+      {
+        "text": "do\u2022",
+        "label": "PERSON",
+        "start": 1101,
+        "end": 1104
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1121,
+        "end": 1123
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 1127,
+        "end": 1128
+      },
+      {
+        "text": "\u2022Ir\u2022",
+        "label": "GPE",
+        "start": 1137,
+        "end": 1141
+      },
+      {
+        "text": "9",
+        "label": "CARDINAL",
+        "start": 1193,
+        "end": 1194
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 1200,
+        "end": 1203
+      },
+      {
+        "text": "8",
+        "label": "CARDINAL",
+        "start": 1294,
+        "end": 1295
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1316,
+        "end": 1318
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 1339,
+        "end": 1340
+      },
+      {
+        "text": "Si",
+        "label": "GPE",
+        "start": 1375,
+        "end": 1377
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1399,
+        "end": 1400
+      },
+      {
+        "text": "\u2022 \u2022",
+        "label": "ORG",
+        "start": 1439,
+        "end": 1442
+      },
+      {
+        "text": "1",
+        "label": "MONEY",
+        "start": 1456,
+        "end": 1457
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1528,
+        "end": 1529
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1604,
+        "end": 1605
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1635,
+        "end": 1636
+      },
+      {
+        "text": "47",
+        "label": "CARDINAL",
+        "start": 1665,
+        "end": 1667
+      },
+      {
+        "text": "II",
+        "label": "CARDINAL",
+        "start": 1679,
+        "end": 1681
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1727,
+        "end": 1728
+      },
+      {
+        "text": "li \u2022",
+        "label": "PERSON",
+        "start": 1821,
+        "end": 1825
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 1854,
+        "end": 1855
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1904,
+        "end": 1905
+      },
+      {
+        "text": "I. \n\u2022 \n\u2022\u2022",
+        "label": "PERSON",
+        "start": 1914,
+        "end": 1923
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 1924,
+        "end": 1926
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1967,
+        "end": 1968
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2017,
+        "end": 2018
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2042,
+        "end": 2043
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2085,
+        "end": 2086
+      },
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 2100,
+        "end": 2102
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 2142,
+        "end": 2144
+      },
+      {
+        "text": "4.1",
+        "label": "CARDINAL",
+        "start": 2180,
+        "end": 2183
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2210,
+        "end": 2211
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2215,
+        "end": 2216
+      },
+      {
+        "text": "I. \n\u2022",
+        "label": "PERSON",
+        "start": 2238,
+        "end": 2243
+      },
+      {
+        "text": "J. \nWV \n\u2022 \u2022",
+        "label": "ORG",
+        "start": 2265,
+        "end": 2276
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2282,
+        "end": 2283
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2294,
+        "end": 2295
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2430,
+        "end": 2431
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 2438,
+        "end": 2441
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2443,
+        "end": 2444
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2466,
+        "end": 2467
+      },
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 2502,
+        "end": 2504
+      },
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 2513,
+        "end": 2514
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2516,
+        "end": 2517
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 2649,
+        "end": 2651
+      },
+      {
+        "text": "$ \nII",
+        "label": "MONEY",
+        "start": 2653,
+        "end": 2658
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2713,
+        "end": 2714
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 2728,
+        "end": 2730
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 2744,
+        "end": 2746
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2761,
+        "end": 2762
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 2764,
+        "end": 2765
+      },
+      {
+        "text": ".t",
+        "label": "GPE",
+        "start": 2815,
+        "end": 2817
+      },
+      {
+        "text": "4\".-4.\u2022\u2022-",
+        "label": "CARDINAL",
+        "start": 2821,
+        "end": 2830
+      },
+      {
+        "text": "\u2022\u2022 \u2022\u2022\u2022",
+        "label": "ORG",
+        "start": 2873,
+        "end": 2879
+      }
+    ],
+    "processing_time": 2.9767727851867676,
+    "sample_text": "li\u2022 \n\u2022 \nar \u2022 \u2022\u2022 \u2022 \n\u2022 \na \u2022 \n\u2022 \n\u2022\u2022 \na. \n. 4  . \n* \ni \u2022 \u2022 \n\u2022 aia \n\u2022 \n1%, \n4 .... \n\u2022 \nit.s \n, \u2022 , ... \n\u201e \n1\u20221 i. a AL \n... a \u2022 \u2022 \n.. , .\u2022 \n\u2022 ... \u2022 \u2022 \u2022 \n\u2022 \nsr \n\u2022\u2022 \u2022 \n\u2022 \u2022 \n. \n.. 0... \n. \u20221 : \u2022. : Ili . \nIlit \n, P \n\u2022 \u201e_10 ih,\"\u2022\u2022.\u2022 . . \n\u2022\u2022\u2022\u2022\u2022\u2022 \n0 \n.16 \n. \n, \nilk \u2022 ' \n\u2022 ,TIV \n\u2022 \n, \n.0 \n\u2022\u2022\u2022\u2022 \n\u2022 \n\u2022 \n \n\u2022 \nda\u201e, \n\u2022;\u2022 ... I \u2022 \n\u2022 \n,.... \u2022 a. \n, 1 \n\u2022 \n\u2022 \n. \nIP \n, \n.\u2022 \n\u2022 \n\u2022\u2022 \n\u2022 \u2022 \n -I\" \u2022 \na \n.18 \n\u2022 \n\u2022 \nIV \nI lk . \n04, \n\u2022 \n\u2022 VIS \u2022 . \n.All \u2022\n\u2022 \nii, . b \u2022 - \u2022 \n\u2022 \n\u2022 \n- ft \n...- \u2022\u2022 \nt \u2022 \nI' \nIP \u2022 \n\u2022 \n* \u2022 \u2022 \n\u2022 \n\u2022 \n9 . \u2022 , ,is \n. \u2022 \n..., \u2022 \n. \u201e,.. \u2022 ..\u2022 \n. \n\u2022 \n\u2022 \n. \n.00.4 \n-\u2022 \n\u2022 \n\u2022 -\u2022 ' \n\u2022 \na \n. \n\u00ab \n\u2022 \n\u2022\u2022 \na \nIP \nA \n\u2022 \n1 \nes \n- \ne. \n\u2022 f . \n' \nb \n\u2022 .i. \n\u2022. \n41041 \n1 \nt. \n' . a 'II \n\u2022 \n' \n4 \nA  \n* \nle \n\u2022 \n\u2022 \n.. \n: \n. \n\u2022 \n\u2022 \n. \nMI . \n\u2022 \n\u2022 \n\u2022 \nN . \n\u2022 \n.... \n1 \nr \ne \n- \u2022 \n\u2022 a e  . \n\u2022\u2022\u2022\u2022 \u2022 \nell' ' \n\u2022 \nII, . \n. \ndor, ..,\u2022 \n\u2022 \n\u2022 \n. \nii i.\u2022 7 \u2022 \n\",\u2022\u2022 ...\u2022 IC 4 ..,,,-,- A\n. . \n\u2022 \n. \n. . \n1, , \n. \n\u00b0 I taly \n.0 .x ..4 1 ,.\u2022 \n. \n\u2022 . \n. \n\u2022 \n-a \n\u2022 \u2022 \na \n\u2022 \n\u2022 \nSt. \n\u2022\u2022 \n. \n\u2022 \nt \u20224 \n.. \n. \nl. \n\u2022 \n\u2022 \n\u2022 \nV \nea i  \n\u2022\u2022 \n\u2022\u2022 \n\u2022 \n\u2022 \n\u2022"
+  },
+  {
+    "filename": "EFTA00008519.pdf",
+    "char_count": 3606,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "1 \u2022",
+        "label": "CARDINAL",
+        "start": 54,
+        "end": 57
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 70,
+        "end": 71
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 104,
+        "end": 105
+      },
+      {
+        "text": "44",
+        "label": "CARDINAL",
+        "start": 115,
+        "end": 117
+      },
+      {
+        "text": "10",
+        "label": "CARDINAL",
+        "start": 211,
+        "end": 213
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 284,
+        "end": 285
+      },
+      {
+        "text": "1 \u2022",
+        "label": "CARDINAL",
+        "start": 293,
+        "end": 296
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 324,
+        "end": 325
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 346,
+        "end": 348
+      },
+      {
+        "text": "1 1",
+        "label": "CARDINAL",
+        "start": 404,
+        "end": 407
+      },
+      {
+        "text": "4\u2022\u2022 \n\u2022 4",
+        "label": "CARDINAL",
+        "start": 537,
+        "end": 545
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 577,
+        "end": 578
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 624,
+        "end": 625
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 646,
+        "end": 647
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 797,
+        "end": 798
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 824,
+        "end": 826
+      },
+      {
+        "text": "IP",
+        "label": "ORG",
+        "start": 828,
+        "end": 830
+      },
+      {
+        "text": "4 .1",
+        "label": "CARDINAL",
+        "start": 850,
+        "end": 854
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 856,
+        "end": 857
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 901,
+        "end": 903
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 962,
+        "end": 963
+      },
+      {
+        "text": "0",
+        "label": "CARDINAL",
+        "start": 1029,
+        "end": 1030
+      },
+      {
+        "text": "14",
+        "label": "CARDINAL",
+        "start": 1034,
+        "end": 1036
+      },
+      {
+        "text": "4 \u2022 \n\u2022",
+        "label": "CARDINAL",
+        "start": 1149,
+        "end": 1155
+      },
+      {
+        "text": "4.1",
+        "label": "CARDINAL",
+        "start": 1219,
+        "end": 1222
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1225,
+        "end": 1226
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1327,
+        "end": 1328
+      },
+      {
+        "text": "10",
+        "label": "CARDINAL",
+        "start": 1348,
+        "end": 1350
+      },
+      {
+        "text": "31\u2018",
+        "label": "CARDINAL",
+        "start": 1401,
+        "end": 1404
+      },
+      {
+        "text": "04",
+        "label": "CARDINAL",
+        "start": 1592,
+        "end": 1594
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1686,
+        "end": 1687
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1764,
+        "end": 1765
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1770,
+        "end": 1771
+      },
+      {
+        "text": "14",
+        "label": "CARDINAL",
+        "start": 1787,
+        "end": 1789
+      },
+      {
+        "text": "\u2022\u2022\u2022\u2022\u2022 4  \n",
+        "label": "PERSON",
+        "start": 1813,
+        "end": 1823
+      },
+      {
+        "text": "4\u2022\u2022",
+        "label": "CARDINAL",
+        "start": 1835,
+        "end": 1838
+      },
+      {
+        "text": "'44",
+        "label": "DATE",
+        "start": 1854,
+        "end": 1857
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1958,
+        "end": 1959
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 1967,
+        "end": 1969
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 2074,
+        "end": 2075
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2085,
+        "end": 2086
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2186,
+        "end": 2187
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2241,
+        "end": 2242
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2358,
+        "end": 2359
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2382,
+        "end": 2383
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2435,
+        "end": 2436
+      },
+      {
+        "text": "\u2022\u2022 e'",
+        "label": "ORG",
+        "start": 2515,
+        "end": 2520
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2580,
+        "end": 2581
+      },
+      {
+        "text": "4 \u2022",
+        "label": "CARDINAL",
+        "start": 2618,
+        "end": 2621
+      },
+      {
+        "text": "404",
+        "label": "CARDINAL",
+        "start": 2643,
+        "end": 2646
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2663,
+        "end": 2664
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 2714,
+        "end": 2716
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2722,
+        "end": 2723
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2725,
+        "end": 2726
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2745,
+        "end": 2746
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2767,
+        "end": 2768
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2861,
+        "end": 2862
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2897,
+        "end": 2898
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2994,
+        "end": 2995
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3127,
+        "end": 3128
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3143,
+        "end": 3144
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 3149,
+        "end": 3151
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 3275,
+        "end": 3277
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3294,
+        "end": 3295
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3397,
+        "end": 3398
+      },
+      {
+        "text": "5",
+        "label": "CARDINAL",
+        "start": 3417,
+        "end": 3418
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 3430,
+        "end": 3431
+      }
+    ],
+    "processing_time": 4.889800786972046,
+    "sample_text": "\u2022 \u2022 \u2022 \n\". \u2022 \nS. \n\u2022 \nle\u2022 \n\u2022\n\u2022\u2022 \u201e. . \u2022 \na  \u2022 \n. \n. \n. . 1 \u2022 \n, \n\u2022 \n\u2022 e\u2022\n1 \n, \u2022 \u2022 \n...p. \u2022\n- \u2022 \ni... \n. \n, 4. 4 . \n' \n44 \n\u2022 he \n; \u2022 \u2022\u2022; . , r . \n. \n, \u2022 . ihe \n.... \nI \n!.. \u2022 \u2022 \u2022 .. \na \n\u2022\nOa\nA \n. \n\u2022 \u2022\u2022 \n\u2022 \u2022 \n.\u2022 \n. \n10 \n\" fr. ' i . - \n. \n4.\u2022 \u2022 . \u2022 , \nI \n.. . . \u2022 \nL., \n. \n\u2022 \n\u2022 \u2022 \n. \nI \n\u2022\u2022 4 \n\u2022 \nr \n1 \u2022 \ne \u2022 \n.2 \n. \n\u2022 \n-\u2022 \n. \n44-\n1-ef, \n\u2022 \n\u2022 \n4, \n\u2022 . \n\u2022\u2022 \n\u202244' \n, \n\u2022 \n\u2022 \n. \n\u2022\u2022\u2022 \u2022 \n, \nlc. \n/ \n' \n' \n- \nI'\n. . \n,1 1... \nk ' \n\u2022 ' \n\u2022 .\" \nt \ntts 't \n' \u2022 \n\u2022\u2022\u20224 \ni \n\u2022\u2022\"\" .. \nSal \u2022 \n. \u201e \n- \nr'\u2022 \n\u2022 , \n\u2022 \n. \nC. \n( / \ni \n\u2022\u2022\u2022 \u2022 - \n. \u2022 \nivr \n.. ,+,,, - \n:4\u2022\u2022 \n\u2022 4 \n. \n-\u2022 \n..e. .t. ' \n. \u2022 \n. t I 1: .4. \n. \n....,.. ; \n;, , \n. \u2022 \n. - di..\n. . \n4 \n\u2022\u2022 ... \u2022 \n\u2022 \n. \n\u2022 \n1. \n\u2022 \nas. \u2022 ....\u201e \n. \n\u2022 ,... \n\u2022 'I\u2022\u2022 \n\u2022 \ni . \n\u2022 - \n\u2022 \n. \n\u2022 \nIiiit \n\u201etr. \n... \n. \n.'' \n. \nV. \nla \n\u2022\u2022\u2022\u2022 \nli\n\u2022 \u2022 \n' \n. \n\u2022 \nt: \n. \n.0 \u2022 \n\u2022,\u201e \n\u2022 \n\u2022\n9 \nX' \n4 \n\u2022 \n. \n, \n; \u2022 ; \u2022 ave\" . \u2022\u2022 \nIP \n.4. .., \n. \n. \n. \n4 .1,\n4\u00b0. \n\u2022 \u2022 A \n,t3,;%.,220 \n\u201e \n,,/ \n\u2022 \n' \n.4., \n\u2022\u2022, eft \n. \n.. , \u2022 a lp \n\u2022 \n\u2022 \n\u2022\u2022\u2022 \n\u2022 \n. \n\u2022 \n\u201e \u2022 \n4 , ,\u201e .. \n4 \n, \n\u2022 \nt. \n' % \u2022 \n,\u2022 \n- \n\u2018 !rt .- \u2022 "
+  },
+  {
+    "filename": "EFTA00008527.pdf",
+    "char_count": 3405,
+    "page_count": 1,
+    "entities": [
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 16,
+        "end": 17
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 69,
+        "end": 70
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 155,
+        "end": 156
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 158,
+        "end": 159
+      },
+      {
+        "text": "2",
+        "label": "CARDINAL",
+        "start": 161,
+        "end": 162
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 480,
+        "end": 481
+      },
+      {
+        "text": "4 0",
+        "label": "CARDINAL",
+        "start": 551,
+        "end": 554
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 570,
+        "end": 571
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 610,
+        "end": 611
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 615,
+        "end": 616
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 642,
+        "end": 643
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 774,
+        "end": 775
+      },
+      {
+        "text": "NII",
+        "label": "ORG",
+        "start": 799,
+        "end": 802
+      },
+      {
+        "text": "N.  4  \u2022",
+        "label": "PERSON",
+        "start": 812,
+        "end": 820
+      },
+      {
+        "text": "\u2022 .,*\u2022",
+        "label": "PERSON",
+        "start": 862,
+        "end": 868
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 889,
+        "end": 890
+      },
+      {
+        "text": "I. 4",
+        "label": "PERSON",
+        "start": 893,
+        "end": 897
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 926,
+        "end": 927
+      },
+      {
+        "text": ".- \n4",
+        "label": "CARDINAL",
+        "start": 976,
+        "end": 981
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1031,
+        "end": 1032
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1052,
+        "end": 1053
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1188,
+        "end": 1189
+      },
+      {
+        "text": "\u2022\u2022\u2022",
+        "label": "GPE",
+        "start": 1210,
+        "end": 1213
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1215,
+        "end": 1216
+      },
+      {
+        "text": "1 1.4 4",
+        "label": "CARDINAL",
+        "start": 1218,
+        "end": 1225
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1244,
+        "end": 1245
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1262,
+        "end": 1263
+      },
+      {
+        "text": "41",
+        "label": "CARDINAL",
+        "start": 1300,
+        "end": 1302
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1326,
+        "end": 1327
+      },
+      {
+        "text": "t. \n.... \n. \n",
+        "label": "PERSON",
+        "start": 1428,
+        "end": 1441
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1466,
+        "end": 1467
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1495,
+        "end": 1496
+      },
+      {
+        "text": "4p",
+        "label": "CARDINAL",
+        "start": 1526,
+        "end": 1528
+      },
+      {
+        "text": "1.,\u2022\u2022\u2022\u2022\u2022",
+        "label": "CARDINAL",
+        "start": 1769,
+        "end": 1777
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1801,
+        "end": 1802
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1807,
+        "end": 1808
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1833,
+        "end": 1834
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1841,
+        "end": 1842
+      },
+      {
+        "text": "4. 4",
+        "label": "CARDINAL",
+        "start": 1868,
+        "end": 1872
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 1881,
+        "end": 1882
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1887,
+        "end": 1888
+      },
+      {
+        "text": "6",
+        "label": "CARDINAL",
+        "start": 1900,
+        "end": 1901
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 1949,
+        "end": 1950
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 1954,
+        "end": 1955
+      },
+      {
+        "text": "011",
+        "label": "CARDINAL",
+        "start": 1991,
+        "end": 1994
+      },
+      {
+        "text": "1  1141",
+        "label": "CARDINAL",
+        "start": 1999,
+        "end": 2006
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2009,
+        "end": 2010
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2048,
+        "end": 2049
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2080,
+        "end": 2081
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2087,
+        "end": 2088
+      },
+      {
+        "text": "404",
+        "label": "CARDINAL",
+        "start": 2154,
+        "end": 2157
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2172,
+        "end": 2173
+      },
+      {
+        "text": "1\n \n",
+        "label": "DATE",
+        "start": 2176,
+        "end": 2180
+      },
+      {
+        "text": "' 4",
+        "label": "DATE",
+        "start": 2224,
+        "end": 2227
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2230,
+        "end": 2231
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2262,
+        "end": 2263
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2303,
+        "end": 2304
+      },
+      {
+        "text": "t.",
+        "label": "PERSON",
+        "start": 2309,
+        "end": 2311
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2416,
+        "end": 2417
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2512,
+        "end": 2513
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2537,
+        "end": 2538
+      },
+      {
+        "text": "4.",
+        "label": "CARDINAL",
+        "start": 2612,
+        "end": 2614
+      },
+      {
+        "text": "2. \n4",
+        "label": "CARDINAL",
+        "start": 2654,
+        "end": 2659
+      },
+      {
+        "text": "241",
+        "label": "CARDINAL",
+        "start": 2664,
+        "end": 2667
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2767,
+        "end": 2768
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2872,
+        "end": 2873
+      },
+      {
+        "text": "7",
+        "label": "CARDINAL",
+        "start": 2903,
+        "end": 2904
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 2924,
+        "end": 2925
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 2999,
+        "end": 3000
+      },
+      {
+        "text": "\u2022\u2022",
+        "label": "ORG",
+        "start": 3034,
+        "end": 3036
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3077,
+        "end": 3078
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3103,
+        "end": 3104
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3125,
+        "end": 3126
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3136,
+        "end": 3137
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3149,
+        "end": 3150
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 3162,
+        "end": 3163
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 3171,
+        "end": 3172
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 3182,
+        "end": 3183
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 3190,
+        "end": 3191
+      },
+      {
+        "text": "4",
+        "label": "CARDINAL",
+        "start": 3202,
+        "end": 3203
+      },
+      {
+        "text": "\u2022.",
+        "label": "ORG",
+        "start": 3261,
+        "end": 3263
+      },
+      {
+        "text": "c y\u2022sp.\u2022 1\u2022\u2022\u2022\u202245",
+        "label": "DATE",
+        "start": 3265,
+        "end": 3281
+      },
+      {
+        "text": "0-11",
+        "label": "CARDINAL",
+        "start": 3294,
+        "end": 3298
+      },
+      {
+        "text": "1",
+        "label": "CARDINAL",
+        "start": 3341,
+        "end": 3342
+      },
+      {
+        "text": "LA",
+        "label": "GPE",
+        "start": 3388,
+        "end": 3390
+      }
+    ],
+    "processing_time": 3.5267906188964844,
+    "sample_text": "; \n.41 \n\u2022 \n\u2022 \u2022 \n4\n. \n! \n\u2022 \n\u2022\n\u2022 \n\u2022 \nc  \nl \n' , \n. \n4P \n\u2022 \n* \n. \n.. \n..4.! ....: .) \n% \n. jk\n.: - ..... \n.; j  \n. \n- \n\u2022 \u2022!( d4.1%1/4-\n.. .\u2022 \n_ \u2022\u2022\u2022\u2022 : \n. \n. \n1, 4 \n2. \n. \nA \n! \n. \n\u2022 ..2, it \n-\u2022 \n\u2022 \n, \n\u2022 \n\u2022 \u2022 \nr \n-re \n\u2022 \n\u2022 \na\n. ' -. .. \n\u2022,.. \u2022\u2022\u2022\u2022 , \n\u2022 \n\u2018 \n\u2022 \n\u2022 \n\u2022 \n\u2022 \u2022\u2022\u2022 ' \nil\u2022 \n.\u2022 \n\u2022 \n. \n\u2022 \n- \n... \n. \n\u2022 \n.- \n.44.4#\n. \u2022 \n\u2022.% - I, _ p n \u2022 sr \n., \u2022 \u2022 \n. \n. \n. \n\u2022 \n.. . \n. \n. \n\u2022 \n- \n, \n\u2022.,\n\u2022\n. \n\u2022 \n\u2022 \nfle, \n\u2022 \n.. \n... \na\" ... \n. \n. \n. \u2022 , '. , \u2022 \ndb \u2022 \n- .* \n\". . \ns \n, \n- .\u2022 ...(- \n, \n1' .:),\u2022 2 \n\u2022%. .,./ \u2022 \nV \na  \n\u2022 \n\u2022 - \n\u2022 4.. \n- \u2022\u2022\u2022\u2022-\u2022 \ndi\n. \n- \n. \n\u2022 \n4 0 \n\u2022\u2022\n- \n\u2022 \n. n \n4 \nif\u2022\u2022 \n\u2022 \n\u2022 \u2022- \u2022 .' 'I\nL._ vi \u2022\u2022 \nft \n4 \n-\n4\n\u2022\n \n\u2022 \n)=-.\u2022 \n- C ' ', , 7\", \n\u2022 - \n. \u2022 , \n\u2022 . A .4 \n4 \u2022\u2022 1st . ' \n-. \u2018$ \u2022 * ' IC \n;- \u2014 * \n* ' \n\u2022 \ne \nA \n\u2022 \n\u2022 \n- % \n\u2022 \n\u2022 \nav  \u2022 \n\u2022 , \n\u2022 \n. \n).... \nA \n -04  A 4, \n \n \u2022\u2022 \n\u2022 \n*\n\u2022  \n\u2022 \u2022 \nNII \n, g,, ..N.  4  \u2022 \nti. \n\u2022 \n' \nsr \n. \n' \n....\u2022 \nV \nte a\n_. \n\u2022 .,*\u2022... \n. \u2022 \n* \n\u2022 \n\u2022 \u2022 \n4. \nI. 4 \n., , \n. \n. \n' \nI \n\u2022\u2022 \n\u2022\n. \n4 \n, \u2022 \n., .. \nk \n.. - \n. . \n. \n. \n\u2022 \nA . \n\u2022 \u2022 4: .- \n4\n... \n. \n. \n\u2014 .\u2022 , "
+  }
+]

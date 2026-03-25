@@ -13,12 +13,11 @@ Usage:
   python migrate_sqlite_to_pg.py --db full_text_corpus  # Migrate one DB only
 """
 
-import os
-import io
-import sys
-import csv
-import sqlite3
 import argparse
+import io
+import os
+import sqlite3
+import sys
 from datetime import datetime
 
 PG_HOST = os.environ.get("PG_HOST", "localhost")

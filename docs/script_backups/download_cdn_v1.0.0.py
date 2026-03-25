@@ -15,18 +15,15 @@ Usage:
   python3 download_cdn.py --monitor          # Show progress only
 """
 
-import os
-import sys
-import json
+import argparse
 import csv
+import json
+import os
 import sqlite3
 import subprocess
-import argparse
 import time
 from datetime import datetime
-from pathlib import Path
 from glob import glob
-
 
 # =============================================================================
 # Configuration Constants

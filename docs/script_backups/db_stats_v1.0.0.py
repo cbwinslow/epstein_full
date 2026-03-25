@@ -10,12 +10,10 @@ Usage:
   python db_stats.py --indexes    # Index sizes only
 """
 
-import sys
-import os
 import argparse
 import os
+
 import psycopg2
-import os
 
 # =============================================================================
 # Configuration

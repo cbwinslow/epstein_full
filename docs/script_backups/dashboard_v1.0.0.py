@@ -12,20 +12,17 @@ Usage:
 """
 
 import os
-import sys
-import time
 import subprocess
+import time
 from datetime import datetime, timedelta
 from glob import glob
 
+from rich import box
 from rich.console import Console
 from rich.live import Live
-from rich.table import Table
 from rich.panel import Panel
+from rich.table import Table
 from rich.text import Text
-from rich.layout import Layout
-from rich import box
-
 
 # =============================================================================
 # Configuration
@@ -205,19 +202,19 @@ def build_dashboard() -> Panel:
     disk_color = "red" if disk_pct > 90 else "magenta"
 
     summary = Text()
-    summary.append(f"  Files: ", style="bold")
+    summary.append("  Files: ", style="bold")
     summary.append(f"{total:,}", style="green bold")
     summary.append(f" / {total_expected:,}  ({overall_pct:.1f}%)", style="dim")
-    summary.append(f"  │  Rate: ", style="bold")
+    summary.append("  │  Rate: ", style="bold")
     summary.append(f"{rate:.1f}/s", style="cyan bold")
-    summary.append(f"  │  ETA: ", style="bold")
+    summary.append("  │  ETA: ", style="bold")
     summary.append(f"{format_eta(total, total_expected, rate)}", style="yellow")
-    summary.append(f"\n  Disk: ", style="bold")
+    summary.append("\n  Disk: ", style="bold")
     summary.append(f"{format_bytes(used)} / {format_bytes(disk_total)}", style=disk_color)
     summary.append(f"  ({disk_pct:.1f}%)", style="dim")
-    summary.append(f"  │  Processes: ", style="bold")
+    summary.append("  │  Processes: ", style="bold")
     summary.append(f"{dl_procs} download + {aria_procs} aria2c", style="cyan")
-    summary.append(f"  │  Time: ", style="bold")
+    summary.append("  │  Time: ", style="bold")
     summary.append(f"{datetime.now().strftime('%H:%M:%S')}", style="dim")
 
     # Overall progress bar

@@ -20,14 +20,14 @@ Environment:
   PG_HOST, PG_PORT, PG_USER, PG_PASSWORD, PG_DBNAME — PostgreSQL connection
 """
 
-import requests
+import argparse
 import json
 import os
-import sys
 import time
-import argparse
 from datetime import datetime
 from pathlib import Path
+
+import requests
 
 # =============================================================================
 # Config

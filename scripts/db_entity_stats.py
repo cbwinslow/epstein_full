@@ -11,14 +11,10 @@ Usage:
   python db_entity_stats.py --entity "Epstein"  # Specific entity details
 """
 
-import sys
-import os
 import argparse
 import os
-import json
-import os
+
 import psycopg2
-import os
 
 # =============================================================================
 # Configuration
@@ -53,7 +49,7 @@ def show_overview(conn):
     edge_sources = cur.fetchone()[0]
 
     print(f"\n{'=' * 60}")
-    print(f"  Knowledge Graph Overview")
+    print("  Knowledge Graph Overview")
     print(f"{'=' * 60}")
     print(f"  Entities:     {entities:,}")
     print(f"  Relationships:{relationships:,}")
@@ -70,7 +66,7 @@ def show_entity_types(conn):
         ORDER BY count DESC
     """)
 
-    print(f"\n  Entity Types:")
+    print("\n  Entity Types:")
     for etype, count in cur.fetchall():
         print(f"    {etype}: {count}")
 
@@ -85,7 +81,7 @@ def show_relationship_types(conn):
         ORDER BY count DESC
     """)
 
-    print(f"\n  Relationship Types:")
+    print("\n  Relationship Types:")
     for rtype, count, weight in cur.fetchall():
         print(f"    {rtype}: {count} edges, total weight: {weight:.0f}")
 

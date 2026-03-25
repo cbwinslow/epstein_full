@@ -1,0 +1,136 @@
+# Conversation Log: 2026-03-22 (Continued)
+
+## Session: GPU Processing Setup, Memory System, and Server Audit
+
+### What We Did
+
+#### Phase 1: Server Hardening & Tool Installation (earlier in session)
+
+1. **Installed CLI tools:**
+   - `@kilocode/cli@7.1.0` — replaced stub kilocode package
+   - `cline@2.9.0` — configured with ClineBot provider (claude-sonnet-4-6)
+   - `opencode@1.2.27` — TUI coding assistant
+   - `openclaw@2026.3.13` — gateway daemon on port 18789
+   - Go 1.26.1, Rust 1.94.0, fnm 1.39.0
+
+2. **Server hardening:**
+   - UFW firewall enabled (deny incoming, allow ssh + 80/tcp)
+   - Nginx hardened (TLSv1.2+, security headers, server_tokens off)
+   - PHP-FPM tuned (max_children=20, max_requests=500)
+   - Cloudflared switched from QUIC to HTTP/2
+   - SSH ForwardAgent enabled for Windows host
+
+3. **Security fixes:**
+   - Extracted hardcoded database credentials from 12 files to environment variables
+   - `scripts/migrate_sqlite_to_pg.py` — uses os.environ.get()
+   - `scripts/db_*.py` (7 files) — uses os.environ.get()
+   - `migrations/bootstrap_db.sh` — uses env vars
+   - Verified `.env` was never committed to git
+   - NOTE: Password `123qweasd` is in git history — rotation recommended
+
+#### Phase 2: Database & Data Acquisition
+
+4. **PostgreSQL migration validated:**
+   - 42 tables, 12GB, 10,894,625 total rows
+   - All 27 core DOJ tables match SQLite exactly
+   - Wrote `scripts/migrate_sqlite_to_pg.py` — comprehensive, re-runnable
+
+5. **Epstein Exposed API data acquired:**
+   - persons: 1,578, flights: 3,615, locations: 83, organizations: 55, nonprofits: 33
+   - Bulk export script: `scripts/fetch_epstein_exposed.py`
+   - Confirmed data NOT redundant with DOJ/EFTA (complementary datasets)
+
+6. **FEC data acquired:**
+   - 400 donations, 3,600 disbursements via API key
+
+#### Phase 3: Epstein-Pipeline CLI & Testing
+
+7. **Epstein-Pipeline CLI installed:**
+   - 17 processor modules with 30+ commands
+   - Key processors: OcrProcessor, EntityExtractor, EmbeddingProcessor, DocumentClassifier, RedactionAnalyzer, KnowledgeGraphBuilder, MediaTranscriber, PersonLinker, PersonIntegrityAuditor
+   - Exporters: NeonExporter (PostgreSQL with pgvector)
+
+8. **Test suite: 151 tests passed, 0 failures**
+
+#### Phase 4: GitHub & CI/CD Setup
+
+9. **20 GitHub issues created** on cbwinslow/epstein_full
+10. **.github/ structure created:** issue templates, workflows (ci, security/CodeQL, stale, welcome, release), CODEOWNERS, dependabot, PR template
+11. **6 repository secrets set**
+
+#### Phase 5: Memory System (Letta)
+
+12. **Letta server running** on port 8283 (v0.16.6, Docker, PostgreSQL backend)
+13. **Epstein agent created:** `agent-6833e981-f29d-428b-8d2a-4b7347587e2b`
+14. **23+ archival memories stored** in Letta PostgreSQL
+15. **`scripts/letta_memory.py`** — direct PostgreSQL access for memories
+16. **`scripts/agent_hooks.sh`** — bash wrappers loaded in .zshrc.local
+
+#### Phase 6: GPU Processing Setup (Incomplete)
+
+17. **GPU inventory:**
+    - 2x Tesla K80 (CC 3.7, 12GB) — WORK with PyTorch 2.3.1+cu118
+    - 1x Tesla K40m (CC 3.5) — NOT supported by PyTorch (too old)
+    - Driver: 470.256.02 (CUDA 11.4, cannot upgrade)
+
+18. **PyTorch constraints:**
+    - PyTorch 2.3.1+cu118 works on K80
+    - PyTorch 2.10+cu128 does NOT work (driver too old)
+    - surya-ocr requires PyTorch >= 2.4 → INCOMPATIBLE
+    - PaddleOCR has API compatibility issues
+    - EasyOCR installed but not yet tested
+
+19. **OCR pipeline approach (current status):**
+    - Epstein-Pipeline has OcrProcessor with backends: pymupdf, surya, olmocr, docling, auto
+    - surya backend requires PyTorch >= 2.4 (incompatible with our driver)
+    - PyMuPDF works on CPU (text layer extraction)
+    - Tesseract installed for CPU fallback OCR
+    - PaddleOCR installed but API broken
+    - EasyOCR installed but not tested
+    - **GPU processing NOT yet started** — need to settle on working OCR backend
+
+20. **RTX 3060 on Windows (192.168.4.25):**
+    - SSH access NOT configured (permission denied — password auth needed)
+    - Cannot use RTX 3060 yet
+
+### Key Technical Decisions Made
+
+| Decision | Rationale |
+|----------|-----------|
+| Letta for memories (not mem0) | Self-hosted, full PostgreSQL control, 49-table schema |
+| Write directly to Letta PG | CLI had bugs; direct SQL is reliable |
+| PyMuPDF first, then OCR | Most DOJ PDFs have text layers |
+| Exclude K40m from CUDA | Too old (CC 3.5), PyTorch doesn't support it |
+| GPU env: CUDA_VISIBLE_DEVICES=1,2 | Use only K80s |
+
+### Unresolved Issues
+
+1. **OCR backend for K80** — surya and PaddleOCR incompatible. Need to test EasyOCR or use PyMuPDF+Tesseract combo
+2. **SSH to Windows** — RTX 3060 not accessible yet
+3. **Password rotation** — 123qweasd still in git history
+4. **OpenClaw WhatsApp** — channels not configured yet
+
+### Files Created/Modified This Session
+
+| File | Purpose |
+|------|---------|
+| `scripts/letta_memory.py` | Letta memory management via PostgreSQL |
+| `scripts/agent_hooks.sh` | Bash aliases for memory operations |
+| `scripts/migrate_sqlite_to_pg.py` | Comprehensive SQLite→PG migration |
+| `scripts/fetch_epstein_exposed.py` | Bulk data downloader for EE API |
+| `scripts/load_supplementary.py` | JSON-to-PostgreSQL loader |
+| `memories/sessions/2026-03-22.md` | Session log |
+| `memories/tier1-critical/infrastructure.md` | Updated with latest state |
+| `memories/tier2-architecture/database.md` | Updated with data sources |
+| `docs/DATA_SOURCES.md` | Updated with EE API, FEC, FBI Vault |
+| `docs/SUPPLEMENTARY_DATASETS.md` | Updated acquisition status |
+| `.github/*` | Issue templates, workflows, CODEOWNERS, dependabot |
+| `.env` / `.env.example` | Added PG connection variables |
+| `TASKS.md` | Phase 11 added, data counts corrected |
+
+### Letta Agent State
+- **Agent ID:** agent-6833e981-f29d-428b-8d2a-4b7347587e2b
+- **Archive:** archive-fcd9782d-3dad-4436-acbb-6f5812d62108
+- **Archival passages:** 23+ (conversation logs, knowledge, hooks)
+- **Core blocks:** persona, human, current_session
+- **Connection:** PostgreSQL direct at localhost:5432, database "letta", user "letta"

@@ -23,15 +23,13 @@ Usage:
   python3 tracker.py snapshot
 """
 
-import os
-import sys
-import sqlite3
 import argparse
+import os
+import sqlite3
+import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional
-
 
 # =============================================================================
 # Configuration Constants

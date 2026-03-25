@@ -11,14 +11,11 @@ Usage:
   python db_fts_rebuild.py --batch 50000  # Custom batch size
 """
 
-import sys
-import os
 import argparse
 import os
 import time
-import os
+
 import psycopg2
-import os
 
 # =============================================================================
 # Configuration
@@ -53,7 +50,7 @@ def check_fts(conn):
     """)
     total, with_fts, missing, pct = cur.fetchone()
 
-    print(f"\nFTS Coverage:")
+    print("\nFTS Coverage:")
     print(f"  Total pages:    {total:,}")
     print(f"  With FTS:       {with_fts:,}")
     print(f"  Missing:        {missing:,}")

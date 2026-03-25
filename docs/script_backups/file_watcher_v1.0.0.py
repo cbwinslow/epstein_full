@@ -11,10 +11,9 @@ Usage:
 """
 
 import os
+import subprocess
 import sys
 import time
-import subprocess
-from pathlib import Path
 
 TRACKER = "/home/cbwinslow/workspace/epstein/scripts/tracker.py"
 PYTHON = "/home/cbwinslow/workspace/epstein/venv/bin/python3"
@@ -62,10 +61,10 @@ def update_all():
 
 def main():
     once = "--once" in sys.argv
-    
+
     print(f"File watcher started (poll every {POLL_INTERVAL}s)")
     print(f"Watches: {WATCHES}")
-    
+
     while True:
         try:
             update_all()

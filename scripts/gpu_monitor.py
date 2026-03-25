@@ -17,15 +17,14 @@ Requirements:
   - Python 3.10+
 """
 
-import subprocess
+import argparse
 import json
+import subprocess
 import sys
 import time
-import argparse
+from dataclasses import asdict, dataclass
 from datetime import datetime
-from dataclasses import dataclass, asdict
 from typing import Optional
-
 
 # =============================================================================
 # Configuration

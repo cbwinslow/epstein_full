@@ -1,0 +1,59 @@
+{
+  "linux_server": {
+    "host": "192.168.4.25",
+    "user": "blaine",
+    "ssh_port": 22,
+    "remote_path": "/home/cbwinslow/workspace/epstein"
+  },
+  "local_paths": {
+    "base_dir": "C:\\epstein-windows",
+    "downloads": "C:\\epstein-windows\\downloads",
+    "processing": "C:\\epstein-windows\\processing",
+    "results": "C:\\epstein-windows\\results"
+  },
+  "packages": [
+    "pymupdf",
+    "pyarrow", 
+    "pandas",
+    "numpy",
+    "scipy",
+    "scikit-learn",
+    "spacy",
+    "insightface",
+    "opencv-python-headless",
+    "jiwer",
+    "nervaluate",
+    "networkx",
+    "tqdm",
+    "aiohttp",
+    "playwright",
+    "rapidfuzz",
+    "torch",
+    "transformers",
+    "sentence-transformers",
+    "huggingface-hub",
+    "datasets"
+  ],
+  "cuda_version": "12.4",
+  "processing": {
+    "batch_size": 1,
+    "max_concurrent_files": 3,
+    "ocr_backend": "pymupdf",
+    "entity_model": "en_core_web_sm",
+    "image_processing": true,
+    "result_format": "json"
+  },
+  "transfer": {
+    "protocol": "scp",
+    "compression": true,
+    "verify_checksum": true,
+    "retry_attempts": 3,
+    "timeout_seconds": 300
+  },
+  "monitoring": {
+    "log_level": "INFO",
+    "log_file": "C:\\epstein-windows\\logs\\processing.log",
+    "status_update_interval": 30,
+    "gpu_monitoring": true
+  }
+}

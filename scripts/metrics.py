@@ -9,11 +9,11 @@ Usage:
   from metrics import character_error_rate, compute_ner_metrics, compute_verification_metrics
 """
 
-import numpy as np
-from dataclasses import dataclass, field
-from typing import List, Tuple, Dict, Set, Optional
 from collections import defaultdict
+from dataclasses import dataclass
+from typing import Dict, List, Set, Tuple
 
+import numpy as np
 
 # =============================================================================
 # OCR Metrics
@@ -269,7 +269,7 @@ def compute_verification_metrics(similarity_scores: np.ndarray,
     Returns:
         Dict with AUC, EER, TAR@FAR, and curve data.
     """
-    from sklearn.metrics import roc_curve, auc
+    from sklearn.metrics import auc, roc_curve
 
     fpr, tpr, thresholds = roc_curve(labels, similarity_scores)
     auc_score = auc(fpr, tpr)

@@ -8,8 +8,8 @@ Run after setup.sh or manually:
   uv run python scripts/setup_dev.py
 """
 
-import sys
 import importlib
+import sys
 from pathlib import Path
 
 
@@ -42,7 +42,6 @@ def check_spacy_model() -> bool:
 def check_parquet() -> bool:
     """Check if PyArrow can read parquet files."""
     try:
-        import pyarrow.parquet as pq
         import pyarrow
         print(f"  ✓ pyarrow.parquet (version {pyarrow.__version__})")
         return True
@@ -87,7 +86,7 @@ def check_scripts() -> bool:
     """Check our scripts are importable."""
     scripts_dir = Path(__file__).parent
     sys.path.insert(0, str(scripts_dir.parent))
-    
+
     scripts = ["tracker", "dashboard", "download_cdn", "metrics"]
     all_ok = True
     for s in scripts:
@@ -104,12 +103,12 @@ def main():
     print("\n" + "=" * 50)
     print("  Epstein Full — Environment Verification")
     print("=" * 50)
-    
+
     results = {}
-    
+
     print("\n--- Python ---")
     print(f"  Python {sys.version}")
-    
+
     print("\n--- Core Dependencies ---")
     for mod, name in [
         ("spacy", "spaCy NLP"),
@@ -135,24 +134,24 @@ def main():
         ("tqdm", "tqdm (progress)"),
     ]:
         results[name] = check_import(mod, name)
-    
+
     print("\n--- Models ---")
     results["spaCy model"] = check_spacy_model()
-    
+
     print("\n--- Data Formats ---")
     results["Parquet"] = check_parquet()
     results["SQLite"] = check_sqlite()
-    
+
     print("\n--- Data Directories ---")
     results["Data dirs"] = check_data_dirs()
-    
+
     print("\n--- Our Scripts ---")
     results["Scripts"] = check_scripts()
-    
+
     # Summary
     passed = sum(1 for v in results.values() if v)
     total = len(results)
-    
+
     print("\n" + "=" * 50)
     if passed == total:
         print(f"  ✓ ALL {total} CHECKS PASSED — Ready!")

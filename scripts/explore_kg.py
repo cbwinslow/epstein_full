@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Interactive knowledge graph exploration tool."""
 
-import sqlite3
 import json
+import sqlite3
 import sys
 
 DB_PATH = "/mnt/data/epstein-project/databases/knowledge_graph.db"
@@ -32,17 +32,17 @@ def get_relationships(entity_id, conn):
 
 def main():
     conn = connect()
-    
+
     if len(sys.argv) > 1:
         query = " ".join(sys.argv[1:])
         print(f"\nSearching for: {query}")
         print("=" * 50)
-        
+
         entities = search_entities(query, conn)
         if not entities:
             print("No entities found.")
             return
-        
+
         for entity in entities:
             print(f"\n{entity[1]} ({entity[2]})")
             print(f"  ID: {entity[0]}")
@@ -52,7 +52,7 @@ def main():
                     if isinstance(v, str) and len(v) > 100:
                         v = v[:100] + "..."
                     print(f"  {k}: {v}")
-            
+
             rels = get_relationships(entity[0], conn)
             if rels:
                 print(f"  Relationships ({len(rels)}):")
@@ -72,7 +72,7 @@ def main():
         print("\n  Entity types:")
         for row in cursor.fetchall():
             print(f"    {row[0]}: {row[1]}")
-    
+
     conn.close()
 
 if __name__ == "__main__":

@@ -19,20 +19,19 @@ Requirements:
   - Python 3.10+
 """
 
+import argparse
+import json
 import os
 import sys
-import json
 import time
-import argparse
 from datetime import datetime
-from typing import Optional
-
 
 # Import our monitors
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from gpu_monitor import query_gpus, health_check as gpu_health, TEMP_WARN as GPU_TEMP_WARN
-from cpu_monitor import get_cpu_info, health_check as cpu_health, TEMP_WARN as CPU_TEMP_WARN
-
+from cpu_monitor import get_cpu_info
+from cpu_monitor import health_check as cpu_health
+from gpu_monitor import health_check as gpu_health
+from gpu_monitor import query_gpus
 
 # =============================================================================
 # Configuration
@@ -118,7 +117,6 @@ def get_processes(name_pattern: str = None) -> list[dict]:
 
 import subprocess
 
-
 # =============================================================================
 # Display
 # =============================================================================
@@ -149,7 +147,7 @@ def snapshot() -> str:
             bar = render_bar(gpu.gpu_utilization, 15)
             lines.append(f"  │ {icon} GPU{gpu.index} {gpu.name:<25} {gpu.temperature_gpu:>3}°C  [{bar}] {gpu.gpu_utilization:>3}%")
             lines.append(f"  │   Mem: {gpu.memory_used:>6}/{gpu.memory_total} MiB  Power: {gpu.power_draw:.0f}W")
-        lines.append(f"  └────────────────────────────────────────────────────┘")
+        lines.append("  └────────────────────────────────────────────────────┘")
     except RuntimeError:
         lines.append("  GPU: not available")
 
@@ -163,13 +161,13 @@ def snapshot() -> str:
 
         lines.extend([
             "",
-            f"  ┌─ CPU ──────────────────────────────────────────────┐",
+            "  ┌─ CPU ──────────────────────────────────────────────┐",
             f"  │ {icon} {cpu.model_name[:45]}",
             f"  │   {cpu.cores_logical} cores  Temp: {temp_str}  Uptime: {int(cpu.uptime_seconds//3600)}h",
             f"  │   Load: [{load_bar}] {cpu.load_percent:.1f}%",
             f"  │   Mem:  [{mem_bar}] {cpu.memory_used_gb:.1f}/{cpu.memory_total_gb:.1f} GB ({cpu.memory_percent:.1f}%)",
             f"  │   Swap: {cpu.swap_used_gb:.1f}/{cpu.swap_total_gb:.1f} GB",
-            f"  └────────────────────────────────────────────────────┘",
+            "  └────────────────────────────────────────────────────┘",
         ])
     except Exception as e:
         lines.append(f"  CPU: error - {e}")
@@ -177,7 +175,7 @@ def snapshot() -> str:
     # Disk
     lines.extend([
         "",
-        f"  ┌─ DISK ─────────────────────────────────────────────┐",
+        "  ┌─ DISK ─────────────────────────────────────────────┐",
     ])
     for path in ["/", "/mnt/data"]:
         disk = get_disk_info(path)
@@ -187,12 +185,12 @@ def snapshot() -> str:
             lines.append(f"  │ {icon} {path:<20} [{bar}] {disk['percent']}%  {disk['free_gb']:.0f}GB free")
         else:
             lines.append(f"  │ {path}: {disk['error']}")
-    lines.append(f"  └────────────────────────────────────────────────────┘")
+    lines.append("  └────────────────────────────────────────────────────┘")
 
     # Active processes
     lines.extend([
         "",
-        f"  ┌─ PROCESSES ─────────────────────────────────────────┐",
+        "  ┌─ PROCESSES ─────────────────────────────────────────┐",
     ])
     procs = get_processes("download|aria2c|python")
     if procs:
@@ -200,7 +198,7 @@ def snapshot() -> str:
             lines.append(f"  │ {p['pid']:>7} {p['cpu']:>5}% CPU  {p['mem']:>5}% MEM  {p['command'][:50]}")
     else:
         lines.append("  │ No matching processes")
-    lines.append(f"  └────────────────────────────────────────────────────┘")
+    lines.append("  └────────────────────────────────────────────────────┘")
 
     lines.append(f"\n{'═' * 70}\n")
     return "\n".join(lines)

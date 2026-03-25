@@ -21,16 +21,13 @@ Usage:
   python3 download_doj.py --monitor          # Show progress only
 """
 
-import os
-import sys
-import json
-import time
-import signal
 import argparse
 import asyncio
+import json
+import os
+import signal
 import subprocess
 from datetime import datetime
-from pathlib import Path
 from glob import glob
 
 # === PATHS ===
@@ -203,7 +200,7 @@ class DOJDownloader:
                 os.replace(tmp, out_path)
                 return True
 
-            except Exception as e:
+            except Exception:
                 if attempt < MAX_RETRIES - 1:
                     await asyncio.sleep(2 ** attempt)
 
@@ -276,7 +273,7 @@ class DOJDownloader:
         disk = self.disk_pct()
 
         print("=" * 78)
-        print(f"  EPSTEIN DOJ FILE DOWNLOADER v2")
+        print("  EPSTEIN DOJ FILE DOWNLOADER v2")
         print(f"  Started: {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}  Elapsed: {str(elapsed).split('.')[0]}")
         print(f"  Disk: {disk:.1f}% {'⚠️' if disk > DISK_ALERT_PCT else '✓'}")
         print("=" * 78)

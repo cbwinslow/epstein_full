@@ -16,15 +16,13 @@ Usage:
   python3 run_downloads.py --monitor    # Just show progress (no download)
 """
 
+import argparse
 import os
-import sys
-import time
 import signal
 import subprocess
-import argparse
-import json
+import sys
+import time
 from datetime import datetime, timedelta
-from pathlib import Path
 from glob import glob
 
 # === CONFIG ===
@@ -118,7 +116,7 @@ class DownloadMonitor:
         disk_pct = self.disk_usage_pct()
 
         print("=" * 78)
-        print(f"  EPSTEIN DOJ FILE DOWNLOADER — Production Run")
+        print("  EPSTEIN DOJ FILE DOWNLOADER — Production Run")
         print(f"  Started: {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"  Elapsed: {str(elapsed).split('.')[0]}")
         print(f"  Disk: {disk_pct:.1f}% used {'⚠️  WARNING' if disk_pct > DISK_ALERT_PCT else '✓'}")
@@ -169,7 +167,7 @@ class DownloadMonitor:
             # Disk space alert
             if self.disk_usage_pct() > DISK_ALERT_PCT:
                 print(f"\n  ⚠️  DISK SPACE ALERT: {self.disk_usage_pct():.1f}% used!")
-                print(f"  Consider pausing downloads and freeing space.")
+                print("  Consider pausing downloads and freeing space.")
 
             time.sleep(PROGRESS_INTERVAL)
 

@@ -13,12 +13,10 @@ Usage:
   python db_search.py --all "Prince Andrew"             # Search everywhere
 """
 
-import sys
-import os
 import argparse
 import os
+
 import psycopg2
-import os
 
 # =============================================================================
 # Configuration

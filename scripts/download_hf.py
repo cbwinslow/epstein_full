@@ -12,13 +12,10 @@ Usage:
   python download_hf.py --test 5           # Download 5 files for testing
 """
 
-import os
-import sys
-import subprocess
 import argparse
+import os
+import subprocess
 from pathlib import Path
-from datetime import datetime
-
 
 # =============================================================================
 # Configuration
@@ -167,7 +164,7 @@ def print_status():
     size_gb = results["total_size"] / (1024**3)
 
     print(f"\n{'='*50}")
-    print(f"  HF Parquet Download Status")
+    print("  HF Parquet Download Status")
     print(f"{'='*50}")
     print(f"  Files:  {present}/{total} ({present/max(total,1)*100:.1f}%)")
     print(f"  Size:   {size_gb:.1f} GB")
@@ -201,7 +198,7 @@ def main():
         parquet_files = parquet_files[:args.test]
         print(f"Test mode: downloading {len(parquet_files)} files")
 
-    print(f"Generating URL list...")
+    print("Generating URL list...")
     url_file = generate_url_list(parquet_files, token)
     print(f"URL list: {url_file} ({len(parquet_files)} files)")
 

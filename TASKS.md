@@ -312,3 +312,64 @@
 | 12.2 | Save mem0 memories | ✅ Done | 25 total memories (18 previous + 7 new) |
 | 12.3 | Create session summary | ✅ Done | memories/sessions/2026-03-22.md |
 | 12.4 | Update TASKS.md | ✅ Done | This file — all tasks documented |
+
+## Phase 13: File Registry & Verification ✅
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 13.1 | Create file registry population script | ✅ Done | `scripts/populate_file_registry.py` + `~/.local/bin/file_registry_builder.py` |
+| 13.2 | Test file registry script | ✅ Done | 4 sample PDFs, 100% success, 0.03s processing time |
+| 13.3 | Run full file registry population | ✅ Done | 1,313,841 files processed, 1,313,840 distinct EFTAs |
+| 13.4 | Document verification procedures | ✅ Done | `docs/verification_procedures.md` with comprehensive procedures |
+| 13.5 | Add verification memories to Letta | ✅ Done | 3 memories, 2 memory blocks, agent context updated |
+| 13.6 | **Investigate OCR redundancy** | ✅ Done | **OCR already complete!** See findings below |
+
+## Critical Finding: OCR Already Complete
+
+**DO NOT run OCR on PDFs again!** OCR processing is redundant and would waste weeks of GPU time.
+
+**Evidence:**
+1. **full_text_corpus.db**: 2,892,730 pages of OCR text for 1,397,796 EFTA numbers
+2. **hf-parquet files**: 318GB pre-extracted text in `text_content` column
+3. **PostgreSQL `pages` table**: 2,892,730 pages already migrated from SQLite
+4. **PostgreSQL `documents_content` table**: Empty, needs population from hf-parquet
+
+**Data Quality:**
+- hf-parquet sample: 1,300/4,529 rows have text_content (28.7%)
+- Average text length: 3,162 characters
+- Max text length: 216,707 characters
+- Text appears to be proper OCR output (court documents, depositions)
+
+**Next Steps:**
+1. Populate `documents_content` table from hf-parquet `text_content`
+2. Use existing OCR text for NER and entity extraction
+3. Cross-reference with file registry to verify coverage
+
+## Phase 14: Text Content Population ⬜
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 14.1 | Create hf-parquet text extraction script | ⬜ TODO | Extract text_content from 634 parquet files |
+| 14.2 | Populate documents_content table | ⬜ TODO | 1.4M documents with consolidated text |
+| 14.3 | Verify text coverage | ⬜ TODO | Cross-reference with file registry |
+| 14.4 | Index text for search | ⬜ TODO | PostgreSQL FTS or pgvector embeddings |
+
+## Phase 15: AI Skills Integration ✅
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 15.1 | Install Epstein memory package | ✅ Done | Installed in venv at `/home/cbwinslow/dotfiles/ai/packages/epstein_memory/` |
+| 15.2 | Update OpenCode configuration | ✅ Done | Updated `/home/cbwinslow/dotfiles/ai/agents/opencode/config.yaml` with skill_paths, letta integration, and conversation logging |
+| 15.3 | Create .opencode directory | ✅ Done | Created at `~/.opencode/` with instructions.md and agent_rules.md |
+| 15.4 | Run create_symlinks.sh | ✅ Done | Created symlinks for .openclaw, .cline, .gemini (not .opencode - handled manually) |
+| 15.5 | Copy global rules to .opencode | ✅ Done | Copied CORE_MANDATES.md and agent_init_rules.md to `~/.opencode/` |
+| 15.6 | Create memory search protocols | ✅ Done | Created `memory_search.py` with semantic, tag, text, recent, and cross-agent search |
+| 15.7 | Create conversation saving script | ✅ Done | Created `save_conversation_to_letta.py` for saving conversations to Letta |
+| 15.8 | Save conversation to memory | ✅ Done | Saved AI skills integration conversation and decisions to Letta |
+| 15.9 | **Migrate Letta scripts to skills** | ✅ Done | Moved generalized Letta operations to centralized AI skills system |
+| 15.10 | **Create CLI operations skill** | ✅ Done | `cli_operations` skill with Letta CLI wrappers and SQL queries |
+| 15.11 | **Enhance memory management skill** | ✅ Done | Added advanced search protocols (semantic, tags, text, stats, cross-agent) |
+| 15.12 | **Create conversation logging skill** | ✅ Done | `conversation_logging` skill with decision/action item extraction |
+| 15.13 | **Create memory sync skill** | ✅ Done | `memory_sync` skill for PostgreSQL ↔ Letta server synchronization |
+| 15.14 | **Update AGENTS.md** | ✅ Done | Added memory management section with skills reference |
+| 15.15 | **Remove legacy scripts** | ✅ Done | Moved redundant Letta scripts to backup directory |

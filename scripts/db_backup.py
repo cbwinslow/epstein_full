@@ -12,16 +12,10 @@ Usage:
   python db_backup.py --rotate 7               # Keep last 7 backups
 """
 
-import os
-import os
-import sys
-import os
 import argparse
 import os
 import subprocess
-import os
 from datetime import datetime
-from pathlib import Path
 from glob import glob
 
 # =============================================================================
