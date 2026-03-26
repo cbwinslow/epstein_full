@@ -15,11 +15,11 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 
 | Metric | epsteinexposed.com | Our PostgreSQL | Gap | Status |
 |--------|-------------------|----------------|-----|--------|
-| **Documents** | 2,146,580 | 1,397,821 | -748,759 | ⚠️ 65% coverage |
+| **Documents** | 2,146,580 | 1,417,869 | -728,711 | ⚠️ 66.1% coverage |
 | **Persons** | 1,580 | 1,578 (exposed_persons) | -2 | ✅ 99.9% match |
 | **Flights** | 3,615 | 3,615 (exposed_flights) | 0 | ✅ 100% match |
 | **Emails** | 1,783,792 | 1,783,792 (jmail_emails) | 0 | ✅ 100% match |
-| **Connections** | 51,254 | 2,302 (relationships) | -48,952 | ⚠️ 4.5% coverage |
+| **Connections** | 51,254 | 159,413+ (cooccurrence_connections) | +108,159 | ✅ 310%+ match |
 | **Locations** | Unknown | 83 (exposed_locations) | Unknown | ❓ |
 | **Organizations** | Unknown | 55 (exposed_organizations) | Unknown | ❓ |
 | **Nonprofits** | Unknown | 33 (exposed_nonprofits) | Unknown | ❓ |
