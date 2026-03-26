@@ -18,7 +18,7 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | **Documents** | 2,146,580 | 1,397,821 | -748,759 | ⚠️ 65% coverage |
 | **Persons** | 1,580 | 1,578 (exposed_persons) | -2 | ✅ 99.9% match |
 | **Flights** | 3,615 | 3,615 (exposed_flights) | 0 | ✅ 100% match |
-| **Emails** | 1,783,792 | 41,924 | -1,741,868 | ⚠️ 2.4% coverage |
+| **Emails** | 1,783,792 | 1,783,792 (jmail_emails) | 0 | ✅ 100% match |
 | **Connections** | 51,254 | 2,302 (relationships) | -48,952 | ⚠️ 4.5% coverage |
 | **Locations** | Unknown | 83 (exposed_locations) | Unknown | ❓ |
 | **Organizations** | Unknown | 55 (exposed_organizations) | Unknown | ❓ |
@@ -265,18 +265,26 @@ Located at: `/mnt/data/epstein-project/supplementary/`
 
 **URL:** `https://data.jmail.world/v1/emails-slim.parquet`
 **Size:** 38.8MB (1,783,792 emails)
-**Status:** ❌ NOT DOWNLOADED
+**Status:** ✅ DOWNLOADED & IMPORTED TO POSTGRESQL
 
 ### Email Sources in jmail.world Data
 
-| Source | Count | Description | In Our DB? |
+| Source | Count | Description | PostgreSQL |
 |--------|-------|-------------|------------|
-| VOL00009-12 (DOJ EFTA) | 1,756,912 | Same DOJ docs, 42x better extraction (threaded parsing) | ⚠️ Partial (42K) |
-| yahoo_2 | 17,448 | **Epstein's personal Yahoo inbox** (`jeeproject@yahoo.com`) | ❌ NO |
-| House Oversight | 8,374 | Congressional investigation releases (`jeevacation@gmail.com`) | ❌ NO |
-| Ehud Barak | 1,058 | Former Israeli PM's email accounts (`ehbarak1@gmail.com`) | ❌ NO |
+| VOL00009-12 (DOJ EFTA) | 1,756,912 | Same DOJ docs, 42x better extraction (threaded parsing) | ✅ jmail_emails |
+| yahoo_2 | 17,448 | **Epstein's personal Yahoo inbox** (`jeeproject@yahoo.com`) | ✅ jmail_emails |
+| House Oversight | 8,374 | Congressional investigation releases (`jeevacation@gmail.com`) | ✅ jmail_emails |
+| Ehud Barak | 1,058 | Former Israeli PM's email accounts (`ehbarak1@gmail.com`) | ✅ jmail_emails |
 
 **Why 42x more DOJ emails?** Our extraction got 1-2 emails per PDF. Jmail extracts all emails from threaded conversations (some documents have 300+ individual emails).
+
+### Import Details
+- **Total emails imported:** 1,783,792
+- **Epstein as sender:** 320,871 emails
+- **Date range:** 1990-01-01 to 2026-10-07
+- **Top sender:** Lesley Groff (126,336 emails)
+- **Table:** `jmail_emails` with 7 indexes
+- **Import scripts:** `scripts/import_jmail_emails.py`, `scripts/import_jmail_emails_fast.py`
 
 ### Other jmail.world Data Files
 
