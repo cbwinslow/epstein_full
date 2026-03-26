@@ -19,10 +19,15 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | **Persons** | 1,580 | 1,578 (exposed_persons) | -2 | ✅ 99.9% match |
 | **Flights** | 3,615 | 3,615 (exposed_flights) | 0 | ✅ 100% match |
 | **Emails** | 1,783,792 | 1,783,792 (jmail_emails) | 0 | ✅ 100% match |
-| **Connections** | 51,254 | 159,413+ (cooccurrence_connections) | +108,159 | ✅ 310%+ match |
+| **Connections** | 51,254 | 157,111 (cooccurrence_connections) | +105,857 | ✅ 307% match |
 | **Locations** | Unknown | 83 (exposed_locations) | Unknown | ❓ |
 | **Organizations** | Unknown | 55 (exposed_organizations) | Unknown | ❓ |
 | **Nonprofits** | Unknown | 33 (exposed_nonprofits) | Unknown | ❓ |
+
+### Additional Data
+- **FBI Vault:** 22 documents (1,344 pages total)
+- **Embeddings:** 230,931 pages with 384-dim vectors (7.98% coverage)
+- **Document Entities:** 5.7M NER-extracted entities
 
 ---
 
