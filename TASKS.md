@@ -420,7 +420,8 @@
 | 18.6 | Import FBI embeddings to PostgreSQL | ✅ Done | 236,174 chunks imported to fbi_embeddings table |
 | 18.7 | Import House Oversight embeddings | ✅ Done | 69,290 chunks imported to house_oversight_embeddings table |
 | 18.8 | Import Full Epstein Index to PostgreSQL | ✅ Done | 8,531 rows imported to full_epstein_index table |
-| 18.9 | Cross-reference embedding sources | ⬜ TODO | Identify overlap and gaps between datasets |
+| 18.9 | Cross-reference embedding sources | ✅ Done | FBI: 61.5% overlap (2,548 exclusive docs); House: 8.2x content; Index: 0.3% coverage |
+| 18.10 | Update DATA_INVENTORY.md | ✅ Done | Documented new datasets and import scripts |
 
 ### Supplementary Dataset Summary
 
