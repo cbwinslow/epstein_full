@@ -120,17 +120,18 @@ def import_fbi_embeddings():
     existing_count = cur.fetchone()[0]
     print(f"📝 Existing records in table: {existing_count:,}")
     
-    if existing_count > 0:
-        print("⚠️  Table already has data. Truncating...")
-        cur.execute("TRUNCATE TABLE fbi_embeddings")
-        conn.commit()
-    
     # Stream and import
     batch = []
     imported = 0
+    skipped = 0
     
     with tqdm(total=total_lines, desc="Importing", unit="records") as pbar:
         for record in stream_jsonl(DATA_FILE):
+            skipped += 1
+            if skipped <= existing_count:
+                pbar.update(1)
+                continue  # Skip already imported records
+            
             batch.append((
                 record['id'],
                 record.get('bates_number'),

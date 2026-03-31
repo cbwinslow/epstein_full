@@ -417,20 +417,20 @@
 | 18.3 | Download FBI OCR data | ✅ Done | 317 MB OCR text from FBI files |
 | 18.4 | Download tensonaut/EPSTEIN_FILES_20K | ❌ Unavailable | Repository removed or made private (404 error) |
 | 18.5 | Download theelderemo/FULL_EPSTEIN_INDEX | ✅ Done | 221K rows, 3.2 MB - text extract CSV |
-| 18.6 | Import FBI embeddings to PostgreSQL | ⬜ TODO | Add to embeddings table |
-| 18.7 | Import House Oversight embeddings | ⬜ TODO | Supplement existing House data |
-| 18.8 | Cross-reference embedding sources | ⬜ TODO | Identify overlap and gaps |
-| 18.9 | Update DATA_INVENTORY.md | ⬜ TODO | Document new datasets |
+| 18.6 | Import FBI embeddings to PostgreSQL | ✅ Done | 236,174 chunks imported to fbi_embeddings table |
+| 18.7 | Import House Oversight embeddings | ✅ Done | 69,290 chunks imported to house_oversight_embeddings table |
+| 18.8 | Import Full Epstein Index to PostgreSQL | ✅ Done | 8,531 rows imported to full_epstein_index table |
+| 18.9 | Cross-reference embedding sources | ⬜ TODO | Identify overlap and gaps between datasets |
 
 ### Supplementary Dataset Summary
 
 | Dataset | Source | Size | Embeddings | Status | GitHub Issue |
 |---------|--------|------|------------|--------|--------------|
 | kabasshouse/epstein-data | HuggingFace | ~12GB | 2.1M (768-dim) | ✅ Imported | - |
-| svetfm/epstein-fbi-files | HuggingFace | 3.31GB | 236K (768-dim) | ⚠️ Rate Limited | #71 |
-| svetfm/epstein-files-nov11-25-house-post-ocr-embeddings | HuggingFace | 357MB | 69K (768-dim) | ⬜ Pending | #72 |
-| tensonaut/EPSTEIN_FILES_20K | HuggingFace | Unknown | None (source) | ⬜ Pending | #70 |
-| theelderemo/FULL_EPSTEIN_INDEX | HuggingFace | Unknown | Unknown | ⬜ Pending | #70 |
+| svetfm/epstein-fbi-files | HuggingFace | 3.9GB | 236K (768-dim) | ✅ Imported | #71 |
+| svetfm/epstein-files-nov11-25-house-post-ocr-embeddings | HuggingFace | 341MB | 69K (768-dim) | ✅ Imported | #72 |
+| theelderemo/FULL_EPSTEIN_INDEX | HuggingFace | 3.2MB | 8.5K (text) | ✅ Imported | #70 |
+| tensonaut/EPSTEIN_FILES_20K | HuggingFace | Unknown | None (source) | ❌ Unavailable | #70 |
 
 **Total Additional Embeddings**: ~305K chunks (~4GB)
 **Model Compatibility**: All use 768-dim (compatible with existing kabasshouse data)
