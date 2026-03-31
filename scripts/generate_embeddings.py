@@ -1,242 +1,249 @@
 #!/usr/bin/env python3
-"""Generate text embeddings for semantic search.
+"""Generate embeddings for all pages using llama.cpp GPU servers.
 
-Generates 768-dim embeddings using sentence-transformers for all document pages
-in PostgreSQL. Stores embeddings in the pages.embedding column (pgvector).
+Supports:
+- Qwen3-Embedding-8B (4096-dim) on port 8080
+- BGE-M3 (1024-dim) on port 8081
 
 Usage:
-    python scripts/generate_embeddings.py [--batch-size 32] [--model nomic-ai/nomic-embed-text-v2-moe]
-    python scripts/generate_embeddings.py --verify  # Just check current status
+    python scripts/generate_embeddings.py bge_m3     # Start BGE-M3 (fast, ~1.8 days)
+    python scripts/generate_embeddings.py qwen3      # Start Qwen3 (slow, ~7-16 days)
+    python scripts/generate_embeddings.py all         # Run both sequentially
+    python scripts/generate_embeddings.py status      # Check embedding status
 """
 
-import argparse
+import json
 import sys
 import time
-from pathlib import Path
+import signal
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-import numpy as np
 import psycopg2
-from psycopg2.extras import RealDictCursor
+import requests
+from psycopg2.extras import execute_values
+
+DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
+
+SERVERS = {
+    "qwen3": {
+        "url": "http://localhost:8080/embedding",
+        "column": "qwen3_embedding",
+        "dims": 4096,
+        "batch_size": 100,
+        "concurrent": 2,
+        "max_text_len": 1500,
+    },
+    "bge_m3": {
+        "url": "http://localhost:8081/embedding",
+        "column": "bge_m3_embedding",
+        "dims": 1024,
+        "batch_size": 200,
+        "concurrent": 1,
+        "max_text_len": 1500,
+    },
+}
+
+shutdown = False
 
 
-# PostgreSQL connection
-PG_DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
-
-# Default embedding model (384-dim, fast, CPU-friendly)
-DEFAULT_MODEL = "all-MiniLM-L6-v2"  # 384-dim, fast
-# For 768-dim: use "nomic-ai/nomic-embed-text-v2-moe" or "all-mpnet-base-v2"
-
-# Expected embedding dimension (must match pages.embedding column)
-EXPECTED_DIM = 384  # Update if using a different model
-
-# Batch size for embedding generation
-BATCH_SIZE = 32
+def signal_handler(sig, frame):
+    global shutdown
+    print("\nGraceful shutdown requested...")
+    shutdown = True
 
 
-def get_embedding_stats(conn):
-    """Get current embedding statistics."""
-    with conn.cursor(cursor_factory=RealDictCursor) as cur:
-        cur.execute("""
-            SELECT 
-                COUNT(*) as total_pages,
-                COUNT(embedding) as pages_with_embeddings,
-                COUNT(*) - COUNT(embedding) as pages_without_embeddings,
-                ROUND(COUNT(embedding) * 100.0 / COUNT(*), 2) as embedding_coverage_percent
-            FROM pages
-        """)
-        return cur.fetchone()
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
 
 
-def get_pages_without_embeddings(conn, limit, offset=0):
-    """Get pages that don't have embeddings yet."""
-    with conn.cursor(cursor_factory=RealDictCursor) as cur:
-        cur.execute("""
-            SELECT id, text_content
-            FROM pages
-            WHERE embedding IS NULL
-            ORDER BY id
-            LIMIT %s OFFSET %s
-        """, (limit, offset))
-        return cur.fetchall()
+def get_conn():
+    return psycopg2.connect(DB_URL)
 
 
-def update_embeddings(conn, updates):
-    """Update embeddings in batch."""
-    with conn.cursor() as cur:
-        for page_id, embedding in updates:
-            cur.execute("""
-                UPDATE pages 
-                SET embedding = %s::vector
-                WHERE id = %s
-            """, (embedding, page_id))
+def ensure_columns(conn):
+    cur = conn.cursor()
+    cur.execute("""
+        DO $$ BEGIN
+            IF NOT EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'pages' AND column_name = 'qwen3_embedding'
+            ) THEN
+                ALTER TABLE pages ADD COLUMN qwen3_embedding vector(4096);
+            END IF;
+            IF NOT EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'pages' AND column_name = 'bge_m3_embedding'
+            ) THEN
+                ALTER TABLE pages ADD COLUMN bge_m3_embedding vector(1024);
+            END IF;
+        END $$;
+    """)
     conn.commit()
+    print("Embedding columns verified.")
 
 
-def generate_embeddings(model_name, batch_size, limit=None):
-    """Generate embeddings for all pages without them."""
-    from sentence_transformers import SentenceTransformer
-    
-    print(f"Loading model: {model_name}")
-    model = SentenceTransformer(model_name)
-    embedding_dim = model.get_sentence_embedding_dimension()
-    print(f"Embedding dimension: {embedding_dim}")
-    
-    # Check if dimension matches column
-    if embedding_dim != EXPECTED_DIM:
-        print(f"WARNING: Model produces {embedding_dim}-dim vectors but column expects {EXPECTED_DIM}-dim")
-        print(f"You may need to ALTER TABLE pages ALTER COLUMN embedding TYPE vector({embedding_dim})")
-        response = input("Continue anyway? (y/N): ")
-        if response.lower() != 'y':
-            print("Aborting. Update the column type first.")
-            return
-    
-    conn = psycopg2.connect(PG_DSN)
+def count_unembedded(conn, column):
+    cur = conn.cursor()
+    cur.execute(f"""
+        SELECT COUNT(*) FROM pages
+        WHERE {column} IS NULL AND text_content IS NOT NULL AND length(text_content) > 10
+    """)
+    return cur.fetchone()[0]
+
+
+def get_pages_batch(conn, column, batch_size, offset):
+    cur = conn.cursor()
+    cur.execute(f"""
+        SELECT id, text_content FROM pages
+        WHERE {column} IS NULL AND text_content IS NOT NULL AND length(text_content) > 10
+        ORDER BY id LIMIT %s OFFSET %s
+    """, (batch_size, offset))
+    return cur.fetchall()
+
+
+def embed_batch(texts, server_url, timeout=300, max_text_len=1500):
+    """Embed a batch of texts. Returns list of embeddings or None on failure."""
+    # Truncate texts
+    truncated = [(t or "")[:max_text_len] for t in texts]
+
     try:
-        # Check current status
-        stats = get_embedding_stats(conn)
-        print(f"\nCurrent status:")
-        print(f"  Total pages: {stats['total_pages']:,}")
-        print(f"  With embeddings: {stats['pages_with_embeddings']:,}")
-        print(f"  Without embeddings: {stats['pages_without_embeddings']:,}")
-        print(f"  Coverage: {stats['embedding_coverage_percent']}%")
-        
-        if stats['pages_without_embeddings'] == 0:
-            print("\nAll pages already have embeddings!")
-            return
-        
-        # Process in batches
-        total_to_process = min(limit, stats['pages_without_embeddings']) if limit else stats['pages_without_embeddings']
-        print(f"\nProcessing {total_to_process:,} pages (batch_size={batch_size})...")
-        
-        processed = 0
-        errors = 0
-        start_time = time.time()
-        
-        while processed < total_to_process:
-            # Get batch of pages
-            batch_limit = min(batch_size, total_to_process - processed)
-            pages = get_pages_without_embeddings(conn, batch_limit, processed)
-            
-            if not pages:
-                break
-            
-            # Extract text content
-            texts = []
-            page_ids = []
-            for page in pages:
-                content = page.get('text_content', '')
-                if content and len(content.strip()) > 10:
-                    texts.append(content[:1000])  # Truncate long texts
-                    page_ids.append(page['id'])
-            
-            if not texts:
-                processed += len(pages)
-                continue
-            
-            # Generate embeddings
+        resp = requests.post(server_url, json={"content": truncated}, timeout=timeout)
+        if resp.status_code == 400:
+            # Token limit exceeded - try shorter texts
+            shorter = [(t or "")[:500] for t in texts]
+            resp = requests.post(server_url, json={"content": shorter}, timeout=timeout)
+        resp.raise_for_status()
+        data = resp.json()
+        embeddings = []
+        for item in data:
+            emb = item["embedding"]
+            if isinstance(emb[0], list):
+                emb = emb[0]
+            embeddings.append(emb)
+        return embeddings
+    except Exception as e:
+        # Try one by one as fallback
+        results = []
+        for t in truncated:
             try:
-                embeddings = model.encode(texts, show_progress_bar=False, batch_size=batch_size)
-                
-                # Update database
-                updates = []
-                for page_id, embedding in zip(page_ids, embeddings):
-                    # Convert numpy array to string for pgvector
-                    embedding_str = '[' + ','.join(map(str, embedding.tolist())) + ']'
-                    updates.append((page_id, embedding_str))
-                
-                update_embeddings(conn, updates)
-                processed += len(pages)
-                
-            except Exception as e:
-                errors += 1
-                conn.rollback()  # Roll back failed transaction
-                if errors <= 3:
-                    print(f"\n  Error at batch {processed}: {e}")
-                processed += len(pages)
-            
-            # Progress update
-            elapsed = time.time() - start_time
-            rate = processed / elapsed if elapsed > 0 else 0
-            eta = (total_to_process - processed) / rate if rate > 0 else 0
-            
-            print(f"\r  Progress: {processed:,}/{total_to_process:,} "
-                  f"({processed/total_to_process*100:.1f}%) "
-                  f"rate: {rate:.1f} pages/sec "
-                  f"ETA: {eta/60:.1f} min",
-                  end="", flush=True)
-        
-        print(f"\n\nDone! Processed: {processed:,}, Errors: {errors}")
-        
-        # Final status
-        final_stats = get_embedding_stats(conn)
-        print(f"\nFinal status:")
-        print(f"  With embeddings: {final_stats['pages_with_embeddings']:,}")
-        print(f"  Coverage: {final_stats['embedding_coverage_percent']}%")
-        
-    finally:
-        conn.close()
+                r = requests.post(server_url, json={"content": [t[:500]]}, timeout=60)
+                r.raise_for_status()
+                d = r.json()
+                emb = d[0]["embedding"]
+                if isinstance(emb[0], list):
+                    emb = emb[0]
+                results.append(emb)
+            except Exception:
+                results.append(None)
+        if any(r is not None for r in results):
+            return results
+        return None
 
 
-def verify_embeddings():
-    """Verify embedding status."""
-    conn = psycopg2.connect(PG_DSN)
-    try:
-        stats = get_embedding_stats(conn)
-        print("=== Embedding Status ===")
-        print(f"Total pages: {stats['total_pages']:,}")
-        print(f"With embeddings: {stats['pages_with_embeddings']:,}")
-        print(f"Without embeddings: {stats['pages_without_embeddings']:,}")
-        print(f"Coverage: {stats['embedding_coverage_percent']}%")
-        
-        # Check vector dimensions
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT 
-                    vector_dims(embedding) as dimensions,
-                    COUNT(*) as count
-                FROM pages 
-                WHERE embedding IS NOT NULL 
-                GROUP BY vector_dims(embedding)
-            """)
-            dims = cur.fetchall()
-            if dims:
-                print("\nVector dimensions:")
-                for d in dims:
-                    print(f"  {d['dimensions']}-dim: {d['count']:,} pages")
-            else:
-                print("\nNo embeddings found.")
-        
-        # Sample embedding
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT id, LEFT(text_content, 100) as content_preview
-                FROM pages 
-                WHERE embedding IS NOT NULL 
-                LIMIT 1
-            """)
-            sample = cur.fetchone()
-            if sample:
-                print(f"\nSample page with embedding:")
-                print(f"  ID: {sample['id']}")
-                print(f"  Content: {sample['content_preview']}...")
-        
-    finally:
+def save_embeddings(conn, page_ids, embeddings, column, dims):
+    cur = conn.cursor()
+    rows = []
+    for pid, emb in zip(page_ids, embeddings):
+        if emb is not None and len(emb) == dims:
+            vec = "[" + ",".join(f"{v:.6f}" for v in emb) + "]"
+            rows.append((pid, vec))
+    if rows:
+        cur.executemany(f"UPDATE pages SET {column} = %s::vector WHERE id = %s",
+                        [(vec, pid) for pid, vec in rows])
+        conn.commit()
+    return len(rows)
+
+
+def process_model(model_name):
+    global shutdown
+    config = SERVERS[model_name]
+    col = config["column"]
+
+    print(f"\n{'='*60}")
+    print(f"Embedding generation: {model_name}")
+    print(f"  Column: {col} ({config['dims']}-dim)")
+    print(f"  Server: {config['url']}")
+    print(f"  Batch: {config['batch_size']} x {config['concurrent']} concurrent")
+    print(f"{'='*60}")
+
+    conn = get_conn()
+    ensure_columns(conn)
+
+    total = count_unembedded(conn, col)
+    if total == 0:
+        print(f"  All pages already have {model_name} embeddings!")
         conn.close()
+        return
+
+    print(f"  Pages to embed: {total:,}")
+    processed = 0
+    errors = 0
+    t0 = time.time()
+    offset = 0
+
+    while not shutdown:
+        pages = get_pages_batch(conn, col, config["batch_size"] * config["concurrent"], offset)
+        if not pages:
+            break
+
+        # Split into sub-batches
+        sub_batches = [pages[i:i + config["batch_size"]]
+                       for i in range(0, len(pages), config["batch_size"])]
+
+        with ThreadPoolExecutor(max_workers=config["concurrent"]) as ex:
+            futs = {}
+            for batch in sub_batches:
+                ids = [p[0] for p in batch]
+                texts = [(p[1] or "")[:config["max_text_len"]] for p in batch]
+                futs[ex.submit(embed_batch, texts, config["url"])] = ids
+
+            for fut in as_completed(futs):
+                ids = futs[fut]
+                embs = fut.result()
+                if embs and len(embs) == len(ids):
+                    processed += save_embeddings(conn, ids, embs, col, config["dims"])
+                else:
+                    errors += len(ids)
+
+        elapsed = time.time() - t0
+        rate = processed / elapsed if elapsed > 0 else 0
+        eta_h = (total - processed) / rate / 3600 if rate > 0 else 0
+        print(f"  {processed:,}/{total:,} ({processed/total*100:.1f}%) "
+              f"| {rate:.1f}/sec | ETA: {eta_h:.1f}h | Err: {errors}")
+        offset += len(pages)
+
+    elapsed = time.time() - t0
+    print(f"\n  {model_name}: {processed:,} done in {elapsed/3600:.1f}h ({processed/elapsed:.1f}/sec)")
+    conn.close()
+
+
+def show_status():
+    conn = get_conn()
+    cur = conn.cursor()
+    for col in ["qwen3_embedding", "bge_m3_embedding"]:
+        cur.execute(f"SELECT COUNT(*) FROM pages WHERE {col} IS NOT NULL")
+        have = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10")
+        total = cur.fetchone()[0]
+        pct = have / total * 100 if total > 0 else 0
+        print(f"  {col}: {have:,}/{total:,} ({pct:.1f}%)")
+    conn.close()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate text embeddings for semantic search")
-    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE, help="Batch size")
-    parser.add_argument("--model", type=str, default=DEFAULT_MODEL, help="Model name")
-    parser.add_argument("--limit", type=int, help="Limit number of pages to process")
-    parser.add_argument("--verify", action="store_true", help="Just verify status")
-    args = parser.parse_args()
-    
-    if args.verify:
-        verify_embeddings()
-        return
-    
-    generate_embeddings(args.model, args.batch_size, args.limit)
+    action = sys.argv[1] if len(sys.argv) > 1 else "status"
+
+    if action == "status":
+        show_status()
+    elif action == "all":
+        for name in SERVERS:
+            if not shutdown:
+                process_model(name)
+    elif action in SERVERS:
+        process_model(action)
+    else:
+        print(f"Usage: {sys.argv[0]} [qwen3|bge_m3|all|status]")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

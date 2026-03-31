@@ -412,15 +412,15 @@
 
 | # | Task | Status | Solution/Notes |
 |---|------|--------|----------------|
-| 18.1 | Download svetfm/epstein-fbi-files embeddings | ⚠️ Rate Limited | 236K chunks, 3.31 GB, nomic-embed-text 768-dim - hit 1000 req/5min limit |
-| 18.2 | Download svetfm/epstein-files-nov11-25-house-post-ocr-embeddings | ⬜ TODO | 69K chunks, 357 MB, House Oversight Committee |
-| 18.3 | Download tensonaut/EPSTEIN_FILES_20K | ⬜ TODO | House Oversight source documents |
-| 18.4 | Download theelderemo/FULL_EPSTEIN_INDEX | ⬜ TODO | Combined DOJ + House index |
-| 18.5 | Import FBI embeddings to PostgreSQL | ⬜ TODO | Add to embeddings table |
-| 18.6 | Import House Oversight embeddings | ⬜ TODO | Supplement existing House data |
-| 18.7 | Cross-reference embedding sources | ⬜ TODO | Identify overlap and gaps |
-| 18.8 | Update DATA_INVENTORY.md | ⬜ TODO | Document new datasets |
-| 18.9 | Create dataset download retry script | ⬜ TODO | Handle HF rate limits with exponential backoff |
+| 18.1 | Download svetfm/epstein-fbi-files embeddings | ✅ Done | 236K chunks, 3.9 GB, nomic-embed-text 768-dim - downloaded at 27 MB/s |
+| 18.2 | Download svetfm/epstein-files-nov11-25-house-post-ocr-embeddings | ✅ Done | 69K chunks, 341 MB, House Oversight Committee - downloaded at 11 MB/s |
+| 18.3 | Download FBI OCR data | ✅ Done | 317 MB OCR text from FBI files |
+| 18.4 | Download tensonaut/EPSTEIN_FILES_20K | ⬜ TODO | House Oversight source documents |
+| 18.5 | Download theelderemo/FULL_EPSTEIN_INDEX | ⬜ TODO | Combined DOJ + House index |
+| 18.6 | Import FBI embeddings to PostgreSQL | ⬜ TODO | Add to embeddings table |
+| 18.7 | Import House Oversight embeddings | ⬜ TODO | Supplement existing House data |
+| 18.8 | Cross-reference embedding sources | ⬜ TODO | Identify overlap and gaps |
+| 18.9 | Update DATA_INVENTORY.md | ⬜ TODO | Document new datasets |
 
 ### Supplementary Dataset Summary
 

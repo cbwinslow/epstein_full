@@ -77,12 +77,20 @@
 |--------|--------|------|---------|
 | CDN PDFs | ✅ **COMPLETE** | 177GB | 1,313,861 files (94.0% of 1.4M EFTAs) |
 | HF Parquet | ✅ **COMPLETE** | 318GB | 634/634 files, 0 missing, pre-extracted text |
-| Pre-built DBs | ✅ Complete | 12GB | 27 tables, 10.9M rows in PostgreSQL |
+| PostgreSQL (epstein) | ✅ Complete | 42GB | 72 tables, 36.6M rows |
 | Knowledge graph | ✅ Available | 892KB | 606 entities, 2,302 relationships |
+| Kabasshouse entities | ✅ Imported | ~100MB | 9.9M entities, PK: (document_id, entity_type, value) |
+| Kabasshouse chunks | ✅ Imported | ~500MB | 1.9M chunks, PK: (document_id, chunk_index) |
+| Kabasshouse embeddings | ✅ Imported | ~12GB | 1.5M 768-dim Gemini vectors, PK: chunk_id |
+| Kabasshouse financial | ✅ Imported | ~5MB | 49.8K transactions, PK: id |
+| House Oversight emails | ✅ Imported | ~10MB | 5K email threads, PK: thread_id |
+| FBI Vault PDFs | 🔄 OCR running | 35MB | 16 PDFs, PyMuPDF + Tesseract |
 | FTS search | ✅ Complete | — | 2,892,730 pages indexed (100%) |
 | **File registry** | ✅ **COMPLETE** | — | 1,313,841 files with SHA-256 hashes |
 | **Text content** | ✅ **COMPLETE** | — | 1,380,935 documents with consolidated text (98.8%) |
 | **Entity extraction** | 🔄 **IN PROGRESS** | — | 2,146 entities extracted (3M expected) |
+| **BGE-M3 embeddings** | 🔄 **RUNNING** | ETA ~2.3 days | 1,400/2,872,262 (0.0%), 15/sec, 1024-dim |
+| **Qwen3 embeddings** | ⬜ **PENDING** | After BGE-M3 | 4096-dim, ~21 days estimated |
 | **Total disk** | **~500GB used** | | **~1.8TB free** |
 
 ### Download Coverage
@@ -164,6 +172,11 @@
 - [x] **Memory search protocols created** - `memory_search.py` with semantic, tag, text, recent, cross-agent search
 - [x] **Conversation saving scripts created** - `save_conversation_to_letta.py` and `recall_conversation.py`
 - [x] **Conversation saved to Letta memory** - AI skills integration session and decisions stored
+- [x] Download and import kabasshouse supplementary data (10 new tables, ~13M rows)
+- [x] Download House Oversight emails (5,082 threads)
+- [x] Download FBI Vault PDFs (16 from Archive.org)
+- [x] Save session memories to Letta
+- [ ] FBI Vault OCR (running in background)
 - [ ] Build knowledge graph from extracted entities
 - [ ] Scale to remaining datasets (1-7, 9-10)
 - [ ] Cross-database integration and analysis
@@ -183,6 +196,9 @@
 | InsightFace/ArcFace for faces | 2026-03-20 | 99.83% LFW, ONNX Runtime (K80 compatible) |
 | Rich over curses for dashboard | 2026-03-20 | Works in non-TTY environments |
 | Centralized AI skills system | 2026-03-24 | Single source of truth for all AI agent configurations and skills |
+| Use aria2c for HF downloads | 2026-03-29 | hf_hub_download hangs on large files, aria2c gives 5-13MB/s |
+| Disable autovacuum during bulk import | 2026-03-29 | Kills throughput on high-conflict ON CONFLICT inserts |
+| Keep Letta tables in letta DB | 2026-03-29 | epstein DB is for document data only |
 
 ---
 

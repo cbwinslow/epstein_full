@@ -26,6 +26,15 @@ be acquired separately to enable cross-referencing analysis.
 | FEC donations | ✅ Downloaded (400) | 1.8MB |
 | FEC disbursements | ✅ Downloaded (3,600) | 16MB |
 | Knowledge graph (606 entities) | ✅ Migrated to PG | 892KB |
+| **kabasshouse entities** | ✅ **Imported (9,893,147)** | **~100MB** |
+| **kabasshouse chunks** | ✅ **Imported (1,874,012)** | **~500MB** |
+| **kabasshouse embeddings** | ✅ **Imported (1,505,618, 768-dim)** | **~12GB** |
+| **kabasshouse financial** | ✅ **Imported (49,770)** | **~5MB** |
+| **kabasshouse redactions** | ✅ **Imported (22,355)** | **~5MB** |
+| **kabasshouse events** | ✅ **Imported (3,038)** | **~1MB** |
+| **kabasshouse curated docs** | ✅ **Imported (1,398)** | **~2MB** |
+| **House Oversight emails** | ✅ **Imported (5,082 threads)** | **~10MB** |
+| **FBI Vault PDFs** | 🔄 **OCR running (16 PDFs)** | **35MB** |
 
 ### What We Still Need
 
@@ -36,7 +45,7 @@ be acquired separately to enable cross-referencing analysis.
 | Epstein Exposed DOJ audit data | 🔄 Pending | MEDIUM |
 | Epstein Exposed stats | 🔄 Pending | LOW |
 | SEC insider trading filings | ❌ Not acquired | MEDIUM |
-| FBI Vault PDFs | ❌ Available on Archive.org | MEDIUM |
+| FBI Vault PDFs | 🔄 OCR running (16 PDFs) | MEDIUM |
 | Court records (CourtListener) | ❌ Not queried | MEDIUM |
 | Court records (structured) | ❌ Partial | MEDIUM |
 | Epstein Web Tracker data | ❌ Not queried | MEDIUM |

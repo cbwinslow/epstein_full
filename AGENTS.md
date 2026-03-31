@@ -451,3 +451,113 @@ These get merged into the existing knowledge graph via:
 - Issues found: ...
 - Fixes applied: ...
 ```
+
+---
+
+## Mandatory Memory Protocol
+
+**EVERY agent MUST execute these steps automatically. No exceptions.**
+
+### On Session Start (Before Any Work)
+```python
+# 1. Recall relevant memories
+from autonomous_memory import recall
+memories = recall("task description keywords", limit=5)
+# Inject results into agent context before proceeding
+```
+
+### During Work (After Every Decision/Error/Discovery)
+```python
+from autonomous_memory import save_decision, save_error, save_discovery
+
+# On decision
+save_decision("Title", "Rationale and what was chosen", agent="agent_name")
+
+# On error
+save_error("Error message", "Context", "How it was fixed", agent="agent_name")
+
+# On discovery
+save_discovery("What was found", "Details", agent="agent_name")
+```
+
+### On Session End (After All Work Complete)
+```python
+from autonomous_memory import log_session
+
+# Save full conversation
+log_session(conversation_messages, "agent_name", "project_name")
+```
+
+### GitHub Issue Protocol
+When closing issues, ALWAYS add a comment with:
+1. What was done (specific actions)
+2. Numbers/metrics (before/after)
+3. Tables affected
+4. Any remaining work
+
+Example:
+```
+gh issue comment 37 --body "## Completed\n\n**Details:**\n- Removed 187K duplicates\n- Final count: 1.6M rows\n- Table: jmail_emails"
+gh issue close 37 --comment "Completed - see details above."
+```
+
+### Memory Location
+- Database: `letta` (PostgreSQL localhost:5432)
+- Table: `letta_memories`
+- Skill: `~/dotfiles/ai/skills/autonomous_memory/`
+- Import: `from autonomous_memory import recall, store, log_session`
+
+---
+
+## Backup & Recovery
+
+### Backup Location
+- **Path**: `/mnt/data/epstein-project/backups/`
+- **Format**: PostgreSQL custom format (`.dump`), compressed level 9
+- **Naming**: `epstein_YYYYMMDD_HHMMSS.dump`
+
+### Current Backups
+| File | Date | Size |
+|------|------|------|
+| `epstein_20260322_203141.dump` | 2026-03-22 | ~3GB |
+| Latest auto-backup | Daily 2am cron | varies |
+
+### Backup Command
+```bash
+# Manual backup
+PGPASSWORD=123qweasd pg_dump -U cbwinslow -h localhost epstein \
+  --format=custom --compress=9 \
+  --file="/mnt/data/epstein-project/backups/epstein_$(date +%Y%m%d_%H%M%S).dump"
+
+# Restore from backup
+pg_restore -U cbwinslow -h localhost -d epstein --clean \
+  /mnt/data/epstein-project/backups/epstein_YYYYMMDD_HHMMSS.dump
+```
+
+### Automated Backups
+- **Cron**: Daily at 2am (system cron, see `crontab -l`)
+- **Retention**: 7 days (old backups auto-cleaned)
+- **Log**: `/home/cbwinslow/workspace/epstein/logs/backup.log`
+
+### What Gets Backed Up
+All 72 tables in the `epstein` database including:
+- Core DOJ data (documents, pages, redactions, embeddings)
+- Kabasshouse imports (entities, chunks, financial, embeddings)
+- Epstein Exposed data (persons, flights, emails, organizations)
+- FBI Vault OCR pages
+- FEC donations
+- DOJ alteration analysis
+- House Oversight emails
+- All indexes, constraints, and extensions (pgvector, pg_trgm)
+
+### What Does NOT Get Backed Up
+- Letta memories (stored in separate `letta` database)
+- Downloaded files in `/mnt/data/epstein-project/downloads/`
+- Log files in `logs/`
+
+### Recovery Procedure
+1. Verify backup integrity: `pg_restore -l /path/to/backup.dump`
+2. Stop any running import processes
+3. Restore: `pg_restore -d epstein --clean /path/to/backup.dump`
+4. Rebuild FTS indexes if needed: `UPDATE pages SET search_vector = to_tsvector('english', COALESCE(text_content, ''))`
+5. Verify row counts against backup metadata
