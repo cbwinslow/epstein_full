@@ -373,3 +373,81 @@
 | 15.13 | **Create memory sync skill** | ✅ Done | `memory_sync` skill for PostgreSQL ↔ Letta server synchronization |
 | 15.14 | **Update AGENTS.md** | ✅ Done | Added memory management section with skills reference |
 | 15.15 | **Remove legacy scripts** | ✅ Done | Moved redundant Letta scripts to backup directory |
+
+## Phase 16: Supplementary Data Download & Import ✅
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 16.1 | Fix PyTorch CUDA | ✅ Done | Was CPU-only (2.11.0+cu118). Driver 470 supports CUDA 11.8 but NOT 12.4. |
+| 16.2 | Test GPU embedding speed | ✅ Done | BGE-small: 240/sec, all-MiniLM-L6-v2: 2596/sec on K80 |
+| 16.3 | Evaluate pre-computed embeddings | ✅ Done | kabasshouse/epstein-data has 2.1M chunk embeddings (768-dim Gemini) |
+| 16.4 | Download kabasshouse entities | ✅ Done | 9,893,147 rows, PK: (document_id, entity_type, value) |
+| 16.5 | Download kabasshouse chunks | ✅ Done | 1,874,012 rows, PK: (document_id, chunk_index) |
+| 16.6 | Download kabasshouse embeddings | ✅ Done | 1,505,618 rows, PK: chunk_id, 768-dim Gemini |
+| 16.7 | Download kabasshouse financial | ✅ Done | 49,770 rows, PK: id |
+| 16.8 | Download kabasshouse redactions | ✅ Done | 22,355 rows, PK: id |
+| 16.9 | Download kabasshouse events | ✅ Done | 3,038 rows, PK: id |
+| 16.10 | Download kabasshouse curated docs | ✅ Done | 1,398 rows, PK: file_key |
+| 16.11 | Download kabasshouse persons | ✅ Done | 546 rows, PK: slug |
+| 16.12 | Download kabasshouse comms | ✅ Done | 128 rows, PK: id |
+| 16.13 | Download House Oversight emails | ✅ Done | 5,082 threads, PK: thread_id |
+| 16.14 | Download FBI Vault PDFs | ✅ Done | 16 valid PDFs from Archive.org |
+| 16.15 | OCR FBI Vault PDFs | 🔄 Running | PyMuPDF + Tesseract, PID 91699 |
+| 16.16 | Fix HF download hanging | ✅ Done | Use aria2c (5-13MB/s) instead of hf_hub_download |
+| 16.17 | Fix PostgreSQL autovacuum | ✅ Done | Disable during bulk import |
+| 16.18 | Clean up downloaded files | ✅ Done | Deleted 5.3GB of imported parquets |
+| 16.19 | Remove Letta tables from epstein DB | ✅ Done | Belong in letta DB, not epstein |
+| 16.20 | Save session memories to Letta | ✅ Done | 5 memories saved |
+
+## Phase 17: FBI Vault OCR ⬜
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 17.1 | OCR FBI Vault PDFs | ✅ Done | 996 pages, 616,959 chars extracted |
+| 17.2 | Verify OCR text quality | ⬜ TODO | Manual spot-check |
+| 17.3 | Add FBI Vault text to search | ⬜ TODO | FTS5 index |
+| 17.4 | Extract entities from FBI Vault | ⬜ TODO | NER on OCR text |
+
+## Phase 18: Supplementary Embedding Datasets 🔄
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 18.1 | Download svetfm/epstein-fbi-files embeddings | ⚠️ Rate Limited | 236K chunks, 3.31 GB, nomic-embed-text 768-dim - hit 1000 req/5min limit |
+| 18.2 | Download svetfm/epstein-files-nov11-25-house-post-ocr-embeddings | ⬜ TODO | 69K chunks, 357 MB, House Oversight Committee |
+| 18.3 | Download tensonaut/EPSTEIN_FILES_20K | ⬜ TODO | House Oversight source documents |
+| 18.4 | Download theelderemo/FULL_EPSTEIN_INDEX | ⬜ TODO | Combined DOJ + House index |
+| 18.5 | Import FBI embeddings to PostgreSQL | ⬜ TODO | Add to embeddings table |
+| 18.6 | Import House Oversight embeddings | ⬜ TODO | Supplement existing House data |
+| 18.7 | Cross-reference embedding sources | ⬜ TODO | Identify overlap and gaps |
+| 18.8 | Update DATA_INVENTORY.md | ⬜ TODO | Document new datasets |
+| 18.9 | Create dataset download retry script | ⬜ TODO | Handle HF rate limits with exponential backoff |
+
+### Supplementary Dataset Summary
+
+| Dataset | Source | Size | Embeddings | Status | GitHub Issue |
+|---------|--------|------|------------|--------|--------------|
+| kabasshouse/epstein-data | HuggingFace | ~12GB | 2.1M (768-dim) | ✅ Imported | - |
+| svetfm/epstein-fbi-files | HuggingFace | 3.31GB | 236K (768-dim) | ⚠️ Rate Limited | #71 |
+| svetfm/epstein-files-nov11-25-house-post-ocr-embeddings | HuggingFace | 357MB | 69K (768-dim) | ⬜ Pending | #72 |
+| tensonaut/EPSTEIN_FILES_20K | HuggingFace | Unknown | None (source) | ⬜ Pending | #70 |
+| theelderemo/FULL_EPSTEIN_INDEX | HuggingFace | Unknown | Unknown | ⬜ Pending | #70 |
+
+**Total Additional Embeddings**: ~305K chunks (~4GB)
+**Model Compatibility**: All use 768-dim (compatible with existing kabasshouse data)
+**Rate Limit Hit**: 1000 API requests per 5 minutes - need retry logic with backoff
+
+---
+
+## Dataset Download Strategy
+
+### Rate Limit Workaround
+- Use `aria2c` for large files (bypasses HF API limits)
+- Implement exponential backoff retry (5min, 10min, 20min)
+- Download during off-peak hours
+- Use HF Pro token if available for higher limits
+
+### Priority Order
+1. **svetfm/epstein-fbi-files** (highest value - FBI investigative files)
+2. **svetfm/epstein-files-nov11-25-house-post-ocr-embeddings** (House Oversight)
+3. **tensonaut/EPSTEIN_FILES_20K** (source documents)
+4. **theelderemo/FULL_EPSTEIN_INDEX** (comprehensive index)
