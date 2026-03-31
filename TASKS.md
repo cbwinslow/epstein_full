@@ -415,8 +415,8 @@
 | 18.1 | Download svetfm/epstein-fbi-files embeddings | ✅ Done | 236K chunks, 3.9 GB, nomic-embed-text 768-dim - downloaded at 27 MB/s |
 | 18.2 | Download svetfm/epstein-files-nov11-25-house-post-ocr-embeddings | ✅ Done | 69K chunks, 341 MB, House Oversight Committee - downloaded at 11 MB/s |
 | 18.3 | Download FBI OCR data | ✅ Done | 317 MB OCR text from FBI files |
-| 18.4 | Download tensonaut/EPSTEIN_FILES_20K | ⬜ TODO | House Oversight source documents |
-| 18.5 | Download theelderemo/FULL_EPSTEIN_INDEX | ⬜ TODO | Combined DOJ + House index |
+| 18.4 | Download tensonaut/EPSTEIN_FILES_20K | ❌ Unavailable | Repository removed or made private (404 error) |
+| 18.5 | Download theelderemo/FULL_EPSTEIN_INDEX | ✅ Done | 221K rows, 3.2 MB - text extract CSV |
 | 18.6 | Import FBI embeddings to PostgreSQL | ⬜ TODO | Add to embeddings table |
 | 18.7 | Import House Oversight embeddings | ⬜ TODO | Supplement existing House data |
 | 18.8 | Cross-reference embedding sources | ⬜ TODO | Identify overlap and gaps |
