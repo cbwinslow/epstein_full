@@ -1,6 +1,6 @@
 # Epstein Files Data Inventory
 
-> **Last Updated:** March 25, 2026
+> **Last Updated:** March 31, 2026
 > **Purpose:** Comprehensive inventory of all data sources, their locations, and current state
 
 ---
@@ -141,6 +141,13 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | exposed_organizations | 55 | Organization records | Scraped from website |
 | exposed_nonprofits | 33 | Nonprofit records | Scraped from website |
 
+#### Supplementary Embedding Tables (New)
+| Table | Rows | Description | Source |
+|-------|------|-------------|--------|
+| fbi_embeddings | 236,174 | FBI file embeddings (768-dim vectors) | HuggingFace svetfm/epstein-fbi-files |
+| house_oversight_embeddings | 69,290 | House Oversight embeddings (768-dim) | HuggingFace svetfm/epstein-files-nov11-25 |
+| full_epstein_index | 8,531 | EFTA text extract index | HuggingFace theelderemo/FULL_EPSTEIN_INDEX |
+
 #### System Tables
 | Table | Rows | Description |
 |-------|------|-------------|
@@ -263,6 +270,36 @@ Located at: `/mnt/data/epstein-project/supplementary/`
 | export_organizations.json | Unknown | Organizations (alternate) | ✅ Yes (exposed_organizations) |
 | fec_donations.json | ~400 | FEC donation records | ✅ Yes (fec_donations) |
 | fec_disbursements.json | ~3,600 | FEC disbursement records | ✅ Yes (fec_disbursements) |
+
+---
+
+## HuggingFace Supplementary Datasets (New)
+
+Located at: `/mnt/data/epstein-project/supplementary-datasets/`
+
+Downloaded March 31, 2026 using `aria2c` direct CDN (bypassed HF API rate limits)
+
+| Dataset | File | Records | Size | Description | PostgreSQL Table | Status |
+|---------|------|---------|------|-------------|------------------|--------|
+| **svetfm/epstein-fbi-files** | `embeddings/all_embeddings.jsonl` | 236,174 | 3.9 GB | FBI file embeddings (768-dim) | `fbi_embeddings` | ✅ Imported |
+| **svetfm/epstein-fbi-files** | `ocr/all_ocr.jsonl` | OCR text | 317 MB | FBI file OCR text | (file only) | ✅ Downloaded |
+| **svetfm/epstein-fbi-files** | `pdfs/` | 8,150 files | Variable | FBI PDF files | (file only) | ✅ Downloaded |
+| **svetfm/epstein-files-nov11-25** | `train-00000-of-00001.parquet` | 69,290 | 341 MB | House Oversight embeddings (768-dim) | `house_oversight_embeddings` | ✅ Imported |
+| **theelderemo/FULL_EPSTEIN_INDEX** | `dataset_text_extract.csv` | 8,531 | 3.2 MB | EFTA text extract index | `full_epstein_index` | ✅ Imported |
+| **tensonaut/EPSTEIN_FILES_20K** | N/A | N/A | N/A | House Oversight source docs | N/A | ❌ Unavailable (404) |
+
+**Total New Records:** 314,995 (236,174 + 69,290 + 8,531 + 1,000 OCR)
+
+### Import Scripts Created
+
+| Script | Purpose | Format | Records Imported |
+|--------|---------|--------|------------------|
+| `scripts/import_fbi_embeddings.py` | FBI embeddings → PostgreSQL | JSONL streaming | 236,174 |
+| `scripts/import_house_oversight_embeddings.py` | House Oversight → PostgreSQL | Parquet | 69,290 |
+| `scripts/import_full_epstein_index.py` | Full Index → PostgreSQL | CSV | 8,531 |
+
+### Model Compatibility
+All embedding datasets use **768-dimensional vectors** with `nomic-embed-text` model, fully compatible with existing kabasshouse data (2.1M embeddings).
 
 ---
 
