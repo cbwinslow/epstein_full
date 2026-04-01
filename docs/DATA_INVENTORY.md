@@ -1,6 +1,6 @@
 # Epstein Files Data Inventory
 
-> **Last Updated:** March 31, 2026
+> **Last Updated:** April 1, 2026
 > **Purpose:** Comprehensive inventory of all data sources, their locations, and current state
 
 ---
@@ -8,6 +8,11 @@
 ## Overview
 
 This document provides a complete inventory of all data in the Epstein Files Analysis project. It compares our data with [epsteinexposed.com](https://epsteinexposed.com) to identify gaps and plan next steps.
+
+**Recent Updates (April 1, 2026):**
+- Added FEC bulk campaign finance data (146 files, 22GB downloaded)
+- Added politicians' financial disclosure tables (House, Senate, Congress trading)
+- Fast COPY-based ingestion implemented (500K+ rows/minute)
 
 ---
 
@@ -23,6 +28,8 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | **Locations** | Unknown | 83 (exposed_locations) | Unknown | ❓ |
 | **Organizations** | Unknown | 55 (exposed_organizations) | Unknown | ❓ |
 | **Nonprofits** | Unknown | 33 (exposed_nonprofits) | Unknown | ❓ |
+| **FEC Contributions** | N/A | 5,420,940+ (fec_individual_contributions) | N/A | 🆕 NEW |
+| **Congress Trading** | N/A | 0 (congress_trading) | N/A | 🆕 NEW (awaiting API key) |
 
 ### Additional Data
 - **FBI Vault:** 22 documents (1,344 pages total)
@@ -147,6 +154,73 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | fbi_embeddings | 236,174 | FBI file embeddings (768-dim vectors) | HuggingFace svetfm/epstein-fbi-files |
 | house_oversight_embeddings | 69,290 | House Oversight embeddings (768-dim) | HuggingFace svetfm/epstein-files-nov11-25 |
 | full_epstein_index | 8,531 | EFTA text extract index | HuggingFace theelderemo/FULL_EPSTEIN_INDEX |
+
+#### FEC Bulk Campaign Finance Data (NEW)
+| Table | Rows | Description | Source |
+|-------|------|-------------|--------|
+| fec_individual_contributions | 5,420,940+ | Individual campaign contributions (1980-2026) | FEC bulk downloads |
+| fec_committees | 23,000+ | Committee master records | FEC bulk downloads |
+| fec_candidates | 12,000+ | Candidate master records | FEC bulk downloads |
+| fec_committee_contributions | 0 | Committee-to-committee transfers (pending) | FEC bulk downloads |
+| fec_candidate_contributions | 0 | Committee-to-candidate transfers (pending) | FEC bulk downloads |
+| fec_operating_expenditures | 0 | Committee operating expenses (pending) | FEC bulk downloads |
+| fec_download_log | 146 | Download tracking | Our ingestion |
+
+**File Types Downloaded:**
+- `indiv*.zip` - Individual contributions (23 cycles, 1980-2026)
+- `cm*.zip` - Committee master (23 cycles)
+- `cn*.zip` - Candidate master (23 cycles)
+- `ccl*.zip` - Candidate-committee linkage (partial)
+- `oth*.zip` - Committee contributions (partial)
+- `pas2*.zip` - Candidate contributions (partial)
+- `oppexp*.zip` - Operating expenditures (partial)
+
+**Storage:** `/mnt/data/epstein-project/raw-files/fec/` (22GB, 146 files)
+
+#### Politicians' Financial Disclosure Data (NEW - FREE Sources)
+| Table | Rows | Description | Source |
+|-------|------|-------------|--------|
+| congress_trading | 0 | Congress member stock trades (via govinfo.gov - FREE) | GovInfo API (api.data.gov) |
+| politician_financial_summary | 0 | Net worth, assets, liabilities (House/Senate scrape) | disclosures-clerk.house.gov |
+| house_disclosures | 0 | House financial disclosure PDFs | Direct scraping (no API key) |
+| senate_disclosures | 0 | Senate financial disclosure PDFs | disclosure.senate.gov |
+
+**FREE Data Sources (No API key required for basic access):**
+
+1. **GovInfo.gov API** (FREE - 36,000 req/hour)
+   - URL: https://api.govinfo.gov
+   - Key: Get free at https://api.data.gov/signup/
+   - Collections: Congressional Bills, Congressional Record, Financial Disclosures
+   - Rate: 36,000 requests/hour, 1,200/minute
+
+2. **Congress.gov API** (FREE)
+   - URL: https://api.congress.gov
+   - Key: Get free at https://api.congress.gov/
+   - Data: Members, bills, committees, nominations
+   - Rate: Lower limits (be polite)
+
+3. **Data.gov API** (FREE)
+   - URL: https://catalog.data.gov/api/3
+   - Key: Optional but recommended
+   - Data: 250,000+ datasets including campaign finance, lobbying, contracts
+
+4. **House Disclosures** (Direct Scraping - NO API)
+   - URL: https://disclosures-clerk.house.gov/PublicDisclosure/FinancialDisclosure
+   - Access: Public search, PDF downloads
+   - Coverage: All House members, annual + periodic transaction reports
+
+5. **Senate Disclosures** (Direct Scraping - NO API)
+   - URL: https://www.disclosure.senate.gov/
+   - Access: Public search, PDF downloads
+   - Coverage: All Senators, annual + periodic transaction reports
+
+**Scripts Created:**
+- `scripts/download_gov_data.py` - GovInfo/Congress.gov/Data.gov APIs
+- `scripts/scrape_congress_disclosures.py` - House/Senate direct scraping
+- `scripts/download_fec_bulk.py` - FEC bulk data (also FREE)
+- `scripts/download_politicians_financial.py` - Quiver Quant (paid - not used)
+
+**Note on Quiver Quant:** API requires paid subscription. Using FREE government sources instead.
 
 #### System Tables
 | Table | Rows | Description |
@@ -425,6 +499,105 @@ All embedding datasets use **768-dimensional vectors** with `nomic-embed-text` m
 | **11** | OpenSanctions | N/A | Easy | Requires API key |
 | **12** | IRS Form 990 | Unknown | Medium | Nonprofit financials |
 | **13** | SEC EDGAR | Unknown | Medium | Insider trading filings |
+
+---
+
+## Datasets for Epstein Information Discovery & Parameter Generation
+
+### Critical Datasets for Cross-Referencing
+
+These datasets are essential for discovering connections, generating search parameters, and building a comprehensive picture of Epstein's network:
+
+#### Tier 1: Essential for Network Analysis
+| Dataset | Source | Status | Use Case |
+|---------|--------|--------|----------|
+| **FEC Contributions** | fec.gov | 🆕 Downloading (22GB) | Find political donations from Epstein associates |
+| **Congress Trading** | Quiver Quant | ⏳ Needs API key | Track stock trades by politicians in Epstein's circle |
+| **Offshore Leaks** | ICIJ | ❌ Not acquired | Panama/Paradise Papers for shell companies |
+| **SEC Insider Trading** | EDGAR | ❌ Not acquired | Stock trades by executives connected to Epstein |
+| **Flight Logs (Full)** | Multiple | ✅ 3,615 flights | Travel patterns, co-travelers |
+| **Emails (Complete)** | jmail.world | ✅ 1.78M emails | Communication patterns, coordination |
+
+#### Tier 2: Important for Context
+| Dataset | Source | Status | Use Case |
+|---------|--------|--------|----------|
+| **FBI Vault Files** | FBI | ⚠️ Partial (22 docs) | Investigative documents |
+| **Court Records** | CourtListener/PACER | ❌ Not acquired | Legal proceedings, testimony |
+| **IRS 990 Forms** | IRS/CitizenAudit | ❌ Not acquired | Nonprofit financial flows |
+| **Property Records** | County assessors | ❌ Not acquired | Real estate transactions |
+| **Corporate Registrations** | OpenCorporates | ❌ Not acquired | Shell companies, business entities |
+| **Lobbying Disclosures** | Senate LDA | ❌ Not acquired | Influence operations |
+
+#### Tier 3: Supplementary Intelligence
+| Dataset | Source | Status | Use Case |
+|---------|--------|--------|----------|
+| **Social Media Archives** | Wayback/Archive.org | ❌ Not acquired | Public statements, connections |
+| **Academic Publications** | OpenAlex | ❌ Not acquired | Research affiliations |
+| **Patent Records** | USPTO | ❌ Not acquired | Technology connections |
+| **Trademark Records** | USPTO | ❌ Not acquired | Business branding |
+| **Campaign Finance (State)** | FollowTheMoney | ❌ Not acquired | State-level political donations |
+| **Contract Awards** | USASpending.gov | ❌ Not acquired | Government contracts to Epstein entities |
+
+### Parameter Generation Sources
+
+For automated discovery and cross-referencing:
+
+#### Entity Resolution Parameters
+```yaml
+person_identifiers:
+  - Full legal name variants
+  - Known aliases (from persons_registry.json: 1,614 entries)
+  - Maiden names
+  - Spouse names (for joint transactions)
+  
+organization_identifiers:
+  - IRS EIN numbers (from nonprofits table: 33 entities)
+  - State registration IDs
+  - FEC committee IDs (from fec_committees: 23,000+ committees)
+  - Shell company patterns
+  
+location_identifiers:
+  - Property addresses (from exposed_locations: 83 locations)
+  - Zillow/Property records
+  - Geocoded coordinates
+  
+financial_identifiers:
+  - Bank routing patterns
+  - Cryptocurrency wallets (if any)
+  - Stock CUSIPs (from congress_trading when acquired)
+  - Transaction amounts (from fec_individual_contributions)
+```
+
+#### Network Discovery Rules
+```yaml
+co_occurrence_triggers:
+  - Same flight (exposed_flights: 3,615 flights)
+  - Same document mention (document_entities: 5.7M entities)
+  - Same email thread (jmail_emails: 1.78M emails)
+  - Same property transaction
+  - Same committee donation (fec_individual_contributions)
+  - Same corporate board
+  - Same nonprofit board (exposed_nonprofits: 33 orgs)
+  
+relationship_strength:
+  - Direct: Co-traveler, co-signatory, mutual mention
+  - Indirect: Common associate, shared location
+  - Temporal: Overlapping activities
+  - Financial: Transactional relationship
+```
+
+### Data Acquisition Priority Matrix
+
+| Priority | Dataset | Estimated Size | Effort | Impact on Discovery |
+|----------|---------|----------------|--------|---------------------|
+| **P0** | Offshore Leaks (ICIJ) | 2-3TB | High | Critical - shell companies |
+| **P0** | SEC EDGAR (Form 3/4/5) | 500GB | Medium | High - insider trades |
+| **P1** | CourtListener | 200GB | Low | High - legal proceedings |
+| **P1** | IRS 990 Forms | 100GB | Medium | Medium - nonprofit flows |
+| **P1** | Property Records | 50GB | High | Medium - real estate |
+| **P2** | OpenCorporates | 20GB | Low | Medium - entity resolution |
+| **P2** | Lobbying Disclosures | 10GB | Low | Low - influence tracking |
+| **P2** | Campaign Finance (State) | 5GB | Medium | Low - state politics |
 
 ---
 

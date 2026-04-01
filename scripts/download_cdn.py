@@ -25,13 +25,16 @@ import time
 from datetime import datetime
 from glob import glob
 
+# Import shared configuration
+from epstein_config import RAW_FILES_DIR, LOGS_DIR, FULL_TEXT_CORPUS_DB
+
 # =============================================================================
 # Configuration Constants
 # =============================================================================
 
 CDN_URL = "https://media-cdn.rollcall.com/epstein-files/EFTA{efta:08d}.pdf"
-RAW_DIR = "/mnt/data/epstein-project/raw-files"
-LOG_DIR = "/mnt/data/epstein-project/logs"
+RAW_DIR = str(RAW_FILES_DIR)
+LOG_DIR = str(LOGS_DIR)
 TRACKER = "/home/cbwinslow/workspace/epstein/scripts/tracker.py"
 PYTHON = "/home/cbwinslow/workspace/epstein/venv/bin/python3"
 EFTA_LIST_FILE = os.path.join(LOG_DIR, "efta_to_download.json")

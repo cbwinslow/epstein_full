@@ -124,6 +124,28 @@
 | aria2c | 1.37.0 | Parallel downloads |
 | SQLite | 3.x | Built-in Python |
 
+## Database Integrity Views
+
+Created comprehensive views for data verification and validation:
+
+| View | Purpose | Key Columns |
+|------|---------|-------------|
+| `documents_missing_content` | Documents without text content | id, efta_number, file_path, total_pages |
+| `pages_missing_text` | Pages with insufficient text | id, efta_number, page_number |
+| `embeddings_coverage` | Embedding model coverage stats | model_name, count_per_model, unique_pages |
+| `entity_extraction_stats` | NER statistics by type | entity_type, count, avg_docs_per_entity |
+| `redaction_analysis_summary` | Redaction patterns | redaction_type, count, avg_text_length, documents_affected |
+| `knowledge_graph_stats` | Graph component counts | type, count |
+| `file_registry_validation` | File integrity checks | source, hashed_files, validated_files, validation_pct |
+| `embedding_datasets_comparison` | Compare embedding sources | dataset, chunks, model |
+
+Query examples:
+- `SELECT * FROM documents_missing_content LIMIT 10;` — Find gaps
+- `SELECT * FROM embeddings_coverage;` — Check embedding completeness
+- `SELECT * FROM redaction_analysis_summary ORDER BY count DESC;` — Top redaction types
+
+---
+
 ## GPU Configuration
 
 | GPU | Device | Model | CC | PyTorch? | ONNX? | Use For |

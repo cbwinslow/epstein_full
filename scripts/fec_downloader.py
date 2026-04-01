@@ -78,6 +78,26 @@ def fetch_donations(name, page=1):
     return data.get("results", []), data.get("pagination", {}).get("count", 0), False
 
 
+def normalize_name(name):
+    """Normalize contributor name to canonical form."""
+    if not name:
+        return name
+    n = name.strip().upper()
+    # Bloomberg variants
+    if n in ('BLOOMBERG, MICHAEL', 'BLOOMBERG, MICHAEL RUBENS'):
+        return 'BLOOMBERG, MICHAEL R.'
+    # Lutnick variants
+    if n in ('LUTNICK, HOWARD', 'LUTNICK, HOWARD W', 'LUTNICK, HOWARD W. MR.'):
+        return 'LUTNICK, HOWARD W.'
+    # Murdoch variants
+    if n == 'MURDOCH, K RUPERT':
+        return 'MURDOCH, K. RUPERT'
+    # Hoffman variants
+    if n == 'HOFFMAN, REID':
+        return 'HOFFMAN, REID G.'
+    return n
+
+
 def save_donations(conn, results):
     """Save FEC results to database. Returns new count."""
     cur = conn.cursor()
@@ -96,7 +116,7 @@ def save_donations(conn, results):
                 ON CONFLICT DO NOTHING
             """, (
                 txn_id,
-                r.get("contributor_name", ""),
+                normalize_name(r.get("contributor_name", "")),
                 r.get("contributor_city", ""),
                 r.get("contributor_state", ""),
                 r.get("contributor_employer", ""),

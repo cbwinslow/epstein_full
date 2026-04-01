@@ -94,8 +94,9 @@ epstein-pipeline/
 - **Tesla K40m (2)**: Embeddings + Classification (overflow)
 
 ### Storage Layout
+
 ```
-/mnt/data/epstein-project/
+/home/cbwinslow/workspace/epstein-data/
 ├── raw-files/           # Downloaded PDFs and media
 │   ├── data1/           # Dataset 1
 │   ├── data2/           # Dataset 2
@@ -110,8 +111,13 @@ epstein-pipeline/
 │   └── full_text_corpus.db (downloading)
 ├── processed/           # OCR output, entities, embeddings
 ├── knowledge-graph/     # Custom KG exports
-└── logs/               # Download and processing logs
+├── models/              # ML models (109GB)
+├── downloads/           # Download staging area
+├── logs/                # Download and processing logs
+└── backups/             # PostgreSQL backups
 ```
+
+**Note:** All scripts now use `scripts/epstein_config.py` for centralized path management. Legacy `/mnt/data/epstein-project/` paths have been migrated to `/home/cbwinslow/workspace/epstein-data/`.
 
 ### Swarm Strategy
 For parallel processing:
@@ -512,7 +518,7 @@ gh issue close 37 --comment "Completed - see details above."
 ## Backup & Recovery
 
 ### Backup Location
-- **Path**: `/mnt/data/epstein-project/backups/`
+- **Path**: `/home/cbwinslow/workspace/epstein-data/backups/`
 - **Format**: PostgreSQL custom format (`.dump`), compressed level 9
 - **Naming**: `epstein_YYYYMMDD_HHMMSS.dump`
 
@@ -552,7 +558,7 @@ All 72 tables in the `epstein` database including:
 
 ### What Does NOT Get Backed Up
 - Letta memories (stored in separate `letta` database)
-- Downloaded files in `/mnt/data/epstein-project/downloads/`
+- Downloaded files in `/home/cbwinslow/workspace/epstein-data/downloads/`
 - Log files in `logs/`
 
 ### Recovery Procedure

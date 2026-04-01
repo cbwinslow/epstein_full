@@ -25,12 +25,15 @@ import time
 from datetime import datetime, timedelta
 from glob import glob
 
+# Import shared configuration
+from epstein_config import RAW_FILES_DIR, LOGS_DIR
+
 # === CONFIG ===
 RIPPER_DIR = "/home/cbwinslow/workspace/epstein/epstein-ripper"
-RAW_DIR = "/mnt/data/epstein-project/raw-files"
+RAW_DIR = str(RAW_FILES_DIR)
 TRACKER = "/home/cbwinslow/workspace/epstein/scripts/tracker.py"
 PYTHON = "/home/cbwinslow/workspace/epstein/venv/bin/python3"
-LOG_DIR = "/mnt/data/epstein-project/logs"
+LOG_DIR = str(LOGS_DIR)
 DISK_ALERT_PCT = 90
 PROGRESS_INTERVAL = 30  # seconds between status updates
 CHECK_INTERVAL = 10     # seconds between file count checks

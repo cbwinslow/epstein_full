@@ -14,6 +14,10 @@ import os
 import subprocess
 import sys
 import time
+from pathlib import Path
+
+# Import shared configuration
+from epstein_config import DATABASES_DIR, RAW_FILES_DIR
 
 TRACKER = "/home/cbwinslow/workspace/epstein/scripts/tracker.py"
 PYTHON = "/home/cbwinslow/workspace/epstein/venv/bin/python3"
@@ -22,26 +26,26 @@ POLL_INTERVAL = 5  # seconds
 # Watches: (task_id, directory_or_file, pattern)
 WATCHES = [
     # Databases
-    ("db-fulltext", "/mnt/data/epstein-project/databases", "full_text_corpus.db"),
-    ("db-redaction", "/mnt/data/epstein-project/databases", "redaction_analysis_v2.db"),
-    ("db-image", "/mnt/data/epstein-project/databases", "image_analysis.db"),
-    ("db-ocr", "/mnt/data/epstein-project/databases", "ocr_database.db"),
-    ("db-comms", "/mnt/data/epstein-project/databases", "communications.db"),
-    ("db-transcripts", "/mnt/data/epstein-project/databases", "transcripts.db"),
-    ("db-kg", "/mnt/data/epstein-project/databases", "knowledge_graph.db"),
+    ("db-fulltext", str(DATABASES_DIR), "full_text_corpus.db"),
+    ("db-redaction", str(DATABASES_DIR), "redaction_analysis_v2.db"),
+    ("db-image", str(DATABASES_DIR), "image_analysis.db"),
+    ("db-ocr", str(DATABASES_DIR), "ocr_database.db"),
+    ("db-comms", str(DATABASES_DIR), "communications.db"),
+    ("db-transcripts", str(DATABASES_DIR), "transcripts.db"),
+    ("db-kg", str(DATABASES_DIR), "knowledge_graph.db"),
     # DOJ raw files (PDFs)
-    ("doj-ds1", "/mnt/data/epstein-project/raw-files/data1", "*.pdf"),
-    ("doj-ds2", "/mnt/data/epstein-project/raw-files/data2", "*.pdf"),
-    ("doj-ds3", "/mnt/data/epstein-project/raw-files/data3", "*.pdf"),
-    ("doj-ds4", "/mnt/data/epstein-project/raw-files/data4", "*.pdf"),
-    ("doj-ds5", "/mnt/data/epstein-project/raw-files/data5", "*.pdf"),
-    ("doj-ds6", "/mnt/data/epstein-project/raw-files/data6", "*.pdf"),
-    ("doj-ds7", "/mnt/data/epstein-project/raw-files/data7", "*.pdf"),
-    ("doj-ds8", "/mnt/data/epstein-project/raw-files/data8", "*.pdf"),
-    ("doj-ds9", "/mnt/data/epstein-project/raw-files/data9", "*.pdf"),
-    ("doj-ds10", "/mnt/data/epstein-project/raw-files/data10", "*.pdf"),
-    ("doj-ds11", "/mnt/data/epstein-project/raw-files/data11", "*.pdf"),
-    ("doj-ds12", "/mnt/data/epstein-project/raw-files/data12", "*.pdf"),
+    ("doj-ds1", str(RAW_FILES_DIR / "data1"), "*.pdf"),
+    ("doj-ds2", str(RAW_FILES_DIR / "data2"), "*.pdf"),
+    ("doj-ds3", str(RAW_FILES_DIR / "data3"), "*.pdf"),
+    ("doj-ds4", str(RAW_FILES_DIR / "data4"), "*.pdf"),
+    ("doj-ds5", str(RAW_FILES_DIR / "data5"), "*.pdf"),
+    ("doj-ds6", str(RAW_FILES_DIR / "data6"), "*.pdf"),
+    ("doj-ds7", str(RAW_FILES_DIR / "data7"), "*.pdf"),
+    ("doj-ds8", str(RAW_FILES_DIR / "data8"), "*.pdf"),
+    ("doj-ds9", str(RAW_FILES_DIR / "data9"), "*.pdf"),
+    ("doj-ds10", str(RAW_FILES_DIR / "data10"), "*.pdf"),
+    ("doj-ds11", str(RAW_FILES_DIR / "data11"), "*.pdf"),
+    ("doj-ds12", str(RAW_FILES_DIR / "data12"), "*.pdf"),
 ]
 
 def count_files(directory: str, pattern: str) -> tuple:

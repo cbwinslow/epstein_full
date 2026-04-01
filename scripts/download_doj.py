@@ -30,11 +30,14 @@ import subprocess
 from datetime import datetime
 from glob import glob
 
+# Import shared configuration
+from epstein_config import RAW_FILES_DIR, LOGS_DIR
+
 # === PATHS ===
-RAW_DIR = "/mnt/data/epstein-project/raw-files"
+RAW_DIR = str(RAW_FILES_DIR)
 TRACKER = "/home/cbwinslow/workspace/epstein/scripts/tracker.py"
 PYTHON = "/home/cbwinslow/workspace/epstein/venv/bin/python3"
-LOG_DIR = "/mnt/data/epstein-project/logs"
+LOG_DIR = str(LOGS_DIR)
 
 # === EFTA RANGES (from Epstein-research-data) ===
 EFTA_RANGES = {
