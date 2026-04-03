@@ -37,7 +37,7 @@ HEADERS = {
     "Accept": "application/json",
 }
 BASE = "https://epsteinexposed.com/api/v2"
-OUTDIR = "/mnt/data/epstein-project/supplementary"
+OUTDIR = "/home/cbwinslow/workspace/epstein-data/supplementary"
 
 PG_HOST = os.environ.get("PG_HOST", "localhost")
 PG_PORT = int(os.environ.get("PG_PORT", "5432"))

@@ -67,10 +67,10 @@ def check_sqlite() -> bool:
 def check_data_dirs() -> bool:
     """Check data directories exist."""
     dirs = [
-        "/mnt/data/epstein-project",
-        "/mnt/data/epstein-project/raw-files",
-        "/mnt/data/epstein-project/databases",
-        "/mnt/data/epstein-project/hf-parquet",
+        "/home/cbwinslow/workspace/epstein-data",
+        "/home/cbwinslow/workspace/epstein-data/raw-files",
+        "/home/cbwinslow/workspace/epstein-data/databases",
+        "/home/cbwinslow/workspace/epstein-data/hf-parquet",
     ]
     all_ok = True
     for d in dirs:

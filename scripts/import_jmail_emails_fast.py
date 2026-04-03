@@ -22,7 +22,7 @@ import psycopg2
 PG_DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 
 # Data paths
-JMAIL_DIR = Path("/mnt/data/epstein-project/supplementary")
+JMAIL_DIR = Path("/home/cbwinslow/workspace/epstein-data/supplementary")
 EMAILS_PARQUET = JMAIL_DIR / "emails-slim.parquet"
 
 

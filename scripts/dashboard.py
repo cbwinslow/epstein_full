@@ -28,7 +28,7 @@ from rich.text import Text
 # Configuration
 # =============================================================================
 
-RAW_DIR = "/mnt/data/epstein-project/raw-files"
+RAW_DIR = "/home/cbwinslow/workspace/epstein-data/raw-files"
 REFRESH_INTERVAL = 3  # seconds
 
 # Actual corpus counts

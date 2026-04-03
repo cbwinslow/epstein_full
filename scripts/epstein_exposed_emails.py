@@ -22,7 +22,7 @@ from datetime import datetime, timedelta
 
 DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 API_BASE = "https://epsteinexposed.com/api/v2/emails"
-STATE_FILE = "/mnt/data/epstein-project/downloads/ee_emails_state.json"
+STATE_FILE = "/home/cbwinslow/workspace/epstein-data/downloads/ee_emails_state.json"
 LOG_FILE = "/home/cbwinslow/workspace/epstein/logs/ee_emails.log"
 MAX_RETRIES = 60  # Retry every minute for up to 60 minutes
 RETRY_DELAY = 60  # 1 minute between retries

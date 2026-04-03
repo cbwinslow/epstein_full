@@ -27,7 +27,7 @@ PG_PORT = 5432
 PG_USER = "cbwinslow"
 PG_PASS = os.environ.get("PG_PASSWORD", "")
 PG_DB = "epstein"
-BACKUP_DIR = "/mnt/data/epstein-project/backups"
+BACKUP_DIR = "/home/cbwinslow/workspace/epstein-data/backups"
 DEFAULT_ROTATE = 5
 
 # Shared env for pg_dump

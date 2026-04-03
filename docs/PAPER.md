@@ -142,7 +142,7 @@ We adopt the Cross-Industry Standard Process for Data Mining (CRISP-DM) framewor
 
 The analysis pipeline operates on a server with:
 - **Compute**: 40 CPU cores, 125 GB RAM
-- **Storage**: 2.5 TB RAID5 (LVM), mounted at `/mnt/data/epstein-project/`
+- **Storage**: 2.5 TB RAID5 (LVM), mounted at `/home/cbwinslow/workspace/epstein-data/`
 - **GPU**: 2× NVIDIA Tesla K80 (12 GB VRAM each, Compute Capability 3.7) + 1× Tesla K40m (11 GB)
 - **Software**: Python 3.12, CUDA 11.4
 

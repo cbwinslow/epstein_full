@@ -17,7 +17,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DATA_DIR = Path('/mnt/data/epstein-project/raw-files/fec')
+DATA_DIR = Path('/home/cbwinslow/workspace/epstein-data/raw-files/fec')
 SCRIPT_DIR = Path('/home/cbwinslow/workspace/epstein/scripts')
 
 # Number of parallel workers (use CPU count, but max 4 to not overwhelm DB)

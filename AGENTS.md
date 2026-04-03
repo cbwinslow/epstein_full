@@ -117,7 +117,7 @@ epstein-pipeline/
 └── backups/             # PostgreSQL backups
 ```
 
-**Note:** All scripts now use `scripts/epstein_config.py` for centralized path management. Legacy `/mnt/data/epstein-project/` paths have been migrated to `/home/cbwinslow/workspace/epstein-data/`.
+**Note:** All scripts now use `scripts/epstein_config.py` for centralized path management. Legacy `/home/cbwinslow/workspace/epstein-data/` paths have been migrated to `/home/cbwinslow/workspace/epstein-data/`.
 
 ### Swarm Strategy
 For parallel processing:
@@ -154,7 +154,7 @@ For parallel processing:
 │  ├─ Scrapes paginated dataset pages                            │
 │  ├─ Downloads PDFs via Playwright (bypasses JS requirements)   │
 │  ├─ Validates PDF signature (rejects HTML poison)              │
-│  └─ Output: /mnt/data/epstein-project/raw-files/data{N}/      │
+│  └─ Output: /home/cbwinslow/workspace/epstein-data/raw-files/data{N}/      │
 │        └── EFTA00000001.pdf, EFTA00000002.pdf, ...            │
 │                                                                 │
 │  EpsteinLibraryMediaScraper (scrape.js)                        │
@@ -533,11 +533,11 @@ gh issue close 37 --comment "Completed - see details above."
 # Manual backup
 PGPASSWORD=123qweasd pg_dump -U cbwinslow -h localhost epstein \
   --format=custom --compress=9 \
-  --file="/mnt/data/epstein-project/backups/epstein_$(date +%Y%m%d_%H%M%S).dump"
+  --file="/home/cbwinslow/workspace/epstein-data/backups/epstein_$(date +%Y%m%d_%H%M%S).dump"
 
 # Restore from backup
 pg_restore -U cbwinslow -h localhost -d epstein --clean \
-  /mnt/data/epstein-project/backups/epstein_YYYYMMDD_HHMMSS.dump
+  /home/cbwinslow/workspace/epstein-data/backups/epstein_YYYYMMDD_HHMMSS.dump
 ```
 
 ### Automated Backups

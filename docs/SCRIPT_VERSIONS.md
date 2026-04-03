@@ -64,7 +64,7 @@ All processing scripts are version-controlled with:
   - Progress tracking and validation
   - Error handling for missing files
 - **Usage**: `python scripts/download_cdn.py --datasets 9,10,11`
-- **Output**: Downloaded PDF files in `/mnt/data/epstein-project/raw-files/`
+- **Output**: Downloaded PDF files in `/home/cbwinslow/workspace/epstein-data/raw-files/`
 - **Status**: ✅ Operational, 268K+ files downloaded
 
 #### `scripts/download_doj.py`
@@ -125,7 +125,7 @@ All processing scripts are version-controlled with:
   - Progress updates via filesystem events
   - Integration with download processes
   - Error detection and reporting
-- **Usage**: `python scripts/file_watcher.py --path /mnt/data/epstein-project/raw-files/`
+- **Usage**: `python scripts/file_watcher.py --path /home/cbwinslow/workspace/epstein-data/raw-files/`
 - **Output**: Progress updates and monitoring
 - **Status**: ✅ Operational
 
@@ -220,10 +220,10 @@ python scripts/advanced_processing_demo.py --backend surya
 python scripts/full_processing_pipeline.py --all-datasets
 
 # 3. Generate embeddings
-epstein-pipeline embed /mnt/data/epstein-project/processed/
+epstein-pipeline embed /home/cbwinslow/workspace/epstein-data/processed/
 
 # 4. Build knowledge graph
-epstein-pipeline build-graph /mnt/data/epstein-project/processed/
+epstein-pipeline build-graph /home/cbwinslow/workspace/epstein-data/processed/
 ```
 
 ## Error Handling and Recovery

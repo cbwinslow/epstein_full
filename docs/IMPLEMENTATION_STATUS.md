@@ -14,7 +14,7 @@ The Epstein Files analysis pipeline has been successfully implemented and is ope
 
 | Component | Status | Details |
 |-----------|--------|---------|
-| **Storage** | ✅ Complete | 2.3TB available on LVM volume `/mnt/data/epstein-project/` |
+| **Storage** | ✅ Complete | 2.3TB available on LVM volume `/home/cbwinslow/workspace/epstein-data/` |
 | **GPU Setup** | ✅ Complete | 2x Tesla K80 (12GB each) + 1x Tesla K40m (11GB), CUDA 11.4 |
 | **Python Environment** | ✅ Complete | Python 3.12 with uv package manager |
 | **PostgreSQL** | ✅ Complete | Database with pgvector, 1.4M documents, 606 entities |

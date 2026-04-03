@@ -21,7 +21,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Paths
-DATA_DIR = Path('/mnt/data/epstein-project/raw-files/fec')
+DATA_DIR = Path('/home/cbwinslow/workspace/epstein-data/raw-files/fec')
 
 # Database config
 DB_CONFIG = {

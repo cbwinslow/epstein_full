@@ -5,7 +5,7 @@ import json
 import sqlite3
 import sys
 
-DB_PATH = "/mnt/data/epstein-project/databases/knowledge_graph.db"
+DB_PATH = "/home/cbwinslow/workspace/epstein-data/databases/knowledge_graph.db"
 
 def connect():
     return sqlite3.connect(DB_PATH)

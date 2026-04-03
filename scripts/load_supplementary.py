@@ -13,7 +13,7 @@ PG = dict(
     password=os.environ.get("PG_PASSWORD", ""),
     dbname="epstein",
 )
-DATA = "/mnt/data/epstein-project/supplementary"
+DATA = "/home/cbwinslow/workspace/epstein-data/supplementary"
 
 
 def get_pg():

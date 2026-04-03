@@ -36,7 +36,7 @@ from epstein_config import RAW_FILES_DIR, LOGS_DIR
 # === PATHS ===
 RAW_DIR = str(RAW_FILES_DIR)
 TRACKER = "/home/cbwinslow/workspace/epstein/scripts/tracker.py"
-PYTHON = "/home/cbwinslow/workspace/epstein/venv/bin/python3"
+PYTHON = "/usr/bin/python3"
 LOG_DIR = str(LOGS_DIR)
 
 # === EFTA RANGES (from Epstein-research-data) ===
@@ -141,22 +141,34 @@ class DOJDownloader:
         self.pw = await self.pw_cm.__aenter__()
         self.browser = await self.pw.chromium.launch(
             headless=True,
-            args=['--disable-blink-features=AutomationControlled', '--no-sandbox']
+            args=['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-dev-shm-usage']
         )
         self.context = await self.browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            viewport={'width': 1280, 'height': 720}
         )
         await self.context.add_init_script(
             "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
         )
-        # Warm up cookies by visiting the site once
+        # Warm up cookies by visiting the site once and handling age gate
         page = await self.context.new_page()
-        await page.goto(AGE_GATE_URL.format(ds=1), wait_until="domcontentloaded", timeout=30000)
-        age = await page.query_selector("#age-button-yes")
-        if age and await age.is_visible():
-            await age.click()
-            await asyncio.sleep(1)
-        await page.close()
+        try:
+            await page.goto(AGE_GATE_URL.format(ds=1), wait_until="networkidle", timeout=60000)
+            # Try multiple selectors for age verification
+            for selector in ['#age-button-yes', '[name="age_verification"]', '#edit-age-verification', 'button:has-text("21")']:
+                try:
+                    age_btn = await page.wait_for_selector(selector, timeout=5000)
+                    if age_btn and await age_btn.is_visible():
+                        await age_btn.click()
+                        await page.wait_for_load_state("networkidle")
+                        await asyncio.sleep(2)
+                        break
+                except:
+                    continue
+        except Exception as e:
+            self.log(f"Age verification warning: {e}")
+        finally:
+            await page.close()
 
     async def teardown(self):
         if self.context:

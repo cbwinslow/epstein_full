@@ -11,7 +11,7 @@
 |------|-------|
 | GitHub | https://github.com/cbwinslow/epstein_full |
 | Project root | `/home/cbwinslow/workspace/epstein` |
-| Data mount | `/mnt/data/epstein-project/` |
+| Data mount | `/home/cbwinslow/workspace/epstein-data/` |
 | Python | 3.12 via uv (`.venv/`) |
 | Package manager | `uv` (never pip directly) |
 | GPUs | 2× Tesla K80 (12GB) + 1× Tesla K40m (11GB), CUDA 11.4 |
@@ -48,7 +48,7 @@
 ├── epstein-ripper/                         # [submodule] DOJ downloader
 └── EpsteinLibraryMediaScraper/             # [submodule] Media scraper
 
-/mnt/data/epstein-project/
+/home/cbwinslow/workspace/epstein-data/
 ├── raw-files/                              # Downloaded PDFs (~268K files)
 │   ├── data1/ through data12/              # Per-dataset directories
 ├── databases/                              # Pre-built SQLite databases (8.4GB)

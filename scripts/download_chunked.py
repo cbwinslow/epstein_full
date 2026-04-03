@@ -13,10 +13,10 @@ import os
 import signal
 from datetime import datetime
 
-RAW_DIR = "/mnt/data/epstein-project/raw-files"
+RAW_DIR = "/home/cbwinslow/workspace/epstein-data/raw-files"
 TRACKER = "/home/cbwinslow/workspace/epstein/scripts/tracker.py"
 PYTHON = "/home/cbwinslow/workspace/epstein/venv/bin/python3"
-LOG_DIR = "/mnt/data/epstein-project/logs"
+LOG_DIR = "/home/cbwinslow/workspace/epstein-data/logs"
 EFTA_LIST_FILE = os.path.join(LOG_DIR, "efta_to_download.json")
 
 DELAY = 0.25

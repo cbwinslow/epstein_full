@@ -1,0 +1,6 @@
+Node Version: 22.22.2
+corepack, nvm-manager, openclaw
+
+Node Version: 24.14.0
+@bitwarden/cli, @bitwarden/mcp-server, @google/gemini-cli, @kilocode/cli, @letta-ai/letta-client, @openai/codex, @qwen-code/qwen-code, agent-skills-cli, cline, corepack, dotenv, kanban, openclaw, opencode-ai
+

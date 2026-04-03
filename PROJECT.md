@@ -14,7 +14,7 @@ python3 scripts/explore_kg.py
 
 # Start downloading DOJ files
 cd /home/cbwinslow/workspace/epstein/epstein-ripper
-python3 auto_ep_rip.py --dataset 1 --out-dir /mnt/data/epstein-project/raw-files/data1
+python3 auto_ep_rip.py --dataset 1 --out-dir /home/cbwinslow/workspace/epstein-data/raw-files/data1
 ```
 
 ## Project Structure
@@ -32,7 +32,7 @@ python3 auto_ep_rip.py --dataset 1 --out-dir /mnt/data/epstein-project/raw-files
 ├── EpsteinLibraryMediaScraper/  # Media URL scraper
 └── scripts/                # Custom analysis scripts
 
-/mnt/data/epstein-project/
+/home/cbwinslow/workspace/epstein-data/
 ├── raw-files/              # Downloaded PDFs and media
 ├── databases/              # Pre-built SQLite databases
 ├── processed/              # OCR output, entities
@@ -102,7 +102,7 @@ python3 auto_ep_rip.py --dataset 1 --out-dir /mnt/data/epstein-project/raw-files
 
 ```bash
 # Check download progress
-ls -lh /mnt/data/epstein-project/raw-files/*/resume_*.txt
+ls -lh /home/cbwinslow/workspace/epstein-data/raw-files/*/resume_*.txt
 
 # Check GPU status
 nvidia-smi
@@ -111,7 +111,7 @@ nvidia-smi
 df -h /mnt/data
 
 # Database stats
-sqlite3 /mnt/data/epstein-project/databases/knowledge_graph.db \
+sqlite3 /home/cbwinslow/workspace/epstein-data/databases/knowledge_graph.db \
   "SELECT 'Entities:', COUNT(*) FROM entities UNION ALL \
    SELECT 'Relationships:', COUNT(*) FROM relationships;"
 ```

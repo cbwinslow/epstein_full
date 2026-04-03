@@ -16,7 +16,7 @@ from psycopg2.extras import execute_values
 from tqdm import tqdm
 
 # Configuration
-DATA_FILE = "/mnt/data/epstein-project/supplementary-datasets/full-epstein-index/dataset_text_extract.csv"
+DATA_FILE = "/home/cbwinslow/workspace/epstein-data/supplementary-datasets/full-epstein-index/dataset_text_extract.csv"
 BATCH_SIZE = 5000
 
 # PostgreSQL connection

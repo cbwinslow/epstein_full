@@ -54,25 +54,25 @@
 python scripts/download_cdn.py --datasets 1-12
 
 # 2. OCR (if not using HF parquet)
-epstein-pipeline ocr /mnt/data/epstein-project/raw-files/data9/ \
-  -o /mnt/data/epstein-project/processed/ocr/data9/ \
+epstein-pipeline ocr /home/cbwinslow/workspace/epstein-data/raw-files/data9/ \
+  -o /home/cbwinslow/workspace/epstein-data/processed/ocr/data9/ \
   --backend surya --workers 4
 
 # 3. Entities
-epstein-pipeline extract-entities /mnt/data/epstein-project/processed/ocr/data9/ \
-  -o /mnt/data/epstein-project/processed/entities/
+epstein-pipeline extract-entities /home/cbwinslow/workspace/epstein-data/processed/ocr/data9/ \
+  -o /home/cbwinslow/workspace/epstein-data/processed/entities/
 
 # 4. Embeddings
-epstein-pipeline embed /mnt/data/epstein-project/processed/ocr/data9/ \
-  -o /mnt/data/epstein-project/processed/embeddings/
+epstein-pipeline embed /home/cbwinslow/workspace/epstein-data/processed/ocr/data9/ \
+  -o /home/cbwinslow/workspace/epstein-data/processed/embeddings/
 
 # 5. Knowledge Graph
-epstein-pipeline build-graph /mnt/data/epstein-project/processed/ \
-  -o /mnt/data/epstein-project/knowledge-graph/
+epstein-pipeline build-graph /home/cbwinslow/workspace/epstein-data/processed/ \
+  -o /home/cbwinslow/workspace/epstein-data/knowledge-graph/
 
 # 6. Export
-epstein-pipeline export sqlite /mnt/data/epstein-project/processed/ \
-  -o /mnt/data/epstein-project/databases/processed_corpus.db
+epstein-pipeline export sqlite /home/cbwinslow/workspace/epstein-data/processed/ \
+  -o /home/cbwinslow/workspace/epstein-data/databases/processed_corpus.db
 ```
 
 ## Monitoring

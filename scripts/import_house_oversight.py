@@ -23,7 +23,7 @@ import psycopg2
 PG_DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 
 # Data paths
-DATA_DIR = Path("/mnt/data/epstein-project/hf-house-oversight")
+DATA_DIR = Path("/home/cbwinslow/workspace/epstein-data/hf-house-oversight")
 CSV_FILE = DATA_DIR / "EPS_FILES_20K_NOV2025.txt"
 
 

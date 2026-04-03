@@ -68,7 +68,7 @@ def main():
         return
 
     # Configuration
-    pdf_dir = '/mnt/data/epstein-project/raw-files/data9/'
+    pdf_dir = '/home/cbwinslow/workspace/epstein-data/raw-files/data9/'
     sample_size = 20  # Process 20 files for demonstration
     output_dir = '/home/cbwinslow/workspace/epstein/processed_sample/'
 

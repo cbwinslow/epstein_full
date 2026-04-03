@@ -51,7 +51,7 @@ python -c "import torch; print(torch.cuda.is_available())"  # Should print True
 
 ```bash
 # Transfer a test file to Windows
-rsync -avz /mnt/data/epstein-project/raw-files/data9/EFTA00000001.pdf blaine@192.168.4.25:C:\epstein-windows\data\test\EFTA00000001.pdf
+rsync -avz /home/cbwinslow/workspace/epstein-data/raw-files/data9/EFTA00000001.pdf blaine@192.168.4.25:C:\epstein-windows\data\test\EFTA00000001.pdf
 
 # Verify file arrived
 ssh blaine@192.168.4.25 "dir C:\epstein-windows\data\test"
@@ -128,7 +128,7 @@ uv run python scripts/distribute_tasks.py --task ocr --dataset data9 --batch-siz
 
 # Force task to run on Linux (existing pipeline)
 # Just use existing epstein-pipeline commands directly
-epstein-pipeline ocr /mnt/data/epstein-project/raw-files/data9/ -o /tmp/ocr_output
+epstein-pipeline ocr /home/cbwinslow/workspace/epstein-data/raw-files/data9/ -o /tmp/ocr_output
 ```
 
 ### 3. Performance Monitoring
@@ -168,7 +168,7 @@ Windows (C:\epstein-windows\):
 ├── logs/                   # Processing logs
 └── scripts/                # Windows-specific scripts
 
-Linux (/mnt/data/epstein-project/):
+Linux (/home/cbwinslow/workspace/epstein-data/):
 ├── raw-files/              # Original PDFs
 ├── processed/              # Combined results from all machines
 └── logs/                   # Centralized logs
@@ -191,7 +191,7 @@ ssh blaine@192.168.4.25 "taskkill /f /im python.exe && python C:\epstein-windows
 uv run python scripts/distribute_tasks.py --clear-failed
 
 # Re-transfer corrupted files
-rsync -avz --checksum /mnt/data/epstein-project/raw-files/data9/ blaine@192.168.4.25:C:\epstein-windows\data\data9/
+rsync -avz --checksum /home/cbwinslow/workspace/epstein-data/raw-files/data9/ blaine@192.168.4.25:C:\epstein-windows\data\data9/
 ```
 
 ## Performance Expectations
@@ -268,7 +268,7 @@ uv run python scripts/setup_dev.py
 ### 3. Backup Strategy
 ```bash
 # Backup Windows processing results
-rsync -avz blaine@192.168.4.25:C:\epstein-windows\processed\ /mnt/data/epstein-project/backups\windows_processed\
+rsync -avz blaine@192.168.4.25:C:\epstein-windows\processed\ /home/cbwinslow/workspace/epstein-data/backups\windows_processed\
 
 # Backup task database
 cp logs/task_distribution.db logs/backups/task_distribution_$(date +%Y%m%d).db

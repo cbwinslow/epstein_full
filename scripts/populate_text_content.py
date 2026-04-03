@@ -7,7 +7,7 @@ documents_content table in PostgreSQL. This provides consolidated
 document-level text (vs page-level text in pages table).
 
 Usage:
-    python populate_text_content.py [--parquet-dir /mnt/data/epstein-project/hf-parquet]
+    python populate_text_content.py [--parquet-dir /home/cbwinslow/workspace/epstein-data/hf-parquet]
                                     [--batch-size 100]
                                     [--workers 4]
                                     [--resume]
@@ -289,7 +289,7 @@ def main():
     parser = argparse.ArgumentParser(description="Populate documents_content from hf-parquet")
     parser.add_argument(
         "--parquet-dir",
-        default="/mnt/data/epstein-project/hf-parquet",
+        default="/home/cbwinslow/workspace/epstein-data/hf-parquet",
         help="Directory containing parquet files",
     )
     parser.add_argument(

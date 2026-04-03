@@ -7,7 +7,7 @@ and populates the PostgreSQL file_registry table. Provides
 verification reports and cross-referencing with documents table.
 
 Usage:
-    python populate_file_registry.py [--scan-dirs /mnt/data/epstein-project/raw-files]
+    python populate_file_registry.py [--scan-dirs /home/cbwinslow/workspace/epstein-data/raw-files]
                                      [--workers 38]
                                      [--batch-size 1000]
                                      [--report-only]
@@ -538,7 +538,7 @@ def main():
     parser.add_argument(
         "--scan-dirs",
         nargs="+",
-        default=["/mnt/data/epstein-project/raw-files", "/mnt/data/epstein-project/hf-parquet"],
+        default=["/home/cbwinslow/workspace/epstein-data/raw-files", "/home/cbwinslow/workspace/epstein-data/hf-parquet"],
         help="Directories to scan",
     )
     parser.add_argument(
@@ -555,7 +555,7 @@ def main():
     )
     parser.add_argument("--resume", action="store_true", help="Resume from last processed file")
     parser.add_argument(
-        "--output-dir", default="/mnt/data/epstein-project/logs", help="Directory to save reports"
+        "--output-dir", default="/home/cbwinslow/workspace/epstein-data/logs", help="Directory to save reports"
     )
 
     args = parser.parse_args()

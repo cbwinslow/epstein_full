@@ -16,7 +16,7 @@ from psycopg2.extras import execute_values
 from tqdm import tqdm
 
 # Configuration
-DATA_FILE = "/mnt/data/epstein-project/supplementary-datasets/house-oversight-embeddings/train-00000-of-00001.parquet"
+DATA_FILE = "/home/cbwinslow/workspace/epstein-data/supplementary-datasets/house-oversight-embeddings/train-00000-of-00001.parquet"
 BATCH_SIZE = 1000
 
 # PostgreSQL connection

@@ -17,7 +17,7 @@ from psycopg2.extras import execute_values
 from tqdm import tqdm
 
 # Configuration
-DATA_FILE = "/mnt/data/epstein-project/supplementary-datasets/fbi-embeddings/embeddings/all_embeddings.jsonl"
+DATA_FILE = "/home/cbwinslow/workspace/epstein-data/supplementary-datasets/fbi-embeddings/embeddings/all_embeddings.jsonl"
 BATCH_SIZE = 1000
 
 # PostgreSQL connection

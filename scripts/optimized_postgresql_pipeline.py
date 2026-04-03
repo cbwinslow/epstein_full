@@ -124,7 +124,7 @@ class OptimizedEpsteinPipeline:
 
     def process_dataset(self, dataset_num, max_files=None):
         """Process all files in a dataset with maximum concurrency."""
-        pdf_dir = f'/mnt/data/epstein-project/raw-files/data{dataset_num}/'
+        pdf_dir = f'/home/cbwinslow/workspace/epstein-data/raw-files/data{dataset_num}/'
 
         if not os.path.exists(pdf_dir):
             logger.warning(f"Dataset {dataset_num} directory not found: {pdf_dir}")

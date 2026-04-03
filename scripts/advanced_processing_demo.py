@@ -51,15 +51,15 @@ def demo_epstein_pipeline():
 
     # Demo commands (these would work if epstein-pipeline was available)
     demo_commands = [
-        ("epstein-pipeline ocr /mnt/data/epstein-project/raw-files/data9/ --output /mnt/data/epstein-project/processed/ocr/data9/ --backend surya",
+        ("epstein-pipeline ocr /home/cbwinslow/workspace/epstein-data/raw-files/data9/ --output /home/cbwinslow/workspace/epstein-data/processed/ocr/data9/ --backend surya",
          "OCR with Surya backend"),
-        ("epstein-pipeline extract-entities /mnt/data/epstein-project/processed/ocr/data9/ --output /mnt/data/epstein-project/processed/entities/",
+        ("epstein-pipeline extract-entities /home/cbwinslow/workspace/epstein-data/processed/ocr/data9/ --output /home/cbwinslow/workspace/epstein-data/processed/entities/",
          "Entity extraction"),
-        ("epstein-pipeline embed /mnt/data/epstein-project/processed/ocr/data9/ --output /mnt/data/epstein-project/processed/embeddings/",
+        ("epstein-pipeline embed /home/cbwinslow/workspace/epstein-data/processed/ocr/data9/ --output /home/cbwinslow/workspace/epstein-data/processed/embeddings/",
          "Generate embeddings"),
-        ("epstein-pipeline build-graph /mnt/data/epstein-project/processed/ --output /mnt/data/epstein-project/knowledge-graph/",
+        ("epstein-pipeline build-graph /home/cbwinslow/workspace/epstein-data/processed/ --output /home/cbwinslow/workspace/epstein-data/knowledge-graph/",
          "Build knowledge graph"),
-        ("epstein-pipeline export sqlite /mnt/data/epstein-project/processed/ --output /mnt/data/epstein-project/databases/processed_corpus.db",
+        ("epstein-pipeline export sqlite /home/cbwinslow/workspace/epstein-data/processed/ --output /home/cbwinslow/workspace/epstein-data/databases/processed_corpus.db",
          "Export to SQLite")
     ]
 

@@ -117,7 +117,7 @@ Linux Server (Galaxy) → Windows RTX 3060
 #### 4.2 Data Transfer Protocol
 ```bash
 # Use rsync over SSH for efficient transfers
-rsync -avz -e "ssh" /mnt/data/epstein-project/raw-files/data9/ blaine@192.168.4.25:/epstein-windows/data/
+rsync -avz -e "ssh" /home/cbwinslow/workspace/epstein-data/raw-files/data9/ blaine@192.168.4.25:/epstein-windows/data/
 ```
 
 #### 4.3 Processing Queue System

@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-DATA_DIR = Path('/mnt/data/epstein-project/raw-files/fec')
+DATA_DIR = Path('/home/cbwinslow/workspace/epstein-data/raw-files/fec')
 SCRIPT_DIR = Path('/home/cbwinslow/workspace/epstein/scripts')
 
 def get_cycle_from_filename(filename):

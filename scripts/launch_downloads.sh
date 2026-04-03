@@ -7,8 +7,8 @@ set -e
 
 SCRIPTS="/home/cbwinslow/workspace/epstein/scripts"
 PYTHON="/home/cbwinslow/workspace/epstein/venv/bin/python3"
-RAW_DIR="/mnt/data/epstein-project/raw-files"
-LOG_DIR="/mnt/data/epstein-project/logs"
+RAW_DIR="/home/cbwinslow/workspace/epstein-data/raw-files"
+LOG_DIR="/home/cbwinslow/workspace/epstein-data/logs"
 MONITOR="$PYTHON $SCRIPTS/download_doj.py --monitor"
 
 mkdir -p "$LOG_DIR"

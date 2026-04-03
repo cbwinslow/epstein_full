@@ -22,7 +22,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Paths
-DATA_DIR = Path('/mnt/data/epstein-project/raw-files/politicians')
+DATA_DIR = Path('/home/cbwinslow/workspace/epstein-data/raw-files/politicians')
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # URLs

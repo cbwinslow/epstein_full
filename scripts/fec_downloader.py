@@ -21,7 +21,7 @@ from datetime import datetime
 DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 API_KEY = "FpB5TzG4hjf7W9IwjBsdTKGyQImqhhidMKRLDXFm"
 API_BASE = "https://api.open.fec.gov/v1/schedules/schedule_a/"
-STATE_FILE = "/mnt/data/epstein-project/downloads/fec_state.json"
+STATE_FILE = "/home/cbwinslow/workspace/epstein-data/downloads/fec_state.json"
 LOG_FILE = "/home/cbwinslow/workspace/epstein/logs/fec_downloader.log"
 PER_PAGE = 100
 

@@ -122,7 +122,7 @@ class TaskDistributor:
 
     def discover_files(self, dataset: str, file_type: str = "pdf") -> List[str]:
         """Discover files to process in a dataset"""
-        data_path = f"/mnt/data/epstein-project/raw-files/{dataset}"
+        data_path = f"/home/cbwinslow/workspace/epstein-data/raw-files/{dataset}"
 
         if file_type == "pdf":
             pattern = "*.pdf"

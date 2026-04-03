@@ -20,7 +20,7 @@ This guide sets up the Epstein Files processing pipeline on a Windows machine wi
 
 ### Network Access
 - SSH access to Windows machine: `blain@192.168.4.101`
-- Access to data storage: `/mnt/data/epstein-project/`
+- Access to data storage: `/home/cbwinslow/workspace/epstein-data/`
 
 ## Quick Start
 
@@ -282,7 +282,7 @@ python setup_windows_gpu.py
 
 The pipeline can process data from:
 
-1. **Local storage**: `/mnt/data/epstein-project/raw-files/data{N}/`
+1. **Local storage**: `/home/cbwinslow/workspace/epstein-data/raw-files/data{N}/`
 2. **HuggingFace parquet**: Pre-extracted text data
 3. **Existing databases**: Can merge with existing knowledge graphs
 

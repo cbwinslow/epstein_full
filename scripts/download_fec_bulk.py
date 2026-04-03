@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 API_KEY = os.getenv('FEC_API_KEY', 'FpB5TzG4hjf7W9IwjBsdTKGyQImqhhidMKRLDXFm')
 BASE_URL = 'https://www.fec.gov/files/bulk-downloads'
 API_BASE = 'https://api.open.fec.gov/v1'
-DATA_DIR = Path('/mnt/data/epstein-project/raw-files/fec')
+DATA_DIR = Path('/home/cbwinslow/workspace/epstein-data/raw-files/fec')
 YEARS = list(range(1980, 2027, 2))  # 1980-2026 (FEC cycles are 2-year periods)
 
 # Database connection

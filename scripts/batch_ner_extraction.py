@@ -64,7 +64,7 @@ PG_CONFIG = {
 }
 
 # Paths
-OUTPUT_BASE_DIR = Path("/mnt/data/epstein-project/processed")
+OUTPUT_BASE_DIR = Path("/home/cbwinslow/workspace/epstein-data/processed")
 ENTITIES_OUTPUT_DIR = OUTPUT_BASE_DIR / "entities"
 REGISTRY_PATH = Path("/home/cbwinslow/workspace/epstein/Epstein-Pipeline/data/persons-registry.json")
 

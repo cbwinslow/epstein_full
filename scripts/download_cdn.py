@@ -98,7 +98,7 @@ def get_efta_to_dataset_map() -> dict:
     Returns:
         dict: Maps EFTA integer -> dataset integer.
     """
-    db_path = "/mnt/data/epstein-project/databases/full_text_corpus.db"
+    db_path = "/home/cbwinslow/workspace/epstein-data/databases/full_text_corpus.db"
     if not os.path.exists(db_path):
         log("Warning: full_text_corpus.db not found, using fallback ranges")
         return _fallback_efta_map()

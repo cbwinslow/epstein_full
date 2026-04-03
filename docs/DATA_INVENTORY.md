@@ -42,7 +42,7 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 
 ### Primary Data Mount
 ```
-/mnt/data/epstein-project/          # 508GB total
+/home/cbwinslow/workspace/epstein-data/          # 508GB total
 ├── raw-files/                      # 177GB - Downloaded PDFs (1.3M files)
 ├── hf-parquet/                     # 318GB - HuggingFace parquet (634 files)
 ├── databases/                      # 12GB - Pre-built SQLite databases
@@ -175,7 +175,7 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 - `pas2*.zip` - Candidate contributions (partial)
 - `oppexp*.zip` - Operating expenditures (partial)
 
-**Storage:** `/mnt/data/epstein-project/raw-files/fec/` (22GB, 146 files)
+**Storage:** `/home/cbwinslow/workspace/epstein-data/raw-files/fec/` (22GB, 146 files)
 
 #### Politicians' Financial Disclosure Data (NEW - FREE Sources)
 | Table | Rows | Description | Source |
@@ -246,7 +246,7 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 
 ## SQLite Databases (Pre-built Sources)
 
-Located at: `/mnt/data/epstein-project/databases/`
+Located at: `/home/cbwinslow/workspace/epstein-data/databases/`
 
 | Database | Size | Tables | Key Content | Migrated to PG? |
 |----------|------|--------|-------------|-----------------|
@@ -265,7 +265,7 @@ Located at: `/mnt/data/epstein-project/databases/`
 
 ## HuggingFace Parquet Data
 
-Located at: `/mnt/data/epstein-project/hf-parquet/`
+Located at: `/home/cbwinslow/workspace/epstein-data/hf-parquet/`
 
 | Metric | Value |
 |--------|-------|
@@ -284,7 +284,7 @@ Located at: `/mnt/data/epstein-project/hf-parquet/`
 
 ## Raw PDF Files
 
-Located at: `/mnt/data/epstein-project/raw-files/`
+Located at: `/home/cbwinslow/workspace/epstein-data/raw-files/`
 
 | Dataset | Size | Description |
 |---------|------|-------------|
@@ -329,7 +329,7 @@ Located at: `~/workspace/epstein/Epstein-research-data/`
 
 ## Supplementary Data (Scraped from epsteinexposed.com)
 
-Located at: `/mnt/data/epstein-project/supplementary/`
+Located at: `/home/cbwinslow/workspace/epstein-data/supplementary/`
 
 | File | Records | Description | Imported to PG? |
 |------|---------|-------------|-----------------|
@@ -349,7 +349,7 @@ Located at: `/mnt/data/epstein-project/supplementary/`
 
 ## HuggingFace Supplementary Datasets (New)
 
-Located at: `/mnt/data/epstein-project/supplementary-datasets/`
+Located at: `/home/cbwinslow/workspace/epstein-data/supplementary-datasets/`
 
 Downloaded March 31, 2026 using `aria2c` direct CDN (bypassed HF API rate limits)
 
@@ -605,7 +605,7 @@ relationship_strength:
 
 ### Priority 1: Download jmail.emails (1.78M emails)
 ```bash
-curl -o /mnt/data/epstein-project/supplementary/emails-slim.parquet \
+curl -o /home/cbwinslow/workspace/epstein-data/supplementary/emails-slim.parquet \
   "https://data.jmail.world/v1/emails-slim.parquet"
 ```
 Then import to PostgreSQL using adapted `ingest-jmail.py` script.
@@ -637,14 +637,14 @@ Then import to PostgreSQL using adapted `ingest-jmail.py` script.
 
 | Data Type | Location | Size |
 |-----------|----------|------|
-| Raw PDFs | `/mnt/data/epstein-project/raw-files/` | 177GB |
-| HF Parquet | `/mnt/data/epstein-project/hf-parquet/` | 318GB |
-| SQLite DBs | `/mnt/data/epstein-project/databases/` | 12GB |
-| Supplementary | `/mnt/data/epstein-project/supplementary/` | ~22MB |
+| Raw PDFs | `/home/cbwinslow/workspace/epstein-data/raw-files/` | 177GB |
+| HF Parquet | `/home/cbwinslow/workspace/epstein-data/hf-parquet/` | 318GB |
+| SQLite DBs | `/home/cbwinslow/workspace/epstein-data/databases/` | 12GB |
+| Supplementary | `/home/cbwinslow/workspace/epstein-data/supplementary/` | ~22MB |
 | Research Data | `~/workspace/epstein/Epstein-research-data/` | ~28MB |
-| Processed Output | `/mnt/data/epstein-project/processed/` | (empty, ready) |
-| Knowledge Graph | `/mnt/data/epstein-project/knowledge-graph/` | (empty, ready) |
-| Logs | `/mnt/data/epstein-project/logs/` | Variable |
+| Processed Output | `/home/cbwinslow/workspace/epstein-data/processed/` | (empty, ready) |
+| Knowledge Graph | `/home/cbwinslow/workspace/epstein-data/knowledge-graph/` | (empty, ready) |
+| Logs | `/home/cbwinslow/workspace/epstein-data/logs/` | Variable |
 
 ---
 

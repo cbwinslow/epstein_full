@@ -6,7 +6,7 @@ paths across multiple scripts. All scripts should import from here.
 
 from pathlib import Path
 
-# Base data directory (migrated from /mnt/data/epstein-project/)
+# Base data directory (migrated from /home/cbwinslow/workspace/epstein-data/)
 DATA_ROOT = Path("/home/cbwinslow/workspace/epstein-data")
 
 # Subdirectories
@@ -37,7 +37,7 @@ DOCS_DIR = PROJECT_ROOT / "docs"
 VENV_DIR = PROJECT_ROOT / "venv"
 
 # Legacy path for backward compatibility (can be removed later)
-LEGACY_DATA_ROOT = Path("/mnt/data/epstein-project")
+LEGACY_DATA_ROOT = Path("/home/cbwinslow/workspace/epstein-data")
 
 
 def ensure_dirs():
@@ -84,8 +84,8 @@ def resolve_path(path_str: str) -> Path:
     path_str = str(path_str)
     
     # Convert legacy paths to new paths
-    if "/mnt/data/epstein-project" in path_str:
-        relative = path_str.split("/mnt/data/epstein-project")[1]
+    if "/home/cbwinslow/workspace/epstein-data" in path_str:
+        relative = path_str.split("/home/cbwinslow/workspace/epstein-data")[1]
         return DATA_ROOT / relative.lstrip("/")
     
     return Path(path_str)

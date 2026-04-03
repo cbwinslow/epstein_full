@@ -137,7 +137,7 @@ sample_verification_results.csv 500 statistical sample results
 sample_verify.py                Playwright verification script
 ```
 
-## Data Storage (/mnt/data/epstein-project/)
+## Data Storage (/home/cbwinslow/workspace/epstein-data/)
 
 | Directory | Contents | Size |
 |-----------|----------|------|
@@ -161,7 +161,7 @@ sample_verify.py                Playwright verification script
 | `prosecutorial_query_graph.db` | 2.5MB | 257 subpoenas |
 | `knowledge_graph.db` | 892KB | 606 entities, 2,302 relationships |
 
-## Logs (/mnt/data/epstein-project/logs/)
+## Logs (/home/cbwinslow/workspace/epstein-data/logs/)
 
 | File | Description |
 |------|-------------|

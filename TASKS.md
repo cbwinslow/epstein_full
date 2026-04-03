@@ -13,7 +13,7 @@
 
 | # | Task | Status | Solution/Notes |
 |---|------|--------|----------------|
-| 1.1 | Mount LVM storage volume | ✅ Done | `lv-nextcloud` mounted at `/mnt/data/epstein-project/`, 2.3TB free |
+| 1.1 | Mount LVM storage volume | ✅ Done | `lv-nextcloud` mounted at `/home/cbwinslow/workspace/epstein-data/`, 2.3TB free |
 | 1.2 | Create project directory structure | ✅ Done | `raw-files/`, `databases/`, `processed/`, `knowledge-graph/`, `logs/` |
 | 1.3 | Clone upstream repos | ✅ Done | 4 repos as git submodules (Epstein-Pipeline, research-data, ripper, media-scraper) |
 | 1.4 | Install Python dependencies | ✅ Done | Epstein-Pipeline + spaCy + PyMuPDF + aiohttp + Playwright via uv |
@@ -104,14 +104,15 @@
 
 ---
 
-## Phase 7: Active Downloads 🔄
+## Phase 7: Active Downloads ✅
 
 | # | Task | Status | Progress |
 |---|------|--------|----------|
-| 7.1 | Download DOJ PDFs via CDN | 🔄 Running | ~268K files downloaded |
+| 7.1 | Download DOJ PDFs via CDN | ✅ Done | ~268K files downloaded |
 | 7.2 | Download HF parquet | ✅ Done | 634/634 files, 318GB |
 | 7.3 | Validate downloaded PDFs | ✅ Done | 1,346 checked, 100% valid (PDF signature) |
 | 7.4 | Validate HF parquet integrity | ✅ Done | 0 missing, 0 zero-size files |
+| 7.5 | Download missing DOJ datasets via epstein-ripper | ✅ Done | 3,671 files: DS2=516, DS3=28, DS4=102, DS6=13, DS7=17, DS8=3,484, DS9=0, DS12=101 |
 
 ---
 

@@ -21,7 +21,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Paths
-DATA_DIR = Path('/mnt/data/epstein-project/raw-files/government')
+DATA_DIR = Path('/home/cbwinslow/workspace/epstein-data/raw-files/government')
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # API Keys (get free at api.data.gov)

@@ -24,7 +24,7 @@ from psycopg2.extras import execute_values
 
 DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 RESEARCH_DATA = Path("/home/cbwinslow/workspace/epstein/Epstein-research-data")
-SUPPLEMENTARY = Path("/mnt/data/epstein-project/supplementary")
+SUPPLEMENTARY = Path("/home/cbwinslow/workspace/epstein-data/supplementary")
 DOJ_AUDIT = RESEARCH_DATA / "doj_audit"
 ALTERATION = RESEARCH_DATA / "alteration_analysis"
 

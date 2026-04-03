@@ -21,10 +21,10 @@
 4. **Concurrent downloads**: Max 5 per dataset, 10 total
 
 ## Storage Rules
-1. **Raw files**: `/mnt/data/epstein-project/raw-files/data{N}/`
-2. **Databases**: `/mnt/data/epstein-project/databases/`
-3. **Processed output**: `/mnt/data/epstein-project/processed/`
-4. **Logs**: `/mnt/data/epstein-project/logs/`
+1. **Raw files**: `/home/cbwinslow/workspace/epstein-data/raw-files/data{N}/`
+2. **Databases**: `/home/cbwinslow/workspace/epstein-data/databases/`
+3. **Processed output**: `/home/cbwinslow/workspace/epstein-data/processed/`
+4. **Logs**: `/home/cbwinslow/workspace/epstein-data/logs/`
 5. **Alert at 90% disk usage** - pause downloads, notify
 
 ## Security Rules

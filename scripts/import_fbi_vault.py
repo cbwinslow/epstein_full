@@ -19,7 +19,7 @@ import psycopg2
 PG_DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 
 # Data paths
-FBI_DIR = Path("/mnt/data/epstein-project/fbi-vault")
+FBI_DIR = Path("/home/cbwinslow/workspace/epstein-data/fbi-vault")
 
 
 def get_existing_fbi_docs(conn):

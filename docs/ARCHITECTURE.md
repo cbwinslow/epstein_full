@@ -10,7 +10,7 @@ the DOJ Epstein Files Transparency Act document releases.
 | Component | Details |
 |-----------|---------|
 | Server | Ubuntu, RAID5 md0 (5x drives, 4.4TB), LVM |
-| Storage | `/mnt/data/epstein-project/` on vg-data/lv-nextcloud (2.5TB) |
+| Storage | `/home/cbwinslow/workspace/epstein-data/` on vg-data/lv-nextcloud (2.5TB) |
 | GPUs | 2x Tesla K80 (12GB) + 1x Tesla K40m (11GB), CUDA 11.4 |
 | Python | 3.12 |
 | Node | v24 |
@@ -92,7 +92,7 @@ the DOJ Epstein Files Transparency Act document releases.
 ## Storage Layout
 
 ```
-/mnt/data/epstein-project/
+/home/cbwinslow/workspace/epstein-data/
 ├── raw-files/              # Downloaded PDFs (data1/ - data12/)
 ├── databases/              # Pre-built SQLite databases (8GB)
 ├── hf-parquet/             # HuggingFace parquet files (317GB)

@@ -35,7 +35,7 @@ from pathlib import Path
 # Configuration Constants
 # =============================================================================
 
-DB_PATH = "/mnt/data/epstein-project/logs/progress.db"
+DB_PATH = "/home/cbwinslow/workspace/epstein-data/logs/progress.db"
 DB_TIMEOUT = 10          # SQLite lock wait timeout (seconds)
 HISTORY_LIMIT = 10       # Max history samples kept per task for rate calculation
 REFRESH_INTERVAL = 2.0   # Watch mode refresh interval (seconds)

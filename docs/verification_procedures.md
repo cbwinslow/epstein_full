@@ -49,7 +49,7 @@ Standard EFTA numbering: `EFTA{8-digits}.pdf`
 python scripts/populate_file_registry.py --scan-dirs /tmp/test_registry --workers 2
 
 # Full population (30-60 minutes)
-python scripts/populate_file_registry.py --scan-dirs /mnt/data/epstein-project/raw-files --workers 38
+python scripts/populate_file_registry.py --scan-dirs /home/cbwinslow/workspace/epstein-data/raw-files --workers 38
 
 # Generate report only
 python scripts/populate_file_registry.py --report-only
@@ -380,7 +380,7 @@ This saves weeks of GPU processing time.
 ### Monitoring Commands
 ```bash
 # Check progress
-tail -f /mnt/data/epstein-project/logs/text_content_full_*.log
+tail -f /home/cbwinslow/workspace/epstein-data/logs/text_content_full_*.log
 
 # Validate results
 python scripts/validate_text_content.py
@@ -416,7 +416,7 @@ PGPASSWORD=123qweasd psql -h localhost -U cbwinslow -d epstein -c "SELECT COUNT(
 ### Monitoring Commands
 ```bash
 # Check progress
-tail -f /mnt/data/epstein-project/logs/ner_extraction_*.log
+tail -f /home/cbwinslow/workspace/epstein-data/logs/ner_extraction_*.log
 
 # Check process status
 ps aux | grep extract_entities

@@ -22,8 +22,8 @@ from pathlib import Path
 # =============================================================================
 
 REPO_ID = "AfricanKillshot/Epstein-Files"
-HF_DIR = os.environ.get("HF_DIR", "/mnt/data/epstein-project/hf-parquet")
-LOG_DIR = os.environ.get("LOG_DIR", "/mnt/data/epstein-project/logs")
+HF_DIR = os.environ.get("HF_DIR", "/home/cbwinslow/workspace/epstein-data/hf-parquet")
+LOG_DIR = os.environ.get("LOG_DIR", "/home/cbwinslow/workspace/epstein-data/logs")
 URL_FILE = os.path.join(LOG_DIR, "hf_urls.txt")
 ARIA2_LOG = os.path.join(LOG_DIR, "hf_aria2c.log")
 

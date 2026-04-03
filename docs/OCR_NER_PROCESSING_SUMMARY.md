@@ -100,7 +100,7 @@ PDF Files → PyMuPDF OCR → Text Extraction → spaCy NER → Entity Extractio
 ## Integration with Existing Infrastructure
 
 ### Knowledge Graph Database
-- **Location**: `/mnt/data/epstein-project/databases/knowledge_graph.db`
+- **Location**: `/home/cbwinslow/workspace/epstein-data/databases/knowledge_graph.db`
 - **Current State**: 606 entities, 2,302 relationships
 - **Integration**: Entity merging and relationship building
 - **Enhancement**: New entity addition and frequency tracking
@@ -156,13 +156,13 @@ python scripts/full_processing_pipeline.py --all-datasets
 ### 4. **Advanced Analysis Implementation**
 ```bash
 # Generate embeddings for semantic search
-epstein-pipeline embed /mnt/data/epstein-project/processed/
+epstein-pipeline embed /home/cbwinslow/workspace/epstein-data/processed/
 
 # Build enhanced knowledge graph
-epstein-pipeline build-graph /mnt/data/epstein-project/processed/
+epstein-pipeline build-graph /home/cbwinslow/workspace/epstein-data/processed/
 
 # Export to multiple formats
-epstein-pipeline export sqlite /mnt/data/epstein-project/processed/
+epstein-pipeline export sqlite /home/cbwinslow/workspace/epstein-data/processed/
 ```
 
 ## Validation and Quality Assurance

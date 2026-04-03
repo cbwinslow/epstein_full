@@ -24,7 +24,7 @@
 
 ## Download Status: Raw Files
 
-Location: `/mnt/data/epstein-project/raw-files/`
+Location: `/home/cbwinslow/workspace/epstein-data/raw-files/`
 
 | Dataset | Files Downloaded | In DB | Status | Notes |
 |---------|-----------------|-------|--------|-------|
@@ -279,5 +279,5 @@ WHERE NOT EXISTS (SELECT 1 FROM pages p WHERE p.id = pe.page_id);
 
 - **RTX 3060 machine**: `192.168.4.25` (user: `blain`, Python 3.11, PyTorch CUDA 12.1 ready)
 - **PostgreSQL**: `192.168.4.101:5432` (configured for Windows access)
-- **Raw files**: `/mnt/data/epstein-project/raw-files/` (datasets 1-12 present)
+- **Raw files**: `/home/cbwinslow/workspace/epstein-data/raw-files/` (datasets 1-12 present)
 - **Total DB size**: ~42GB (78 tables, ~36M rows across all tables)

@@ -11,7 +11,7 @@ The Epstein Files analysis project has been **successfully implemented and is fu
 ## Key Achievements
 
 ### ✅ **Infrastructure Complete**
-- **Storage**: 2.3TB available on LVM volume `/mnt/data/epstein-project/`
+- **Storage**: 2.3TB available on LVM volume `/home/cbwinslow/workspace/epstein-data/`
 - **GPU Setup**: 2x Tesla K80 (12GB each) + 1x Tesla K40m (11GB), CUDA 11.4
 - **Database**: PostgreSQL with pgvector, 1.4M documents indexed
 - **Environment**: Python 3.12 with uv package manager
