@@ -23,6 +23,17 @@ venv/
 *.db.gz
 *.db.wal
 
+# Large data directories (generated/downloaded content)
+models/
+processed/
+raw-files/
+data/
+downloads/
+out/
+output/
+results/
+backups/
+
 # Logs and state (runtime artifacts)
 logs/
 *.log
