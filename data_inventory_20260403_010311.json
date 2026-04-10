@@ -1,0 +1,690 @@
+{
+  "timestamp": "2026-04-03T00:59:58.238291",
+  "raw_files": {
+    "data5": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data5",
+      "total_files": 120,
+      "total_size_bytes": 64577936,
+      "total_size_human": "61.59 MB",
+      "file_types": {
+        ".pdf": 120
+      },
+      "size_by_type": {
+        ".pdf": "61.59 MB"
+      }
+    },
+    "data2": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data2",
+      "total_files": 411,
+      "total_size_bytes": 489652835,
+      "total_size_human": "466.97 MB",
+      "file_types": {
+        ".pdf": 411
+      },
+      "size_by_type": {
+        ".pdf": "466.97 MB"
+      }
+    },
+    "data11": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data11",
+      "total_files": 260041,
+      "total_size_bytes": 21267440344,
+      "total_size_human": "19.81 GB",
+      "file_types": {
+        ".pdf": 260009,
+        ".aria2": 31,
+        ".cwd3bb": 1
+      },
+      "size_by_type": {
+        ".pdf": "19.75 GB",
+        ".aria2": "1.61 KB",
+        ".cwd3bb": "58.00 MB"
+      }
+    },
+    "fec": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/fec",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    },
+    "data3": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data3",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    },
+    "government": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/government",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    },
+    "data9": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data9",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    },
+    "data1": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data1",
+      "total_files": 3159,
+      "total_size_bytes": 1328875942,
+      "total_size_human": "1.24 GB",
+      "file_types": {
+        ".pdf": 3159
+      },
+      "size_by_type": {
+        ".pdf": "1.24 GB"
+      }
+    },
+    "data10": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data10",
+      "total_files": 497679,
+      "total_size_bytes": 71859567464,
+      "total_size_human": "66.92 GB",
+      "file_types": {
+        ".pdf": 497679
+      },
+      "size_by_type": {
+        ".pdf": "66.92 GB"
+      }
+    },
+    "data6": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data6",
+      "total_files": 7,
+      "total_size_bytes": 20998797,
+      "total_size_human": "20.03 MB",
+      "file_types": {
+        ".pdf": 7
+      },
+      "size_by_type": {
+        ".pdf": "20.03 MB"
+      }
+    },
+    "data12": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data12",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    },
+    "data7": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data7",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    },
+    "politicians": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/politicians",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    },
+    "data0": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data0",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    },
+    "data4": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data4",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    },
+    "data8": {
+      "path": "/home/cbwinslow/workspace/epstein-data/raw-files/data8",
+      "total_files": 0,
+      "total_size_bytes": 0,
+      "total_size_human": "0.00 B",
+      "file_types": {},
+      "size_by_type": {}
+    }
+  },
+  "processed_data": {
+    "/home/cbwinslow/workspace/epstein-data/processed": {
+      "file_count": 2060,
+      "total_size": "9.89 MB",
+      "sample_files": [
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000108.json",
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000068.json",
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000471.json",
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000476.json",
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000121.json",
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000019.json",
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000473.json",
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000084.json",
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000352.json",
+        "/home/cbwinslow/workspace/epstein-data/processed/entities/batch_0000/EFTA00000001.json"
+      ]
+    },
+    "/home/cbwinslow/workspace/epstein/processed": {
+      "file_count": 20,
+      "total_size": "73.58 MB",
+      "sample_files": [
+        "/home/cbwinslow/workspace/epstein/processed/dataset_9_results.json",
+        "/home/cbwinslow/workspace/epstein/processed/text_content.log",
+        "/home/cbwinslow/workspace/epstein/processed/processing.log",
+        "/home/cbwinslow/workspace/epstein/processed/dataset_1_results.json",
+        "/home/cbwinslow/workspace/epstein/processed/dataset_10_results.json",
+        "/home/cbwinslow/workspace/epstein/processed/batch_ner_extraction.log",
+        "/home/cbwinslow/workspace/epstein/processed/postgresql_processing_report.json",
+        "/home/cbwinslow/workspace/epstein/processed/dataset_2_results.json",
+        "/home/cbwinslow/workspace/epstein/processed/dataset_7_results.json",
+        "/home/cbwinslow/workspace/epstein/processed/dataset_4_results.json"
+      ]
+    },
+    "/home/cbwinslow/workspace/epstein/output": {
+      "file_count": 0,
+      "total_size": "0.00 B",
+      "sample_files": []
+    },
+    "/home/cbwinslow/workspace/epstein/out": {
+      "file_count": 0,
+      "total_size": "0.00 B",
+      "sample_files": []
+    },
+    "/home/cbwinslow/workspace/epstein/data": {
+      "file_count": 0,
+      "total_size": "0.00 B",
+      "sample_files": []
+    }
+  },
+  "databases": {
+    "/home/cbwinslow/workspace/epstein-data/databases/prosecutorial_query_graph.db": {
+      "type": "sqlite",
+      "tables": {
+        "subpoenas": 257,
+        "rider_clauses": 2018,
+        "returns": 304,
+        "subpoena_return_links": 304,
+        "clause_fulfillment": 3813,
+        "graph_nodes": 677,
+        "graph_edges": 2745,
+        "investigative_gaps": 779
+      },
+      "total_tables": 8,
+      "size": "2.45 MB"
+    },
+    "/home/cbwinslow/workspace/epstein-data/databases/ocr_database.db": {
+      "type": "sqlite",
+      "tables": {
+        "ocr_results": 38955,
+        "ocr_fts": 38955,
+        "ocr_fts_data": 1739,
+        "ocr_fts_idx": 1933,
+        "ocr_fts_docsize": 8600,
+        "ocr_fts_config": 1
+      },
+      "total_tables": 6,
+      "size": "67.30 MB"
+    },
+    "/home/cbwinslow/workspace/epstein-data/databases/redaction_analysis_v2.db": {
+      "type": "sqlite",
+      "tables": {
+        "redactions": 2587102,
+        "document_summary": 849655,
+        "reconstructed_pages": 39588,
+        "sqlite_sequence": 2,
+        "extracted_entities": 107422
+      },
+      "total_tables": 5,
+      "size": "939.77 MB"
+    },
+    "/home/cbwinslow/workspace/epstein-data/databases/transcripts.db": {
+      "type": "sqlite",
+      "tables": {
+        "transcripts": 1628,
+        "transcript_segments": 25129,
+        "transcripts_fts": 1628,
+        "transcripts_fts_data": 155,
+        "transcripts_fts_idx": 153,
+        "transcripts_fts_docsize": 370,
+        "transcripts_fts_config": 1
+      },
+      "total_tables": 7,
+      "size": "4.73 MB"
+    },
+    "/home/cbwinslow/workspace/epstein-data/databases/full_text_corpus.db": {
+      "type": "sqlite",
+      "tables": {
+        "documents": 1397821,
+        "pages": 2892730,
+        "pages_fts": 2892730,
+        "pages_fts_data": 551522,
+        "pages_fts_idx": 203560,
+        "pages_fts_docsize": 2892730,
+        "pages_fts_config": 1,
+        "document_classification": 1380964,
+        "efta_crosswalk": 1380964
+      },
+      "total_tables": 9,
+      "size": "6.94 GB"
+    },
+    "/home/cbwinslow/workspace/epstein-data/databases/knowledge_graph.db": {
+      "type": "sqlite",
+      "tables": {
+        "sqlite_sequence": 3,
+        "entities": 1391,
+        "relationships": 2302,
+        "edge_sources": 905,
+        "kg_metadata": 26
+      },
+      "total_tables": 5,
+      "size": "1008.00 KB"
+    },
+    "/home/cbwinslow/workspace/epstein-data/databases/image_analysis.db": {
+      "type": "sqlite",
+      "tables": {
+        "images": 38955,
+        "images_fts": 38955,
+        "images_fts_data": 15086,
+        "images_fts_idx": 6618,
+        "images_fts_content": 38955,
+        "images_fts_docsize": 38955,
+        "images_fts_config": 1
+      },
+      "total_tables": 7,
+      "size": "388.26 MB"
+    },
+    "/home/cbwinslow/workspace/epstein-data/databases/communications.db": {
+      "type": "sqlite",
+      "tables": {
+        "emails": 41924,
+        "sqlite_sequence": 4,
+        "email_participants": 90204,
+        "resolved_identities": 1139,
+        "communication_pairs": 271
+      },
+      "total_tables": 5,
+      "size": "29.49 MB"
+    }
+  },
+  "repositories": {
+    "epstein": {
+      "path": "/home/cbwinslow/workspace/epstein",
+      "exists": true,
+      "total_files": 84063,
+      "file_types": {
+        ".db": 3,
+        ".gz": 264,
+        ".md": 151,
+        ".example": 1,
+        ".json": 267,
+        ".log": 33,
+        ".sh": 34,
+        "no_ext": 3162,
+        ".txt": 871,
+        ".16": 3,
+        ".py": 34652,
+        ".toml": 17,
+        ".tag": 5,
+        ".sql": 8,
+        ".pyc": 12058,
+        ".yml": 30,
+        ".csv": 51,
+        ".png": 74,
+        ".jpg": 26,
+        ".gif": 2,
+        ".html": 12,
+        ".rtf": 1,
+        ".js": 466,
+        ".cfg": 9,
+        ".1": 21,
+        ".c": 72,
+        ".pyx": 209,
+        ".h": 11391,
+        ".pkl": 14,
+        ".pth": 4,
+        ".so": 691,
+        ".pyi": 2789,
+        ".typed": 253,
+        ".rst": 38,
+        ".exe": 20,
+        ".apache": 5,
+        ".bsd": 4,
+        ".pem": 17,
+        ".tpl": 10,
+        ".hpp": 103,
+        ".bc": 4,
+        ".cu": 22,
+        ".cpp": 112,
+        ".100": 10,
+        ".0": 53,
+        ".2": 7,
+        ".dat": 1112,
+        ".unicode": 1,
+        ".lesser": 1,
+        ".proto": 164,
+        ".cmd": 1,
+        ".asm": 2,
+        ".obj": 2,
+        ".mjs": 3,
+        ".ts": 397,
+        ".css": 40,
+        ".svg": 22,
+        ".webmanifest": 1,
+        ".ttf": 49,
+        ".ps1": 9,
+        ".ini": 15,
+        ".xml": 23,
+        ".npy": 35,
+        ".tif": 2,
+        ".npz": 26,
+        ".pxi": 50,
+        ".2300": 10,
+        ".pxd": 324,
+        ".cc": 95,
+        ".cmake": 46,
+        ".orc": 4,
+        ".feather": 1,
+        ".parquet": 4,
+        ".4": 3,
+        ".onnx": 1806,
+        ".ipynb": 1,
+        ".3": 19,
+        ".pb": 5847,
+        ".yaml": 354,
+        ".lock": 5,
+        ".puml": 17,
+        ".rs": 188,
+        ".bin": 15,
+        ".stderr": 6,
+        ".gbnf": 2,
+        ".j2": 3,
+        ".jinja": 3,
+        ".hh": 2,
+        ".doctest": 59,
+        ".jinja2": 22,
+        ".lua": 1,
+        ".pdf": 4275,
+        ".afm": 60,
+        ".mplstyle": 29,
+        ".xrc": 1,
+        ".markdown-it": 1,
+        ".cuh": 75,
+        ".mit": 1,
+        ".apache2": 1,
+        ".g4": 2,
+        ".lark": 2,
+        ".al": 16,
+        ".xsl": 10,
+        ".17": 1,
+        ".200": 2,
+        ".5": 2,
+        ".mako": 12,
+        ".bzl": 1,
+        ".bazel": 1,
+        ".in": 4,
+        ".conf": 1,
+        ".odt": 1,
+        ".tex": 4,
+        ".sty": 1,
+        ".fits": 1,
+        ".build": 26,
+        ".a": 4,
+        ".pc": 1,
+        ".template": 1,
+        ".f90": 61,
+        ".pyf": 7,
+        ".f": 24,
+        ".inc": 1,
+        ".f95": 1,
+        ".tab": 42,
+        ".zi": 1,
+        ".lzma": 5,
+        ".xz": 5,
+        ".bz2": 9,
+        ".gzip": 5,
+        ".z": 3,
+        ".emf": 4,
+        ".pptx": 1,
+        ".mat": 110,
+        ".arff": 16,
+        ".wav": 22,
+        ".sav": 47,
+        ".nc": 3,
+        ".ani": 1,
+        ".psf": 1,
+        ".external": 1,
+        ".rng": 1,
+        ".bsd3": 1,
+        ".hash": 8,
+        ".bash": 1,
+        ".zsh": 1,
+        ".fish": 2,
+        ".nu": 2,
+        ".csh": 2,
+        ".bat": 6,
+        ".whl": 5,
+        ".9": 9,
+        ".15": 1,
+        ".12": 10,
+        ".11": 9,
+        ".10": 3,
+        ".8": 2,
+        ".go": 1,
+        ".pl": 1,
+        ".rockspec": 1,
+        ".npmignore": 1,
+        ".r": 1,
+        ".gemspec": 1,
+        ".mod": 1,
+        ".renv": 1,
+        ".tp": 24,
+        ".tmpl": 2,
+        ".eigen": 1,
+        ".completion": 3,
+        ".dtd": 1,
+        ".zip": 6,
+        ".a99": 2,
+        ".b99": 2,
+        ".plantuml": 1,
+        ".supp": 3,
+        ".62": 1,
+        ".13": 5,
+        ".cjs": 97,
+        ".cts": 97
+      },
+      "last_commit": "c9028a0 Update .gitignore to exclude large data directories"
+    },
+    "Epstein-Pipeline": {
+      "path": "/home/cbwinslow/workspace/epstein/Epstein-Pipeline",
+      "exists": true,
+      "total_files": 179,
+      "file_types": {
+        "no_ext": 11,
+        ".md": 14,
+        ".yml": 5,
+        ".toml": 1,
+        ".tag": 2,
+        ".py": 92,
+        ".json": 2,
+        ".pyc": 47,
+        ".txt": 5
+      },
+      "last_commit": "2ed46f5 Optimize Neon integration for high-traffic production readiness"
+    },
+    "Epstein-research-data": {
+      "path": "/home/cbwinslow/workspace/epstein/Epstein-research-data",
+      "exists": true,
+      "total_files": 103,
+      "file_types": {
+        "no_ext": 3,
+        ".txt": 7,
+        ".json": 5,
+        ".csv": 12,
+        ".gz": 4,
+        ".md": 3,
+        ".py": 40,
+        ".png": 13,
+        ".jpg": 10,
+        ".gif": 1,
+        ".html": 1,
+        ".rtf": 1,
+        ".sh": 3
+      },
+      "last_commit": "e3b75b4 Remove handwriting_transcriptions.db from repo \u2014 available in v5.1 release"
+    },
+    "EpsteinLibraryMediaScraper": {
+      "path": "/home/cbwinslow/workspace/epstein/EpsteinLibraryMediaScraper",
+      "exists": true,
+      "total_files": 17,
+      "file_types": {
+        "no_ext": 3,
+        ".js": 6,
+        ".json": 2,
+        ".md": 1,
+        ".txt": 5
+      },
+      "last_commit": "8bcf3b4 new files found"
+    },
+    "epstein-ripper": {
+      "path": "/home/cbwinslow/workspace/epstein/epstein-ripper",
+      "exists": true,
+      "total_files": 4302,
+      "file_types": {
+        ".txt": 10,
+        "no_ext": 2,
+        ".py": 11,
+        ".log": 1,
+        ".md": 1,
+        ".json": 11,
+        ".pdf": 4261,
+        ".pyc": 1,
+        ".zip": 4
+      },
+      "last_commit": "5091cd6 Remove support development comments from image_ripper.py"
+    },
+    "epstein-data": {
+      "path": "/home/cbwinslow/workspace/epstein-data",
+      "exists": true,
+      "total_files": 764728,
+      "file_types": {
+        ".json": 2074,
+        ".pdf": 761632,
+        "no_ext": 23,
+        ".md": 5,
+        ".txt": 146,
+        ".metadata": 18,
+        ".parquet": 638,
+        ".zip": 39,
+        ".log": 71,
+        ".csv": 6,
+        ".bak": 1,
+        ".dump": 34,
+        ".db": 9,
+        ".aria2": 31,
+        ".cwd3bb": 1
+      },
+      "last_commit": null
+    }
+  },
+  "validation": {
+    "checksums": {},
+    "missing_files": [],
+    "corrupted_files": [],
+    "consistency_checks": {
+      "data5": "OK",
+      "data2": "OK",
+      "data11": "OK",
+      "fec": "Empty dataset",
+      "data3": "Empty dataset",
+      "government": "Empty dataset",
+      "data9": "Empty dataset",
+      "data1": "OK",
+      "data10": "OK",
+      "data6": "OK",
+      "data12": "Empty dataset",
+      "data7": "Empty dataset",
+      "politicians": "Empty dataset",
+      "data0": "Empty dataset",
+      "data4": "Empty dataset",
+      "data8": "Empty dataset"
+    }
+  },
+  "gaps": [
+    {
+      "type": "empty_dataset",
+      "dataset": "fec",
+      "description": "Dataset fec has no files",
+      "severity": "high"
+    },
+    {
+      "type": "empty_dataset",
+      "dataset": "data3",
+      "description": "Dataset data3 has no files",
+      "severity": "high"
+    },
+    {
+      "type": "empty_dataset",
+      "dataset": "government",
+      "description": "Dataset government has no files",
+      "severity": "high"
+    },
+    {
+      "type": "empty_dataset",
+      "dataset": "data9",
+      "description": "Dataset data9 has no files",
+      "severity": "high"
+    },
+    {
+      "type": "empty_dataset",
+      "dataset": "data12",
+      "description": "Dataset data12 has no files",
+      "severity": "high"
+    },
+    {
+      "type": "empty_dataset",
+      "dataset": "data7",
+      "description": "Dataset data7 has no files",
+      "severity": "high"
+    },
+    {
+      "type": "empty_dataset",
+      "dataset": "politicians",
+      "description": "Dataset politicians has no files",
+      "severity": "high"
+    },
+    {
+      "type": "empty_dataset",
+      "dataset": "data0",
+      "description": "Dataset data0 has no files",
+      "severity": "high"
+    },
+    {
+      "type": "empty_dataset",
+      "dataset": "data4",
+      "description": "Dataset data4 has no files",
+      "severity": "high"
+    },
+    {
+      "type": "empty_dataset",
+      "dataset": "data8",
+      "description": "Dataset data8 has no files",
+      "severity": "high"
+    },
+    {
+      "type": "missing_database",
+      "description": "PostgreSQL epstein database not accessible",
+      "severity": "high"
+    }
+  ]
+}

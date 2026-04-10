@@ -73,16 +73,38 @@ python scripts/explore_kg.py "Epstein"
 
 ```
 epstein_full/
-├── scripts/                    # Our download and analysis tools
-│   ├── tracker.py              # SQLite-backed progress tracker
-│   ├── dashboard.py            # Rich terminal dashboard
-│   ├── download_cdn.py         # CDN downloader (aria2c)
-│   ├── download_doj.py         # Playwright downloader
-│   ├── download_chunked.py     # Chunked parallel downloader
-│   ├── explore_kg.py           # Knowledge graph explorer
-│   ├── file_watcher.py         # Filesystem progress monitor
-│   ├── launch_downloads.sh     # Multi-process launcher
-│   └── run_downloads.py        # Download runner with monitoring
+├── scripts/
+│   ├── ingestion/              # Data ingestion & collection
+│   │   ├── mega_parallel_ingestion.py    # High-throughput news ingestion
+│   │   ├── staged_news_ingestion.py      # Phased news collection
+│   │   ├── run_news_ingestion.py         # News ingestion runner
+│   │   ├── run_media_acquisition.py      # Media file acquisition
+│   │   ├── article_ingestion_pipeline.py # Article pipeline
+│   │   ├── import_*.py           # Various import scripts
+│   │   └── postgresql_processor.py       # PostgreSQL ingestion
+│   ├── processing/             # NLP & analysis
+│   │   ├── extract_entities.py # Named entity extraction
+│   │   ├── generate_embeddings.py        # Embedding generation
+│   │   ├── batch_ner_extraction.py     # Batch NER processing
+│   │   ├── embed_*.py          # CPU/GPU embedding variants
+│   │   ├── vectorize_documents.py        # Document vectorization
+│   │   └── full_processing_pipeline.py   # Complete pipeline
+│   ├── database/               # Database utilities
+│   │   ├── migrations/         # SQL migration files
+│   │   ├── apply_migrations.py # Migration runner
+│   │   ├── init_postgres_db.py # PostgreSQL setup
+│   │   ├── migrate_sqlite_to_pg.py     # SQLite → PostgreSQL
+│   │   └── setup_postgres.py   # Database configuration
+│   ├── utils/                  # Helper scripts
+│   │   ├── dashboard.py          # Live monitoring dashboard
+│   │   ├── tracker.py          # Progress tracking
+│   │   ├── db_search.py        # Database search
+│   │   ├── db_stats.py         # Statistics
+│   │   ├── data_quality_validator.py   # Data validation
+│   │   ├── cpu_monitor.py      # CPU monitoring
+│   │   ├── gpu_monitor.py      # GPU monitoring
+│   │   └── build_efta_crosswalk.py     # EFTA crosswalk
+│   └── archive/                # Legacy/deprecated scripts
 ├── docs/                       # Documentation
 │   ├── ARCHITECTURE.md         # System design
 │   ├── DATA_SOURCES.md         # Data sources and URLs

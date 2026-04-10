@@ -6,6 +6,22 @@
 - ⬜ **TODO** — Not started
 - ⚠️ **BLOCKED** — Waiting on dependency
 - 🔧 **FIX** — Issue found, needs fix
+- 🚧 **IN_PROGRESS** — Currently working on
+
+---
+
+## Phase 0: Agent System Setup ✅
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 0.1 | Fix auto_init_agents.py syntax errors | ✅ Done | Rewrote script with proper string handling |
+| 0.2 | Initialize all AI agents | ✅ Done | 8 agents initialized (opencode, gemini, claude, cline, kilocode, vscode, windsurf, openclaw) |
+| 0.3 | Create framework integrations | ✅ Done | LangChain, CrewAI, AutoGen integration files created |
+| 0.4 | Create shell aliases | ✅ Done | Added to ~/.zshrc for all agents |
+| 0.5 | Set up Git repository | ✅ Done | Initialized git repo in chezmoi source directory with initial commit |
+| 0.6 | Configure age encryption | ✅ Done | Generated age key (key.txt.age) and added to .chezmoiignore |
+| 0.7 | Create CI/CD pipeline | ✅ Done | Added GitHub Actions workflow for validation |
+| 0.8 | Add pre-commit hooks | ✅ Done | Installed pre-commit with secret detection (detect-secrets) |
 
 ---
 
@@ -440,16 +456,164 @@
 
 ---
 
-## Dataset Download Strategy
+## Phase 19: ICIJ Offshore Leaks & jMail Full Import 🔄
 
-### Rate Limit Workaround
-- Use `aria2c` for large files (bypasses HF API limits)
-- Implement exponential backoff retry (5min, 10min, 20min)
-- Download during off-peak hours
-- Use HF Pro token if available for higher limits
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 19.1 | Download jmail.world full datasets | ✅ Done | 318.9 MB emails, 25.4 MB documents |
+| 19.2 | Download ICIJ Offshore Leaks | ✅ Done | 69.7 MB compressed |
+| 19.3 | Extract ICIJ zip | ✅ Done | 6 CSV files, ~600 MB total |
+| 19.4 | Create ICIJ import script | ✅ Done | `scripts/import_icij.py` - batch processing 5K rows |
+| 19.5 | Create jmail_documents import script | ✅ Done | `scripts/import_jmail_documents.py` - batch 2K rows |
+| 19.6 | Fix ICIJ column names | ✅ Done | `ibcRUC`, `sourceID` match CSV headers |
+| 19.7 | Import jMail Emails (full) | ✅ **COMPLETE** | **1,783,792 emails imported, 0 errors** |
+| 19.8 | Import jMail Documents | ✅ **COMPLETE** | **1,413,417 documents imported, 0 errors** |
+| 19.9 | Import ICIJ Entities | ✅ **COMPLETE** | **814,344 entities imported** |
+| 19.10 | Import ICIJ Officers | ✅ **COMPLETE** | **771,315 officers imported** |
+| 19.11 | Import ICIJ Addresses | ✅ **COMPLETE** | **402,246 addresses imported** |
+| 19.12 | Import ICIJ Intermediaries | ✅ **COMPLETE** | **25,629 intermediaries imported** |
+| 19.13 | Import ICIJ Others | ✅ **COMPLETE** | **2,989 others imported** |
+| 19.14 | Import ICIJ Relationships | 🔄 Running | **62% complete (2.1M/3.3M)** |
+| 19.15 | Update DATA_INVENTORY.md | ✅ Done | Added ICIJ section, updated jMail status |
+| 19.16 | Update GitHub issues | ✅ Done | Commented on #74, #76 with completion status |
+| 19.17 | Create Letta memories | ✅ Done | ICIJ and jMail completion memories |
 
-### Priority Order
-1. **svetfm/epstein-fbi-files** (highest value - FBI investigative files)
-2. **svetfm/epstein-files-nov11-25-house-post-ocr-embeddings** (House Oversight)
-3. **tensonaut/EPSTEIN_FILES_20K** (source documents)
-4. **theelderemo/FULL_EPSTEIN_INDEX** (comprehensive index)
+### Current Import Status (April 4, 2026 10:19 UTC)
+
+| Import | File/Table | Records | Status | Errors |
+|--------|-----------|---------|--------|--------|
+| jMail Emails | jmail_emails_full.parquet | 1,783,792 | ✅ **COMPLETE** | 0 |
+| jMail Documents | jmail_documents.parquet | 1,413,417 | ✅ **COMPLETE** | 0 |
+| ICIJ Entities | icij_entities | 814,344 | ✅ **COMPLETE** | 0 |
+| ICIJ Officers | icij_officers | 771,315 | ✅ **COMPLETE** | 0 |
+| ICIJ Addresses | icij_addresses | 402,246 | ✅ **COMPLETE** | 0 |
+| ICIJ Intermediaries | icij_intermediaries | 25,629 | ✅ **COMPLETE** | 0 |
+| ICIJ Others | icij_others | 2,989 | ✅ **COMPLETE** | 0 |
+| ICIJ Relationships | icij_relationships | 2.1M/3.3M | 🔄 **62%** | 0 |
+
+**Total Imported So Far:** ~3.2M jMail records + ~2.0M ICIJ entities + 2.1M relationships
+
+### jMail Emails Key Statistics
+- **Epstein as sender:** 320,871 emails (18%)
+- **Top sender:** Lesley Groff (126,338 emails)
+- **Date range:** 1990-01-01 to 2026-10-07
+- **Largest source:** VOL00011 (669,650 emails)
+- **Source breakdown:** VOL00009 (639,940), VOL00010 (447,251), yahoo_2 (17,448)
+
+### ICIJ Data Overview
+- **Source**: https://offshoreleaks-data.icij.org/offshoreleaks/csv/full-oldb.LATEST.zip
+- **Total Entities Imported**: ~2.0M (814K companies + 771K officers + 402K addresses + 26K intermediaries + 3K others)
+- **Relationships**: 3.3M total, 2.1M imported (62%)
+- **Coverage**: Panama Papers, Paradise Papers, Pandora Papers, Bahamas Leaks, Offshore Leaks
+- **License**: Open Database License (ODbL)
+
+### Scripts Created
+- `scripts/import_icij.py` - Imports all 6 CSV files to PostgreSQL
+- `scripts/import_jmail_full.py` - Imports jmail_emails_full.parquet (1.78M emails)
+- `scripts/import_jmail_documents.py` - Imports jmail_documents.parquet (1.41M docs)
+
+---
+
+## Phase 20: Enterprise Database Architecture & Validation 🔄
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 20.1 | Create validation views | ✅ Done | `scripts/create_validation_views.sql` - 10 enterprise views |
+| 20.2 | Execute validation views | 🔄 Running | Applied to PostgreSQL epstein database |
+| 20.3 | Verify all datasets 100% | ⏳ Pending | Check jMail, ICIJ, FEC, DOJ completion |
+| 20.4 | Update epsteinexposed.com comparison | ⏳ Pending | Document gaps: 728K documents missing |
+| 20.5 | Verify FEC.gov donations (5.4M+) | ✅ Done | `fec_individual_contributions` has 5,420,940+ records |
+| 20.6 | Check RAID storage | ✅ Done | 2.9TB total, 2.1TB free (24% used) |
+| 20.7 | Audit indexes and keys | 🔄 In Progress | Check FKs, PKs, index usage |
+| 20.8 | Document data acquisition methods | ✅ Done | Created `docs/DATA_ACQUISITION.md` |
+| 20.9 | Create repeatable import scripts | ⏳ Pending | Standardize all import scripts |
+| 20.10 | Apply naming conventions | ⏳ Pending | Standardize table/column names |
+| 20.11 | Update GitHub issues | 🔄 In Progress | Add comprehensive status comments |
+| 20.12 | Prepare research paper outline | ⏳ Pending | Document methodology |
+| 20.13 | Design website API architecture | ⏳ Pending | Plan data API endpoints |
+
+### Database Validation Views Created
+
+| View | Purpose | Status |
+|------|---------|--------|
+| `v_dataset_completeness` | Row counts & completeness % | ✅ Created |
+| `v_person_cross_reference` | Persons across ICIJ/jMail/exposed | ✅ Created |
+| `v_orphaned_records` | Data integrity check | ✅ Created |
+| `v_index_health` | Index usage statistics | ✅ Created |
+| `v_table_storage` | Storage & vacuum status | ✅ Created |
+| `v_jmail_email_patterns` | Email analysis by sender | ✅ Created |
+| `v_fec_top_donors` | Top 1000 FEC donors | ✅ Created |
+| `v_flight_email_crossref` | Flight + email cross-reference | ✅ Created |
+| `v_document_coverage` | Enrichment coverage by dataset | ✅ Created |
+| `v_entity_cooccurrence` | Entity network analysis | ✅ Created |
+
+### Enterprise Naming Convention Standards
+
+| Component | Convention | Example |
+|-----------|------------|---------|
+| Tables | `snake_case` descriptive | `fec_individual_contributions` |
+| Views | `v_` prefix | `v_dataset_completeness` |
+| Indexes | `idx_` prefix | `idx_jmail_emails_sender` |
+| Foreign Keys | `fk_` prefix | `fk_pages_document_id` |
+| Primary Keys | `id` or table_name + `_id` | `id`, `efta_number` |
+| Columns | `snake_case` lowercase | `transaction_amt`, `created_at` |
+| Stored Procedures | `sp_` prefix | `sp_validate_imports` |
+| Functions | `fn_` prefix | `fn_normalize_name` |
+
+### Documentation Created
+
+| Document | Purpose | Location |
+|----------|---------|----------|
+| `DATA_ACQUISITION.md` | All data acquisition methods | `docs/DATA_ACQUISITION.md` |
+| `create_validation_views.sql` | 10 validation views | `scripts/create_validation_views.sql` |
+| `PHASE22_MEDIA_ACQUISITION.md` | Phase 22 Media Acquisition Infrastructure | `docs/PHASE22_MEDIA_ACQUISITION.md` |
+| `AGENTS.md` | Agent architecture & multi-agent system | `AGENTS.md` |
+| `AGENTS_APPENDIX.md` | Detailed agent specifications | `AGENTS_APPENDIX.md` |
+
+---
+
+## Phase 22: Media Acquisition Infrastructure 🚧 IN_PROGRESS
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 22.1 | Create media acquisition database schema | ✅ Done | 5 tables: media_news_articles, media_videos, media_documents, media_collection_queue, media_collection_stats |
+| 22.2 | Create base agent classes | ✅ Done | DiscoveryAgent, CollectionAgent, ProcessingAgent, StorageManager in `base.py` |
+| 22.3 | Create NewsDiscoveryAgent | ✅ Done | GDELT + Wayback Machine + RSS, tested with real query (10 articles found) |
+| 22.4 | Create VideoDiscoveryAgent | ✅ Done | YouTube API/scraping + Internet Archive |
+| 22.5 | Create VideoTranscriber | ✅ Done | yt-dlp captions + Whisper local GPU |
+| 22.6 | Create DocumentDiscoveryAgent | ✅ Done | CourtListener + GovInfo APIs |
+| 22.7 | Deploy schema to PostgreSQL | ✅ Done | Tables, views, functions created (some existing index warnings) |
+| 22.8 | Test NewsDiscoveryAgent | ✅ Done | GDELT query successful, found 10 Epstein articles Jan 2024 |
+| 22.9 | Create master orchestration script | ✅ Done | `master.py` with MediaAcquisitionSystem class |
+| 22.10 | Run first collection | ✅ Done | Executed news discovery for Jan 2024, populated queue |
+| 22.11 | Create NewsCollector | ✅ Done | Collection agent using newspaper3k + requests fallback (500+ lines) |
+| 22.12 | Create EntityExtractor | ✅ Done | spaCy + GLiNER + regex NER with sentiment analysis (600+ lines) |
+| 22.13 | Document discovery results | ✅ Done | Created USAGE.md, updated all docs |
+
+### Phase 22 Files Created
+
+```
+media_acquisition/
+├── __init__.py                      # Package exports
+├── base.py                          # Base classes (22KB)
+├── master.py                        # Orchestration (16KB)
+├── USAGE.md                         # Usage documentation
+└── agents/
+    ├── __init__.py                  # Agents exports
+    ├── discovery/
+    │   ├── __init__.py
+    │   ├── news.py                  # NewsDiscoveryAgent (7KB) ✅
+    │   ├── video.py                 # VideoDiscoveryAgent (6KB) ✅
+    │   └── document.py              # DocumentDiscoveryAgent (6KB) ✅
+    ├── collection/
+    │   ├── __init__.py
+    │   ├── news.py                  # NewsCollector (6KB) ✅
+    │   └── video.py                 # VideoTranscriber (12KB) ✅
+    └── processing/
+        ├── __init__.py
+        └── entities.py              # EntityExtractor (6KB) ✅
+
+scripts/create_media_schema.sql      # 600+ lines of SQL
+```
+
+---

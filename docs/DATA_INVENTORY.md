@@ -1,6 +1,6 @@
 # Epstein Files Data Inventory
 
-> **Last Updated:** April 1, 2026
+> **Last Updated:** April 4, 2026
 > **Purpose:** Comprehensive inventory of all data sources, their locations, and current state
 
 ---
@@ -9,10 +9,16 @@
 
 This document provides a complete inventory of all data in the Epstein Files Analysis project. It compares our data with [epsteinexposed.com](https://epsteinexposed.com) to identify gaps and plan next steps.
 
-**Recent Updates (April 1, 2026):**
-- Added FEC bulk campaign finance data (146 files, 22GB downloaded)
-- Added politicians' financial disclosure tables (House, Senate, Congress trading)
-- Fast COPY-based ingestion implemented (500K+ rows/minute)
+**Recent Updates (April 4, 2026):**
+- ✅ **ICIJ IMPORT COMPLETE:** 3,339,267 relationships imported
+- ✅ **Phase 22 Media Acquisition Infrastructure:** 5 agents created, schema deployed
+- ✅ **NewsDiscoveryAgent tested:** Successfully found 10 Epstein articles via GDELT
+- ✅ Downloaded jmail.world full datasets (318.9 MB emails, 24.2 MB documents)
+- ✅ Downloaded ICIJ Offshore Leaks full database (69.7 MB)
+- ✅ Extracted ICIJ data: 814,344 entities, 3.3M relationships, 1.8M officers
+- ✅ SQLite imports complete: redactions (2.59M), reconstructed_pages (39K), extracted_entities (107K)
+- ✅ jMail email import COMPLETE (1.78M emails)
+- ✅ jMail documents import COMPLETE (1.41M documents)
 
 ---
 
@@ -88,7 +94,15 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | efta_crosswalk | 1,380,964 | EFTA number mappings | full_text_corpus.db |
 | file_registry | 1,313,844 | SHA-256 hashes, file metadata | Our population script |
 
-#### Entity & NER Tables
+#### Media Acquisition Tables (Phase 22)
+| Table | Rows | Description | Source |
+|-------|------|-------------|--------|
+| media_news_articles | 0 | News articles from GDELT, Wayback, RSS | Pending collection |
+| media_videos | 0 | Video content with transcripts | Pending collection |
+| media_documents | 0 | Court documents, government releases | Pending collection |
+| media_collection_queue | 0 | Task queue for media acquisition | Ready for use |
+| media_collection_stats | 1 | Daily collection statistics | Initialized |
+| media_entity_mentions | 0 | Cross-reference media to entities | Ready for use |
 | Table | Rows | Description | Source |
 |-------|------|-------------|--------|
 | document_entities | 5,709,659 | NER-extracted entities from documents | Our NER extraction |
@@ -412,6 +426,58 @@ All embedding datasets use **768-dimensional vectors** with `nomic-embed-text` m
 | `photos.parquet` | 1.0MB | 18K photos |
 | `people.parquet` | 9.9KB | 473 people in photos |
 | `photo_faces.parquet` | 57.7KB | 975 face detections |
+
+---
+
+## ICIJ Offshore Leaks Database
+
+**URL:** `https://offshoreleaks-data.icij.org/offshoreleaks/csv/full-oldb.LATEST.zip`
+**Downloaded:** April 3, 2026
+**Size:** 69.7 MB (compressed), ~600 MB extracted
+**Status:** ✅ EXTRACTED, ⏳ Import to PostgreSQL pending
+
+### About ICIJ
+**ICIJ** = International Consortium of Investigative Journalists  
+A nonprofit coordinating global investigative journalism across 100+ countries.
+
+### Coverage
+- **Panama Papers** (2016): 11.5M documents from Mossack Fonseca
+- **Paradise Papers** (2017): 13.4M documents from offshore law firms
+- **Pandora Papers** (2021): 11.9M documents from 14 offshore service providers
+- **Bahamas Leaks** (2016): 1.3M documents from Bahamian corporate registry
+- **Offshore Leaks** (2013): Original offshore financial records
+
+### Extracted Files
+
+| File | Rows | Size | Description | Import Status |
+|------|------|------|-------------|---------------|
+| `nodes-entities.csv` | 814,617 | 190 MB | Companies/offshore entities | ⏳ Pending |
+| `nodes-officers.csv` | ~1,800,000 | 87 MB | People/officers | ⏳ Pending |
+| `nodes-addresses.csv` | ~700,000 | 69 MB | Addresses | ⏳ Pending |
+| `nodes-intermediaries.csv` | ~38,000 | 3.8 MB | Intermediaries/brokers | ⏳ Pending |
+| `nodes-others.csv` | ~4,000 | 389 KB | Other entities | ⏳ Pending |
+| `relationships.csv` | 3,339,272 | 247 MB | Entity relationships | ⏳ Pending |
+
+**Total Records:** ~5.7M entities + 3.3M relationships
+
+### Data Schema (entities)
+```csv
+node_id,name,original_name,former_name,jurisdiction,jurisdiction_description,
+company_type,address,internal_id,incorporation_date,inactivation_date,
+struck_off_date,dorm_date,status,service_provider,ibcRUC,country_codes,
+countries,sourceID,valid_until,note
+```
+
+### Data Schema (relationships)
+```csv
+node_id_start,node_id_end,rel_type,link,status,start_date,end_date,sourceID
+```
+
+### License
+Open Database License (ODbL) - free to use, share, and modify
+
+### Location
+`/home/cbwinslow/workspace/epstein-data/downloads/icij_extracted/`
 
 ---
 

@@ -1,0 +1,32 @@
+{
+  "endpoint": {
+    "host": "0.0.0.0",
+    "port": 8000,
+    "auth_token": "epstein-embeddings-2024"
+  },
+  "models": {
+    "embedding": {
+      "model_name": "nomic-ai/nomic-embed-text-v2-moe",
+      "device": "cuda",
+      "batch_size": 32,
+      "max_length": 8192,
+      "trust_remote_code": true
+    },
+    "reranker": {
+      "model_name": "jinaai/jina-reranker-v2-base-multilingual",
+      "device": "cuda"
+    }
+  },
+  "postgres": {
+    "host": "windows-host",
+    "port": 5432,
+    "user": "cbwinslow",
+    "password": "123qweasd",
+    "dbname": "epstein"
+  },
+  "batch": {
+    "chunk_size": 512,
+    "overlap": 128,
+    "max_workers": 4
+  }
+}

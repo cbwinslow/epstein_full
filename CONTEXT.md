@@ -79,6 +79,10 @@
 | HF Parquet | ✅ **COMPLETE** | 318GB | 634/634 files, 0 missing, pre-extracted text |
 | PostgreSQL (epstein) | ✅ Complete | 42GB | 72 tables, 36.6M rows |
 | Knowledge graph | ✅ Available | 892KB | 606 entities, 2,302 relationships |
+| **jMail Emails** | ✅ **COMPLETE** | 334MB | **1,783,792 emails imported** |
+| **jMail Documents** | ✅ **COMPLETE** | 25MB | **1,413,417 documents imported** |
+| **ICIJ Entities** | ✅ **COMPLETE** | 600MB | **~2.0M entities imported (5/6 files)** |
+| **ICIJ Relationships** | 🔄 **RUNNING** | — | **64% complete (2.14M/3.34M)** |
 | Kabasshouse entities | ✅ Imported | ~100MB | 9.9M entities, PK: (document_id, entity_type, value) |
 | Kabasshouse chunks | ✅ Imported | ~500MB | 1.9M chunks, PK: (document_id, chunk_index) |
 | Kabasshouse embeddings | ✅ Imported | ~12GB | 1.5M 768-dim Gemini vectors, PK: chunk_id |

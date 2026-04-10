@@ -253,6 +253,7 @@ For parallel processing:
 
 ### Our code goes in
 - `scripts/` — standalone tools
+- `media_acquisition/` — Phase 22 media acquisition system
 - `workers/` — background processing agents (future)
 - Root level — config files, docs
 
@@ -336,6 +337,9 @@ All agents use the centralized configuration at `/home/cbwinslow/dotfiles/ai/age
 | Progress tracking | JSON | Shared state file | scripts/tracker.py |
 | Transcriptions | SQLite | Per-file text + segments | Pre-built transcripts.db |
 | Image descriptions | SQLite | AI-generated text | Pre-built image_analysis.db |
+| News articles | PostgreSQL | media_news_articles table | NewsDiscoveryAgent + NewsCollector |
+| Videos | PostgreSQL | media_videos table | VideoDiscoveryAgent + VideoTranscriber |
+| Court docs | PostgreSQL | media_documents table | DocumentDiscoveryAgent |
 
 ### Vector Database Options (Future)
 
@@ -415,6 +419,7 @@ These get merged into the existing knowledge graph via:
 
 ### What Counts as "Ours"
 - `scripts/` — our download, tracking, analysis tools
+- `media_acquisition/` — Phase 22 media acquisition system
 - `docs/` — our documentation
 - Root `.md` files — our project docs
 - `pyproject.toml` — our dependency config

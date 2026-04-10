@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
-"""Import jmail.world emails into PostgreSQL.
+"""Import jmail.world FULL emails dataset into PostgreSQL.
 
-Downloads emails-slim.parquet from jmail.world (1.78M emails) and imports
-into a jmail_emails table. Handles 4 distinct email sources:
-- VOL00009-12: DOJ EFTA document emails (1.75M)
-- yahoo_2: Epstein's personal Yahoo inbox (17K)
-- House Oversight: Congressional releases (8K)
-- Ehud Barak: Former Israeli PM emails (1K)
+Imports jmail_emails_full.parquet (1.78M emails) into jmail_emails_full table.
+This is the complete dataset vs the slim version.
 
 Usage:
-    python scripts/import_jmail_emails.py [--dry-run] [--batch-size 500]
+    python scripts/import_jmail_full.py [--dry-run] [--batch-size 1000]
 """
 
 import argparse
@@ -27,18 +23,18 @@ import psycopg2.extras
 PG_DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 
 # Data paths
-JMAIL_DIR = Path("/home/cbwinslow/workspace/epstein-data/supplementary")
-EMAILS_PARQUET = JMAIL_DIR / "emails-slim.parquet"
+DOWNLOADS_DIR = Path("/home/cbwinslow/workspace/epstein-data/downloads")
+EMAILS_PARQUET = DOWNLOADS_DIR / "jmail_emails_full.parquet"
 
 # Batch size for inserts
-BATCH_SIZE = 500
+BATCH_SIZE = 1000
 
-# Schema for jmail_emails table
+# Schema for jmail_emails_full table
 CREATE_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS jmail_emails (
+CREATE TABLE IF NOT EXISTS jmail_emails_full (
     id TEXT PRIMARY KEY,
     doc_id TEXT,
-    message_index INT DEFAULT 0,
+    message_index TEXT,
     sender TEXT,
     subject TEXT,
     to_recipients JSONB DEFAULT '[]',
@@ -58,17 +54,17 @@ CREATE TABLE IF NOT EXISTS jmail_emails (
 """
 
 CREATE_INDEXES_SQL = """
-CREATE INDEX IF NOT EXISTS idx_jmail_emails_sent ON jmail_emails(sent_at);
-CREATE INDEX IF NOT EXISTS idx_jmail_emails_sender ON jmail_emails(sender);
-CREATE INDEX IF NOT EXISTS idx_jmail_emails_account ON jmail_emails(account_email);
-CREATE INDEX IF NOT EXISTS idx_jmail_emails_promo ON jmail_emails(is_promotional);
-CREATE INDEX IF NOT EXISTS idx_jmail_emails_doc ON jmail_emails(doc_id);
-CREATE INDEX IF NOT EXISTS idx_jmail_emails_drop ON jmail_emails(email_drop_id);
-CREATE INDEX IF NOT EXISTS idx_jmail_emails_epstein ON jmail_emails(epstein_is_sender);
+CREATE INDEX IF NOT EXISTS idx_jmail_full_sent ON jmail_emails_full(sent_at);
+CREATE INDEX IF NOT EXISTS idx_jmail_full_sender ON jmail_emails_full(sender);
+CREATE INDEX IF NOT EXISTS idx_jmail_full_account ON jmail_emails_full(account_email);
+CREATE INDEX IF NOT EXISTS idx_jmail_full_promo ON jmail_emails_full(is_promotional);
+CREATE INDEX IF NOT EXISTS idx_jmail_full_doc ON jmail_emails_full(doc_id);
+CREATE INDEX IF NOT EXISTS idx_jmail_full_drop ON jmail_emails_full(email_drop_id);
+CREATE INDEX IF NOT EXISTS idx_jmail_full_epstein ON jmail_emails_full(epstein_is_sender);
 """
 
 INSERT_SQL = """
-INSERT INTO jmail_emails (
+INSERT INTO jmail_emails_full (
     id, doc_id, message_index, sender, subject,
     to_recipients, cc_recipients, bcc_recipients,
     sent_at, attachments, account_email, email_drop_id,
@@ -87,7 +83,7 @@ def safe_json(val):
         return "[]"
     if isinstance(val, str):
         try:
-            json.loads(val)  # Validate it's valid JSON
+            json.loads(val)
             return val
         except (json.JSONDecodeError, ValueError):
             return "[]"
@@ -101,9 +97,7 @@ def parse_timestamp(val):
     if pd.isna(val):
         return None
     try:
-        # Handle ISO format strings
         if isinstance(val, str):
-            # Quick sanity check on year
             if len(val) >= 4:
                 year_str = val[:4]
                 if year_str.isdigit():
@@ -150,10 +144,17 @@ def safe_str(val, max_len=None):
 
 def prepare_row(row):
     """Prepare a row for insertion."""
+    # Handle message_index as TEXT (can be INT or UUID string)
+    msg_idx = row.get("message_index")
+    if pd.isna(msg_idx):
+        msg_idx = None
+    else:
+        msg_idx = str(msg_idx)  # Convert to string to handle both INT and UUID
+    
     return (
-        row["id"],
+        str(row["id"]),
         safe_str(row.get("doc_id"), 200),
-        safe_int(row.get("message_index")),
+        msg_idx,  # TEXT to handle UUIDs
         safe_str(row.get("sender"), 500),
         safe_str(row.get("subject"), 1000),
         safe_json(row.get("to_recipients")),
@@ -172,9 +173,9 @@ def prepare_row(row):
 
 
 def get_existing_count(conn):
-    """Get count of existing rows in jmail_emails."""
+    """Get count of existing rows."""
     with conn.cursor() as cur:
-        cur.execute("SELECT COUNT(*) FROM jmail_emails")
+        cur.execute("SELECT COUNT(*) FROM jmail_emails_full")
         return cur.fetchone()[0]
 
 
@@ -187,7 +188,6 @@ def import_emails(df, conn, dry_run=False, batch_size=BATCH_SIZE):
 
     print(f"\nImporting {total:,} emails (batch_size={batch_size})...")
 
-    # Use autocommit for batch inserts to avoid transaction abort cascading
     if not dry_run:
         ac_conn = psycopg2.connect(PG_DSN)
         ac_conn.autocommit = True
@@ -218,7 +218,6 @@ def import_emails(df, conn, dry_run=False, batch_size=BATCH_SIZE):
             inserted += batch_inserted
             errors += batch_errors
 
-            # Progress update
             done = min(i + batch_size, total)
             pct = done / total * 100
             print(
@@ -237,19 +236,17 @@ def import_emails(df, conn, dry_run=False, batch_size=BATCH_SIZE):
 
 
 def print_summary(conn):
-    """Print summary statistics after import."""
+    """Print summary statistics."""
     print("\n=== Import Summary ===")
 
     with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        # Total count
-        cur.execute("SELECT COUNT(*) as cnt FROM jmail_emails")
+        cur.execute("SELECT COUNT(*) as cnt FROM jmail_emails_full")
         total = cur.fetchone()["cnt"]
         print(f"Total emails: {total:,}")
 
-        # By source
         cur.execute("""
             SELECT email_drop_id, COUNT(*) as cnt
-            FROM jmail_emails
+            FROM jmail_emails_full
             GROUP BY email_drop_id
             ORDER BY cnt DESC
         """)
@@ -257,10 +254,9 @@ def print_summary(conn):
         for row in cur.fetchall():
             print(f"  {row['email_drop_id']}: {row['cnt']:,}")
 
-        # Epstein sent
         cur.execute("""
             SELECT epstein_is_sender, COUNT(*) as cnt
-            FROM jmail_emails
+            FROM jmail_emails_full
             GROUP BY epstein_is_sender
         """)
         print("\nEpstein as sender:")
@@ -268,30 +264,17 @@ def print_summary(conn):
             label = "Yes" if row["epstein_is_sender"] else "No"
             print(f"  {label}: {row['cnt']:,}")
 
-        # Promotional
-        cur.execute("""
-            SELECT is_promotional, COUNT(*) as cnt
-            FROM jmail_emails
-            GROUP BY is_promotional
-        """)
-        print("\nPromotional:")
-        for row in cur.fetchall():
-            label = "Yes" if row["is_promotional"] else "No"
-            print(f"  {label}: {row['cnt']:,}")
-
-        # Date range
         cur.execute("""
             SELECT MIN(sent_at) as earliest, MAX(sent_at) as latest
-            FROM jmail_emails
+            FROM jmail_emails_full
             WHERE sent_at IS NOT NULL
         """)
         row = cur.fetchone()
         print(f"\nDate range: {row['earliest']} to {row['latest']}")
 
-        # Top senders
         cur.execute("""
             SELECT sender, COUNT(*) as cnt
-            FROM jmail_emails
+            FROM jmail_emails_full
             WHERE sender IS NOT NULL AND sender != ''
             GROUP BY sender
             ORDER BY cnt DESC
@@ -303,45 +286,40 @@ def print_summary(conn):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Import jmail.world emails to PostgreSQL")
+    parser = argparse.ArgumentParser(description="Import jmail.world FULL emails to PostgreSQL")
     parser.add_argument("--dry-run", action="store_true", help="Parse only, don't insert")
     parser.add_argument("--batch-size", type=int, default=BATCH_SIZE, help="Batch size")
     parser.add_argument("--verify", action="store_true", help="Just print summary stats")
     args = parser.parse_args()
 
-    # Check parquet file exists
     if not EMAILS_PARQUET.exists():
         print(f"ERROR: {EMAILS_PARQUET} not found")
-        print("Download with: curl -o {path} https://data.jmail.world/v1/emails-slim.parquet")
+        print("Download with: python scripts/download_jmail_with_headers.py")
         sys.exit(1)
 
-    # Connect to PostgreSQL
     conn = psycopg2.connect(PG_DSN)
     try:
         if args.verify:
             print_summary(conn)
             return
 
-        # Create table and indexes
-        print("Creating jmail_emails table...")
+        print("Creating jmail_emails_full table...")
         with conn.cursor() as cur:
             cur.execute(CREATE_TABLE_SQL)
             conn.commit()
 
-        # Check existing count
         existing = get_existing_count(conn)
         print(f"Existing rows: {existing:,}")
 
-        # Load parquet
         print(f"Loading {EMAILS_PARQUET}...")
         df = pd.read_parquet(EMAILS_PARQUET)
         print(f"Parquet rows: {len(df):,}")
+        print(f"Columns: {list(df.columns)}")
 
-        # Filter out existing IDs if needed
         if existing > 0:
             print("Checking for existing IDs to skip...")
             with conn.cursor() as cur:
-                cur.execute("SELECT id FROM jmail_emails")
+                cur.execute("SELECT id FROM jmail_emails_full")
                 existing_ids = {row[0] for row in cur.fetchall()}
             before = len(df)
             df = df[~df.id.isin(existing_ids)]
@@ -352,17 +330,14 @@ def main():
             print_summary(conn)
             return
 
-        # Import
         inserted, skipped, errors = import_emails(df, conn, dry_run=args.dry_run, batch_size=args.batch_size)
 
         if not args.dry_run:
-            # Create indexes
             print("Creating indexes...")
             with conn.cursor() as cur:
                 cur.execute(CREATE_INDEXES_SQL)
                 conn.commit()
 
-            # Print summary
             print_summary(conn)
 
     finally:
