@@ -6,6 +6,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+}
 
 // Your Epstein database schemas will go here
 // Example:
