@@ -233,6 +233,7 @@
 | Black Book Import | `scripts/import_black_book_json.py` | ✅ Complete | 2025-04-11 | 2,327 contacts |
 | Flight Logs Import | `scripts/import_flight_logs.py` | ✅ Complete | 2025-04-11 | 85 names |
 | Neo4j Graph Import | `scripts/import_neo4j_graph.py` | ✅ Complete | 2025-04-11 | 383 nodes, 534 rels |
+| Birthday Book Import | `scripts/import_birthday_book.py` | ✅ Complete | 2025-04-11 | 126 pages, 510 entities |
 
 ### Pending Pipelines
 
@@ -242,7 +243,7 @@
 | House Oversight 2024 (FULL_EPSTEIN_INDEX) | HuggingFace | ~20,000 | High |
 | Black Book | GitHub/dleerdefi | 2,327 contacts ✅ Ingested | High |
 | Flight Logs | GitHub/dleerdefi | 85 names, flights parsed ✅ Ingested | High |
-| Birthday Book | GitHub/dleerdefi | 128 pages | Medium |
+| Birthday Book | GitHub/dleerdefi | 126 pages ✅ Ingested (1 failed) | Medium |
 | Neo4j Graph Import | GitHub/dleerdefi | 383 nodes, 534 relationships ✅ Ingested | High |
 
 ---
