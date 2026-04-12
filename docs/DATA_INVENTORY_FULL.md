@@ -200,11 +200,11 @@
   - Size: ~20,000 pages
   - Priority: HIGH
 
-- **dleerdefi/epstein-network-data:** ✅ **ALL INGESTED**
+- **dleerdefi/epstein-network-data:** ✅ **ALL INGESTED** (Verified April 12, 2026)
   - Black Book: 2,327 contacts → `black_book_contacts` table
-  - Flight Logs: 85 names → `flight_log_names` + `flight_log_entries` tables
+  - Flight Logs: 86 names, 19 flight entries → `flight_log_names` + `flight_log_entries` tables
   - Neo4j Graph: 383 nodes, 534 relationships → `neo4j_nodes` + `neo4j_relationships` tables
-  - Birthday Book: 126 pages → `birthday_book_pages` + `birthday_book_entities` tables
+  - Birthday Book: 126 pages, 510 entities → `birthday_book_pages` + `birthday_book_entities` + `birthday_book_photos` (111) + `birthday_book_signatures` (17) + `birthday_book_redactions` (47)
 
 **⚠️ Next Priority: Download HuggingFace datasets**
 
@@ -241,7 +241,7 @@
 | ICIJ Import | `scripts/import_icij.py` | ✅ Complete | 2025-04-04 | 3.3M |
 | FEC Import | `scripts/import_fec.py` | ✅ Complete | 2025-03 | 5.4M |
 | Black Book Import | `scripts/import_black_book_json.py` | ✅ Complete | 2025-04-11 | 2,327 contacts |
-| Flight Logs Import | `scripts/import_flight_logs.py` | ✅ Complete | 2025-04-11 | 85 names |
+| Flight Logs Import | `scripts/import_flight_logs.py` | ✅ Complete | 2025-04-12 | 86 names, 19 entries |
 | Neo4j Graph Import | `scripts/import_neo4j_graph.py` | ✅ Complete | 2025-04-11 | 383 nodes, 534 rels |
 | Birthday Book Import | `scripts/import_birthday_book.py` | ✅ Complete | 2025-04-11 | 126 pages, 510 entities |
 
@@ -253,7 +253,7 @@
 | House Oversight 2024 (FULL_EPSTEIN_INDEX) | HuggingFace | ~20,000 | High |
 | Black Book | GitHub/dleerdefi | 2,327 contacts ✅ Ingested | High |
 | Flight Logs | GitHub/dleerdefi | 85 names, flights parsed ✅ Ingested | High |
-| Birthday Book | GitHub/dleerdefi | 126 pages ✅ Ingested (1 failed) | Medium |
+| Birthday Book | GitHub/dleerdefi | 126 pages ✅ Ingested | Medium |
 | Neo4j Graph Import | GitHub/dleerdefi | 383 nodes, 534 relationships ✅ Ingested | High |
 
 ---
