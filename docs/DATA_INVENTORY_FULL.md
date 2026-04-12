@@ -190,10 +190,43 @@
 | **epstein-fbi-files** | FBI docs | FBI Vault | `svetfm/epstein-fbi-files` | 🔍 Available |
 
 **Download & Ingest Status:**
-- **epstein-files-20k:** 🔍 **NEEDS DOWNLOAD**
-  - Directory exists but is EMPTY: `/home/cbwinslow/workspace/epstein-data/huggingface/epstein_files_20k/`
-  - Script ready: `download_hf_resume.py`
-  - Need to run: `HF_TOKEN=xxx python scripts/download_hf_resume.py`
+- **epstein-files-20k:** ✅ **DOWNLOADED & INGESTED**
+  - Location: `/home/cbwinslow/workspace/epstein-data/huggingface/epstein_files_20k/data.jsonl` (127 MB)
+  - SQL Table: `hf_epstein_files_20k` (2,136,420 records) ✅
+  
+- **House Oversight TXT (EPS_FILES_20K_NOV2025):** ✅ **DOWNLOADED** → 🔄 **IMPORTING**
+  - Location: `/home/cbwinslow/workspace/epstein-data/hf-house-oversight/EPS_FILES_20K_NOV2025.txt` (100 MB)
+  - Script: `import_hf_house_oversight_txt.py`
+  
+- **Email Threads:** ✅ **DOWNLOADED** → 🔄 **IMPORTING**
+  - Location: `/home/cbwinslow/workspace/epstein-data/hf-emails-threads/epstein_email_threads.parquet` (4.3 MB)
+  - Script: `import_hf_email_threads.py`
+  - Note: Check for duplicates with `house_oversight_emails`
+  
+- **OCR Complete:** ✅ **DOWNLOADED** → 🔄 **IMPORTING**
+  - Location: `/home/cbwinslow/workspace/epstein-data/hf-ocr-complete/data/dataset.parquet` (1.3 GB)
+  - Script: `import_hf_ocr_complete.py`
+  
+- **Embeddings:** ✅ **DOWNLOADED** → ⏳ **PENDING**
+  - Location: `/home/cbwinslow/workspace/epstein-data/hf-embeddings/data/train-00000-of-00001.parquet` (340 MB)
+  - Status: Ready for import
+  
+- **Epstein Data Text:** ✅ **DOWNLOADED** → ⏳ **PENDING**
+  - Location: `/home/cbwinslow/workspace/epstein-data/hf-new-datasets/epstein-data-text/` (2.2 GB, 16 parquet files)
+  - Status: Ready for import
+  
+- **FBI Files:** ✅ **DOWNLOADED** (Filesystem only)
+  - Location: `/home/cbwinslow/workspace/epstein-data/hf-datasets/fbi-files/` (4.5 GB, 355 PDFs)
+  - SQL: `fbi_vault_pages` (1,426 metadata records) ✅
+  - Strategy: Keep PDFs on disk, metadata in SQL
+  
+- **Epstein Images:** ✅ **DOWNLOADED** (Filesystem only)
+  - Location: `/home/cbwinslow/workspace/epstein-data/hf-new-datasets/epstein-images/` (4.9 GB, 9 parquet files)
+  - Strategy: Keep on disk, import metadata to SQL
+  
+- **Cropped Images:** ✅ **DOWNLOADED** (Filesystem only)
+  - Location: `/home/cbwinslow/workspace/epstein-data/hf-new-datasets/epstein-images-cropped/` (4.3 GB, 7 parquet files)
+  - Strategy: Keep on disk, import metadata to SQL
   
 - **House Oversight 2024 (FULL_EPSTEIN_INDEX):** 🔍 **NOT DOWNLOADED**
   - Dataset: `thelde/remo/FULL_EPSTEIN_INDEX`
@@ -206,7 +239,8 @@
   - Neo4j Graph: 383 nodes, 534 relationships → `neo4j_nodes` + `neo4j_relationships` tables
   - Birthday Book: 126 pages, 510 entities → `birthday_book_pages` + `birthday_book_entities` + `birthday_book_photos` (111) + `birthday_book_signatures` (17) + `birthday_book_redactions` (47)
 
-**⚠️ Next Priority: Download HuggingFace datasets**
+**📊 Total HuggingFace Data: ~15.6 GB on disk**
+**✅ Already in SQL: 2.2M+ records from HF datasets**
 
 ---
 
