@@ -53,7 +53,7 @@
 #### HuggingFace Datasets
 | Directory | Path | Size | Files | SQL Table | Status |
 |-----------|------|------|-------|-----------|--------|
-| **epstein-files-20k** | `huggingface/epstein_files_20k/` | 127 MB | 2 | `hf_epstein_files_20k` | ✅ Complete |
+| **epstein-files-20k** | `hf-epstein-files-20k/` | 127 MB | 2 | `hf_epstein_files_20k` | ✅ Complete |
 | **House Oversight TXT** | `hf-house-oversight/` | 101 MB | 7 | `hf_house_oversight_docs` | ✅ Complete |
 | **Email Threads** | `hf-emails-threads/` | 4 MB | 7 | ~~`hf_email_threads`~~ | ❌ Duplicate (dropped) |
 | **OCR Complete** | `hf-ocr-complete/data/` | 1.3 GB | 1 | `hf_ocr_complete` | 🔄 Importing |
@@ -76,6 +76,8 @@
 |-----------|------|------|-------------|
 | **External Repos** | `external_repos/` | - | Cloned repos (epstein-network-data, etc.) |
 | **kabbashouse Data** | `kabasshouse-data/` | - | kabbashouse HF datasets |
+
+**Note:** `epstein-network-data/` repo contains documentation (README, LICENSE, CONTRIBUTING) but data/ directory is empty - data needs to be downloaded/generated.
 
 #### Government & Legal Data
 | Directory | Path | Size | Description |
@@ -154,6 +156,42 @@
 | **Other** | 8 | - |
 
 **Grand Total: ~655+ GB**
+
+---
+
+## 🔧 Maintenance Log (April 13, 2026)
+
+### Cleanup Actions Completed
+
+1. **HF Directory Naming Standardized**
+   - Renamed `huggingface/` → `hf-epstein-files-20k/` for consistency
+   - All HF directories now use `hf-` prefix
+
+2. **Processed Directory**
+   - Cleaned empty subdirectories: `processed/entities/batch_0003`, `processed/batch_temp/batch_0003`
+   - No data to move (directory was empty)
+
+3. **Downloads Directory**
+   - Removed 7 empty files (0 bytes):
+     - `fbi_part_01.pdf`
+     - `full-epstein-index.parquet`
+     - `GENERATED_ON_20250331.txt` (2x)
+     - `paradise-papers.zip`
+     - `offshore-leaks.zip`
+     - `panama-papers.zip`
+   - Removed wget log files
+   - Cleaned empty .git/ directories from downloads/hf/
+
+4. **Backups Directory**
+   - Verified 2 PostgreSQL dumps (13.2 GB total):
+     - `epstein_20260322_203141.dump` (2.9 GB)
+     - `epstein_20260331_172210.dump` (11.1 GB)
+   - Kept for disaster recovery
+
+5. **External Repositories**
+   - Verified `epstein-network-data/` repo
+   - Contains documentation (README, LICENSE, CONTRIBUTING, DATA_STATUS)
+   - Data directory is empty (needs data download/generation)
 
 ---
 

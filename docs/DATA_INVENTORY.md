@@ -735,7 +735,7 @@ Then import to PostgreSQL using adapted `ingest-jmail.py` script.
 
 | Dataset | Location | Size | SQL Table | Status |
 |---------|----------|------|-----------|--------|
-| epstein-files-20k | `huggingface/epstein_files_20k/` | 127 MB | `hf_epstein_files_20k` | ✅ Complete |
+| epstein-files-20k | `hf-epstein-files-20k/` | 127 MB | `hf_epstein_files_20k` | ✅ Complete |
 | House Oversight TXT | `hf-house-oversight/` | 101 MB | `hf_house_oversight_docs` | ✅ Complete |
 | Email Threads | `hf-emails-threads/` | 4 MB | ~~`hf_email_threads`~~ | ❌ Dropped |
 | OCR Complete | `hf-ocr-complete/data/` | 1.3 GB | `hf_ocr_complete` | 🔄 Importing |
