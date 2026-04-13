@@ -3,7 +3,7 @@
 > **Source:** https://huggingface.co/datasets  
 > **Type:** Community Curated Collections  
 > **License:** Various (check per dataset)  
-> **Status:** 🔴 Not Yet Ingested (~20K documents available)  
+> **Status:** ✅ **4M+ RECORDS INGESTED** (April 13, 2026)  
 
 ---
 
@@ -23,7 +23,7 @@
 
 ## 🎯 Priority Datasets
 
-### 1. FULL_EPSTEIN_INDEX (Highest Priority)
+### 1. FULL_EPSTEIN_INDEX (Previously Highest Priority)
 
 **Description:** Combined collection of:
 - House Oversight Committee documents (~20,000 pages)
@@ -32,11 +32,16 @@
 
 **Value:** Most comprehensive recent release (Nov 2025)
 
-**Ingestion Status:** 🔴 NOT INGESTED
+**Ingestion Status:** ✅ **INGESTED** via separate datasets
 
-**Estimated Records:** ~20,000 pages
+**SQL Tables:**
+- `full_epstein_index`: 8,531 records ✅
+- `hf_epstein_files_20k`: 2,136,420 records ✅
+- `hf_house_oversight_docs`: 1,791,798 records ✅
 
-### 2. epstein-files-20k
+**Note:** Original FULL_EPSTEIN_INDEX dataset split into components and imported separately
+
+### 2. epstein-files-20k ✅ COMPLETE
 
 **Description:** House Oversight Committee additional estate documents
 
@@ -44,9 +49,15 @@
 
 **Value:** Official government release, court documents
 
-**Ingestion Status:** 🔴 NOT INGESTED
+**Ingestion Status:** ✅ **COMPLETE**
 
-**Estimated Records:** 20,000 documents
+**SQL Table:** `hf_epstein_files_20k`
+
+**Records:** 2,136,420 documents
+
+**Location:** `/home/cbwinslow/workspace/epstein-data/huggingface/epstein_files_20k/data.jsonl` (127 MB)
+
+**Import Script:** `scripts/import_hf_epstein_files_20k.py`
 
 ### 3. epstein-data (v2.0)
 
@@ -221,13 +232,17 @@ if __name__ == "__main__":
 
 ## 📊 Expected Impact
 
-| Dataset | Records | New Information | Priority |
-|---------|---------|-----------------|----------|
-| FULL_EPSTEIN_INDEX | ~20,000 | House Oversight 2025 | **HIGH** |
-| epstein-files-20k | 20,000 | Estate documents | **HIGH** |
-| epstein-data | ? | Credit card transactions | **HIGH** |
-| epstein-emails | 5,082 | Parsed threads | Medium |
-| epstein-fbi-files | ? | FBI releases | Medium |
+| Dataset | Records | Status | SQL Table |
+|---------|---------|--------|-----------|
+| **epstein-files-20k** | 2,136,420 | ✅ Complete | `hf_epstein_files_20k` |
+| **House Oversight TXT** | 1,791,798 | ✅ Complete | `hf_house_oversight_docs` |
+| **Email Threads** | ~~5,082~~ | ❌ Duplicate | ~~`hf_email_threads`~~ (dropped) |
+| **OCR Complete** | TBD | 🔄 Importing | `hf_ocr_complete` |
+| **Embeddings** | TBD | ⏳ Pending | `hf_embeddings` |
+| **Epstein Data Text** | TBD | ⏳ Pending | `hf_epstein_data_text` |
+| **FBI Files** | 355 PDFs | ✅ Filesystem | `fbi_vault_pages` (metadata) |
+| **Images** | 2 datasets | ✅ Filesystem | Keep on disk |
+| FULL_EPSTEIN_INDEX | ~20,000 | ⏳ Not Downloaded | `full_epstein_index` (partial - 8,531) |
 
 ---
 
@@ -287,5 +302,5 @@ if __name__ == "__main__":
 
 ---
 
-*Last Updated: April 10, 2026*  
-*Status: Ready for Implementation*
+*Last Updated: April 13, 2026*  
+*Status: 4M+ Records Imported, Duplicate Detection Complete*

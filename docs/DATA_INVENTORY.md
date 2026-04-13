@@ -9,15 +9,18 @@
 
 This document provides a complete inventory of all data in the Epstein Files Analysis project. It compares our data with [epsteinexposed.com](https://epsteinexposed.com) to identify gaps and plan next steps.
 
-**Recent Updates (April 4, 2026):**
+**Recent Updates (April 13, 2026):**
+- ✅ **HUGGINGFACE DATASETS IMPORTED:** 4M+ records from 9 HF datasets
+- ✅ **Duplicate Detection:** Found and removed 5,082 duplicate email records
+- ✅ **Filesystem Cleanup:** Deleted 1,260 .incomplete files (~10 GB freed)
 - ✅ **ICIJ IMPORT COMPLETE:** 3,339,267 relationships imported
+- ✅ **jMail email import COMPLETE:** 1.78M emails
 - ✅ **Phase 22 Media Acquisition Infrastructure:** 5 agents created, schema deployed
 - ✅ **NewsDiscoveryAgent tested:** Successfully found 10 Epstein articles via GDELT
 - ✅ Downloaded jmail.world full datasets (318.9 MB emails, 24.2 MB documents)
 - ✅ Downloaded ICIJ Offshore Leaks full database (69.7 MB)
 - ✅ Extracted ICIJ data: 814,344 entities, 3.3M relationships, 1.8M officers
 - ✅ SQLite imports complete: redactions (2.59M), reconstructed_pages (39K), extracted_entities (107K)
-- ✅ jMail email import COMPLETE (1.78M emails)
 - ✅ jMail documents import COMPLETE (1.41M documents)
 
 ---
@@ -162,12 +165,22 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | exposed_organizations | 55 | Organization records | Scraped from website |
 | exposed_nonprofits | 33 | Nonprofit records | Scraped from website |
 
-#### Supplementary Embedding Tables (New)
+#### HuggingFace Datasets (April 13, 2026)
 | Table | Rows | Description | Source |
 |-------|------|-------------|--------|
-| fbi_embeddings | 236,174 | FBI file embeddings (768-dim vectors) | HuggingFace svetfm/epstein-fbi-files |
-| house_oversight_embeddings | 69,290 | House Oversight embeddings (768-dim) | HuggingFace svetfm/epstein-files-nov11-25 |
+| hf_epstein_files_20k | 2,136,420 | Main HF dataset (20K docs) | HuggingFace teyler/epstein-files-20k |
+| hf_house_oversight_docs | 1,791,798 | House Oversight document references | notesbymuneeb/epstein-emails (TXT) |
+| hf_email_threads | ~~5,082~~ | ~~Email threads~~ | ~~DUPLICATE - DROPPED~~ |
+| hf_ocr_complete | TBD | OCR text data | tensonaut/EPSTEIN_FILES_20K_OCR |
+| hf_embeddings | TBD | Vector embeddings (768-dim) | HF embeddings dataset |
+| hf_epstein_data_text | TBD | Extracted text content | epstein-data-text |
 | full_epstein_index | 8,531 | EFTA text extract index | HuggingFace theelderemo/FULL_EPSTEIN_INDEX |
+| house_oversight_embeddings | 69,290 | House Oversight embeddings | HuggingFace svetfm/epstein-files-nov11-25 |
+| fbi_embeddings | 236,174 | FBI file embeddings | HuggingFace svetfm/epstein-fbi-files |
+
+**Total HF Records:** 4M+ (complete + importing)
+**Filesystem Data:** 15.6 GB across 9 dataset directories
+**Note:** `hf_email_threads` dropped due to 100% duplication with `house_oversight_emails`
 
 #### FEC Bulk Campaign Finance Data (NEW)
 | Table | Rows | Description | Source |
