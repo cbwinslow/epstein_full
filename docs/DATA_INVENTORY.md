@@ -714,16 +714,70 @@ Then import to PostgreSQL using adapted `ingest-jmail.py` script.
 
 ## File Locations Reference
 
+### Workspace Structure
+```
+~/workspace/
+├── epstein/                    # Code, scripts, documentation (~15 GB)
+├── epstein-data/              # Data storage (~500+ GB)
+└── epstein-pipeline/           # Pipeline submodule
+```
+
+### Core Data Locations
+
+| Data Type | Location | Size | Status |
+|-----------|----------|------|--------|
+| **Raw PDFs (DOJ)** | `/home/cbwinslow/workspace/epstein-data/raw-files/` | 177GB | 1.3M files |
+| **HF Parquet** | `/home/cbwinslow/workspace/epstein-data/hf-parquet/` | 318GB | 634 files |
+| **SQLite DBs** | `/home/cbwinslow/workspace/epstein-data/databases/` | 12GB | 8 databases |
+| **ML Models** | `/home/cbwinslow/workspace/epstein-data/models/` | 109GB | Processing models |
+
+### HuggingFace Dataset Locations (April 13, 2026)
+
+| Dataset | Location | Size | SQL Table | Status |
+|---------|----------|------|-----------|--------|
+| epstein-files-20k | `huggingface/epstein_files_20k/` | 127 MB | `hf_epstein_files_20k` | ✅ Complete |
+| House Oversight TXT | `hf-house-oversight/` | 101 MB | `hf_house_oversight_docs` | ✅ Complete |
+| Email Threads | `hf-emails-threads/` | 4 MB | ~~`hf_email_threads`~~ | ❌ Dropped |
+| OCR Complete | `hf-ocr-complete/data/` | 1.3 GB | `hf_ocr_complete` | 🔄 Importing |
+| Embeddings | `hf-embeddings/data/` | 341 MB | `hf_embeddings` | ⏳ Pending |
+| Epstein Data Text | `hf-new-datasets/epstein-data-text/` | 2.2 GB | `hf_epstein_data_text` | ⏳ Pending |
+| Epstein Images | `hf-new-datasets/epstein-images/` | 4.9 GB | - | 📂 Filesystem |
+| Cropped Images | `hf-new-datasets/epstein-images-cropped/` | 4.3 GB | - | 📂 Filesystem |
+| FBI Files | `hf-datasets/fbi-files/` | 4.5 GB | `fbi_vault_pages` | ✅ Metadata |
+| Full Index | `hf-datasets/full-index/` | 4 MB | `full_epstein_index` | ✅ Complete |
+
+### Other Data Locations
+
 | Data Type | Location | Size |
 |-----------|----------|------|
-| Raw PDFs | `/home/cbwinslow/workspace/epstein-data/raw-files/` | 177GB |
-| HF Parquet | `/home/cbwinslow/workspace/epstein-data/hf-parquet/` | 318GB |
-| SQLite DBs | `/home/cbwinslow/workspace/epstein-data/databases/` | 12GB |
-| Supplementary | `/home/cbwinslow/workspace/epstein-data/supplementary/` | ~22MB |
+| Supplementary | `supplementary/` | ~22MB |
 | Research Data | `~/workspace/epstein/Epstein-research-data/` | ~28MB |
-| Processed Output | `/home/cbwinslow/workspace/epstein-data/processed/` | (empty, ready) |
-| Knowledge Graph | `/home/cbwinslow/workspace/epstein-data/knowledge-graph/` | (empty, ready) |
-| Logs | `/home/cbwinslow/workspace/epstein-data/logs/` | Variable |
+| Downloads | `downloads/` | Variable |
+| Logs | `logs/` | Variable |
+| Backups | `backups/` | ~2GB |
+
+### External Repositories
+- `external_repos/` - Cloned repos (epstein-network-data, etc.)
+- `kabasshouse-data/` - kabbashouse HF datasets
+
+### Government & Legal Data
+- `courtlistener/` - Court records
+- `fbi-vault/` - FBI documents
+- `fec/` - Campaign finance (22 GB)
+- `icij-data/` - Offshore Leaks (~600 MB)
+- `gdelt/` - News articles
+
+### Quick Access Commands
+```bash
+# Find files by extension
+find ~/workspace/epstein-data -name "*.parquet" | head
+
+# Check directory size
+du -sh ~/workspace/epstein-data/hf-*/
+
+# Count files by type
+find ~/workspace/epstein-data -name "*.pdf" | wc -l
+```
 
 ---
 
