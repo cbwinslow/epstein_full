@@ -1,0 +1,86 @@
+# CodeRabbit AI Code Review Configuration
+# https://docs.coderabbit.ai/
+# For Epstein Data Analysis Project - Tailored for data processing code
+
+language: en-US
+early_access: false
+
+reviews:
+  profile: chill  # Options: chill, assertive
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+
+  # Path-specific instructions for data processing code
+  path_instructions:
+    - path: "scripts/ingestion/**/*.py"
+      instructions: |
+        Review data ingestion scripts for:
+        - SQL injection vulnerabilities in query construction
+        - Proper batch processing to avoid memory issues
+        - Error handling for network failures and retries
+        - Rate limiting compliance for external APIs
+        - Connection pooling and resource cleanup
+        - Logging for debugging data pipeline issues
+
+    - path: "scripts/processing/**/*.py"
+      instructions: |
+        Review data processing scripts for:
+        - Memory efficiency with large datasets (1M+ rows)
+        - Proper PostgreSQL connection pooling
+        - Transaction handling and rollback scenarios
+        - Progress tracking for long-running operations
+        - GPU resource management (CUDA cleanup)
+        - Temporary file cleanup
+
+    - path: "scripts/database/**/*.py"
+      instructions: |
+        Review database scripts for:
+        - Migration safety (backward compatibility)
+        - Index creation performance impact
+        - Foreign key constraint violations
+        - Connection leak prevention
+
+    - path: "**/*.sql"
+      instructions: |
+        Review SQL for:
+        - Index usage (ensure WHERE clauses use indexes)
+        - Potential N+1 query patterns
+        - Proper constraints (NOT NULL, UNIQUE, FK)
+        - Batch operations vs individual inserts
+        - Lock contention in concurrent scenarios
+
+    - path: "media_acquisition/**/*.py"
+      instructions: |
+        Review media acquisition code for:
+        - URL validation and sanitization
+        - Download timeout handling
+        - File size limits and disk space checks
+        - Duplicate detection logic
+
+  # Auto-review settings
+  auto_review:
+    enabled: true
+    ignore_title_keywords:
+      - "WIP"
+      - "Draft"
+      - "DO NOT MERGE"
+      - "[skip ci]"
+    drafts: false
+    base_branches:
+      - "main"
+      - "master"
+      - "develop"
+
+  # Tool integrations
+  tools:
+    github_actions:
+      enabled: true
+    shellcheck:
+      enabled: true
+    ruff:
+      enabled: true
+    markdownlint:
+      enabled: true

@@ -1,0 +1,16 @@
+[Unit]
+Description=Epstein RTX3060 Embeddings Generator
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=cbwinslow
+WorkingDirectory=/home/cbwinslow/workspace/epstein/scripts/processing
+ExecStart=/home/cbwinslow/workspace/epstein/scripts/processing/run_embeddings.sh
+Restart=always
+RestartSec=30
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target

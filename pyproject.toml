@@ -73,8 +73,11 @@ classification = [
     "transformers>=4.35",           # BART-large-mnli zero-shot classification
     "torch>=2.0",                   # PyTorch (for transformers)
 ]
+monitoring = [
+    "sentry-sdk>=2.0",              # Error tracking and performance monitoring
+]
 all = [
-    "epstein-full[gpu,ocr,transcription,embedding,classification]",
+    "epstein-full[gpu,ocr,transcription,embedding,classification,monitoring]",
 ]
 
 # CLI entry points

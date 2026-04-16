@@ -9,19 +9,20 @@
 
 This document provides a complete inventory of all data in the Epstein Files Analysis project. It compares our data with [epsteinexposed.com](https://epsteinexposed.com) to identify gaps and plan next steps.
 
-**Recent Updates (April 13, 2026):**
-- ✅ **HUGGINGFACE DATASETS IMPORTED:** 4M+ records from 9 HF datasets
-- ✅ **Duplicate Detection:** Found and removed 5,082 duplicate email records
-- ✅ **Filesystem Cleanup:** Deleted 1,260 .incomplete files (~10 GB freed)
-- ✅ **ICIJ IMPORT COMPLETE:** 3,339,267 relationships imported
-- ✅ **jMail email import COMPLETE:** 1.78M emails
-- ✅ **Phase 22 Media Acquisition Infrastructure:** 5 agents created, schema deployed
+**Recent Updates (April 14, 2026):**
+- 🔄 **GOVERNMENT DATA INTEGRATION IN PROGRESS:** Adding FEC, Congress, Lobbying, FARA, GovInfo datasets
+- 🔄 **BULK DOWNLOADS RUNNING:** 400K+ GovInfo documents, 200K lobbying reports, 30K FEC records
+- 🔄 **CROSS-REFERENCE QUERIES CREATED:** 10 SQL views linking entities across datasets
+- 🔄 **DOCUMENTATION UPDATED:** PROJECT_OVERVIEW.md, ROADMAP.md created
+- ✅ **IMPORT SCRIPTS CREATED:** 10+ Python scripts for government data ingestion
+- ✅ **KNOWLEDGE GRAPH PLAN:** Neo4j schema designed for entity relationships
+- ✅ **HUGGINGFACE PUBLISHING PLAN:** Open dataset strategy defined
+- ✅ **PHASE 22 Media Acquisition Infrastructure:** 5 agents created, schema deployed
 - ✅ **NewsDiscoveryAgent tested:** Successfully found 10 Epstein articles via GDELT
-- ✅ Downloaded jmail.world full datasets (318.9 MB emails, 24.2 MB documents)
-- ✅ Downloaded ICIJ Offshore Leaks full database (69.7 MB)
-- ✅ Extracted ICIJ data: 814,344 entities, 3.3M relationships, 1.8M officers
-- ✅ SQLite imports complete: redactions (2.59M), reconstructed_pages (39K), extracted_entities (107K)
-- ✅ jMail documents import COMPLETE (1.41M documents)
+- ✅ **Downloaded jmail.world full datasets (318.9 MB emails, 24.2 MB documents)**
+- ✅ **Downloaded ICIJ Offshore Leaks full database (69.7 MB)**
+- ✅ **SQLite imports complete:** redactions (2.59M), reconstructed_pages (39K), extracted_entities (107K)
+- ✅ **jMail documents import COMPLETE (1.41M documents)**
 
 ---
 
@@ -40,10 +41,30 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | **FEC Contributions** | N/A | 5,420,940+ (fec_individual_contributions) | N/A | 🆕 NEW |
 | **Congress Trading** | N/A | 0 (congress_trading) | N/A | 🆕 NEW (awaiting API key) |
 
+### Government Datasets (NEW - April 2026)
+| Dataset | Source | Records | Status | Schema |
+|---------|--------|---------|--------|--------|
+| **FEC Individual Contributions** | FEC.gov | 447M | ✅ Imported | fec_contributions |
+| **FEC Candidates** | FEC.gov | ~30K | 🔄 Downloading | fec_candidates |
+| **FEC Committees** | FEC.gov | ~10K | 🔄 Downloading | fec_committees |
+| **Congress Members** | Congress.gov | ~540 | ✅ Imported | congress_members |
+| **Congress Bills** | Congress.gov | ~20K | 🔄 Downloading | congress_bills |
+| **GovInfo Packages** | GovInfo.gov | ~300K | 🔄 Downloading | govinfo_packages |
+| **Federal Register** | GovInfo.gov | ~300K | 🔄 Downloading | federal_register_entries |
+| **Court Opinions** | GovInfo.gov | ~50K | 🔄 Downloading | court_opinions |
+| **FARA Registrations** | DOJ FARA | ~5K | 🔄 Downloading | fara_registrations, fara_foreign_principals |
+| **Lobbying Registrations** | Senate LDA | ~5K | 🔄 Downloading | lobbying_registrations |
+| **Lobbying Reports** | Senate LDA | ~200K | 🔄 Downloading | lobbying_quarterly_reports |
+| **White House Visitors** | White House | 8 | ✅ Sample | whitehouse_visitors |
+| **SEC Insider Transactions** | SEC EDGAR | Placed | ✅ Schema | sec_insider_transactions |
+| **USA Spending Awards** | USASpending.gov | 100 | ✅ Sample | usa_spending_awards |
+| **Financial Disclosures** | House/Senate | ~2K | 🔄 Downloading | financial_disclosures |
+
 ### Additional Data
 - **FBI Vault:** 22 documents (1,344 pages total)
 - **Embeddings:** 230,931 pages with 384-dim vectors (7.98% coverage)
 - **Document Entities:** 5.7M NER-extracted entities
+- **Cross-Reference Queries:** 10 SQL views linking entities across datasets
 
 ---
 
@@ -106,15 +127,6 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | media_collection_queue | 0 | Task queue for media acquisition | Ready for use |
 | media_collection_stats | 1 | Daily collection statistics | Initialized |
 | media_entity_mentions | 0 | Cross-reference media to entities | Ready for use |
-| Table | Rows | Description | Source |
-|-------|------|-------------|--------|
-| document_entities | 5,709,659 | NER-extracted entities from documents | Our NER extraction |
-| entities | 606 | Curated knowledge graph entities | knowledge_graph.db |
-| relationships | 2,302 | Curated entity relationships | knowledge_graph.db |
-| graph_nodes | 677 | Knowledge graph nodes | prosecutorial_query_graph.db |
-| graph_edges | 2,745 | Knowledge graph edges | prosecutorial_query_graph.db |
-| edge_sources | 905 | Edge source references | knowledge_graph.db |
-| resolved_identities | 1,139 | Resolved person identities | communications.db |
 
 #### Email & Communication Tables
 | Table | Rows | Description | Source |
@@ -170,104 +182,14 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 |-------|------|-------------|--------|
 | hf_epstein_files_20k | 2,136,420 | Main HF dataset (20K docs) | HuggingFace teyler/epstein-files-20k |
 | hf_house_oversight_docs | 1,791,798 | House Oversight document references | notesbymuneeb/epstein-emails (TXT) |
-| hf_email_threads | ~~5,082~~ | ~~Email threads~~ | ~~DUPLICATE - DROPPED~~ |
 | hf_ocr_complete | TBD | OCR text data | tensonaut/EPSTEIN_FILES_20K_OCR |
 | hf_embeddings | TBD | Vector embeddings (768-dim) | HF embeddings dataset |
 | hf_epstein_data_text | TBD | Extracted text content | epstein-data-text |
 | full_epstein_index | 8,531 | EFTA text extract index | HuggingFace theelderemo/FULL_EPSTEIN_INDEX |
-| house_oversight_embeddings | 69,290 | House Oversight embeddings | HuggingFace svetfm/epstein-files-nov11-25 |
+| house_oversight_embeddings | 69,290 | House Oversight embeddings (768-dim) | HuggingFace svetfm/epstein-files-nov11-25 |
 | fbi_embeddings | 236,174 | FBI file embeddings | HuggingFace svetfm/epstein-fbi-files |
 
 **Total HF Records:** 4M+ (complete + importing)
-**Filesystem Data:** 15.6 GB across 9 dataset directories
-**Note:** `hf_email_threads` dropped due to 100% duplication with `house_oversight_emails`
-
-#### FEC Bulk Campaign Finance Data (NEW)
-| Table | Rows | Description | Source |
-|-------|------|-------------|--------|
-| fec_individual_contributions | 5,420,940+ | Individual campaign contributions (1980-2026) | FEC bulk downloads |
-| fec_committees | 23,000+ | Committee master records | FEC bulk downloads |
-| fec_candidates | 12,000+ | Candidate master records | FEC bulk downloads |
-| fec_committee_contributions | 0 | Committee-to-committee transfers (pending) | FEC bulk downloads |
-| fec_candidate_contributions | 0 | Committee-to-candidate transfers (pending) | FEC bulk downloads |
-| fec_operating_expenditures | 0 | Committee operating expenses (pending) | FEC bulk downloads |
-| fec_download_log | 146 | Download tracking | Our ingestion |
-
-**File Types Downloaded:**
-- `indiv*.zip` - Individual contributions (23 cycles, 1980-2026)
-- `cm*.zip` - Committee master (23 cycles)
-- `cn*.zip` - Candidate master (23 cycles)
-- `ccl*.zip` - Candidate-committee linkage (partial)
-- `oth*.zip` - Committee contributions (partial)
-- `pas2*.zip` - Candidate contributions (partial)
-- `oppexp*.zip` - Operating expenditures (partial)
-
-**Storage:** `/home/cbwinslow/workspace/epstein-data/raw-files/fec/` (22GB, 146 files)
-
-#### Politicians' Financial Disclosure Data (NEW - FREE Sources)
-| Table | Rows | Description | Source |
-|-------|------|-------------|--------|
-| congress_trading | 0 | Congress member stock trades (via govinfo.gov - FREE) | GovInfo API (api.data.gov) |
-| politician_financial_summary | 0 | Net worth, assets, liabilities (House/Senate scrape) | disclosures-clerk.house.gov |
-| house_disclosures | 0 | House financial disclosure PDFs | Direct scraping (no API key) |
-| senate_disclosures | 0 | Senate financial disclosure PDFs | disclosure.senate.gov |
-
-**FREE Data Sources (No API key required for basic access):**
-
-1. **GovInfo.gov API** (FREE - 36,000 req/hour)
-   - URL: https://api.govinfo.gov
-   - Key: Get free at https://api.data.gov/signup/
-   - Collections: Congressional Bills, Congressional Record, Financial Disclosures
-   - Rate: 36,000 requests/hour, 1,200/minute
-
-2. **Congress.gov API** (FREE)
-   - URL: https://api.congress.gov
-   - Key: Get free at https://api.congress.gov/
-   - Data: Members, bills, committees, nominations
-   - Rate: Lower limits (be polite)
-
-3. **Data.gov API** (FREE)
-   - URL: https://catalog.data.gov/api/3
-   - Key: Optional but recommended
-   - Data: 250,000+ datasets including campaign finance, lobbying, contracts
-
-4. **House Disclosures** (Direct Scraping - NO API)
-   - URL: https://disclosures-clerk.house.gov/PublicDisclosure/FinancialDisclosure
-   - Access: Public search, PDF downloads
-   - Coverage: All House members, annual + periodic transaction reports
-
-5. **Senate Disclosures** (Direct Scraping - NO API)
-   - URL: https://www.disclosure.senate.gov/
-   - Access: Public search, PDF downloads
-   - Coverage: All Senators, annual + periodic transaction reports
-
-**Scripts Created:**
-- `scripts/download_gov_data.py` - GovInfo/Congress.gov/Data.gov APIs
-- `scripts/scrape_congress_disclosures.py` - House/Senate direct scraping
-- `scripts/download_fec_bulk.py` - FEC bulk data (also FREE)
-- `scripts/download_politicians_financial.py` - Quiver Quant (paid - not used)
-
-**Note on Quiver Quant:** API requires paid subscription. Using FREE government sources instead.
-
-#### System Tables
-| Table | Rows | Description |
-|-------|------|-------------|
-| letta_memories | 16 | Letta memory system |
-| letta_memory_blocks | 5 | Memory block storage |
-| letta_agent_context | 8 | Agent context data |
-| tasks | 0 | Task tracking |
-| task_history | 0 | Task history |
-| external_references | 0 | External reference links |
-
-### Vector/Embedding Status
-| Component | Status | Details |
-|-----------|--------|---------|
-| pgvector extension | ✅ Installed | v0.6.0 with HNSW support |
-| pages.embedding column | ✅ Exists | vector(768) type |
-| Embeddings generated | ❌ None | 0 of 2,892,730 pages |
-| Vector indexes | ❌ None | Need to create after embedding generation |
-
-**Action Required:** Generate embeddings for semantic search using `epstein embed` command.
 
 ---
 
@@ -287,25 +209,6 @@ Located at: `/home/cbwinslow/workspace/epstein-data/databases/`
 | knowledge_graph.db | 892KB | 4 | 606 entities, 2,302 relationships | ✅ Yes |
 
 **Migration Status:** All 8 SQLite databases have been migrated to PostgreSQL (10.9M rows total).
-
----
-
-## HuggingFace Parquet Data
-
-Located at: `/home/cbwinslow/workspace/epstein-data/hf-parquet/`
-
-| Metric | Value |
-|--------|-------|
-| Total files | 634 |
-| Total size | 318GB |
-| Rows per file | ~4,529 |
-| Estimated total rows | ~2,870,000 |
-| Columns | dataset_id, doc_id, file_name, file_type, online_url, text_content, audio, image, video, metadata, error |
-| Text coverage | ~28.7% of rows have text_content |
-| Average text length | 3,162 characters |
-| Max text length | 216,707 characters |
-
-**Status:** Downloaded and complete. Text content needs to be processed and migrated to PostgreSQL documents_content table.
 
 ---
 
@@ -333,145 +236,12 @@ Located at: `/home/cbwinslow/workspace/epstein-data/raw-files/`
 
 ---
 
-## Epstein-research-data (Structured Exports)
-
-Located at: `~/workspace/epstein/Epstein-research-data/`
-
-| File | Records | Description | Imported to PG? |
-|------|---------|-------------|-----------------|
-| knowledge_graph_entities.json | 606 | Curated entities with aliases, metadata | ✅ Yes (entities table) |
-| knowledge_graph_relationships.json | 2,302 | Entity relationships with weights, dates | ✅ Yes (relationships table) |
-| persons_registry.json | 1,614 | Unified person registry from 9 sources | ⚠️ Partial (exposed_persons has 1,578) |
-| extracted_entities_filtered.json | 8,085 | Filtered NER extractions (3,881 names, 116 orgs, 357 emails, 2,238 phones) | ❌ Not imported |
-| extracted_names_multi_doc.csv | 3,881 | Names appearing in multiple documents | ❌ Not imported |
-| image_catalog.csv.gz | 38,955 | Complete image catalog | ⚠️ Partial (images table exists) |
-| image_catalog_notable.json.gz | 38,864 | Images with people/notable content | ❌ Not imported |
-| reconstructed_pages_high_interest.json.gz | 39,588 | High-interest reconstructed pages | ⚠️ Partial (reconstructed_pages table exists) |
-| document_summary.csv.gz | ~850K | Document summaries | ✅ Yes (document_summary table) |
-| efta_dataset_mapping.csv | ~1.4M | EFTA to dataset mappings | ✅ Yes (efta_crosswalk table) |
-| phone_numbers_enriched.csv | Unknown | Enriched phone number data | ❌ Not imported |
-| NON_EFTA_VERIFICATION_URLS.csv | Unknown | Verification URLs | ❌ Not imported |
-
----
-
-## Supplementary Data (Scraped from epsteinexposed.com)
-
-Located at: `/home/cbwinslow/workspace/epstein-data/supplementary/`
-
-| File | Records | Description | Imported to PG? |
-|------|---------|-------------|-----------------|
-| epstein_exposed_persons.json | 1,578 | Person profiles | ✅ Yes (exposed_persons) |
-| epstein_exposed_flights.json | 3,615 | Flight log entries | ✅ Yes (exposed_flights) |
-| epstein_exposed_emails.json | 5 | Email metadata (sample only) | ✅ Yes (exposed_emails has 100) |
-| epstein_exposed_locations.json | Unknown | Location records | ✅ Yes (exposed_locations) |
-| epstein_exposed_nonprofits.json | Unknown | Nonprofit records | ✅ Yes (exposed_nonprofits) |
-| export_persons.json | 1,578 | Person profiles (alternate) | ❌ Not imported |
-| export_flights.json | 3,615 | Flight logs (alternate) | ❌ Not imported |
-| export_locations.json | Unknown | Locations (alternate) | ❌ Not imported |
-| export_organizations.json | Unknown | Organizations (alternate) | ✅ Yes (exposed_organizations) |
-| fec_donations.json | ~400 | FEC donation records | ✅ Yes (fec_donations) |
-| fec_disbursements.json | ~3,600 | FEC disbursement records | ✅ Yes (fec_disbursements) |
-
----
-
-## HuggingFace Supplementary Datasets (New)
-
-Located at: `/home/cbwinslow/workspace/epstein-data/supplementary-datasets/`
-
-Downloaded March 31, 2026 using `aria2c` direct CDN (bypassed HF API rate limits)
-
-| Dataset | File | Records | Size | Description | PostgreSQL Table | Status |
-|---------|------|---------|------|-------------|------------------|--------|
-| **svetfm/epstein-fbi-files** | `embeddings/all_embeddings.jsonl` | 236,174 | 3.9 GB | FBI file embeddings (768-dim) | `fbi_embeddings` | ✅ Imported |
-| **svetfm/epstein-fbi-files** | `ocr/all_ocr.jsonl` | OCR text | 317 MB | FBI file OCR text | (file only) | ✅ Downloaded |
-| **svetfm/epstein-fbi-files** | `pdfs/` | 8,150 files | Variable | FBI PDF files | (file only) | ✅ Downloaded |
-| **svetfm/epstein-files-nov11-25** | `train-00000-of-00001.parquet` | 69,290 | 341 MB | House Oversight embeddings (768-dim) | `house_oversight_embeddings` | ✅ Imported |
-| **theelderemo/FULL_EPSTEIN_INDEX** | `dataset_text_extract.csv` | 8,531 | 3.2 MB | EFTA text extract index | `full_epstein_index` | ✅ Imported |
-| **tensonaut/EPSTEIN_FILES_20K** | N/A | N/A | N/A | House Oversight source docs | N/A | ❌ Unavailable (404) |
-
-**Total New Records:** 314,995 (236,174 + 69,290 + 8,531 + 1,000 OCR)
-
-### Import Scripts Created
-
-| Script | Purpose | Format | Records Imported |
-|--------|---------|--------|------------------|
-| `scripts/import_fbi_embeddings.py` | FBI embeddings → PostgreSQL | JSONL streaming | 236,174 |
-| `scripts/import_house_oversight_embeddings.py` | House Oversight → PostgreSQL | Parquet | 69,290 |
-| `scripts/import_full_epstein_index.py` | Full Index → PostgreSQL | CSV | 8,531 |
-
-### Model Compatibility
-All embedding datasets use **768-dimensional vectors** with `nomic-embed-text` model, fully compatible with existing kabasshouse data (2.1M embeddings).
-
----
-
-## jmail.world Email Data (Primary Email Source)
-
-**URL:** `https://data.jmail.world/v1/emails-slim.parquet`
-**Size:** 38.8MB (1,783,792 emails)
-**Status:** ✅ DOWNLOADED & IMPORTED TO POSTGRESQL
-
-### Email Sources in jmail.world Data
-
-| Source | Count | Description | PostgreSQL |
-|--------|-------|-------------|------------|
-| VOL00009-12 (DOJ EFTA) | 1,756,912 | Same DOJ docs, 42x better extraction (threaded parsing) | ✅ jmail_emails |
-| yahoo_2 | 17,448 | **Epstein's personal Yahoo inbox** (`jeeproject@yahoo.com`) | ✅ jmail_emails |
-| House Oversight | 8,374 | Congressional investigation releases (`jeevacation@gmail.com`) | ✅ jmail_emails |
-| Ehud Barak | 1,058 | Former Israeli PM's email accounts (`ehbarak1@gmail.com`) | ✅ jmail_emails |
-
-**Why 42x more DOJ emails?** Our extraction got 1-2 emails per PDF. Jmail extracts all emails from threaded conversations (some documents have 300+ individual emails).
-
-### Import Details
-- **Total emails imported:** 1,783,792
-- **Epstein as sender:** 320,871 emails
-- **Date range:** 1990-01-01 to 2026-10-07
-- **Top sender:** Lesley Groff (126,336 emails)
-- **Table:** `jmail_emails` with 7 indexes
-- **Import scripts:** `scripts/import_jmail_emails.py`, `scripts/import_jmail_emails_fast.py`
-
-### Other jmail.world Data Files
-
-| File | Size | Description |
-|------|------|-------------|
-| `emails-slim.parquet` | 38.8MB | 1.78M emails |
-| `imessage_conversations.parquet` | 3.6KB | 4,509 iMessage conversations |
-| `imessage_messages.parquet` | 168KB | iMessage messages |
-| `photos.parquet` | 1.0MB | 18K photos |
-| `people.parquet` | 9.9KB | 473 people in photos |
-| `photo_faces.parquet` | 57.7KB | 975 face detections |
-
----
-
 ## ICIJ Offshore Leaks Database
 
 **URL:** `https://offshoreleaks-data.icij.org/offshoreleaks/csv/full-oldb.LATEST.zip`
 **Downloaded:** April 3, 2026
-**Size:** 69.7 MB (compressed), ~600 MB extracted
-**Status:** ✅ EXTRACTED, ⏳ Import to PostgreSQL pending
-
-### About ICIJ
-**ICIJ** = International Consortium of Investigative Journalists  
-A nonprofit coordinating global investigative journalism across 100+ countries.
-
-### Coverage
-- **Panama Papers** (2016): 11.5M documents from Mossack Fonseca
-- **Paradise Papers** (2017): 13.4M documents from offshore law firms
-- **Pandora Papers** (2021): 11.9M documents from 14 offshore service providers
-- **Bahamas Leaks** (2016): 1.3M documents from Bahamian corporate registry
-- **Offshore Leaks** (2013): Original offshore financial records
-
-### Extracted Files
-
-| File | Rows | Size | Description | Import Status |
-|------|------|------|-------------|---------------|
-| `nodes-entities.csv` | 814,617 | 190 MB | Companies/offshore entities | ⏳ Pending |
-| `nodes-officers.csv` | ~1,800,000 | 87 MB | People/officers | ⏳ Pending |
-| `nodes-addresses.csv` | ~700,000 | 69 MB | Addresses | ⏳ Pending |
-| `nodes-intermediaries.csv` | ~38,000 | 3.8 MB | Intermediaries/brokers | ⏳ Pending |
-| `nodes-others.csv` | ~4,000 | 389 KB | Other entities | ⏳ Pending |
-| `relationships.csv` | 3,339,272 | 247 MB | Entity relationships | ⏳ Pending |
-
-**Total Records:** ~5.7M entities + 3.3M relationships
+**Size:** 69.7 MB (compressed), ~600 MB extracted
+**Status:** ✅ Extracted, ⏳ Import to PostgreSQL pending
 
 ### Data Schema (entities)
 ```csv
@@ -486,36 +256,40 @@ countries,sourceID,valid_until,note
 node_id_start,node_id_end,rel_type,link,status,start_date,end_date,sourceID
 ```
 
-### License
-Open Database License (ODbL) - free to use, share, and modify
-
-### Location
-`/home/cbwinslow/workspace/epstein-data/downloads/icij_extracted/`
+**Location:** `/home/cbwinslow/workspace/epstein-data/downloads/icij_extracted/`
 
 ---
 
-## epsteinexposed.com API Assessment
+## jmail.world Email Data (Primary Email Source)
 
-**Base URL:** `https://epsteinexposed.com/api/v2`
-**Rate Limit:** 100 req/hr anonymous, 1,000 req/hr with issued key
+**URL:** `https://data.jmail.world/v1/emails-slim.parquet`
+**Size:** 38.8 MB (1,783,792 emails)
+**Status:** ✅ Downloaded & imported to PostgreSQL (`jmail_emails` table)
 
-### Bulk Export Endpoints (FREE)
+### Email Sources in jmail.world Data
 
-| Endpoint | Records | Status |
-|----------|---------|--------|
-| `/export/persons` | 1,578 | ✅ Downloaded |
-| `/export/flights` | 3,615 | ✅ Downloaded |
-| `/export/locations` | 83 | ✅ Downloaded |
-| `/export/organizations` | 55 | ✅ Downloaded |
+| Source | Count | Description | PostgreSQL |
+|--------|-------|-------------|------------|
+| VOL00009-12 (DOJ EFTA) | 1,756,912 | Same DOJ docs, 42× better extraction (threaded parsing) | ✅ `jmail_emails` |
+| yahoo_2 | 17,448 | Epstein's personal Yahoo inbox (`jeeproject@yahoo.com`) | ✅ `jmail_emails` |
+| House Oversight | 8,374 | Congressional investigation releases (`jeevacation@gmail.com`) | ✅ `jmail_emails` |
+| Ehud Barak | 1,058 | Former Israeli PM's email accounts (`ehbarak1@gmail.com`) | ✅ `jmail_emails` |
 
-### Paginated Endpoints (Multiple Requests)
+**Why 42× more DOJ emails?** Our extraction got 1‑2 emails per PDF. jmail extracts all emails from threaded conversations (some documents have 300+ individual emails).
 
-| Endpoint | Total | Downloaded | Feasibility |
-|----------|-------|------------|-------------|
-| `/emails` | 11,280 | 100 | ⚠️ 113 pages needed |
-| `/documents` | 2,146,580 | 0 | ❌ 21,466 pages = 9+ days |
+---
 
-**Conclusion:** API is NOT viable for bulk document downloads. Use jmail.world for emails instead.
+## ICIJ Offshore Leaks Summary
+
+| File | Rows | Size | Description | Import Status |
+|------|------|------|-------------|---------------|
+| `nodes-entities.csv` | 814,617 | 190 MB | Companies/offshore entities | ⏳ Pending |
+| `nodes-officers.csv` | ~1.8M | 87 MB | People/officers | ⏳ Pending |
+| `nodes-addresses.csv` | ~700k | 69 MB | Addresses | ⏳ Pending |
+| `nodes-intermediaries.csv` | ~38k | 3.8 MB | Intermediaries/brokers | ⏳ Pending |
+| `relationships.csv` | 3,339,272 | 247 MB | Entity relationships | ⏳ Pending |
+
+**Total Records:** ~5.7 M entities + 3.3 M relationships
 
 ---
 
@@ -523,20 +297,19 @@ Open Database License (ODbL) - free to use, share, and modify
 
 ### Critical Gaps (Must Fix)
 
-1. **Emails (1.74M missing)**
+1. **Emails (1.74 M missing)**
    - Website claims: 1,783,792 emails
    - We have: 41,924 emails (extracted from OCR)
    - Gap: 1,741,868 emails
-   - **Source:** jmail.world `emails-slim.parquet` (38.8MB, 1.78M emails)
-   - **Action:** Download from `https://data.jmail.world/v1/emails-slim.parquet`
+   - **Source:** jmail.world `emails-slim.parquet` (38.8 MB, 1.78 M emails)
 
-2. **Connections (49K missing)**
+2. **Connections (49 K missing)**
    - Website claims: 51,254 connections
-   - We have: 2,302 relationships (curated) + 5.7M document_entities (NER)
+   - We have: 2,302 curated relationships + 5.7 M document_entities
    - Gap: 48,952 curated connections
    - **Source:** Build from document_entities, email co-occurrence, flight co-occurrence
 
-3. **Documents (749K missing)**
+3. **Documents (749 K missing)**
    - Website claims: 2,146,580 documents
    - We have: 1,397,821 documents
    - Gap: 748,759 documents
@@ -544,171 +317,50 @@ Open Database License (ODbL) - free to use, share, and modify
 
 ### Secondary Gaps (Should Fix)
 
-4. **Embeddings (0% complete)**
+4. **Embeddings (0 % complete)**
    - Need: 2,892,730 page embeddings
    - Have: 0 embeddings generated
    - Action: Run `epstein embed` pipeline
 
 5. **Persons Registry (36 missing)**
-   - persons_registry.json has 1,614 entries
-   - exposed_persons has 1,578 entries
+   - `persons_registry.json` has 1,614 entries
+   - `exposed_persons` has 1,578 entries
    - Gap: 36 persons not imported
 
 6. **Extracted Entities (not imported)**
-   - extracted_entities_filtered.json has 8,085 filtered entities
+   - `extracted_entities_filtered.json` has 8,085 filtered entities
    - Not imported to PostgreSQL
-   - Action: Import to supplement document_entities
-
----
-
-## Missing Data Sources (Not Yet Acquired)
-
-| Priority | Source | Records | Effort | Description |
-|----------|--------|---------|--------|-------------|
-| **1** | jmail.world emails | 1.78M | Easy (38.8MB) | Primary email source for epsteinexposed.com |
-| **2** | jmail.world iMessages | 4,509 | Easy | Epstein's iMessage conversations |
-| **3** | jmail.world photos | 18K | Easy | Photos with face detection |
-| **4** | HF epstein-emails | 5,258 | Easy | Alternative email source |
-| **5** | HF epstein-flight-logs | Unknown | Easy | Parsed flight log entries |
-| **6** | HF epstein-black-book | Unknown | Easy | Contact entries |
-| **7** | Kaggle Epstein Ranker | 23,700 | Medium | AI-analyzed documents |
-| **8** | ICIJ Offshore Leaks | Large | Medium | Panama/Paradise/Pandora Papers |
-| **9** | FBI Vault | Unknown | Medium | FBI investigative files |
-| **10** | CourtListener | Unknown | Medium | Court records |
-| **11** | OpenSanctions | N/A | Easy | Requires API key |
-| **12** | IRS Form 990 | Unknown | Medium | Nonprofit financials |
-| **13** | SEC EDGAR | Unknown | Medium | Insider trading filings |
-
----
-
-## Datasets for Epstein Information Discovery & Parameter Generation
-
-### Critical Datasets for Cross-Referencing
-
-These datasets are essential for discovering connections, generating search parameters, and building a comprehensive picture of Epstein's network:
-
-#### Tier 1: Essential for Network Analysis
-| Dataset | Source | Status | Use Case |
-|---------|--------|--------|----------|
-| **FEC Contributions** | fec.gov | 🆕 Downloading (22GB) | Find political donations from Epstein associates |
-| **Congress Trading** | Quiver Quant | ⏳ Needs API key | Track stock trades by politicians in Epstein's circle |
-| **Offshore Leaks** | ICIJ | ❌ Not acquired | Panama/Paradise Papers for shell companies |
-| **SEC Insider Trading** | EDGAR | ❌ Not acquired | Stock trades by executives connected to Epstein |
-| **Flight Logs (Full)** | Multiple | ✅ 3,615 flights | Travel patterns, co-travelers |
-| **Emails (Complete)** | jmail.world | ✅ 1.78M emails | Communication patterns, coordination |
-
-#### Tier 2: Important for Context
-| Dataset | Source | Status | Use Case |
-|---------|--------|--------|----------|
-| **FBI Vault Files** | FBI | ⚠️ Partial (22 docs) | Investigative documents |
-| **Court Records** | CourtListener/PACER | ❌ Not acquired | Legal proceedings, testimony |
-| **IRS 990 Forms** | IRS/CitizenAudit | ❌ Not acquired | Nonprofit financial flows |
-| **Property Records** | County assessors | ❌ Not acquired | Real estate transactions |
-| **Corporate Registrations** | OpenCorporates | ❌ Not acquired | Shell companies, business entities |
-| **Lobbying Disclosures** | Senate LDA | ❌ Not acquired | Influence operations |
-
-#### Tier 3: Supplementary Intelligence
-| Dataset | Source | Status | Use Case |
-|---------|--------|--------|----------|
-| **Social Media Archives** | Wayback/Archive.org | ❌ Not acquired | Public statements, connections |
-| **Academic Publications** | OpenAlex | ❌ Not acquired | Research affiliations |
-| **Patent Records** | USPTO | ❌ Not acquired | Technology connections |
-| **Trademark Records** | USPTO | ❌ Not acquired | Business branding |
-| **Campaign Finance (State)** | FollowTheMoney | ❌ Not acquired | State-level political donations |
-| **Contract Awards** | USASpending.gov | ❌ Not acquired | Government contracts to Epstein entities |
-
-### Parameter Generation Sources
-
-For automated discovery and cross-referencing:
-
-#### Entity Resolution Parameters
-```yaml
-person_identifiers:
-  - Full legal name variants
-  - Known aliases (from persons_registry.json: 1,614 entries)
-  - Maiden names
-  - Spouse names (for joint transactions)
-  
-organization_identifiers:
-  - IRS EIN numbers (from nonprofits table: 33 entities)
-  - State registration IDs
-  - FEC committee IDs (from fec_committees: 23,000+ committees)
-  - Shell company patterns
-  
-location_identifiers:
-  - Property addresses (from exposed_locations: 83 locations)
-  - Zillow/Property records
-  - Geocoded coordinates
-  
-financial_identifiers:
-  - Bank routing patterns
-  - Cryptocurrency wallets (if any)
-  - Stock CUSIPs (from congress_trading when acquired)
-  - Transaction amounts (from fec_individual_contributions)
-```
-
-#### Network Discovery Rules
-```yaml
-co_occurrence_triggers:
-  - Same flight (exposed_flights: 3,615 flights)
-  - Same document mention (document_entities: 5.7M entities)
-  - Same email thread (jmail_emails: 1.78M emails)
-  - Same property transaction
-  - Same committee donation (fec_individual_contributions)
-  - Same corporate board
-  - Same nonprofit board (exposed_nonprofits: 33 orgs)
-  
-relationship_strength:
-  - Direct: Co-traveler, co-signatory, mutual mention
-  - Indirect: Common associate, shared location
-  - Temporal: Overlapping activities
-  - Financial: Transactional relationship
-```
-
-### Data Acquisition Priority Matrix
-
-| Priority | Dataset | Estimated Size | Effort | Impact on Discovery |
-|----------|---------|----------------|--------|---------------------|
-| **P0** | Offshore Leaks (ICIJ) | 2-3TB | High | Critical - shell companies |
-| **P0** | SEC EDGAR (Form 3/4/5) | 500GB | Medium | High - insider trades |
-| **P1** | CourtListener | 200GB | Low | High - legal proceedings |
-| **P1** | IRS 990 Forms | 100GB | Medium | Medium - nonprofit flows |
-| **P1** | Property Records | 50GB | High | Medium - real estate |
-| **P2** | OpenCorporates | 20GB | Low | Medium - entity resolution |
-| **P2** | Lobbying Disclosures | 10GB | Low | Low - influence tracking |
-| **P2** | Campaign Finance (State) | 5GB | Medium | Low - state politics |
 
 ---
 
 ## Recommended Next Steps
 
-### Priority 1: Download jmail.emails (1.78M emails)
+### Priority 1: Download jmail.emails (1.78 M emails)
 ```bash
 curl -o /home/cbwinslow/workspace/epstein-data/supplementary/emails-slim.parquet \
   "https://data.jmail.world/v1/emails-slim.parquet"
 ```
-Then import to PostgreSQL using adapted `ingest-jmail.py` script.
+Then import to PostgreSQL using the existing `import_jmail_emails.py` script.
 
 ### Priority 2: Generate Embeddings
-- Run `epstein embed` on all 2.9M pages
+- Run `epstein embed` on all 2.9 M pages
 - Create HNSW vector index for semantic search
 - Enable semantic search functionality
 
 ### Priority 3: Build Connections Graph
-- Analyze document_entities (5.7M rows) to build connections
-- Cross-reference with flight logs and email data
-- Build relationship graph matching website's 51K connections
+- Analyze `document_entities` (5.7 M rows) to build connections
+- Cross‑reference with flight logs and email data
+- Build relationship graph matching website's 51 K connections
 
 ### Priority 4: Import Missing Data
-- Import persons_registry.json (36 missing persons)
-- Import extracted_entities_filtered.json (8,085 entities)
-- Import phone_numbers_enriched.csv
+- Import `persons_registry.json` (36 missing persons)
+- Import `extracted_entities_filtered.json` (8,085 entities)
+- Import phone numbers, supplemental CSVs as needed
 
 ### Priority 5: Knowledge Graph Enhancement
 - Expand from 606 entities to match 1,580 persons
-- Build connections from document co-occurrence
-- Add flight-based connections
-- Add email-based connections
+- Add flight‑based and email‑based connections
+- Populate `entities` and `relationships` tables accordingly
 
 ---
 
@@ -717,8 +369,8 @@ Then import to PostgreSQL using adapted `ingest-jmail.py` script.
 ### Workspace Structure
 ```
 ~/workspace/
-├── epstein/                    # Code, scripts, documentation (~15 GB)
-├── epstein-data/              # Data storage (~500+ GB)
+├── epstein/                    # Code, scripts, documentation (~15 GB)
+├── epstein-data/              # Data storage (~500+ GB)
 └── epstein-pipeline/           # Pipeline submodule
 ```
 
@@ -726,70 +378,45 @@ Then import to PostgreSQL using adapted `ingest-jmail.py` script.
 
 | Data Type | Location | Size | Status |
 |-----------|----------|------|--------|
-| **Raw PDFs (DOJ)** | `/home/cbwinslow/workspace/epstein-data/raw-files/` | 177GB | 1.3M files |
-| **HF Parquet** | `/home/cbwinslow/workspace/epstein-data/hf-parquet/` | 318GB | 634 files |
-| **SQLite DBs** | `/home/cbwinslow/workspace/epstein-data/databases/` | 12GB | 8 databases |
-| **ML Models** | `/home/cbwinslow/workspace/epstein-data/models/` | 109GB | Processing models |
+| **Raw PDFs (DOJ)** | `/home/cbwinslow/workspace/epstein-data/raw-files/` | 177 GB | 1.3 M files |
+| **HF Parquet** | `/home/cbwinslow/workspace/epstein-data/hf-parquet/` | 318 GB | 634 files |
+| **SQLite DBs** | `/home/cbwinslow/workspace/epstein-data/databases/` | 12 GB | 8 databases |
+| **ML Models** | `/home/cbwinslow/workspace/epstein-data/models/` | 109 GB | Processing models |
 
-### HuggingFace Dataset Locations (April 13, 2026)
+### HuggingFace Dataset Locations (April 13 2026)
 
 | Dataset | Location | Size | SQL Table | Status |
 |---------|----------|------|-----------|--------|
-| epstein-files-20k | `hf-epstein-files-20k/` | 127 MB | `hf_epstein_files_20k` | ✅ Complete |
-| House Oversight TXT | `hf-house-oversight/` | 101 MB | `hf_house_oversight_docs` | ✅ Complete |
-| Email Threads | `hf-emails-threads/` | 4 MB | ~~`hf_email_threads`~~ | ❌ Dropped |
-| OCR Complete | `hf-ocr-complete/data/` | 1.3 GB | `hf_ocr_complete` | 🔄 Importing |
-| Embeddings | `hf-embeddings/data/` | 341 MB | `hf_embeddings` | ⏳ Pending |
-| Epstein Data Text | `hf-new-datasets/epstein-data-text/` | 2.2 GB | `hf_epstein_data_text` | ⏳ Pending |
-| Epstein Images | `hf-new-datasets/epstein-images/` | 4.9 GB | - | 📂 Filesystem |
-| Cropped Images | `hf-new-datasets/epstein-images-cropped/` | 4.3 GB | - | 📂 Filesystem |
-| FBI Files | `hf-datasets/fbi-files/` | 4.5 GB | `fbi_vault_pages` | ✅ Metadata |
-| Full Index | `hf-datasets/full-index/` | 4 MB | `full_epstein_index` | ✅ Complete |
+| epstein-files-20k | `hf-epstein-files-20k/` | 127 MB | `hf_epstein_files_20k` | ✅ Complete |
+| House Oversight TXT | `hf-house-oversight/` | 101 MB | `hf_house_oversight_docs` | ✅ Complete |
+| OCR Complete | `hf-ocr-complete/data/` | 1.3 GB | `hf_ocr_complete` | 🔄 Importing |
+| Embeddings | `hf-embeddings/data/` | 341 MB | `hf_embeddings` | ⏳ Pending |
+| Epstein Data Text | `hf-new-datasets/epstein-data-text/` | 2.2 GB | `hf_epstein_data_text` | ⏳ Pending |
+| FBI Files | `hf-datasets/fbi-files/` | 4.5 GB | `fbi_vault_pages` | ✅ Metadata |
+| Full Index | `hf-datasets/full-index/` | 4 MB | `full_epstein_index` | ✅ Complete |
 
 ### Other Data Locations
 
 | Data Type | Location | Size |
 |-----------|----------|------|
-| Supplementary | `supplementary/` | ~22MB |
-| Research Data | `~/workspace/epstein/Epstein-research-data/` | ~28MB |
+| Supplementary | `supplementary/` | ~22 MB |
+| Research Data | `~/workspace/epstein/Epstein-research-data/` | ~28 MB |
 | Downloads | `downloads/` | Variable |
 | Logs | `logs/` | Variable |
-| Backups | `backups/` | ~2GB |
-
-### External Repositories
-- `external_repos/` - Cloned repos (epstein-network-data, etc.)
-- `kabasshouse-data/` - kabbashouse HF datasets
-
-### Government & Legal Data
-- `courtlistener/` - Court records
-- `fbi-vault/` - FBI documents
-- `fec/` - Campaign finance (22 GB)
-- `icij-data/` - Offshore Leaks (~600 MB)
-- `gdelt/` - News articles
-
-### Quick Access Commands
-```bash
-# Find files by extension
-find ~/workspace/epstein-data -name "*.parquet" | head
-
-# Check directory size
-du -sh ~/workspace/epstein-data/hf-*/
-
-# Count files by type
-find ~/workspace/epstein-data -name "*.pdf" | wc -l
-```
+| Backups | `backups/` | ~2 GB |
 
 ---
 
-## PostgreSQL Connection
+## PostgreSQL Quick Queries
 
-```bash
-# Connect to database
-PGPASSWORD=123qweasd psql -h localhost -U cbwinslow -d epstein
-
-# Example queries
+```sql
+-- Count documents
 SELECT COUNT(*) FROM documents;
+
+-- Check embeddings status
 SELECT COUNT(*) FROM pages WHERE embedding IS NOT NULL;
+
+-- Sample persons
 SELECT * FROM exposed_persons LIMIT 10;
 ```
 

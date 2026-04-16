@@ -360,6 +360,135 @@ BATCH_SIZE = 32  # Adjust based on GPU memory
 - **Logs**: Check processing logs for errors
 - **Community**: Project GitHub issues and discussions
 
+## Embeddings Generation (Ollama + RTX 3060)
+
+### Overview
+
+Use Windows RTX 3060 with Ollama to generate text embeddings for semantic search. This is significantly faster than using K40m/K80 GPUs for embeddings.
+
+### Setup
+
+#### 1. Install Ollama on Windows
+
+Download and install from https://ollama.com
+
+#### 2. Pull Embedding Model
+
+```powershell
+ollama pull mxbai-embed-large
+```
+
+Alternative models:
+- `mxbai-embed-large` - 1024 dims, 64.68 MTEB (best performance)
+- `snowflake-arctic-embed` - 768 dims, optimized for legal text
+- `nomic-embed-text` - 768 dims, 8192 token context
+
+#### 3. Configure Ollama for Network Access
+
+```powershell
+# Set environment variable
+$env:OLLAMA_HOST="0.0.0.0:11434"
+ollama serve
+```
+
+Verify it's listening:
+```powershell
+netstat -an | findstr 11434
+# Should show: 0.0.0.0:11434 LISTENING
+```
+
+#### 4. Configure Linux Script
+
+Edit `/home/cbwinslow/workspace/epstein/scripts/processing/rtx3060_embeddings.py`:
+
+```python
+WINDOWS_HOST = "192.168.4.25"  # Windows machine IP
+OLLAMA_PORT = "11434"
+OLLAMA_MODEL = "mxbai-embed-large:latest"
+```
+
+### Running Embeddings Generation
+
+#### Option A: Manual Run (Testing)
+
+```bash
+cd /home/cbwinslow/workspace/epstein/scripts/processing
+python3 rtx3060_embeddings.py
+```
+
+#### Option B: Systemd Service (Production)
+
+```bash
+# Start the systemd service (survives disconnects, auto-restarts)
+sudo systemctl start epstein-embeddings
+
+# Check status
+sudo systemctl status epstein-embeddings
+
+# View logs
+tail -f /tmp/rtx3060_embeddings.log
+
+# Stop when complete
+sudo systemctl stop epstein-embeddings
+sudo systemctl disable epstein-embeddings
+```
+
+### Monitoring Progress
+
+```bash
+# Check count of embedded pages
+psql -U cbwinslow -d epstein -c "SELECT COUNT(rtx3060_embedding) FROM pages;"
+
+# Check remaining pages
+psql -U cbwinslow -d epstein -c "SELECT COUNT(*) - COUNT(rtx3060_embedding) as remaining FROM pages WHERE text_content IS NOT NULL;"
+
+# Run completion check script
+/home/cbwinslow/workspace/epstein/scripts/processing/check_embeddings_complete.sh
+```
+
+### Performance
+
+- **Speed**: ~12-15 embeddings/second
+- **VRAM Usage**: ~2-4GB (depending on model)
+- **ETA**: ~64 hours for 2.9M pages (RTX 3060 12GB)
+- **Dimensions**: 768 or 1024 (model dependent)
+
+### Troubleshooting
+
+#### Connection Refused
+1. Verify Windows firewall allows port 11434
+2. Check Ollama is running: `ollama list`
+3. Verify Ollama listening on 0.0.0.0, not just localhost
+
+#### Model Not Found
+```powershell
+ollama pull mxbai-embed-large
+ollama list  # Verify model appears
+```
+
+#### Out of Memory
+- Reduce batch size in script (default: 50)
+- Use smaller model (nomic-embed-text uses ~2GB)
+- Close other GPU applications
+
+### Completion Actions
+
+When embeddings generation completes (~64 hours):
+
+```bash
+# 1. Stop the service
+sudo systemctl stop epstein-embeddings
+sudo systemctl disable epstein-embeddings
+
+# 2. Create vector index for performance
+psql -U cbwinslow -d epstein -c "CREATE INDEX idx_rtx3060_embedding ON pages USING ivfflat (rtx3060_embedding vector_cosine_ops);"
+
+# 3. Verify completion
+cat /home/cbwinslow/workspace/epstein/EMBEDDINGS_COMPLETE.txt
+```
+
+---
+
 ## Next Steps
 
 After successful setup:

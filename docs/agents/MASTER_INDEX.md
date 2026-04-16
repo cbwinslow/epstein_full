@@ -52,6 +52,7 @@ docs/agents/
 | **NER Worker** | Entity extraction | spaCy, GLiNER | K80/K40m |
 | **Transcribe Worker** | Audio/video transcription | faster-whisper | K80 |
 | **Image Worker** | Image analysis | Vision models | K80 |
+| **Embeddings Worker** | Text embeddings (Ollama) | Ollama API, nomic-embed-text | RTX 3060 |
 | **KG Worker** | Knowledge graph building | Neo4j, spaCy | CPU |
 
 ---
@@ -76,11 +77,12 @@ docs/agents/
 
 ## 📊 Coverage Gaps (Priority Tasks)
 
-### High Priority (Updated April 13, 2026)
+### High Priority (Updated April 16, 2026)
 
 1. **FULL_EPSTEIN_INDEX** (~20K docs) - Download from HF (partially done via components)
-2. **Remaining HF Imports** - OCR Complete, Embeddings, Epstein Data Text (in progress)
-3. ~~**House Oversight**~~ - ✅ COMPLETE (1.8M records imported)
+2. **RTX 3060 Embeddings** - 🟡 IN PROGRESS (36K/2.9M pages, ~64h ETA via Ollama)
+3. **Remaining HF Imports** - OCR Complete, Epstein Data Text (in progress)
+4. ~~**House Oversight**~~ - ✅ COMPLETE (1.8M records imported)
 
 ### Completed (April 13, 2026) ✅
 
