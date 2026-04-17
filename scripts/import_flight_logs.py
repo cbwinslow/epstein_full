@@ -148,16 +148,7 @@ async def import_flights(conn):
     for tweet in tweets:
         tweet_id = tweet.get('id')
         text = tweet.get('text', '')
-        created_at_str = tweet.get('createdAt')
-        
-        # Parse created_at datetime
-        created_at = None
-        if created_at_str:
-            try:
-                # Parse ISO format datetime
-                created_at = datetime.fromisoformat(created_at_str.replace('Z', '+00:00'))
-            except:
-                pass
+        created_at = tweet.get('createdAt')
         
         # Parse flights from tweet text
         flights = parse_flight_text(text)

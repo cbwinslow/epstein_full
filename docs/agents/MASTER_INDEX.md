@@ -1,6 +1,6 @@
 # AI Agent Master Index
 
-> **Last Updated:** April 13, 2026  
+> **Last Updated:** April 10, 2026  
 > **Purpose:** Central index for all AI agent documentation and procedures
 
 ---
@@ -40,7 +40,7 @@ docs/agents/
 | **GDELT Agent** | News Articles | 🟡 | 23,413+ | [INGESTION_GUIDES/03-gdelt-news.md](INGESTION_GUIDES/03-gdelt-news.md) |
 | **ICIJ Agent** | Offshore Leaks | ✅ | 814K entities | [INGESTION_GUIDES/04-icij-offshore-leaks.md](INGESTION_GUIDES/04-icij-offshore-leaks.md) |
 | **FEC Agent** | Campaign Finance | ✅ | 5.4M | [INGESTION_GUIDES/05-fec-contributions.md](INGESTION_GUIDES/05-fec-contributions.md) |
-| **HF Agent** | HuggingFace Datasets | ✅ | **4M+** | [INGESTION_GUIDES/06-huggingface-datasets.md](INGESTION_GUIDES/06-huggingface-datasets.md) |
+| **HF Agent** | HuggingFace Datasets | 🔴 | ~20K | [INGESTION_GUIDES/06-huggingface-datasets.md](INGESTION_GUIDES/06-huggingface-datasets.md) |
 | **GitHub Agent** | Third-Party Repos | 🔴 | 10K+ nodes | [INGESTION_GUIDES/07-third-party-repos.md](INGESTION_GUIDES/07-third-party-repos.md) |
 
 ### Worker Agents
@@ -52,7 +52,6 @@ docs/agents/
 | **NER Worker** | Entity extraction | spaCy, GLiNER | K80/K40m |
 | **Transcribe Worker** | Audio/video transcription | faster-whisper | K80 |
 | **Image Worker** | Image analysis | Vision models | K80 |
-| **Embeddings Worker** | Text embeddings (Ollama) | Ollama API, nomic-embed-text | RTX 3060 |
 | **KG Worker** | Knowledge graph building | Neo4j, spaCy | CPU |
 
 ---
@@ -77,21 +76,11 @@ docs/agents/
 
 ## 📊 Coverage Gaps (Priority Tasks)
 
-### High Priority (Updated April 16, 2026)
+### High Priority
 
-1. **FULL_EPSTEIN_INDEX** (~20K docs) - Download from HF (partially done via components)
-2. **RTX 3060 Embeddings** - 🟡 IN PROGRESS (36K/2.9M pages, ~64h ETA via Ollama)
-3. **Remaining HF Imports** - OCR Complete, Epstein Data Text (in progress)
-4. ~~**House Oversight**~~ - ✅ COMPLETE (1.8M records imported)
-
-### Completed (April 13, 2026) ✅
-
-- ✅ **Black Book + Flight Logs** - From dleerdefi repo (2,327 contacts, 86 names, 19 flights)
-- ✅ **Birthday Book** - 126 pages, 510 entities, 111 photos
-- ✅ **Neo4j Knowledge Graph** - 383 nodes, 534 relationships
-- ✅ **HuggingFace epstein-files-20k** - 2.1M records
-- ✅ **House Oversight** - 1.8M document references
-- ✅ **Duplicate Detection** - 5,082 duplicates removed, 10GB freed
+1. **House Oversight 2024** (~20K docs) - HuggingFace datasets
+2. **Black Book + Flight Logs** - From dleerdefi repo
+3. **Neo4j Knowledge Graph** - 10K nodes, 16K relations
 
 ### Medium Priority
 
@@ -127,4 +116,4 @@ docs/agents/
 
 ---
 
-*Generated: April 13, 2026*
+*Generated: April 10, 2026*

@@ -157,11 +157,11 @@
 
 | Dataset | Records | Size | Status |
 |---------|---------|------|--------|
-| **Birthday Book** | 126 pages | ~244 MB | ✅ **INGESTED** |
-| **Black Book** | 2,327 contacts | ~79 MB | ✅ **INGESTED** |
-| **Flight Logs** | 85 names + flights | ~797 MB | ✅ **INGESTED** |
-| **Neo4j Nodes** | 383 nodes | - | ✅ **INGESTED** |
-| **Neo4j Relations** | 534 relationships | - | ✅ **INGESTED** |
+| **Birthday Book** | 128 pages | ~244 MB | ✅ Available |
+| **Black Book** | 1,252 contacts | ~79 MB | ✅ Available |
+| **Flight Logs** | 118 pages (1991-2019) | ~797 MB | ✅ Available |
+| **Neo4j Nodes** | 10,356 | - | ✅ Available |
+| **Neo4j Relations** | 16,625+ | - | ✅ Available |
 
 **Key Data:**
 - **Persons:** 2,541 canonical persons
@@ -183,64 +183,20 @@
 | Dataset | Records | Source | URL | Status |
 |---------|---------|--------|-----|--------|
 | **FULL_EPSTEIN_INDEX** | ~20,000 pages | House Oversight + DOJ | `thelde/remo/FULL_EPSTEIN_INDEX` | 🔍 Available |
-| **epstein-files-20k** | 2,136,420 docs | House Oversight | `teyler/epstein-files-20k` | 🔍 **NEEDS DOWNLOAD** |
+| **epstein-files-20k** | 2,136,420 docs | House Oversight | `teyler/epstein-files-20k` | ✅ **INGESTED** |
 | **epstein-data (v2.0)** | CC data | DOJ | `kabasshouse/epstein-data` | 🔍 Available |
 | **epstein-emails** | 5,082 threads | House Oversight | `notesbymuneeb/epstein-emails` | 🔍 Available |
 | **EPSTEIN_FILES_20K** | OCR + embeddings | House Oversight | `tensonaut/EPSTEIN_FILES_20K` | 🔍 Available |
 | **epstein-fbi-files** | FBI docs | FBI Vault | `svetfm/epstein-fbi-files` | 🔍 Available |
 
 **Download & Ingest Status:**
-- **epstein-files-20k:** ✅ **DOWNLOADED & INGESTED**
-  - Location: `/home/cbwinslow/workspace/epstein-data/huggingface/epstein_files_20k/data.jsonl` (127 MB)
-  - SQL Table: `hf_epstein_files_20k` (2,136,420 records) ✅
-  
-- **House Oversight TXT (EPS_FILES_20K_NOV2025):** ✅ **DOWNLOADED** → 🔄 **IMPORTING**
-  - Location: `/home/cbwinslow/workspace/epstein-data/hf-house-oversight/EPS_FILES_20K_NOV2025.txt` (100 MB)
-  - Script: `import_hf_house_oversight_txt.py`
-  
-- **Email Threads:** ✅ **DOWNLOADED** → 🔄 **IMPORTING**
-  - Location: `/home/cbwinslow/workspace/epstein-data/hf-emails-threads/epstein_email_threads.parquet` (4.3 MB)
-  - Script: `import_hf_email_threads.py`
-  - Note: Check for duplicates with `house_oversight_emails`
-  
-- **OCR Complete:** ✅ **DOWNLOADED** → 🔄 **IMPORTING**
-  - Location: `/home/cbwinslow/workspace/epstein-data/hf-ocr-complete/data/dataset.parquet` (1.3 GB)
-  - Script: `import_hf_ocr_complete.py`
-  
-- **Embeddings:** ✅ **DOWNLOADED** → ⏳ **PENDING**
-  - Location: `/home/cbwinslow/workspace/epstein-data/hf-embeddings/data/train-00000-of-00001.parquet` (340 MB)
-  - Status: Ready for import
-  
-- **Epstein Data Text:** ✅ **DOWNLOADED** → ⏳ **PENDING**
-  - Location: `/home/cbwinslow/workspace/epstein-data/hf-new-datasets/epstein-data-text/` (2.2 GB, 16 parquet files)
-  - Status: Ready for import
-  
-- **FBI Files:** ✅ **DOWNLOADED** (Filesystem only)
-  - Location: `/home/cbwinslow/workspace/epstein-data/hf-datasets/fbi-files/` (4.5 GB, 355 PDFs)
-  - SQL: `fbi_vault_pages` (1,426 metadata records) ✅
-  - Strategy: Keep PDFs on disk, metadata in SQL
-  
-- **Epstein Images:** ✅ **DOWNLOADED** (Filesystem only)
-  - Location: `/home/cbwinslow/workspace/epstein-data/hf-new-datasets/epstein-images/` (4.9 GB, 9 parquet files)
-  - Strategy: Keep on disk, import metadata to SQL
-  
-- **Cropped Images:** ✅ **DOWNLOADED** (Filesystem only)
-  - Location: `/home/cbwinslow/workspace/epstein-data/hf-new-datasets/epstein-images-cropped/` (4.3 GB, 7 parquet files)
-  - Strategy: Keep on disk, import metadata to SQL
-  
-- **House Oversight 2024 (FULL_EPSTEIN_INDEX):** 🔍 **NOT DOWNLOADED**
-  - Dataset: `thelde/remo/FULL_EPSTEIN_INDEX`
-  - Size: ~20,000 pages
-  - Priority: HIGH
+- **epstein-files-20k:** ✅ **COMPLETE & INGESTED**
+  - Downloaded: 2,136,420 records (126.76 MB)
+  - Table: `hf_epstein_files_20k` (2,136,420 rows)
+  - Location: `/home/cbwinslow/workspace/epstein-data/huggingface/epstein_files_20k/`
+  - Scripts: `download_hf_resume.py`, `import_hf_epstein_files_20k.py`
 
-- **dleerdefi/epstein-network-data:** ✅ **ALL INGESTED** (Verified April 12, 2026)
-  - Black Book: 2,327 contacts → `black_book_contacts` table
-  - Flight Logs: 86 names, 19 flight entries → `flight_log_names` + `flight_log_entries` tables
-  - Neo4j Graph: 383 nodes, 534 relationships → `neo4j_nodes` + `neo4j_relationships` tables
-  - Birthday Book: 126 pages, 510 entities → `birthday_book_pages` + `birthday_book_entities` + `birthday_book_photos` (111) + `birthday_book_signatures` (17) + `birthday_book_redactions` (47)
-
-**📊 Total HuggingFace Data: ~15.6 GB on disk**
-**✅ Already in SQL: 2.2M+ records from HF datasets**
+**✅ INGESTED - Next: Remaining datasets**
 
 ---
 
@@ -275,9 +231,7 @@
 | ICIJ Import | `scripts/import_icij.py` | ✅ Complete | 2025-04-04 | 3.3M |
 | FEC Import | `scripts/import_fec.py` | ✅ Complete | 2025-03 | 5.4M |
 | Black Book Import | `scripts/import_black_book_json.py` | ✅ Complete | 2025-04-11 | 2,327 contacts |
-| Flight Logs Import | `scripts/import_flight_logs.py` | ✅ Complete | 2025-04-12 | 86 names, 19 entries |
-| Neo4j Graph Import | `scripts/import_neo4j_graph.py` | ✅ Complete | 2025-04-11 | 383 nodes, 534 rels |
-| Birthday Book Import | `scripts/import_birthday_book.py` | ✅ Complete | 2025-04-11 | 126 pages, 510 entities |
+| Flight Logs Import | `scripts/import_flight_logs.py` | ✅ Complete | 2025-04-11 | 85 names |
 
 ### Pending Pipelines
 
@@ -287,8 +241,8 @@
 | House Oversight 2024 (FULL_EPSTEIN_INDEX) | HuggingFace | ~20,000 | High |
 | Black Book | GitHub/dleerdefi | 2,327 contacts ✅ Ingested | High |
 | Flight Logs | GitHub/dleerdefi | 85 names, flights parsed ✅ Ingested | High |
-| Birthday Book | GitHub/dleerdefi | 126 pages ✅ Ingested | Medium |
-| Neo4j Graph Import | GitHub/dleerdefi | 383 nodes, 534 relationships ✅ Ingested | High |
+| Birthday Book | GitHub/dleerdefi | 128 pages | Medium |
+| Neo4j Graph Import | GitHub/dleerdefi | 10,356 nodes, 16,625 edges | High |
 
 ---
 
