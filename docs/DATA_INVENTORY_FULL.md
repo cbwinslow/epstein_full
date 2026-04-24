@@ -11,8 +11,8 @@
 |----------|---------|------|--------|
 | **Primary Documents** | 1.4M | 20+ GB | ✅ Complete |
 | **News Articles** | 23,413+ | - | ✅ Active Collection |
-| **Emails** | 1.78M | 319 MB | ✅ Complete |
-| **Government Data** | 450M+ | - | ✅ Complete |
+| **Emails** | 1.78M | 319 MB | ✅ Complete (jmail_emails_full: 1.78M rows) |
+| **Government Data** | 450M+ | - | 🔴 Partial (Senate votes: 6.3K rows, ~100 failed, 403 errors) |
 | **Knowledge Graph** | 3.3M relations | - | ✅ Complete |
 | **Offshore Leaks** | 814K entities | 600 MB | ✅ Complete |
 | **HuggingFace Datasets** | 2.1M+ | ~2 GB | ✅ Downloaded (Need Ingestion) |
