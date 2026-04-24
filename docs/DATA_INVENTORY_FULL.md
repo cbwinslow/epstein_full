@@ -15,6 +15,7 @@
 | **Government Data** | 450M+ | - | ✅ Complete (Senate votes: 6,313 rows, 403 errors resolved) |
 | **Knowledge Graph** | 3.3M relations | - | ✅ Complete |
 | **Offshore Leaks** | 814K entities | 600 MB | ✅ Complete |
+| **Neo4j Knowledge Graph** | 383 nodes, 534 relations | - | ✅ Complete (Imported) |
 | **HuggingFace Datasets** | 2.1M+ | ~2 GB | ✅ Downloaded (Need Ingestion) |
 | **HuggingFace Datasets** | 2.1M+ | ~2 GB | ✅ Downloaded (Need Ingestion) |
 
