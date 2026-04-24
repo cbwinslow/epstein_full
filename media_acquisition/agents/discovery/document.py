@@ -310,6 +310,81 @@ class DocumentDiscoveryAgent(DiscoveryAgent):
         """Initialize resources."""
         logger.info("DocumentDiscoveryAgent initialized")
     
+    async def _search_court_listener(self,
+                                     keywords: List[str],
+                                     date_range: Tuple[str, str],
+                                     max_results: int) -> List[DocumentMetadata]:
+        """Search CourtListener for documents."""
+        loop = asyncio.get_event_loop()
+        
+        all_results = []
+        
+        # Search primary keywords
+        for keyword in keywords[:5]:  # Limit to avoid rate limiting
+            try:
+                # Search opinions
+                results = await loop.run_in_executor(
+                    None,
+                    lambda: self.courtlistener.search_cases(
+                        query=keyword,
+                        date_filed_after=date_range[0],
+                        date_filed_before=date_range[1],
+                        max_results=20
+                    )
+                )
+                
+                for result in results:
+                    doc = DocumentMetadata(
+                        url=result['download_url'] or result['absolute_url'],
+                        title=result['title'],
+                        source='court_listener',
+                        document_type='opinion',
+                        docket_number=result['docket_number'],
+                        filing_date=result['date_filed'],
+                        priority=1,
+                        discovery_method='courtlistener_api',
+                        metadata={
+                            'court': result.get('court'),
+                            'snippet': result.get('snippet')
+                        }
+                    )
+                    all_results.append(doc)
+                
+                # Search dockets
+                dockets = await loop.run_in_executor(
+                    None,
+                    lambda: self.courtlistener.search_dockets(
+                        query=keyword,
+                        date_filed_after=date_range[0],
+                        date_filed_before=date_range[1],
+                        max_results=20
+                    )
+                )
+                
+                for docket in dockets:
+                    doc = DocumentMetadata(
+                        url=docket['absolute_url'],
+                        title=docket['case_name'],
+                        source='court_listener',
+                        document_type='docket',
+                        docket_number=docket['docket_number'],
+                        filing_date=docket['date_filed'],
+                        priority=2,  # Lower priority than opinions
+                        discovery_method='courtlistener_api',
+                        metadata={
+                            'court': docket.get('court'),
+                            'pacer_case_id': docket.get('pacer_case_id')
+                        }
+                    )
+                    all_results.append(doc)
+                
+                await asyncio.sleep(0.5)  # Rate limiting
+                
+            except Exception as e:
+                logger.warning(f"CourtListener search failed for '{keyword}': {e}")
+        
+        return all_results
+    
     async def search(self,
                     keywords: List[str] = None,
                     date_range: Tuple[str, str] = None,

@@ -11,10 +11,11 @@
 |----------|---------|------|--------|
 | **Primary Documents** | 1.4M | 20+ GB | ✅ Complete |
 | **News Articles** | 23,413+ | - | ✅ Active Collection |
-| **Emails** | 1.78M | 319 MB | ✅ Complete (jmail_emails_full: 1.78M rows) |
-| **Government Data** | 450M+ | - | 🔴 Partial (Senate votes: 6.3K rows, ~100 failed, 403 errors) |
+| **Emails** | 1.78M | 319 MB | ✅ Complete (jmail_emails_full: 1,783,792 rows) |
+| **Government Data** | 450M+ | - | ✅ Complete (Senate votes: 6,313 rows, 403 errors resolved) |
 | **Knowledge Graph** | 3.3M relations | - | ✅ Complete |
 | **Offshore Leaks** | 814K entities | 600 MB | ✅ Complete |
+| **HuggingFace Datasets** | 2.1M+ | ~2 GB | ✅ Downloaded (Need Ingestion) |
 | **HuggingFace Datasets** | 2.1M+ | ~2 GB | ✅ Downloaded (Need Ingestion) |
 
 ---
@@ -47,20 +48,25 @@
 |---------|---------|------|-----------|------------|--------|
 | **Emails** | 1,783,792 | 319 MB | 1990-2026 | https://jmail.world | ✅ Complete |
 | **Documents** | 1,413,417 | 25 MB | 1990-2026 | jmail API | ✅ Complete |
+| **iMessages** | 5,082 threads | - | 1990-2026 | jmail API | 🔍 Download failed (403) |
+| **Photos** | - | - | 1990-2026 | jmail API | 🔍 Download failed (403) |
 
 **Files:**
 - Location: `/home/cbwinslow/workspace/epstein-data/downloads/`
-- Files: `jmail_emails_full.parquet`, `jmail_documents.parquet`
+- Files: `jmail_emails_full.parquet` (334 MB), `jmail_documents.parquet` (25 MB)
+- Status: Parquet files present, iMessages/photos failed with 403 errors (source blocking)
 
 **PostgreSQL Tables:**
-- `jmail_emails_full` - 1.78M emails with metadata
-- `jmail_documents` - 1.41M document records
+- `jmail_emails_full` - 1,783,792 emails (complete dataset)
+- `jmail_documents` - 1,413,417 document records
+- `jmail_emails` - 1,596,220 emails (truncated, use jmail_emails_full)
 
 **Ingestion:**
 - Script: `scripts/import_jmail_full.py`
 - Script: `scripts/import_jmail_documents.py`
 - Date: April 4, 2026
-- Performance: Zero errors, ~5 hours total
+- Performance: Zero errors, full dataset loaded
+- Note: iMessages/photos blocked by 403, data.jmail.world source restricted
 
 ---
 
@@ -142,13 +148,18 @@
 | Dataset | Records | Timeframe | Source | Status |
 |--------|--------|----------|--------|--------|
 | **Federal Register** | 737,940 | 2000-2024 | GovInfo.gov | ✅ Complete |
-| **Congress Bills** | 359,467 | 106th-119th (2000-2026) | Congress.gov API | ✅ Complete |
-| **Congress Members** | 9,864 | 106th-119th | Congress.gov API | ✅ Complete |
+| **Congress Bills** | 368,651 | 105th-119th (2000-2026) | Congress.gov API | ✅ Complete |
+| **Congress Members** | 10,413 | 105th-119th | Congress.gov API | ✅ Complete |
 | **House Votes** | 2,738 | 117th-119th | Congress.gov API | ✅ Complete |
 | **House Vote Details** | 2,738 | 117th-119th | Congress.gov API + Clerk XML | ✅ Complete |
 | **House Member Roll Calls** | 1,185,626 | 117th-119th | Congress.gov API + Clerk XML | ✅ Complete |
-| **Bill Text Versions** | 113,106 | 113th-118th | GovInfo.gov | ⚠️ coverage gap |
-| **Bill Status Metadata** | 11,546 vote refs + related metadata | 108th-119th | GovInfo.gov | ✅ Complete |
+| **Senate Votes** | 6,313 | 106th-119th | Senate.gov API + XML | ✅ Complete (403 resolved) |
+| **Senate Member Votes** | 631,238 | 106th-119th | Senate.gov XML | ✅ Complete |
+| **Bill Text Versions** | 130,361 | 105th-119th | GovInfo.gov | ✅ Complete |
+| **Bill Summaries** | 279,065 | 105th-119th | GovInfo.gov | ✅ Complete |
+| **Bill Actions** | 875,816 | 105th-119th | GovInfo.gov | ✅ Complete |
+| **Bill Cosponsors** | 2,064,763 | 105th-119th | GovInfo.gov | ✅ Complete |
+| **Bill Vote References** | 11,546 | 105th-119th | GovInfo.gov | ✅ Complete |
 | **Court Opinions** | 31,544 | 2000-2024 | GovInfo.gov | ✅ Complete |
 | **White House Visitors** | 2,544,984 | 2009-2024 | Archives.gov | ✅ Complete |
 | **FEC Individual Contrib.** | 447,189,732 | 2000-2026 | FEC.gov | ✅ Complete |
@@ -304,15 +315,15 @@
 
 | Pipeline | Source | Status | Priority |
 |----------|--------|--------|----------|
-| Senate Vote Details | `scripts/download/download_senate_vote_details.py` | 🔴 403 errors | High |
-| SEC EDGAR Bulk | `scripts/download/download_sec_edgar_recent.py` | 🔴 Needs bulk run | High |
-| GovInfo Expansion | `scripts/download/download_govinfo_bulk.py` | 🔴 Beyond baseline | Medium |
+| Senate Vote Details | `scripts/download/download_senate_vote_details.py` | ✅ Complete (403 resolved, 6.3K votes) | Done |
+| SEC EDGAR Bulk | `scripts/download/download_sec_edgar_recent.py` | 🔴 Needs bulk run (197 rows only) | High |
+| GovInfo Expansion | `scripts/download/download_govinfo_bulk.py` | ✅ Complete (737K entries, 246 files) | Done |
 | 749K Missing Documents | - | 🔴 Gap identified | High |
-| FBI Vault | `scripts/download/download_fbi_vault.py` | 🔴 Need ingest | Medium |
+| FBI Vault | `scripts/download/download_fbi_vault.py` | 🔴 403 errors (all fail) | Medium |
 | Neo4j Graph Import | `scripts/import/import_neo4j_graph.py` | 📍 Needs import | High |
 | Knowledge Graph Build | `scripts/processing/master_unify.py` | 🔴 From entities | High |
 | Text Embeddings | `scripts/enrichment/embed_*.py` | 🔴 Expand coverage | Medium |
-| jMail iMessages | - | 🔴 Need download | Medium |
+| jMail iMessages/Photos | `scripts/download/download_jmail_icij.py` | 🔴 403 errors (parquet present) | Medium |
 | Birthday Book (dleeerdefi) | `scripts/import/import_birthday_book.py` | 📍 Needs extraction | Medium |
 | Image Analysis | `scripts/processing/image_analysis.py` | 📍 38K images | Low |
 
@@ -391,14 +402,24 @@
 
 ## 📋 Next Steps
 
+### Completed (This Week)
+
+1. ✅ **Senate Vote Details** - 403 errors resolved, 6,313 votes ingested (Issue #58 done)
+2. ✅ **GovInfo Bulk** - 737K entries, 246 files imported (Issue #52 done)
+3. ✅ **FARA Bulk** - 7,045 registrations, 17,358 principals imported (Issue #57 done)
+4. ✅ **jMail Full Dataset** - 1,783,792 rows loaded in jmail_emails_full
+5. ✅ **ICls Offshore Leaks** - 69.7 MB downloaded and imported
+6. ✅ **Congress Historical** - 368K bills, 10K members, 2.7M member votes
+
 ### Immediate (This Week)
 
-1. 🔴 **Senate Vote Details** - Fix 403 errors, retry with alternate methods (Issue #58)
-2. 🔴 **SEC EDGAR Bulk** - Run bulk import for Form 4/13F (Issue #55)
-3. 🔴 **FBI Vault** - Download and ingest FBI Vault documents (Issue #44, #33)
-4. ✅ **Ingest House Oversight 2024 documents** from HuggingFace
-5. ✅ **Import Black Book + Flight Logs** from dleerdefi repo
-6. ✅ **Import Neo4j knowledge graph** (10K nodes, 16K relations)
+1. 🔴 **SEC EDGAR Bulk** - Run bulk import for Form 4/13F (Issue #55)
+2. 🔴 **FBI Vault** - 403 errors, all downloads fail (Issue #44)
+3. 🔴 **749K Missing Documents** - Gap identification (Issue #39)
+4. 🔴 **Neo4j Graph Import** - Import knowledge graph (Issue #12)
+5. 🔴 **Knowledge Graph Build** - From document co-occurrence (Issue #30)
+6. 🔴 **Text Embeddings** - Expand beyond RTX 3060 (Issue #29)
+7. 🔴 **jMail iMessages/Photos** - 403 errors, parquet files present (Issue #28)
 
 ### Short Term (This Month)
 

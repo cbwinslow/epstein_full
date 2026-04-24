@@ -17,10 +17,11 @@
 - **Data Sources Overview:** See `docs/agents/MASTER_INDEX.md`
 - **Ingestion Procedures:** See `docs/agents/INGESTION_GUIDES/`
 - **Current Data Status:** See `docs/DATA_INVENTORY_FULL.md`
-  - Senate votes: 6.3K rows (~100 failed, 403 errors stopping at congress 106)
-  - Email: 1.78M rows in jmail_emails_full (complete)
-  - SEC EDGAR: 197 rows in sec_insider_transactions (complete)
-  - FBI Vault: Failed (403 errors, need workaround)
+   - Senate votes: 6,313 rows in congress_senate_votes + 631,238 member votes (complete, 403 resolved)
+   - Email: 1,783,792 rows in jmail_emails_full (complete)
+   - SEC EDGAR: 197 rows in sec_insider_transactions (recent only, bulk pending)
+   - FBI Vault: Failed (403 errors, all downloads fail)
+   - FARA: 7,045 registrations + 17,358 principals (complete)
 - **Coverage Gaps:** Senate vote-detail pipeline, pre-107th Congress expansion path, and pre-2009 White House logs
 
 ---
