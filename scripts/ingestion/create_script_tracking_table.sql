@@ -16,7 +16,7 @@ CREATE INDEX IF NOT EXISTS idx_download_scripts_name ON download_scripts(script_
 CREATE INDEX IF NOT EXISTS idx_download_scripts_hash ON download_scripts(script_hash);
 
 -- Add foreign key to data_pipeline_tracking to link to the script used
-ALTER TABLE data_pipeline_tracking 
+ALTER TABLE data_pipeline_tracking
 ADD COLUMN IF NOT EXISTS download_script_id INTEGER REFERENCES download_scripts(id);
 
 -- Add index on download_script_id for joins
@@ -31,8 +31,8 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-CREATE TRIGGER update_download_scripts_updated_at 
-    BEFORE UPDATE ON download_scripts 
+CREATE TRIGGER update_download_scripts_updated_at
+    BEFORE UPDATE ON download_scripts
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 COMMENT ON TABLE download_scripts IS 'Tracks download scripts with their content for reproducibility';

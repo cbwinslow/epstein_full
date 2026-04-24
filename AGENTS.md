@@ -1,6 +1,6 @@
 # Epstein Files Analysis - Agent Configuration
 
-> **Last Updated:** April 24, 2026  
+> **Last Updated:** April 24, 2026
 > **Purpose:** Master configuration for AI agents working on Epstein data analysis
 
 ## 📚 Documentation Structure
@@ -353,7 +353,7 @@ For parallel processing:
 ## Memory Management
 
 ### Centralized Skills System
-All memory operations use the centralized AI skills system located at `/home/cbwinslow/dotfiles/ai/skills/`. 
+All memory operations use the centralized AI skills system located at `/home/cbwinslow/dotfiles/ai/skills/`.
 
 **DO NOT** implement memory management logic directly in this project. Use the skills instead.
 
@@ -1226,7 +1226,7 @@ from scripts.ingestion.news_ingestion_framework import *
 **After ingestion, query results:**
 ```sql
 -- Total collected
-SELECT COUNT(*) FROM media_news_articles 
+SELECT COUNT(*) FROM media_news_articles
 WHERE discovery_source = 'mega_parallel_ingestion';
 
 -- By year
@@ -1236,8 +1236,8 @@ WHERE discovery_source = 'mega_parallel_ingestion'
 GROUP BY year ORDER BY year;
 
 -- Word count distribution
-SELECT 
-    CASE 
+SELECT
+    CASE
         WHEN word_count < 100 THEN 'Short (<100)'
         WHEN word_count < 500 THEN 'Medium (100-500)'
         ELSE 'Long (500+)'
@@ -1247,7 +1247,7 @@ FROM media_news_articles
 GROUP BY 1;
 
 -- Top sources
-SELECT source_domain, COUNT(*) 
+SELECT source_domain, COUNT(*)
 FROM media_news_articles
 GROUP BY source_domain
 ORDER BY COUNT(*) DESC

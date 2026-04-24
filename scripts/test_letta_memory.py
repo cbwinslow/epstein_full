@@ -9,13 +9,13 @@ import sys
 from datetime import datetime
 
 # Add Letta client to path
-sys.path.insert(0, '/home/cbwinslow/.local/lib/python3.11/site-packages')
+sys.path.insert(0, "/home/cbwinslow/.local/lib/python3.11/site-packages")
 
 try:
     from letta_client import Letta
 except ImportError:
     print("Letta client not found. Installing...")
-    os.system('pip install letta-client')
+    os.system("pip install letta-client")
     from letta_client import Letta
 
 # Letta server configuration
@@ -26,6 +26,7 @@ LETTA_API_KEY = "123qweasd"
 # Project identifier
 PROJECT_NAME = "epstein"
 PROJECT_ID = "epstein-data-analysis"
+
 
 def main():
     print(f"Connecting to Letta server at {LETTA_BASE_URL}...")
@@ -57,7 +58,7 @@ def main():
             llm_config={
                 "model": "OpenRouter/openai/gpt-4o-mini",
                 "model_endpoint_type": "openrouter",
-                "context_window": 128000
+                "context_window": 128000,
             },
             memory_blocks=[
                 {
@@ -68,7 +69,7 @@ def main():
                         "DOJ documents, and government data from Congress.gov, GovInfo.gov."
                     ),
                     "limit": 10000,
-                    "description": "Overall project context and objectives"
+                    "description": "Overall project context and objectives",
                 },
                 {
                     "label": "conversation_history",
@@ -77,7 +78,7 @@ def main():
                         "Setting up Letta integration for memory tracking across sessions."
                     ),
                     "limit": 10000,
-                    "description": "Recent conversation history and decisions"
+                    "description": "Recent conversation history and decisions",
                 },
                 {
                     "label": "data_sources",
@@ -88,7 +89,7 @@ def main():
                         "Congress.gov, GovInfo.gov"
                     ),
                     "limit": 10000,
-                    "description": "Available data sources and their status"
+                    "description": "Available data sources and their status",
                 },
                 {
                     "label": "skills_created",
@@ -100,9 +101,9 @@ def main():
                         "multi-agent, work-tracking."
                     ),
                     "limit": 10000,
-                    "description": "Letta skills created and configured for this project"
-                }
-            ]
+                    "description": "Letta skills created and configured for this project",
+                },
+            ],
         )
         print(f"Created agent: {project_agent.id}")
     else:
@@ -119,11 +120,7 @@ def main():
                 "learning SDK, conversations, client tools, streaming, identity, MCP tools, "
                 "sandbox, jobs, metrics). Generalized epstein-specific skills to make them globally usable."
             ),
-            "metadata": {
-                "project": PROJECT_ID,
-                "date": "2026-04-18",
-                "type": "session_summary"
-            }
+            "metadata": {"project": PROJECT_ID, "date": "2026-04-18", "type": "session_summary"},
         },
         {
             "content": (
@@ -131,10 +128,7 @@ def main():
                 "'epstein' (data pipeline tracking, cbwinslow user) and "
                 "'letta' (agent memory, letta user). Both at localhost:5432."
             ),
-            "metadata": {
-                "project": PROJECT_ID,
-                "type": "database_config"
-            }
+            "metadata": {"project": PROJECT_ID, "type": "database_config"},
         },
         {
             "content": (
@@ -142,10 +136,7 @@ def main():
                 "API at localhost:8083, UI at localhost:8283. "
                 "Using external PostgreSQL database 'letta' for persistence."
             ),
-            "metadata": {
-                "project": PROJECT_ID,
-                "type": "server_config"
-            }
+            "metadata": {"project": PROJECT_ID, "type": "server_config"},
         },
         {
             "content": (
@@ -154,10 +145,7 @@ def main():
                 "and 5 generalized skills (api-interactions, data-pipeline, "
                 "database-operations, multi-agent, work-tracking)."
             ),
-            "metadata": {
-                "project": PROJECT_ID,
-                "type": "skills_config"
-            }
+            "metadata": {"project": PROJECT_ID, "type": "skills_config"},
         },
         {
             "content": (
@@ -166,10 +154,7 @@ def main():
                 "ICIJ relationships 77% (2.57M/3.34M), FEC contributions 100% (5.4M+), "
                 "DOJ documents 94% (1.31M/1.40M EFTAs)."
             ),
-            "metadata": {
-                "project": PROJECT_ID,
-                "type": "data_status"
-            }
+            "metadata": {"project": PROJECT_ID, "type": "data_status"},
         },
         {
             "content": (
@@ -177,11 +162,8 @@ def main():
                 "Fix GovInfo.gov API offset limitation (500 errors at offset 10000), "
                 "Complete Congress.gov historical download test."
             ),
-            "metadata": {
-                "project": PROJECT_ID,
-                "type": "pending_tasks"
-            }
-        }
+            "metadata": {"project": PROJECT_ID, "type": "pending_tasks"},
+        },
     ]
 
     # Note: Archival memory insertion requires different API
@@ -205,7 +187,7 @@ def main():
                     f"Session: {datetime.now().isoformat()}. "
                     f"Letta integration setup complete. Added {len(memories_to_add)} "
                     f"memories to archival memory. Agent: {project_agent.id}."
-                )
+                ),
             )
             print("  ✓ Updated conversation history")
         else:
@@ -213,11 +195,12 @@ def main():
     except Exception as e:
         print(f"  ✗ Error updating memory block: {e}")
 
-    print(f"\n✓ Letta integration test complete!")
+    print("\n✓ Letta integration test complete!")
     print(f"  Agent ID: {project_agent.id}")
     print(f"  Project: {PROJECT_ID}")
     print(f"  Memories added: {len(memories_to_add)}")
-    print(f"\nYou can view the agent at: http://localhost:8283")
+    print("\nYou can view the agent at: http://localhost:8283")
+
 
 if __name__ == "__main__":
     main()

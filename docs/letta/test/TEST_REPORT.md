@@ -1,9 +1,9 @@
 # Letta Server Test Report
 
-**Test Date:** April 18, 2026  
-**Test Environment:** Ubuntu Homelab Server (SSH from Windows)  
-**Letta Server:** http://localhost:8283  
-**PostgreSQL:** letta database at 192.168.4.101:5432  
+**Test Date:** April 18, 2026
+**Test Environment:** Ubuntu Homelab Server (SSH from Windows)
+**Letta Server:** http://localhost:8283
+**PostgreSQL:** letta database at 192.168.4.101:5432
 **OpenRouter:** API key configured, endpoint https://openrouter.ai/api/v1
 
 ---

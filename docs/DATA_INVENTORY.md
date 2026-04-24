@@ -62,7 +62,7 @@ CREATE TABLE data_pipeline_tracking (
     source_name TEXT NOT NULL,
     source_type TEXT NOT NULL,  -- 'government', 'financial', 'legal', 'media', 'research'
     source_url TEXT,
-    
+
     -- Download tracking
     download_status TEXT DEFAULT 'pending',  -- 'pending', 'downloading', 'completed', 'failed'
     download_started_at TIMESTAMPTZ,
@@ -71,7 +71,7 @@ CREATE TABLE data_pipeline_tracking (
     download_size_bytes BIGINT,
     download_files_count INT,
     download_path TEXT,
-    
+
     -- Ingestion tracking
     ingestion_status TEXT DEFAULT 'pending',  -- 'pending', 'in_progress', 'completed', 'failed'
     ingestion_started_at TIMESTAMPTZ,
@@ -79,7 +79,7 @@ CREATE TABLE data_pipeline_tracking (
     ingestion_error TEXT,
     records_imported BIGINT DEFAULT 0,
     target_table TEXT,
-    
+
     -- Metadata
     description TEXT,
     priority TEXT DEFAULT 'medium',  -- 'high', 'medium', 'low'
