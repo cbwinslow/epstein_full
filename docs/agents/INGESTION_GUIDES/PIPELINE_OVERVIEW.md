@@ -1,7 +1,7 @@
 # Data Ingestion Pipeline Overview
 
-> **Last Updated:** April 24, 2026  
-> **Purpose:** Comprehensive guide to the Epstein data ingestion pipeline - organized, repeatable, and reusable  
+> **Last Updated:** April 24, 2026
+> **Purpose:** Comprehensive guide to the Epstein data ingestion pipeline - organized, repeatable, and reusable
 
 ---
 
@@ -209,7 +209,7 @@ python scripts/enrichment/batch_ner_extraction.py \
 
 | Process | Script | Output | Status |
 |---------|--------|--------|--------|
-| Generate Embeddings (RTX 3060) | `scripts/enrichment/rtx3060_embeddings.py` | ✅ Complete |  
+| Generate Embeddings (RTX 3060) | `scripts/enrichment/rtx3060_embeddings.py` | ✅ Complete |
 | Generate Embeddings (pgvector) | `scripts/enrichment/embed_*.py` | 🔴 In progress |
 | Build Knowledge Graph | `scripts/processing/master_unify.py` | 🔴 Needs update |
 | Cross-Reference | `scripts/enrichment/load_supplementary.py` | 🔴 Needs run |
@@ -372,7 +372,7 @@ python scripts/processing/deduplicate_records.py --check-only
 # 1. Create download script
 vim scripts/download/download_NEWSOURCE.py
 
-# 2. Create import script  
+# 2. Create import script
 vim scripts/import/import_NEWSOURCE.py
 
 # 3. Document in docs/agents/INGESTION_GUIDES/
@@ -402,7 +402,7 @@ from config import DATA_DIR
 def download_NEWSOURCE(year):
     output_dir = DATA_DIR / 'raw-files/newsource'
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # TODO: Implement download logic
     print(f"Downloading NEWSOURCE for {year}...")
     pass
@@ -428,7 +428,7 @@ async def import_NEWSOURCE():
     conn = await asyncpg.connect(
         "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
     )
-    
+
     # Create table
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS newsource_data (
@@ -437,10 +437,10 @@ async def import_NEWSOURCE():
             source TEXT DEFAULT 'NEWSOURCE'
         )
     """)
-    
+
     # TODO: Implement import logic
     print("Importing NEWSOURCE...")
-    
+
     await conn.close()
 
 if __name__ == '__main__':
@@ -460,6 +460,6 @@ if __name__ == '__main__':
 
 ---
 
-*Last Updated: April 24, 2026*  
-*Maintained by: Research Team*  
+*Last Updated: April 24, 2026*
+*Maintained by: Research Team*
 *Status: Ready for Continuation*

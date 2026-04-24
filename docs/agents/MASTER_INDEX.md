@@ -73,54 +73,54 @@ docs/agents/
 
 ---
 
-## 🚀 Getting Started for AI Agents  
+## 🚀 Getting Started for AI Agents
 
-### New Agent Onboarding  
+### New Agent Onboarding
 
-1. **Read** `ARCHITECTURE.md` - Understand the system  
-2. **Read** `DATA_SOURCES.md` - Know all data sources  
-3. **Read** `INGESTION_GUIDES/PIPELINE_OVERVIEW.md` - Understand pipeline phases  
-4. **Pick** a source guide from `INGESTION_GUIDES/`  
-5. **Follow** the step-by-step procedures in `PROCEDURES/`  
+1. **Read** `ARCHITECTURE.md` - Understand the system
+2. **Read** `DATA_SOURCES.md` - Know all data sources
+3. **Read** `INGESTION_GUIDES/PIPELINE_OVERVIEW.md` - Understand pipeline phases
+4. **Pick** a source guide from `INGESTION_GUIDES/`
+5. **Follow** the step-by-step procedures in `PROCEDURES/`
 
-### Before Starting Work  
+### Before Starting Work
 
-1. Check `DATA_INVENTORY_FULL.md` for current data status  
-2. Verify which sources are already ingested  
-3. Identify gaps or incomplete pipelines  
-4. Check `../DATA_INVENTORY_FULL.md` for coverage analysis  
-5. Read `scripts/README.md` to understand script organization  
+1. Check `DATA_INVENTORY_FULL.md` for current data status
+2. Verify which sources are already ingested
+3. Identify gaps or incomplete pipelines
+4. Check `../DATA_INVENTORY_FULL.md` for coverage analysis
+5. Read `scripts/README.md` to understand script organization
 
 ---
 
-## 📊 Coverage Gaps (Where Codex Left Off - Open Issues)  
+## 📊 Coverage Gaps (Where Codex Left Off - Open Issues)
 
-### High Priority (🚨 Urgent)  
+### High Priority (🚨 Urgent)
 
-1. **Issue #58** - Senate vote details backfill (403 errors) - `download_senate_vote_details.py` 🔴  
-2. **Issue #55** - SEC EDGAR bulk ingestion (Form 4/13F) - `download_sec_edgar_recent.py` 🔴  
-3. **Issue #39** - 749K missing documents gap identification 🔴  
-4. **Issue #44** - FBI Vault text addition to full-text index 🔴  
-5. **Issue #30** - Knowledge graph connections from document co-occurrence 📍  
+1. **Issue #58** - Senate vote details backfill (403 errors) - `download_senate_vote_details.py` 🔴
+2. **Issue #55** - SEC EDGAR bulk ingestion (Form 4/13F) - `download_sec_edgar_recent.py` 🔴
+3. **Issue #39** - 749K missing documents gap identification 🔴
+4. **Issue #44** - FBI Vault text addition to full-text index 🔴
+5. **Issue #30** - Knowledge graph connections from document co-occurrence 📍
 
-### Medium Priority  
+### Medium Priority
 
-6. **Issue #52** - GovInfo expansion beyond current bulk baseline 🔴  
-7. **Issue #29** - Text embeddings expansion beyond RTX 3060 🔴  
-8. **Issue #28** - jMail iMessages/photos download 🔴  
-9. **Issue #12** - Updated knowledge graph from extracted entities 📍  
+6. **Issue #52** - GovInfo expansion beyond current bulk baseline 🔴
+7. **Issue #29** - Text embeddings expansion beyond RTX 3060 🔴
+8. **Issue #28** - jMail iMessages/photos download 🔴
+9. **Issue #12** - Updated knowledge graph from extracted entities 📍
 
-### Completed Recently (✅ Closed April 2026)  
+### Completed Recently (✅ Closed April 2026)
 
-10. **Issue #60** - GovInfo 119 normalization reconciliation ✅  
-11. **Issue #59** - FARA normalized bulk import ✅  
-12. **Issue #51** - Congress.gov completion (106th-119th) ✅  
-13. **Issue #56/#54** - White House visitor logs ingestion ✅  
-14. **Issue #50/#47** - RTX 3060 Embeddings + Phase 22 Media ✅  
-15. **Issue #46/#45/#40** - Fill data gaps, Epstein Exposed emails, SEC EDGAR ✅  
-16. **Issue #38/#35/#34** - FBI Vault, persons registry, jMail import ✅  
-17. **Issue #33/#32/#31** - FBI Vault, ICJ Offshore, HuggingFace ✅  
-18. **Issue #27/#9/#8** - jMail dataset, Process HF parquet, OCR pipeline ✅  
+10. **Issue #60** - GovInfo 119 normalization reconciliation ✅
+11. **Issue #59** - FARA normalized bulk import ✅
+12. **Issue #51** - Congress.gov completion (106th-119th) ✅
+13. **Issue #56/#54** - White House visitor logs ingestion ✅
+14. **Issue #50/#47** - RTX 3060 Embeddings + Phase 22 Media ✅
+15. **Issue #46/#45/#40** - Fill data gaps, Epstein Exposed emails, SEC EDGAR ✅
+16. **Issue #38/#35/#34** - FBI Vault, persons registry, jMail import ✅
+17. **Issue #33/#32/#31** - FBI Vault, ICJ Offshore, HuggingFace ✅
+18. **Issue #27/#9/#8** - jMail dataset, Process HF parquet, OCR pipeline ✅
 
 ### Medium Priority
 

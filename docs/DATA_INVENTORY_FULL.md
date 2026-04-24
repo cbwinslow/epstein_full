@@ -274,46 +274,46 @@
 
 ---
 
-## 🔄 Ingestion Pipeline Status  
+## 🔄 Ingestion Pipeline Status
 
-### Completed Pipelines (✅)  
+### Completed Pipelines (✅)
 
-| Pipeline | Script | Status | Last Run | Records |  
-|----------|--------|--------|----------|---------|  
-| DOJ Ripper | `epstein-ripper/auto_ep_rip.py` | ✅ Complete | 2026-04 | 1.4M docs |  
-| jMail Import | `scripts/import_jmail_*.py` | ✅ Complete | 2026-04-04 | 1.78M emails |  
-| ICIJ Import | `scripts/import_icij.py` | ✅ Complete | 2026-04-04 | 814K entities |  
-| FEC Import | `scripts/import_fec.py` | ✅ Complete | 2026-03 | 447M contributions |  
-| Congress.gov | `scripts/download_congress_historical.py` | ✅ Complete | 2026-04-24 | 368K bills, 10K members |  
-| GovInfo Bulk | `scripts/download_govinfo_bulk.py` | ✅ Complete | 2026-04-24 | 246 files, 737K entries |  
-| White House Visitors | `scripts/download_whitehouse.py` | ✅ Complete | 2026-04-22 | 2.5M visits |  
-| HuggingFace epstein-files-20k | `scripts/import/import_hf_epstein_files_20k.py` | ✅ Complete | 2026-04 | 2.1M docs |  
-| Black Book (dleeerdefi) | `scripts/import/import_dleeerdefi_black_book.py` | ✅ Complete | 2026-04 | 1,252 contacts |  
-| Flight Logs (dleeerdefi) | `scripts/import/import_flight_logs.py` | ✅ Complete | 2026-04 | 2,051 flights |  
-| RTX 3060 Embeddings | `scripts/enrichment/rtx3060_embeddings.py` | ✅ Complete | 2026-04-16 | Generated |  
-| FARA Bulk Import | `scripts/import/import_fara.py` | ✅ Complete | 2026-04-24 | 7K+ records |  
-| GovInfo 119 Normalization | `scripts/import/import_govinfo_*.py` | ✅ Complete | 2026-04-24 | Verified |  
+| Pipeline | Script | Status | Last Run | Records |
+|----------|--------|--------|----------|---------|
+| DOJ Ripper | `epstein-ripper/auto_ep_rip.py` | ✅ Complete | 2026-04 | 1.4M docs |
+| jMail Import | `scripts/import_jmail_*.py` | ✅ Complete | 2026-04-04 | 1.78M emails |
+| ICIJ Import | `scripts/import_icij.py` | ✅ Complete | 2026-04-04 | 814K entities |
+| FEC Import | `scripts/import_fec.py` | ✅ Complete | 2026-03 | 447M contributions |
+| Congress.gov | `scripts/download_congress_historical.py` | ✅ Complete | 2026-04-24 | 368K bills, 10K members |
+| GovInfo Bulk | `scripts/download_govinfo_bulk.py` | ✅ Complete | 2026-04-24 | 246 files, 737K entries |
+| White House Visitors | `scripts/download_whitehouse.py` | ✅ Complete | 2026-04-22 | 2.5M visits |
+| HuggingFace epstein-files-20k | `scripts/import/import_hf_epstein_files_20k.py` | ✅ Complete | 2026-04 | 2.1M docs |
+| Black Book (dleeerdefi) | `scripts/import/import_dleeerdefi_black_book.py` | ✅ Complete | 2026-04 | 1,252 contacts |
+| Flight Logs (dleeerdefi) | `scripts/import/import_flight_logs.py` | ✅ Complete | 2026-04 | 2,051 flights |
+| RTX 3060 Embeddings | `scripts/enrichment/rtx3060_embeddings.py` | ✅ Complete | 2026-04-16 | Generated |
+| FARA Bulk Import | `scripts/import/import_fara.py` | ✅ Complete | 2026-04-24 | 7K+ records |
+| GovInfo 119 Normalization | `scripts/import/import_govinfo_*.py` | ✅ Complete | 2026-04-24 | Verified |
 
-### Active Pipelines (🟡)  
+### Active Pipelines (🟡)
 
-| Pipeline | Script | Status | Last Run | Records |  
-|----------|--------|--------|----------|---------|  
-| GDELT Swarm | `gdelt_parallel_swarm.py` | 🟡 Running | 2025-04-10 | 23,413+ articles |  
+| Pipeline | Script | Status | Last Run | Records |
+|----------|--------|--------|----------|---------|
+| GDELT Swarm | `gdelt_parallel_swarm.py` | 🟡 Running | 2025-04-10 | 23,413+ articles |
 
-### Pending Pipelines (📍 or 🔴)  
+### Pending Pipelines (📍 or 🔴)
 
-| Pipeline | Source | Status | Priority |  
-|----------|--------|--------|----------|  
-| Senate Vote Details | `scripts/download/download_senate_vote_details.py` | 🔴 403 errors | High |  
-| SEC EDGAR Bulk | `scripts/download/download_sec_edgar_recent.py` | 🔴 Needs bulk run | High |  
-| GovInfo Expansion | `scripts/download/download_govinfo_bulk.py` | 🔴 Beyond baseline | Medium |  
-| 749K Missing Documents | - | 🔴 Gap identified | High |  
-| FBI Vault | `scripts/download/download_fbi_vault.py` | 🔴 Need ingest | Medium |  
-| Neo4j Graph Import | `scripts/import/import_neo4j_graph.py` | 📍 Needs import | High |  
-| Knowledge Graph Build | `scripts/processing/master_unify.py` | 🔴 From entities | High |  
-| Text Embeddings | `scripts/enrichment/embed_*.py` | 🔴 Expand coverage | Medium |  
-| jMail iMessages | - | 🔴 Need download | Medium |  
-| Birthday Book (dleeerdefi) | `scripts/import/import_birthday_book.py` | 📍 Needs extraction | Medium |  
+| Pipeline | Source | Status | Priority |
+|----------|--------|--------|----------|
+| Senate Vote Details | `scripts/download/download_senate_vote_details.py` | 🔴 403 errors | High |
+| SEC EDGAR Bulk | `scripts/download/download_sec_edgar_recent.py` | 🔴 Needs bulk run | High |
+| GovInfo Expansion | `scripts/download/download_govinfo_bulk.py` | 🔴 Beyond baseline | Medium |
+| 749K Missing Documents | - | 🔴 Gap identified | High |
+| FBI Vault | `scripts/download/download_fbi_vault.py` | 🔴 Need ingest | Medium |
+| Neo4j Graph Import | `scripts/import/import_neo4j_graph.py` | 📍 Needs import | High |
+| Knowledge Graph Build | `scripts/processing/master_unify.py` | 🔴 From entities | High |
+| Text Embeddings | `scripts/enrichment/embed_*.py` | 🔴 Expand coverage | Medium |
+| jMail iMessages | - | 🔴 Need download | Medium |
+| Birthday Book (dleeerdefi) | `scripts/import/import_birthday_book.py` | 📍 Needs extraction | Medium |
 | Image Analysis | `scripts/processing/image_analysis.py` | 📍 38K images | Low |
 
 ---
@@ -389,32 +389,32 @@
 
 ---
 
-## 📋 Next Steps  
+## 📋 Next Steps
 
-### Immediate (This Week)  
+### Immediate (This Week)
 
-1. 🔴 **Senate Vote Details** - Fix 403 errors, retry with alternate methods (Issue #58)  
-2. 🔴 **SEC EDGAR Bulk** - Run bulk import for Form 4/13F (Issue #55)  
-3. 🔴 **FBI Vault** - Download and ingest FBI Vault documents (Issue #44, #33)  
-4. ✅ **Ingest House Oversight 2024 documents** from HuggingFace  
-5. ✅ **Import Black Book + Flight Logs** from dleerdefi repo  
-6. ✅ **Import Neo4j knowledge graph** (10K nodes, 16K relations)  
+1. 🔴 **Senate Vote Details** - Fix 403 errors, retry with alternate methods (Issue #58)
+2. 🔴 **SEC EDGAR Bulk** - Run bulk import for Form 4/13F (Issue #55)
+3. 🔴 **FBI Vault** - Download and ingest FBI Vault documents (Issue #44, #33)
+4. ✅ **Ingest House Oversight 2024 documents** from HuggingFace
+5. ✅ **Import Black Book + Flight Logs** from dleerdefi repo
+6. ✅ **Import Neo4j knowledge graph** (10K nodes, 16K relations)
 
-### Short Term (This Month)  
+### Short Term (This Month)
 
-7. 🔴 **GovInfo Expansion** - Beyond current bulk baseline (Issue #52)  
-8. 🔴 **Knowledge Graph Build** - From document co-occurrence (Issue #30, #12)  
-9. 🔴 **Text Embeddings** - Expand coverage beyond RTX 3060 (Issue #29)  
-10. 📌 **Pre-2015 coverage** - CourtListener RECAP for 1999-2014  
-11. 📌 **Birthday Book** - 128 pages manual/OCR extraction  
-12. 📌 **Image analysis** - 38K images from PDFs  
+7. 🔴 **GovInfo Expansion** - Beyond current bulk baseline (Issue #52)
+8. 🔴 **Knowledge Graph Build** - From document co-occurrence (Issue #30, #12)
+9. 🔴 **Text Embeddings** - Expand coverage beyond RTX 3060 (Issue #29)
+10. 📌 **Pre-2015 coverage** - CourtListener RECAP for 1999-2014
+11. 📌 **Birthday Book** - 128 pages manual/OCR extraction
+12. 📌 **Image analysis** - 38K images from PDFs
 
-### Long Term (This Quarter)  
+### Long Term (This Quarter)
 
-13. 🔴 **Entity deduplication** across all sources  
-14. 🔴 **Master knowledge graph** combining all datasets  
-15. 🔴 **Embeddings** for 100% of documents  
-16. 🔴 **jMail iMessages** - Download from jmail.world (Issue #28)  
+13. 🔴 **Entity deduplication** across all sources
+14. 🔴 **Master knowledge graph** combining all datasets
+15. 🔴 **Embeddings** for 100% of documents
+16. 🔴 **jMail iMessages** - Download from jmail.world (Issue #28)
 
 ---
 

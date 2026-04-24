@@ -1,7 +1,7 @@
 # Pipeline Orchestration Procedures
 
-> **Last Updated:** April 24, 2026  
-> **Purpose:** Procedures for orchestrating the full ingestion pipeline - from discovery to enrichment  
+> **Last Updated:** April 24, 2026
+> **Purpose:** Procedures for orchestrating the full ingestion pipeline - from discovery to enrichment
 
 ---
 
@@ -222,7 +222,7 @@ python scripts/processing/verify_counts.sql --partial
 
 ### Progress Tracking
 
-**Table:** `collection_queue` (in PostgreSQL)  
+**Table:** `collection_queue` (in PostgreSQL)
 
 ```sql
 -- Check collection progress
@@ -286,5 +286,5 @@ tail -f /home/cbwinslow/workspace/epstein/logs/*.log
 
 ---
 
-*Last Updated: April 24, 2026*  
+*Last Updated: April 24, 2026*
 *Status: Ready for Continuation*

@@ -1,7 +1,7 @@
 # Quality Assurance Procedures
 
-> **Last Updated:** April 24, 2026  
-> **Purpose:** Procedures for ensuring data quality, deduplication, and validation  
+> **Last Updated:** April 24, 2026
+> **Purpose:** Procedures for ensuring data quality, deduplication, and validation
 
 ---
 
@@ -68,9 +68,9 @@ SELECT MIN(publish_date), MAX(publish_date) FROM federal_register_entries;
 
 ```sql
 -- Check if Congress members appear in multiple congresses
-SELECT bioguide_id, COUNT(DISTINCT congress_number) 
-FROM congress_members 
-GROUP BY bioguide_id 
+SELECT bioguide_id, COUNT(DISTINCT congress_number)
+FROM congress_members
+GROUP BY bioguide_id
 HAVING COUNT(DISTINCT congress_number) > 1;
 
 -- Verify vote counts match
@@ -87,7 +87,7 @@ HAVING v.vote_count != COUNT(mv.member_id);
 
 ### Identify Duplicates
 
-**Script:** `scripts/processing/deduplicate_records.py`  
+**Script:** `scripts/processing/deduplicate_records.py`
 
 ```bash
 # Check for duplicates across all tables
@@ -127,7 +127,7 @@ python scripts/processing/eduplicate_records.py --method hash --tables jmail_ema
 
 ### Identify Gaps
 
-**Issue #39:** 749K missing documents  
+**Issue #39:** 749K missing documents
 
 ```bash
 # Compare expected vs. actual
@@ -206,5 +206,5 @@ echo "QA complete! Check logs: qa_*.log"
 
 ---
 
-*Last Updated: April 24, 2026*  
+*Last Updated: April 24, 2026*
 *Status: Ready for Use*

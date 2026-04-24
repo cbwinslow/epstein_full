@@ -1,7 +1,7 @@
 # Data Collection Procedures
 
-> **Last Updated:** April 24, 2026  
-> **Purpose:** Step-by-step procedures for collecting data from all sources  
+> **Last Updated:** April 24, 2026
+> **Purpose:** Step-by-step procedures for collecting data from all sources
 
 ---
 
@@ -40,8 +40,8 @@ vim docs/DATA_INVENTORY_FULL.md
 
 ### 1. DOJ Epstein Library
 
-**Script:** `epstein-ripper/auto_ep_rip.py`  
-**Output:** `/home/cbwinslow/workspace/epstein-data/raw-files/data{1-12}/`  
+**Script:** `epstein-ripper/auto_ep_rip.py`
+**Output:** `/home/cbwinslow/workspace/epstein-data/raw-files/data{1-12}/`
 **Status:** ✅ Complete (1.4M docs)
 
 ```bash
@@ -61,8 +61,8 @@ ls /home/cbwinslow/workspace/epstein-data/raw-files/data1/ | wc -l
 
 ### 2. jMail World Emails
 
-**Scripts:** `scripts/import/import_jmail_*.py`  
-**Output:** PostgreSQL `jmail_emails_full`, `jmail_documents`  
+**Scripts:** `scripts/import/import_jmail_*.py`
+**Output:** PostgreSQL `jmail_emails_full`, `jmail_documents`
 **Status:** ✅ Complete (1.78M emails)
 
 ```bash
@@ -84,8 +84,8 @@ SELECT COUNT(*) FROM jmail_emails_full;
 
 ### 3. GovInfo Bulk Data
 
-**Scripts:** `scripts/download/download_govinfo_bulk.py`  
-**Output:** `/home/cbwinslow/workspace/epstein-data/raw-files/govinfo_bulk/`  
+**Scripts:** `scripts/download/download_govinfo_bulk.py`
+**Output:** `/home/cbwinslow/workspace/epstein-data/raw-files/govinfo_bulk/`
 **Status:** ✅ Complete (246 files)
 
 ```bash
@@ -109,8 +109,8 @@ SELECT COUNT(*) FROM federal_register_entries;
 
 ### 4. Congress.gov Historical
 
-**Script:** `scripts/download/download_congress_historical.py`  
-**Output:** `/home/cbwinslow/workspace/epstein-data/raw-files/congress_historical/`  
+**Script:** `scripts/download/download_congress_historical.py`
+**Output:** `/home/cbwinslow/workspace/epstein-data/raw-files/congress_historical/`
 **Status:** ✅ Complete (105th-119th)
 
 ```bash
@@ -133,8 +133,8 @@ SELECT COUNT(*) FROM congress_bills;
 
 ### 5. Senate Vote Details (🚨 OPEN Issue #58)
 
-**Script:** `scripts/download/download_senate_vote_details.py`  
-**Status:** 🔴 403 errors from senate.gov  
+**Script:** `scripts/download/download_senate_vote_details.py`
+**Status:** 🔴 403 errors from senate.gov
 
 ```bash
 # Try with retry logic
@@ -152,8 +152,8 @@ ls /home/cbwinslow/workspace/epstein-data/raw-files/senate_votes/ 2>/dev/null ||
 
 ### 6. SEC EDGAR Bulk (🚨 OPEN Issue #55)
 
-**Script:** `scripts/download/download_sec_edgar_recent.py`  
-**Status:** 🔴 Needs bulk run  
+**Script:** `scripts/download/download_sec_edgar_recent.py`
+**Status:** 🔴 Needs bulk run
 
 ```bash
 # Download Form 4, 13F data
@@ -206,5 +206,5 @@ echo "Collection complete!"
 
 ---
 
-*Last Updated: April 24, 2026*  
+*Last Updated: April 24, 2026*
 *Status: Ready for Use*
