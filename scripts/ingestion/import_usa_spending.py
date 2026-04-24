@@ -94,9 +94,14 @@ def parse_json_file(filepath: Path) -> List[Dict]:
             data = json.load(f)
         
         for result in data.get('results', []):
+            # Handle empty date strings by converting to None
+            award_date = result.get('Award Date', result.get('period_of_performance_start_date', ''))
+            period_start = result.get('Period of Performance Start Date', '')
+            period_end = result.get('Period of Performance End Date', '')
+            
             record = {
                 'award_id': result.get('Award ID', result.get('generated_internal_id', '')),
-                'award_type': result.get('award_type', ''),
+                'award_type': result.get('award_type', 'contract'),
                 'recipient_name': result.get('Recipient Name', result.get('recipient_name', '')),
                 'recipient_uei': result.get('recipient_uei', ''),
                 'recipient_parent_name': result.get('recipient_parent_name', ''),
@@ -104,9 +109,9 @@ def parse_json_file(filepath: Path) -> List[Dict]:
                 'awarding_sub_agency': result.get('Awarding Sub Agency', result.get('awarding_sub_agency_name', '')),
                 'program_title': result.get('program_title', ''),
                 'award_amount': result.get('Award Amount', result.get('award_amount', 0)),
-                'award_date': result.get('Award Date', result.get('period_of_performance_start_date', '')),
-                'period_start': result.get('Period of Performance Start Date', ''),
-                'period_end': result.get('Period of Performance End Date', ''),
+                'award_date': award_date if award_date else None,
+                'period_start': period_start if period_start else None,
+                'period_end': period_end if period_end else None,
                 'contract_award_type': result.get('contract_award_type', ''),
                 'grant_award_type': result.get('grant_award_type', ''),
                 'cfda_number': result.get('cfda_number', ''),
@@ -162,7 +167,11 @@ def import_records(records: List[Dict]) -> int:
             ))
             inserted += 1
         except Exception as e:
-            logger.debug(f"Insert failed: {e}")
+            logger.error(f"Insert failed for {r.get('award_id')}: {e}")
+            conn.rollback()
+            cur.close()
+            conn.close()
+            return inserted
     
     conn.commit()
     cur.close()

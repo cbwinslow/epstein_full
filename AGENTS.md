@@ -1,6 +1,6 @@
 # Epstein Files Analysis - Agent Configuration
 
-> **Last Updated:** April 10, 2026  
+> **Last Updated:** April 24, 2026  
 > **Purpose:** Master configuration for AI agents working on Epstein data analysis
 
 ## 📚 Documentation Structure
@@ -17,7 +17,7 @@
 - **Data Sources Overview:** See `docs/agents/MASTER_INDEX.md`
 - **Ingestion Procedures:** See `docs/agents/INGESTION_GUIDES/`
 - **Current Data Status:** See `docs/DATA_INVENTORY_FULL.md`
-- **Coverage Gaps:** Pre-2015 era needs alternative sources
+- **Coverage Gaps:** Senate vote-detail pipeline, pre-107th Congress expansion path, and pre-2009 White House logs
 
 ---
 
@@ -122,6 +122,8 @@ epstein-pipeline/
 │   ├── data1/           # Dataset 1
 │   ├── data2/           # Dataset 2
 │   └── ...
+│   ├── congress_historical/   # Congress.gov historical downloads (107th+)
+│   └── govinfo_historical/    # GovInfo historical downloads (2000+)
 ├── databases/           # Pre-built SQLite databases
 │   ├── knowledge_graph.db
 │   ├── redaction_analysis_v2.db
@@ -153,6 +155,76 @@ For parallel processing:
 - Processing progress: SQLite tracking table
 - GPU utilization: nvidia-smi polling
 - Disk usage: df monitoring with alerts at 90%
+
+### Government Historical Ingestion Status
+
+- **FEC historical coverage:** already present in PostgreSQL via `fec_individual_contributions` for cycles 2000-2026 (447,189,732 rows). Do not re-download unless validating source parity.
+- **Congress historical pipeline:** use `scripts/ingestion/download_congress_historical.py`.
+  - Correct endpoints are `/bill/{congress}` and `/member/congress/{congress}`.
+  - Files are stored under `/home/cbwinslow/workspace/epstein-data/raw-files/congress_historical/congress_{N}/`.
+  - Script is resumable and skips completed congress files.
+- **GovInfo historical pipeline:** use `scripts/ingestion/download_govinfo_historical.py`.
+  - Uses `offsetMark` pagination and larger page sizes per the official GovInfo API guidance.
+  - Files are stored under `/home/cbwinslow/workspace/epstein-data/raw-files/govinfo_historical/`.
+- **GovInfo bulk-data pipeline:** use `scripts/ingestion/download_govinfo_bulk.py`.
+  - Supports `FR` yearly ZIPs.
+  - Supports `BILLSTATUS` ZIPs by congress and bill type.
+  - Supports `BILLS` ZIPs by congress, session, and bill type.
+  - Supports `BILLSUM` ZIPs by congress and bill type.
+  - Saves JSON listing manifests next to every downloaded ZIP under `/home/cbwinslow/workspace/epstein-data/raw-files/govinfo_bulk/`.
+- **GovInfo Bill Status bulk import:** use `scripts/ingestion/import_govinfo_billstatus_bulk.py`.
+  - Normalizes bill details into:
+    - `congress_bill_titles`
+    - `congress_bill_summaries`
+    - `congress_bill_actions`
+    - `congress_bill_cosponsors`
+    - `congress_bill_related_bills`
+    - `congress_bill_vote_references`
+  - Enforces unique bill identity on `congress_bills (congress, bill_type, bill_number)`.
+- **Government ingestion status (revalidated 2026-04-24 UTC):**
+  - `congress_bills`: 368,651 (105th-119th)
+  - `congress_members`: 10,413 (105th-119th)
+  - `congress_house_votes`: 2,738 (117th-119th)
+  - `congress_house_vote_details`: 2,738 (pending=0)
+  - `congress_house_member_votes`: 1,185,626
+  - `congress_senate_votes`: 3,132 (106th-119th, partial due upstream 403s)
+  - `congress_senate_member_votes`: 313,176
+  - `congress_bill_text_versions`: 130,361 (expanded with 119th BILLS bulk import)
+  - `congress_bill_summaries`: 279,065
+  - `congress_bill_actions`: 875,816
+  - `congress_bill_cosponsors`: 2,064,763
+  - `congress_bill_vote_references`: 11,546
+  - `federal_register_entries`: 737,940 (2000-01-03 to 2024-12-31)
+  - `court_opinions`: 31,544
+  - `govinfo_packages`: 94,741
+  - `govinfo_bulk_import_status`: 246 files complete
+  - `fara_registrations`: 7,045
+  - `fara_foreign_principals`: 17,358
+  - `fara_short_forms`: 44,413
+  - `fara_registrant_docs`: 124,224
+  - `sec_insider_transactions`: 139 (recent feed import)
+  - `whitehouse_visitors`: 2,544,984 total records (2009-2024)
+    - Obama (2009-2017): 1,562,487
+    - Biden (2021-2024): 937,744
+    - Unique visitors: 1,038,898
+  - Runtime note: latest high-concurrency GovInfo/Congress/FARA batch completed on 2026-04-24 UTC.
+- **Residual government ingestion gaps to track:**
+  - Senate vote-detail pipeline exists (`download_senate_vote_details.py`) but upstream `senate.gov` is intermittently returning HTTP 403 from this host; rerun/backfill required after access unblocks.
+  - Pre-105th Congress expansion requires API-key path and alternate handling.
+  - GitHub tracking: `#51` (closed), `#52` (GovInfo expansion), `#55` (SEC EDGAR), `#57` (FARA), plus sub-issues created for Senate backfill + FARA normalization.
+- **Important schema note:** `congress_members` must be unique on `(bioguide_id, congress_number)`, not `bioguide_id` alone, or historical imports overwrite earlier congress membership.
+- **GovInfo specialized tables:** `import_govinfo.py` fills summary-level rows for:
+  - `federal_register_entries`
+  - `court_opinions`
+  - Verified current counts: `federal_register_entries=737,940`, `court_opinions=31,544`
+- **Validated GovInfo bulk-data slice:** `BILLSTATUS-113-hjres.zip` imported cleanly with:
+  - `131` bills
+  - `350` titles
+  - `178` summaries
+  - `950` actions
+  - `1,837` cosponsors
+  - `217` related bill links
+  - `49` vote references
 
 ### Error Handling
 - HTML/corruption detection → quarantine + re-auth
@@ -577,7 +649,10 @@ All 72 tables in the `epstein` database including:
 - Kabasshouse imports (entities, chunks, financial, embeddings)
 - Epstein Exposed data (persons, flights, emails, organizations)
 - FBI Vault OCR pages
-- FEC donations
+- FEC donations (447M individual contributions)
+- House Financial Disclosures (37,281 records, 2008-2024)
+- Senate Financial Disclosures (not accessible - DNS error)
+- Senate LDA (lobbying registrations and reports)
 - DOJ alteration analysis
 - House Oversight emails
 - All indexes, constraints, and extensions (pgvector, pg_trgm)

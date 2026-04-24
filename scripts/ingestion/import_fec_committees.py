@@ -393,14 +393,17 @@ def update_inventory(counts: Dict[str, int]):
     cur = conn.cursor()
     
     for source, count in counts.items():
-        cur.execute("""
-            INSERT INTO data_inventory (source_name, status, actual_records, last_updated)
-            VALUES (%s, 'imported', %s, NOW())
-            ON CONFLICT (source_name) DO UPDATE SET
-                status = 'imported',
-                actual_records = %s,
-                last_updated = NOW()
-        """, (source, count, count))
+        try:
+            cur.execute("""
+                INSERT INTO data_inventory (source_name, source_type, status, actual_records, last_updated)
+                VALUES (%s, 'government', 'imported', %s, NOW())
+                ON CONFLICT (source_name) DO UPDATE SET
+                    status = 'imported',
+                    actual_records = %s,
+                    last_updated = NOW()
+            """, (source, count, count))
+        except Exception as e:
+            logger.warning(f"Could not update inventory for {source}: {e}")
     
     conn.commit()
     cur.close()

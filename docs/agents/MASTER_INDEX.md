@@ -1,6 +1,6 @@
 # AI Agent Master Index
 
-> **Last Updated:** April 10, 2026  
+> **Last Updated:** April 24, 2026
 > **Purpose:** Central index for all AI agent documentation and procedures
 
 ---
@@ -39,9 +39,26 @@ docs/agents/
 | **jMail Agent** | jMail World Emails | ✅ | 1.78M emails | [INGESTION_GUIDES/02-jmail-world.md](INGESTION_GUIDES/02-jmail-world.md) |
 | **GDELT Agent** | News Articles | 🟡 | 23,413+ | [INGESTION_GUIDES/03-gdelt-news.md](INGESTION_GUIDES/03-gdelt-news.md) |
 | **ICIJ Agent** | Offshore Leaks | ✅ | 814K entities | [INGESTION_GUIDES/04-icij-offshore-leaks.md](INGESTION_GUIDES/04-icij-offshore-leaks.md) |
-| **FEC Agent** | Campaign Finance | ✅ | 5.4M | [INGESTION_GUIDES/05-fec-contributions.md](INGESTION_GUIDES/05-fec-contributions.md) |
-| **HF Agent** | HuggingFace Datasets | 🔴 | ~20K | [INGESTION_GUIDES/06-huggingface-datasets.md](INGESTION_GUIDES/06-huggingface-datasets.md) |
-| **GitHub Agent** | Third-Party Repos | 🔴 | 10K+ nodes | [INGESTION_GUIDES/07-third-party-repos.md](INGESTION_GUIDES/07-third-party-repos.md) |
+| **FEC Agent** | Campaign Finance | ✅ | 447.2M contributions (2000-2026) | [INGESTION_GUIDES/05-fec-contributions.md](INGESTION_GUIDES/05-fec-contributions.md) |
+| **HF Agent** | HuggingFace Datasets | ✅ | 634 parquet files (318GB) | [INGESTION_GUIDES/06-huggingface-datasets.md](INGESTION_GUIDES/06-huggingface-datasets.md) |
+| **GitHub Agent** | Third-Party Repos | 🟡 | Mixed (partially imported) | [INGESTION_GUIDES/07-third-party-repos.md](INGESTION_GUIDES/07-third-party-repos.md) |
+
+### Government Ingestion Snapshot (Updated April 24, 2026 UTC)
+
+| Dataset | Coverage | Count |
+|---------|----------|-------|
+| Federal Register | 2000-2024 | 737,940 |
+| Congress Bills | 105th-119th | 368,651 |
+| Congress Members | 105th-119th | 10,413 |
+| Congress House Votes | 117th-119th | 2,738 |
+| Congress Senate Votes | 106th-119th | 3,132 (partial, source 403 retries pending) |
+| Congress Bill Text Versions | 113th-119th | 130,361 |
+| White House Visitors | 2009-2024 | 2,544,984 |
+| GovInfo Bulk Import Files | FR/BILLS/BILLSTATUS/BILLSUM | 246 complete |
+| FARA Registrations | current bulk | 7,045 |
+| FARA Foreign Principals | current bulk | 17,358 |
+| FARA Short Forms | current bulk | 44,413 |
+| FARA Registrant Docs | current bulk | 124,224 |
 
 ### Worker Agents
 
@@ -56,37 +73,60 @@ docs/agents/
 
 ---
 
-## 🚀 Getting Started for AI Agents
+## 🚀 Getting Started for AI Agents  
 
-### New Agent Onboarding
+### New Agent Onboarding  
 
-1. **Read** `ARCHITECTURE.md` - Understand the system
-2. **Read** `DATA_SOURCES.md` - Know all data sources
-3. **Pick** an ingestion guide from `INGESTION_GUIDES/`
-4. **Follow** the step-by-step procedures
+1. **Read** `ARCHITECTURE.md` - Understand the system  
+2. **Read** `DATA_SOURCES.md` - Know all data sources  
+3. **Read** `INGESTION_GUIDES/PIPELINE_OVERVIEW.md` - Understand pipeline phases  
+4. **Pick** a source guide from `INGESTION_GUIDES/`  
+5. **Follow** the step-by-step procedures in `PROCEDURES/`  
 
-### Before Starting Work
+### Before Starting Work  
 
-1. Check `DATA_INVENTORY_FULL.md` for current data status
-2. Verify which sources are already ingested
-3. Identify gaps or incomplete pipelines
-4. Check `../DATA_INVENTORY_FULL.md` for coverage analysis
+1. Check `DATA_INVENTORY_FULL.md` for current data status  
+2. Verify which sources are already ingested  
+3. Identify gaps or incomplete pipelines  
+4. Check `../DATA_INVENTORY_FULL.md` for coverage analysis  
+5. Read `scripts/README.md` to understand script organization  
 
 ---
 
-## 📊 Coverage Gaps (Priority Tasks)
+## 📊 Coverage Gaps (Where Codex Left Off - Open Issues)  
 
-### High Priority
+### High Priority (🚨 Urgent)  
 
-1. **House Oversight 2024** (~20K docs) - HuggingFace datasets
-2. **Black Book + Flight Logs** - From dleerdefi repo
-3. **Neo4j Knowledge Graph** - 10K nodes, 16K relations
+1. **Issue #58** - Senate vote details backfill (403 errors) - `download_senate_vote_details.py` 🔴  
+2. **Issue #55** - SEC EDGAR bulk ingestion (Form 4/13F) - `download_sec_edgar_recent.py` 🔴  
+3. **Issue #39** - 749K missing documents gap identification 🔴  
+4. **Issue #44** - FBI Vault text addition to full-text index 🔴  
+5. **Issue #30** - Knowledge graph connections from document co-occurrence 📍  
+
+### Medium Priority  
+
+6. **Issue #52** - GovInfo expansion beyond current bulk baseline 🔴  
+7. **Issue #29** - Text embeddings expansion beyond RTX 3060 🔴  
+8. **Issue #28** - jMail iMessages/photos download 🔴  
+9. **Issue #12** - Updated knowledge graph from extracted entities 📍  
+
+### Completed Recently (✅ Closed April 2026)  
+
+10. **Issue #60** - GovInfo 119 normalization reconciliation ✅  
+11. **Issue #59** - FARA normalized bulk import ✅  
+12. **Issue #51** - Congress.gov completion (106th-119th) ✅  
+13. **Issue #56/#54** - White House visitor logs ingestion ✅  
+14. **Issue #50/#47** - RTX 3060 Embeddings + Phase 22 Media ✅  
+15. **Issue #46/#45/#40** - Fill data gaps, Epstein Exposed emails, SEC EDGAR ✅  
+16. **Issue #38/#35/#34** - FBI Vault, persons registry, jMail import ✅  
+17. **Issue #33/#32/#31** - FBI Vault, ICJ Offshore, HuggingFace ✅  
+18. **Issue #27/#9/#8** - jMail dataset, Process HF parquet, OCR pipeline ✅  
 
 ### Medium Priority
 
-4. **Pre-2015 News** - CourtListener RECAP, Wayback Machine
-5. **Birthday Book** - 128 pages from dleerdefi repo
-6. **FBI Vault** - Complete document set
+4. **Pre-2015 news coverage** - expand CourtListener/Wayback/news archives
+5. **Pre-107th Congress strategy** - requires Congress.gov API key + alternative pathing
+6. **Pre-2009 White House data alternatives** - constrained by public disclosure limits
 
 ### Low Priority
 
@@ -116,4 +156,4 @@ docs/agents/
 
 ---
 
-*Generated: April 10, 2026*
+*Generated: April 24, 2026*

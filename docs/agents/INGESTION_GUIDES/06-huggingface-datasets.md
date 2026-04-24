@@ -1,9 +1,9 @@
 # Data Source: HuggingFace Datasets
 
-> **Source:** https://huggingface.co/datasets  
-> **Type:** Community Curated Collections  
-> **License:** Various (check per dataset)  
-> **Status:** 🔴 Not Yet Ingested (~20K documents available)  
+> **Source:** https://huggingface.co/datasets
+> **Type:** Community Curated Collections
+> **License:** Various (check per dataset)
+> **Status:** 🔴 Not Yet Ingested (~20K documents available)
 
 ---
 
@@ -83,10 +83,10 @@ import asyncio
 async def ingest_huggingface_dataset():
     # Load dataset
     dataset = load_dataset("thelde/remo/FULL_EPSTEIN_INDEX", split="train")
-    
+
     # Connect to PostgreSQL
     conn = await asyncpg.connect("postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
-    
+
     # Insert records
     for item in dataset:
         await conn.execute("""
@@ -94,7 +94,7 @@ async def ingest_huggingface_dataset():
             VALUES ($1, $2, $3)
             ON CONFLICT DO NOTHING
         """, "huggingface", item['text'], item['metadata'])
-    
+
     await conn.close()
 
 asyncio.run(ingest_huggingface_dataset())
@@ -116,11 +116,11 @@ import asyncio
 async def import_full_index():
     print("Loading FULL_EPSTEIN_INDEX dataset...")
     dataset = load_dataset("thelde/remo/FULL_EPSTEIN_INDEX", split="train")
-    
+
     conn = await asyncpg.connect(
         "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
     )
-    
+
     # Create table if not exists
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS hf_epstein_index (
@@ -133,14 +133,14 @@ async def import_full_index():
             ingestion_date TIMESTAMPTZ DEFAULT NOW()
         )
     """)
-    
+
     count = 0
     for item in dataset:
         await conn.execute("""
-            INSERT INTO hf_epstein_index 
+            INSERT INTO hf_epstein_index
             (source, document_type, content, metadata, page_number)
             VALUES ($1, $2, $3, $4, $5)
-        """, 
+        """,
             item.get('source', 'unknown'),
             item.get('document_type', 'unknown'),
             item.get('text', ''),
@@ -148,10 +148,10 @@ async def import_full_index():
             item.get('page_number', 0)
         )
         count += 1
-        
+
         if count % 100 == 0:
             print(f"Imported {count} records...")
-    
+
     print(f"Complete! Imported {count} records")
     await conn.close()
 
@@ -171,11 +171,11 @@ import asyncio
 async def import_cc_data():
     print("Loading epstein-data credit card dataset...")
     dataset = load_dataset("kabasshouse/epstein-data", split="train")
-    
+
     conn = await asyncpg.connect(
         "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
     )
-    
+
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS hf_credit_card_transactions (
             id SERIAL PRIMARY KEY,
@@ -191,10 +191,10 @@ async def import_cc_data():
             metadata JSONB
         )
     """)
-    
+
     for item in dataset:
         await conn.execute("""
-            INSERT INTO hf_credit_card_transactions 
+            INSERT INTO hf_credit_card_transactions
             (cardholder_name, transaction_date, merchant, merchant_category,
              amount, flight_origin, flight_destination, carrier, passengers, metadata)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
@@ -210,7 +210,7 @@ async def import_cc_data():
             item.get('passengers', []),
             item
         )
-    
+
     await conn.close()
 
 if __name__ == "__main__":
@@ -287,5 +287,5 @@ if __name__ == "__main__":
 
 ---
 
-*Last Updated: April 10, 2026*  
+*Last Updated: April 10, 2026*
 *Status: Ready for Implementation*

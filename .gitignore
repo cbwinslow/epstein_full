@@ -120,3 +120,44 @@ docker-compose.override.yml
 *.rej
 *.diff
 *.patch
+
+# AI IDE Directories (Cline/Windsurf/Cursor and other agent directories)
+.adal/
+.agent/
+.agents/
+.claude/
+.cline/
+.codebuddy/
+.commandcode/
+.continue/
+.cursor/
+.factory/
+.kilocode/
+.kiro/
+.mcpjam/
+.mux/
+.neovate/
+.openhands/
+.pochi/
+.qoder/
+.roomodes/
+.windsurf/
+.copilot/
+.aider/
+.devine/
+.gopilot/
+.jetbrains/
+.pilot/
+.replit/
+.sourceduty/
+.trae/
+.windsurf/
+.zed/
+
+# AI Skill directories
+skills/
+shared_skills/
+
+# epstein-data directory (all large data files)
+epstein-data/
+research/upstream_refs/

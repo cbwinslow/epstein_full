@@ -1,6 +1,6 @@
 # Epstein Files Data Inventory
 
-> **Last Updated:** April 4, 2026
+> **Last Updated:** April 22, 2026
 > **Purpose:** Comprehensive inventory of all data sources, their locations, and current state
 
 ---
@@ -9,7 +9,30 @@
 
 This document provides a complete inventory of all data in the Epstein Files Analysis project. It compares our data with [epsteinexposed.com](https://epsteinexposed.com) to identify gaps and plan next steps.
 
-**Recent Updates (April 14, 2026):**
+**Recent Updates (April 22, 2026):**
+- ✅ **Congress Historical 107th:** 10,791 bills + 553 members imported after fixing the historical API endpoints
+- ✅ **Congress Historical 108th-109th Imported:** 108th = 10,669 bills + 544 members, 109th = 13,072 bills + 546 members
+- ✅ **GovInfo Historical 2000:** 8,543 packages imported (`BILLS=7,075`, `CRPT=849`, `FR=253`, `USCOURTS=366`)
+- ✅ **GovInfo Historical 2001:** package summaries imported; `FR=249`, `USCOURTS=358`
+- ✅ **Congress Bills Cleanup:** Removed 54,945 duplicate 118th rows and 401 stray snapshot/test rows
+- ✅ **FEC Historical Coverage Verified:** `fec_individual_contributions` already contains 447,189,732 rows across cycles 2000-2026
+
+**Previous Updates (April 18, 2026):**
+- ✅ **DATA PIPELINE TRACKING SYSTEM:** Created `data_pipeline_tracking` table for systematic tracking of downloads/ingestion
+- ✅ **ICIJ Offshore Leaks:** 5,355,790 records imported (814K entities, 771K officers, 402K addresses, 25K intermediaries, 3K others, 3.3M relationships)
+- ✅ **USA Spending Awards:** 100 records imported (sample data from 2 JSON files)
+- 🔄 **GOVERNMENT HISTORICAL BACKFILL IN PROGRESS:** Congress.gov and GovInfo.gov corrected and resumed
+- ✅ **Congress.gov:** 107th + 118th slices verified in PostgreSQL
+- ✅ **FEC.gov Committees/Candidates:** 91,011 records (11,989 candidates, 59,021 committees, 8,623 links, 12,378 PAC records)
+- ✅ **GovInfo.gov:** current-era packages plus historical 2000 slice imported into `govinfo_packages`
+- ✅ **FEC Individual Contributions Script:** Created for indiv24.zip (90M estimated records, 11GB) - import running in background
+- ✅ **Centralized Config:** Created config.py for all import scripts
+- ✅ **House Financial Disclosures:** 37,281 records (2008-2024) imported via workaround script
+- 🔄 **Senate Financial Disclosures:** Not accessible from server (DNS resolution error for efts.senate.gov)
+- 🔄 **Senate LDA:** Not downloaded yet (tables don't exist)
+- 🔄 **FEC Individual Import:** In progress (90M records, 11GB)
+
+**Previous Updates (April 14, 2026):**
 - 🔄 **GOVERNMENT DATA INTEGRATION IN PROGRESS:** Adding FEC, Congress, Lobbying, FARA, GovInfo datasets
 - 🔄 **BULK DOWNLOADS RUNNING:** 400K+ GovInfo documents, 200K lobbying reports, 30K FEC records
 - 🔄 **CROSS-REFERENCE QUERIES CREATED:** 10 SQL views linking entities across datasets
@@ -26,6 +49,66 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 
 ---
 
+## Data Pipeline Tracking System
+
+**Table:** `data_pipeline_tracking` in PostgreSQL
+
+**Purpose:** Systematic tracking of all data sources through download and ingestion pipeline
+
+**Schema:**
+```sql
+CREATE TABLE data_pipeline_tracking (
+    id SERIAL PRIMARY KEY,
+    source_name TEXT NOT NULL,
+    source_type TEXT NOT NULL,  -- 'government', 'financial', 'legal', 'media', 'research'
+    source_url TEXT,
+    
+    -- Download tracking
+    download_status TEXT DEFAULT 'pending',  -- 'pending', 'downloading', 'completed', 'failed'
+    download_started_at TIMESTAMPTZ,
+    download_completed_at TIMESTAMPTZ,
+    download_error TEXT,
+    download_size_bytes BIGINT,
+    download_files_count INT,
+    download_path TEXT,
+    
+    -- Ingestion tracking
+    ingestion_status TEXT DEFAULT 'pending',  -- 'pending', 'in_progress', 'completed', 'failed'
+    ingestion_started_at TIMESTAMPTZ,
+    ingestion_completed_at TIMESTAMPTZ,
+    ingestion_error TEXT,
+    records_imported BIGINT DEFAULT 0,
+    target_table TEXT,
+    
+    -- Metadata
+    description TEXT,
+    priority TEXT DEFAULT 'medium',  -- 'high', 'medium', 'low'
+    notes TEXT,
+    last_checked_at TIMESTAMPTZ DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+**Query Pipeline Status:**
+```bash
+python3 scripts/ingestion/query_pipeline_status.py
+```
+
+**Current Status (April 18, 2026):**
+- **Completed:** 11 datasets (downloaded + ingested)
+- **In Progress:** 1 dataset (FEC Individual Contributions - 90M records)
+- **Pending:** 5 datasets (blocked by network errors or not yet downloaded)
+
+**Advantages of Database Tracking:**
+- Programmatic access for queries and updates
+- Can use triggers for automatic state tracking
+- Easy to filter by status, priority, or source type
+- Scalable as project grows
+- Can generate reports and dashboards
+
+---
+
 ## Quick Reference: epsteinexposed.com vs Our Data
 
 | Metric | epsteinexposed.com | Our PostgreSQL | Gap | Status |
@@ -38,27 +121,33 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | **Locations** | Unknown | 83 (exposed_locations) | Unknown | ❓ |
 | **Organizations** | Unknown | 55 (exposed_organizations) | Unknown | ❓ |
 | **Nonprofits** | Unknown | 33 (exposed_nonprofits) | Unknown | ❓ |
-| **FEC Contributions** | N/A | 5,420,940+ (fec_individual_contributions) | N/A | 🆕 NEW |
+| **FEC Contributions** | N/A | 447M (2000-2026) | N/A | 🆕 NEW |
 | **Congress Trading** | N/A | 0 (congress_trading) | N/A | 🆕 NEW (awaiting API key) |
 
-### Government Datasets (NEW - April 2026)
+### Government Datasets (April 22, 2026)
 | Dataset | Source | Records | Status | Schema |
 |---------|--------|---------|--------|--------|
-| **FEC Individual Contributions** | FEC.gov | 447M | ✅ Imported | fec_contributions |
-| **FEC Candidates** | FEC.gov | ~30K | 🔄 Downloading | fec_candidates |
-| **FEC Committees** | FEC.gov | ~10K | 🔄 Downloading | fec_committees |
-| **Congress Members** | Congress.gov | ~540 | ✅ Imported | congress_members |
-| **Congress Bills** | Congress.gov | ~20K | 🔄 Downloading | congress_bills |
-| **GovInfo Packages** | GovInfo.gov | ~300K | 🔄 Downloading | govinfo_packages |
-| **Federal Register** | GovInfo.gov | ~300K | 🔄 Downloading | federal_register_entries |
-| **Court Opinions** | GovInfo.gov | ~50K | 🔄 Downloading | court_opinions |
-| **FARA Registrations** | DOJ FARA | ~5K | 🔄 Downloading | fara_registrations, fara_foreign_principals |
-| **Lobbying Registrations** | Senate LDA | ~5K | 🔄 Downloading | lobbying_registrations |
-| **Lobbying Reports** | Senate LDA | ~200K | 🔄 Downloading | lobbying_quarterly_reports |
+| **Congress Members** | Congress.gov | 4,334 | Imported (107th, 108th, 109th, 118th) | congress_members |
+| **Congress Bills** | Congress.gov | 53,847 | Imported (107th, 108th, 109th, 118th) | congress_bills |
+| **FEC Candidates** | FEC.gov | 11,989 | Imported | fec_candidates |
+| **FEC Committees** | FEC.gov | 59,021 | Imported | fec_committees |
+| **FEC Candidate-Committee Links** | FEC.gov | 8,623 | Imported | fec_candidate_committee_links |
+| **FEC PAC Summary** | FEC.gov | 12,378 | Imported | fec_pac_summary |
+| **FEC Individual Contributions** | FEC.gov | 447,189,732 | Imported | fec_individual_contributions |
+| **GovInfo Packages** | GovInfo.gov | 62,161 | Imported | govinfo_packages |
+| **Federal Register** | GovInfo.gov | 2,245 | Imported from package summaries | federal_register_entries |
+| **Court Opinions** | GovInfo.gov | 30,724 | Imported from package summaries | court_opinions |
+| **Committee Reports** | GovInfo.gov | 849 historical + current-era packages | Imported into `govinfo_packages` | govinfo_packages |
+| **FARA Registrations** | DOJ FARA | ~5K | Downloading | fara_registrations, fara_foreign_principals |
+| **Lobbying Registrations** | Senate LDA | ~5K | 🔄 Ingesting | lobbying_registrations |
+| **Lobbying Reports** | Senate LDA | ~200K | 🔄 Ingesting | lobbying_quarterly_reports |
 | **White House Visitors** | White House | 8 | ✅ Sample | whitehouse_visitors |
 | **SEC Insider Transactions** | SEC EDGAR | Placed | ✅ Schema | sec_insider_transactions |
 | **USA Spending Awards** | USASpending.gov | 100 | ✅ Sample | usa_spending_awards |
-| **Financial Disclosures** | House/Senate | ~2K | 🔄 Downloading | financial_disclosures |
+| **House Financial Disclosures** | House Clerk | 37,281 | ✅ Imported | house_financial_disclosures |
+| **Senate Financial Disclosures** | Senate eFD | 0 | ❌ DNS error | senate_financial_disclosures |
+
+**Total Government Records Ingested:** 447M+ plus current Congress/GovInfo/FD support tables; historical backfill remains in progress for Congress.gov and GovInfo.gov
 
 ### Additional Data
 - **FBI Vault:** 22 documents (1,344 pages total)
@@ -106,7 +195,7 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 | unaccent | 1.1 | Accent-insensitive search |
 | pg_stat_statements | 1.10 | Query monitoring |
 
-### Tables (44 total, ~15M rows)
+### Tables (53 total, ~462M rows)
 
 #### Core Document Tables
 | Table | Rows | Description | Source |
@@ -166,6 +255,19 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 |-------|------|-------------|--------|
 | fec_donations | 400 | FEC donation records | Supplementary data |
 | fec_disbursements | 3,600 | FEC disbursement records | Supplementary data |
+
+#### Government Tables (April 22, 2026)
+| Table | Rows | Description | Source |
+|-------|------|-------------|--------|
+| congress_members | 4,334 | Congressional member data (107th, 108th, 109th, 118th) | Congress.gov |
+| congress_bills | 53,847 | Congressional bills | Congress.gov |
+| fec_candidates | 11,989 | FEC candidate records (2020, 2022, 2024) | FEC.gov |
+| fec_committees | 59,021 | FEC committee records (2020, 2022, 2024) | FEC.gov |
+| fec_candidate_committee_links | 8,623 | Links between candidates and committees | FEC.gov |
+| fec_pac_summary | 12,378 | PAC financial summaries | FEC.gov |
+| govinfo_packages | 53,618 | GovInfo.gov packages (bills, reports, opinions) | GovInfo.gov |
+| federal_register_entries | 2,245 | Federal Register entries | GovInfo.gov |
+| court_opinions | 30,724 | Court opinions | GovInfo.gov |
 
 #### epsteinexposed.com Mirror Tables
 | Table | Rows | Description | Source |

@@ -528,9 +528,39 @@
 | 20.8 | Document data acquisition methods | ✅ Done | Created `docs/DATA_ACQUISITION.md` |
 | 20.9 | Create repeatable import scripts | ⏳ Pending | Standardize all import scripts |
 | 20.10 | Apply naming conventions | ⏳ Pending | Standardize table/column names |
-| 20.11 | Update GitHub issues | 🔄 In Progress | Add comprehensive status comments |
+| 20.11 | Update GitHub issues | ✅ Done | Posted reconciled status updates with validated counts and residual gap tracking (`#51`, `#52`, `#55`, `#57`) |
 | 20.12 | Prepare research paper outline | ⏳ Pending | Document methodology |
 | 20.13 | Design website API architecture | ⏳ Pending | Plan data API endpoints |
+| 20.14 | Fix Congress historical downloader | ✅ Done | Corrected API endpoints to `/bill/{congress}` and `/member/congress/{congress}`; validated with 107th Congress |
+| 20.15 | Fix GovInfo historical offset failure | ✅ Done | Split high-volume collections into monthly windows to avoid 500 errors at offset 10000 |
+| 20.16 | Import first historical Congress slice | ✅ Done | Imported Congress 107: 10,791 bills + 553 members |
+| 20.17 | Import first historical GovInfo slice | ✅ Done | Imported GovInfo 2000: 8,543 packages (BILLS/CRPT/FR/USCOURTS) |
+| 20.18 | Verify FEC historical coverage | ✅ Done | `fec_individual_contributions` already covers cycles 2000-2026 with 447,189,732 rows |
+| 20.19 | Clean polluted Congress bill rows | ✅ Done | Removed 401 stray rows and 54,945 duplicate 118th bill rows; table now has 107th=10,791 and 118th=19,315 |
+| 20.20 | Launch next Congress historical batch | ✅ Done | 108th-109th completed and imported; `congress_bills` now includes 108th=10,669 and 109th=13,072, `congress_members` includes 108th=544 and 109th=546; see `logs/ingestion/congress_historical_batch_108_109_20260422.log` |
+| 20.21 | Launch next GovInfo historical batch | ✅ Done | 2001 completed and imported; `FR=249`, `USCOURTS=358` plus 2001 bill/report package classes now in `govinfo_packages`; see `logs/ingestion/govinfo_historical_batch_2001_20260422.log` |
+| 20.22 | Create GitHub tracking issues for historical backfill | ✅ Done | Created `#51` (Congress) and `#52` (GovInfo) with current status/comments |
+| 20.23 | Populate GovInfo specialized tables | ✅ Done | `import_govinfo.py` now fills `federal_register_entries` and `court_opinions`; verified counts `2,245` and `30,724` |
+| 20.24 | Harden Congress importer against malformed records | ✅ Done | `import_congress.py` now skips null/non-dict bill/member records and null nested objects; validated with `py_compile` and parser-only check against `congress_118/bills/bills_118.json` |
+| 20.25 | Fix historical downloader worker model | ✅ Done | Added process-wide API rate limiting and per-thread `requests.Session` reuse to Congress/GovInfo historical downloaders; Congress now downloads bills+members concurrently per congress without exceeding per-process rate budget |
+| 20.26 | Launch Congress 110th-112th historical batch | ✅ Done | Completed and imported; part of validated 107th-119th Congress coverage with `congress_bills=333,400` and `congress_members=8,769` (verified April 23, 2026 session log) |
+| 20.27 | Launch GovInfo 2002-2003 historical batch | ✅ Done | Completed with patched worker model (`--workers 8`); `USCOURTS` 2002=`394`, 2003=`426`; `FR` 2002=`250`, 2003=`249`; `court_opinions` now `31,544` |
+| 20.28 | Align downloaders with official upstream docs/repos | ✅ Done | Cloned official GovInfo/Congress support repos; GovInfo historical downloader now uses `offsetMark`; Congress historical downloader now uses `limit=250` and safer pacing; validated live on GovInfo `BILLS 2004` and Congress `113` |
+| 20.29 | Rework GovInfo bulk downloader to use bulkdata repository | ✅ Done | Replaced API-based `download_govinfo_bulk.py` with a real GovInfo bulk ZIP downloader for `FR` and `BILLSTATUS`; validated `FR-2004.zip` and `BILLSTATUS-113-hjres.zip` and saved listing manifests alongside them |
+| 20.30 | Import GovInfo Bill Status bulk XML into normalized tables | ✅ Done | Added `import_govinfo_billstatus_bulk.py`; creates `congress_bill_titles`, `congress_bill_summaries`, `congress_bill_actions`, `congress_bill_cosponsors`, `congress_bill_related_bills`, and `congress_bill_vote_references`; validated on `BILLSTATUS-113-hjres.zip` with `131` bills and `49` vote references |
+| 20.31 | Extend GovInfo bulk downloader for bill text and bill summaries | ✅ Done | `download_govinfo_bulk.py` now supports `BILLS` and `BILLSUM` ZIPs in addition to `FR` and `BILLSTATUS`; validated on `113/hjres` live downloads |
+| 20.32 | Harden Congress bill identity integrity | ✅ Done | Added unique index `uq_congress_bills_key` on `(congress, bill_type, bill_number)` after verifying no duplicates remained |
+| 20.33 | Launch wide official bulk-data backfill | ✅ Done | Completed for scoped targets; final verified bulk import status: `FR completed=26`, `BILLSTATUS completed=52`, `BILLS completed=96`, `BILLSUM completed=48` |
+| 20.34 | Fix GovInfo bulk ZIP integrity and resumable Bill Status import | ✅ Done | `download_govinfo_bulk.py` now validates existing/downloaded ZIPs and re-downloads corrupt files via `.part` temp writes; `import_govinfo_billstatus_bulk.py` now records per-ZIP status in `govinfo_bulk_import_status`, skips completed ZIPs, and continues on failure; repaired corrupt `BILLSTATUS-113-hr.zip` and resumed import |
+| 20.35 | Add GovInfo BILLSUM bulk importer | ✅ Done | Added `import_govinfo_billsum_bulk.py`; validated on `BILLSUM-113-hjres.zip` (`178` summaries) and completed full BILLSUM batch (`BILLSUM completed=48`) |
+| 20.36 | Harden GovInfo BILLS bulk importer against malformed XML | ✅ Done | `import_govinfo_bills_bulk.py` uses `lxml` recovery and corrected bill-type normalization; full BILLS batch completed (`BILLS completed=96`) |
+| 20.37 | Add GovInfo FR bulk importer | ✅ Done | Added `import_govinfo_fr_bulk.py`; validated and completed full FR yearly batch (`FR completed=26`, `federal_register_entries=737,940`) |
+| 20.38 | Repair corrupt FR yearly ZIPs for bulk import | ✅ Done | Reused `download_govinfo_bulk.py` to redownload invalid FR ZIPs for `2000-2003,2005-2007`; repaired archives are back on disk and the resumed FR importer is retrying them |
+| 20.39 | Complete GovInfo BILLS bulk backfill | ✅ Done | Patched importer cleared malformed XML and `hres` normalization failures; `govinfo_bulk_import_status` now shows `BILLS completed=96`; `congress_bill_text_versions=113106` |
+| 20.40 | Add Congress House vote ingestion | ✅ Done | `download_congress_historical.py` now downloads House roll call votes via the official `house-vote` endpoint where available; `import_congress.py` now imports `house_votes_*.json` into `congress_house_votes`; validated on Congress `118` with `1241` imported votes |
+| 20.41 | Continue GovInfo FR full-year bulk backfill | ✅ Done | FR backfill completed for 2000-2024; final verified range `2000-01-03` to `2024-12-31` with `737,940` rows |
+| 20.42 | Expand House vote backfill to supported congresses | ✅ Done | Used vote-only component runs to download/import House votes for `117`, `118`, and `119`; `congress_house_votes=2730` (`117=998`, `118=1241`, `119=491`) |
+| 20.43 | Continue GovInfo FR full-year bulk backfill verification | ✅ Done | Final verification passed; no active FR importer process and row counts match documented April 23, 2026 completion state |
 
 ### Database Validation Views Created
 
@@ -617,3 +647,26 @@ scripts/create_media_schema.sql      # 600+ lines of SQL
 ```
 
 ---
+
+## Phase 23: Government Data Completion & Standardized Pipelines 🚧 IN_PROGRESS
+
+| # | Task | Status | Solution/Notes |
+|---|------|--------|----------------|
+| 23.1 | Reconcile government coverage against live DB | ✅ Done | Verified counts and ranges for `congress_*`, `govinfo_*`, `federal_register_entries`, `whitehouse_visitors` on 2026-04-24 |
+| 23.2 | Correct docs to remove stale/interim government counts | ✅ Done | Updated `AGENTS.md`, `docs/DATA_INVENTORY_FULL.md`, `docs/GOV_DATA_INGESTION_SUMMARY.md`, and replaced stale `docs/GOVERNMENT_DATA_PIPELINE.md` |
+| 23.3 | Track residual Congress gaps | ✅ Done | Initial gap matrix (2026-04-24 start) identified `106th`, `119th members`, and vote-detail empties; all three are now closed |
+| 23.4 | Track residual vote-detail gaps | ✅ Done | Initial state had `congress_house_vote_details=0`, `congress_house_member_votes=0`; now `2738` and `1185626`, with Senate vote-detail still pending |
+| 23.5 | Update GitHub issue #51 with gap matrix and next steps | ✅ Done | Posted current validated counts and explicit remaining Congress tasks |
+| 23.6 | Update GitHub issue #52 with finalized GovInfo state + remaining scope | ✅ Done | Posted bulk completion metrics and next-scope clarification |
+| 23.7 | Update GitHub issue #55 (SEC EDGAR) with pipeline recommendation | ✅ Done | Added actionable ingestion path and integration target notes |
+| 23.8 | Update GitHub issue #57 (FARA) with realistic acquisition strategy | ✅ Done | Added practical approach for non-bulk/interactive source constraints |
+| 23.9 | Backfill 119th members into `congress_members` | ✅ Done | Executed `download_congress_historical.py --congresses 119 --components members --workers 12 --import-after-download`; imported 551 records |
+| 23.10 | Backfill House vote details + member votes | ✅ Done | Executed `download_house_vote_details.py --limit 1000000 --concurrency 40` plus tail pass; final `congress_house_vote_details=2738`, `congress_house_member_votes=1185626`, `pending_vote_details=0` |
+| 23.11 | Implement Senate vote-detail pipeline | ⬜ TODO | Add downloader/importer + normalized tables and idempotent tracking |
+| 23.12 | Extend to year-2000 Congress completeness (106th session coverage) | ✅ Done | Executed `download_congress_historical.py --congresses 106 --components bills,members,votes --workers 12 --import-after-download`; imported `106th` bills/members and validated 106-119 range |
+| 23.13 | Publish generalized government pipeline runbook | ✅ Done | `docs/GOVERNMENT_DATA_PIPELINE.md` now defines repeatable download/import/validate pattern |
+| 23.14 | Harden House vote-detail importer for session-aware idempotency | ✅ Done | Updated `download_house_vote_details.py` to key on `(congress,session,roll_call_number)`, fixed endpoint payload handling, added schema migration and validation |
+| 23.15 | Run high-concurrency historical Congress/GovInfo refresh in parallel | ✅ Done | Ran `download_congress_historical.py --congresses 106-119 --components bills,members,votes --workers 24 --import-after-download` and GovInfo bulk download/import loops for `BILLSTATUS`, `BILLS`, `BILLSUM` |
+| 23.16 | Build and validate Senate vote-detail ingestion pipeline | 🔄 In Progress | Added `download_senate_vote_details.py`, validated inserts, loaded `congress_senate_votes=3132` and `congress_senate_member_votes=313176`; blocked by intermittent upstream HTTP 403 responses |
+| 23.17 | Fix FARA importer for current bulk XML schema | 🔄 In Progress | Reworked `import_fara.py` for streaming `<ROW>` ingestion with normalized tables (`registrations/principals/short_forms/docs`), validated via sample runs; full production ingest actively running |
+| 23.18 | Update GitHub tracking with sub-issues and progress comments | ✅ Done | Commented on `#51/#52/#55/#57`; opened `#58` (Senate retries), `#59` (FARA completion), `#60` (GovInfo 119 reconciliation) |

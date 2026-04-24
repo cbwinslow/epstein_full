@@ -48,7 +48,7 @@ def download_with_resume(dataset_name, folder_name, batch_size=10000):
             f.write(json.dumps(dataset[i]) + "\n")
 
             if (i + 1) % batch_size == 0:
-                print(f"   Saved {i + 1:,} / {total:,} ({(i+1)/total*100:.1f}%)")
+                print(f"   Saved {i + 1:,} / {total:,} ({(i + 1) / total * 100:.1f}%)")
                 # Flush periodically
                 f.flush()
 
@@ -63,7 +63,7 @@ def download_with_resume(dataset_name, folder_name, batch_size=10000):
         json.dump(manifest, f, indent=2)
 
     print(f"✅ Complete! Total saved: {total:,} records")
-    print(f"   File size: {jsonl_path.stat().st_size / (1024*1024):.2f} MB")
+    print(f"   File size: {jsonl_path.stat().st_size / (1024 * 1024):.2f} MB")
     return True
 
 

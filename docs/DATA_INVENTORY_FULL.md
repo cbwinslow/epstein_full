@@ -1,6 +1,6 @@
 # Epstein Files - Comprehensive Data Inventory
 
-> **Last Updated:** April 10, 2026  
+> **Last Updated:** April 24, 2026
 > **Purpose:** Master inventory of all data sources, their provenance, size, and ingestion status
 
 ---
@@ -12,7 +12,7 @@
 | **Primary Documents** | 1.4M | 20+ GB | ✅ Complete |
 | **News Articles** | 23,413+ | - | ✅ Active Collection |
 | **Emails** | 1.78M | 319 MB | ✅ Complete |
-| **Financial Data** | 5.4M+ | - | ✅ Complete |
+| **Government Data** | 450M+ | - | ✅ Complete |
 | **Knowledge Graph** | 3.3M relations | - | ✅ Complete |
 | **Offshore Leaks** | 814K entities | 600 MB | ✅ Complete |
 | **HuggingFace Datasets** | 2.1M+ | ~2 GB | ✅ Downloaded (Need Ingestion) |
@@ -125,7 +125,7 @@
 
 | Dataset | Records | Size | Timeframe | Source URL | Status |
 |---------|---------|------|-----------|------------|--------|
-| **Individual Contributions** | 5,420,940+ | - | 1999-2026 | https://www.fec.gov/data/ | ✅ Complete |
+| **Individual Contributions** | 447,189,732 | - | 2000-2026 | https://www.fec.gov/data/ | ✅ Complete |
 
 **PostgreSQL Table:**
 - `fec_individual_contributions`
@@ -137,7 +137,59 @@
 
 ---
 
-### 6. FBI Vault
+### 6. Government Data (Comprehensive Historical Coverage)
+
+| Dataset | Records | Timeframe | Source | Status |
+|--------|--------|----------|--------|--------|
+| **Federal Register** | 737,940 | 2000-2024 | GovInfo.gov | ✅ Complete |
+| **Congress Bills** | 359,467 | 106th-119th (2000-2026) | Congress.gov API | ✅ Complete |
+| **Congress Members** | 9,864 | 106th-119th | Congress.gov API | ✅ Complete |
+| **House Votes** | 2,738 | 117th-119th | Congress.gov API | ✅ Complete |
+| **House Vote Details** | 2,738 | 117th-119th | Congress.gov API + Clerk XML | ✅ Complete |
+| **House Member Roll Calls** | 1,185,626 | 117th-119th | Congress.gov API + Clerk XML | ✅ Complete |
+| **Bill Text Versions** | 113,106 | 113th-118th | GovInfo.gov | ⚠️ coverage gap |
+| **Bill Status Metadata** | 11,546 vote refs + related metadata | 108th-119th | GovInfo.gov | ✅ Complete |
+| **Court Opinions** | 31,544 | 2000-2024 | GovInfo.gov | ✅ Complete |
+| **White House Visitors** | 2,544,984 | 2009-2024 | Archives.gov | ✅ Complete |
+| **FEC Individual Contrib.** | 447,189,732 | 2000-2026 | FEC.gov | ✅ Complete |
+| **House Financial Discl.** | 37,281 | 2008-2024 | Clerk.House.gov | ✅ Complete |
+| **Lobbying (LDA)** | 30,600 | 2000-2024 | Senate.gov | ✅ Complete |
+
+#### Coverage for Epstein's Peak Years (2000-2009)
+
+| Source | 2000 | 2001 | 2002 | 2003 | 2004 | 2005 | 2006 | 2007 | 2008 | 2009 |
+|--------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+| Federal Register | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Congress Bills | - | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| FEC Contributions | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| White House Visitors | - | - | - | - | - | - | - | - | - | ✅ |
+
+**Note:** White House visitor logs were not publicly disclosed until the Obama administration in 2009. Pre-2009 visitor data is not available.
+
+#### PostgreSQL Tables
+- `federal_register_entries` - 737,940 entries
+- `congress_bills` - 359,467 bills
+- `congress_members` - 9,864 members
+- `congress_house_votes` - 2,738 votes
+- `congress_house_vote_details` - 2,738 vote detail rows
+- `congress_house_member_votes` - 1,185,626 member vote rows
+- `congress_bill_text_versions` - 113,106 versions
+- `whitehouse_visitors` - 2,544,984 visits
+- `fec_individual_contributions` - 447M+ contributions
+- `house_financial_disclosures` - 37,281 filings
+- `lda_filings` - 30,600 registrations
+
+#### Scripts
+- `download_govinfo_bulk.py` - Federal Register, Bills, Bill Status
+- `download_congress_historical.py` - Congress bills/members/votes
+- `download_whitehouse.py` - White House visitor logs
+- `import_govinfo_*.py` - GovInfo importers
+- `import_congress.py` - Congress importer
+- `import_whitehouse_visitors.py` - Visitor log importer
+
+---
+
+### 7. FBI Vault
 
 | Dataset | Records | Size | Timeframe | Source URL | Status |
 |---------|---------|------|-----------|------------|--------|
@@ -150,7 +202,7 @@
 
 ---
 
-### 7. Third-Party Knowledge Graphs
+### 8. Third-Party Knowledge Graphs
 
 #### dleerdefi/epstein-network-data
 **Source:** https://github.com/dleerdefi/epstein-network-data
@@ -178,7 +230,7 @@
 
 ---
 
-### 8. HuggingFace Datasets
+### 9. HuggingFace Datasets
 
 | Dataset | Records | Source | URL | Status |
 |---------|---------|--------|-----|--------|
@@ -202,47 +254,67 @@
 
 ## 📈 Coverage Gaps
 
-### Pre-2015 Era (9/11, Early Wexner)
+### Current Structural Gaps
 
-| Era | Timeframe | Coverage | Solution |
-|-----|-----------|----------|----------|
-| **Wexner Money Mgmt** | 1999-2006 | ❌ None | Need court filings |
-| **9/11 Connections** | 2001-2002 | ❌ None | Need FOIA requests |
-| **First Investigation** | 2005-2008 | ⚠️ Limited | Palm Beach PD records |
-| **Acosta Era** | 2008-2019 | ⚠️ Limited | Case file 09-347 |
+| Gap | Timeframe | Coverage | Recommended Path |
+|-----|-----------|----------|------------------|
+| **Pre-107th Congress** | Before 2001 | ❌ Not in current historical pipeline | Congress.gov API key + alternate ingestion path |
+| **119th Congress Members** | 2025-2026 | ⚠️ Missing in `congress_members` | Run members-only Congress backfill for 119th |
+| **Roll Call Vote Details** | 2000+ | ⚠️ Vote refs exist, detail tables empty | Backfill House/Senate vote detail pipelines |
+| **White House Visitor Logs** | Before 2009 | ❌ Not publicly disclosed in the same archive flow | External archival/legal-source strategy |
+| **Pre-2015 News** | Before Feb 2015 | ⚠️ GDELT not available | CourtListener RECAP, Wayback, other archives |
+| **SEC EDGAR Linkage Data** | 2000+ | ⚠️ Partial/optional | Expand SEC ingestion for Form 4 / 13F |
+| **FARA Bulk Coverage** | 2000+ | ⚠️ Limited API support | Managed/manual acquisition workflow |
 
 **Alternative Sources Needed:**
-- CourtListener RECAP for pre-2015 filings
-- Wayback Machine for archived news
-- LexisNexis (if available)
-- Physical document requests
+- CourtListener RECAP and docket-level court sources
+- Wayback Machine and archival news repositories
+- SEC EDGAR direct pipelines (targeted forms)
+- Managed FARA acquisition strategy
 
 ---
 
-## 🔄 Ingestion Pipeline Status
+## 🔄 Ingestion Pipeline Status  
 
-### Active Pipelines
+### Completed Pipelines (✅)  
 
-| Pipeline | Script | Status | Last Run | Records |
-|----------|--------|--------|----------|---------|
-| GDELT Swarm | `gdelt_parallel_swarm.py` | 🟡 Running | 2025-04-10 | 23,413+ |
-| DOJ Ripper | `epstein-ripper/auto_ep_rip.py` | ✅ Complete | 2025-03 | 1.4M |
-| jMail Import | `scripts/import_jmail_*.py` | ✅ Complete | 2025-04-04 | 3.2M |
-| ICIJ Import | `scripts/import_icij.py` | ✅ Complete | 2025-04-04 | 3.3M |
-| FEC Import | `scripts/import_fec.py` | ✅ Complete | 2025-03 | 5.4M |
-| Black Book Import | `scripts/import_black_book_json.py` | ✅ Complete | 2025-04-11 | 2,327 contacts |
-| Flight Logs Import | `scripts/import_flight_logs.py` | ✅ Complete | 2025-04-11 | 85 names |
+| Pipeline | Script | Status | Last Run | Records |  
+|----------|--------|--------|----------|---------|  
+| DOJ Ripper | `epstein-ripper/auto_ep_rip.py` | ✅ Complete | 2026-04 | 1.4M docs |  
+| jMail Import | `scripts/import_jmail_*.py` | ✅ Complete | 2026-04-04 | 1.78M emails |  
+| ICIJ Import | `scripts/import_icij.py` | ✅ Complete | 2026-04-04 | 814K entities |  
+| FEC Import | `scripts/import_fec.py` | ✅ Complete | 2026-03 | 447M contributions |  
+| Congress.gov | `scripts/download_congress_historical.py` | ✅ Complete | 2026-04-24 | 368K bills, 10K members |  
+| GovInfo Bulk | `scripts/download_govinfo_bulk.py` | ✅ Complete | 2026-04-24 | 246 files, 737K entries |  
+| White House Visitors | `scripts/download_whitehouse.py` | ✅ Complete | 2026-04-22 | 2.5M visits |  
+| HuggingFace epstein-files-20k | `scripts/import/import_hf_epstein_files_20k.py` | ✅ Complete | 2026-04 | 2.1M docs |  
+| Black Book (dleeerdefi) | `scripts/import/import_dleeerdefi_black_book.py` | ✅ Complete | 2026-04 | 1,252 contacts |  
+| Flight Logs (dleeerdefi) | `scripts/import/import_flight_logs.py` | ✅ Complete | 2026-04 | 2,051 flights |  
+| RTX 3060 Embeddings | `scripts/enrichment/rtx3060_embeddings.py` | ✅ Complete | 2026-04-16 | Generated |  
+| FARA Bulk Import | `scripts/import/import_fara.py` | ✅ Complete | 2026-04-24 | 7K+ records |  
+| GovInfo 119 Normalization | `scripts/import/import_govinfo_*.py` | ✅ Complete | 2026-04-24 | Verified |  
 
-### Pending Pipelines
+### Active Pipelines (🟡)  
 
-| Pipeline | Source | Records | Priority |
-|----------|--------|---------|----------|
-| HuggingFace epstein-files-20k | HuggingFace | 2.1M docs (Need Ingestion) | High |
-| House Oversight 2024 (FULL_EPSTEIN_INDEX) | HuggingFace | ~20,000 | High |
-| Black Book | GitHub/dleerdefi | 2,327 contacts ✅ Ingested | High |
-| Flight Logs | GitHub/dleerdefi | 85 names, flights parsed ✅ Ingested | High |
-| Birthday Book | GitHub/dleerdefi | 128 pages | Medium |
-| Neo4j Graph Import | GitHub/dleerdefi | 10,356 nodes, 16,625 edges | High |
+| Pipeline | Script | Status | Last Run | Records |  
+|----------|--------|--------|----------|---------|  
+| GDELT Swarm | `gdelt_parallel_swarm.py` | 🟡 Running | 2025-04-10 | 23,413+ articles |  
+
+### Pending Pipelines (📍 or 🔴)  
+
+| Pipeline | Source | Status | Priority |  
+|----------|--------|--------|----------|  
+| Senate Vote Details | `scripts/download/download_senate_vote_details.py` | 🔴 403 errors | High |  
+| SEC EDGAR Bulk | `scripts/download/download_sec_edgar_recent.py` | 🔴 Needs bulk run | High |  
+| GovInfo Expansion | `scripts/download/download_govinfo_bulk.py` | 🔴 Beyond baseline | Medium |  
+| 749K Missing Documents | - | 🔴 Gap identified | High |  
+| FBI Vault | `scripts/download/download_fbi_vault.py` | 🔴 Need ingest | Medium |  
+| Neo4j Graph Import | `scripts/import/import_neo4j_graph.py` | 📍 Needs import | High |  
+| Knowledge Graph Build | `scripts/processing/master_unify.py` | 🔴 From entities | High |  
+| Text Embeddings | `scripts/enrichment/embed_*.py` | 🔴 Expand coverage | Medium |  
+| jMail iMessages | - | 🔴 Need download | Medium |  
+| Birthday Book (dleeerdefi) | `scripts/import/import_birthday_book.py` | 📍 Needs extraction | Medium |  
+| Image Analysis | `scripts/processing/image_analysis.py` | 📍 38K images | Low |
 
 ---
 
@@ -317,25 +389,32 @@
 
 ---
 
-## 📋 Next Steps
+## 📋 Next Steps  
 
-### Immediate (This Week)
+### Immediate (This Week)  
 
-1. ✅ **Ingest House Oversight 2024 documents** from HuggingFace
-2. ✅ **Import Black Book + Flight Logs** from dleerdefi repo
-3. ✅ **Import Neo4j knowledge graph** (10K nodes, 16K relations)
+1. 🔴 **Senate Vote Details** - Fix 403 errors, retry with alternate methods (Issue #58)  
+2. 🔴 **SEC EDGAR Bulk** - Run bulk import for Form 4/13F (Issue #55)  
+3. 🔴 **FBI Vault** - Download and ingest FBI Vault documents (Issue #44, #33)  
+4. ✅ **Ingest House Oversight 2024 documents** from HuggingFace  
+5. ✅ **Import Black Book + Flight Logs** from dleerdefi repo  
+6. ✅ **Import Neo4j knowledge graph** (10K nodes, 16K relations)  
 
-### Short Term (This Month)
+### Short Term (This Month)  
 
-4. 📌 **Pre-2015 coverage** - CourtListener RECAP for 1999-2014
-5. 📌 **Birthday Book** - 128 pages manual/OCR extraction
-6. 📌 **Image analysis** - 38K images from PDFs
+7. 🔴 **GovInfo Expansion** - Beyond current bulk baseline (Issue #52)  
+8. 🔴 **Knowledge Graph Build** - From document co-occurrence (Issue #30, #12)  
+9. 🔴 **Text Embeddings** - Expand coverage beyond RTX 3060 (Issue #29)  
+10. 📌 **Pre-2015 coverage** - CourtListener RECAP for 1999-2014  
+11. 📌 **Birthday Book** - 128 pages manual/OCR extraction  
+12. 📌 **Image analysis** - 38K images from PDFs  
 
-### Long Term (This Quarter)
+### Long Term (This Quarter)  
 
-7. 📌 **Entity deduplication** across all sources
-8. 📌 **Master knowledge graph** combining all datasets
-9. 📌 **Embeddings** for 100% of documents
+13. 🔴 **Entity deduplication** across all sources  
+14. 🔴 **Master knowledge graph** combining all datasets  
+15. 🔴 **Embeddings** for 100% of documents  
+16. 🔴 **jMail iMessages** - Download from jmail.world (Issue #28)  
 
 ---
 
@@ -362,5 +441,5 @@
 
 ---
 
-*Generated: April 10, 2026*  
+*Generated: April 24, 2026*
 *Maintained by: Research Team*

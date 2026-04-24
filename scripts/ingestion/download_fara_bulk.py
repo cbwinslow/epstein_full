@@ -28,13 +28,12 @@ logger = logging.getLogger(__name__)
 
 BASE_DIR.mkdir(parents=True, exist_ok=True)
 
-# FARA bulk data URLs (publicly available)
+# FARA bulk data URLs (publicly available, current bulk repository)
 FARA_URLS = {
-    'registrations': 'https://efile.fara.gov/bulk/Registrations.xml.zip',
-    'supplements': 'https://efile.fara.gov/bulk/Supplements.xml.zip',
-    'amendments': 'https://efile.fara.gov/bulk/Amendments.xml.zip',
-    'exhibits': 'https://efile.fara.gov/bulk/Exhibits.xml.zip',
-    'foreign_principals': 'https://efile.fara.gov/bulk/ForeignPrincipals.xml.zip',
+    "registrants": "https://efile.fara.gov/bulk/zip/FARA_All_Registrants.xml.zip",
+    "registrant_docs": "https://efile.fara.gov/bulk/zip/FARA_All_RegistrantDocs.xml.zip",
+    "short_forms": "https://efile.fara.gov/bulk/zip/FARA_All_ShortForms.xml.zip",
+    "foreign_principals": "https://efile.fara.gov/bulk/zip/FARA_All_ForeignPrincipals.xml.zip",
 }
 
 
@@ -44,7 +43,7 @@ def download_and_extract(name: str, url: str) -> int:
     logger.info(f"URL: {url}")
     
     try:
-        response = requests.get(url, timeout=300, stream=True)
+        response = requests.get(url, timeout=600, stream=True)
         response.raise_for_status()
         
         size_mb = len(response.content) / (1024 * 1024)

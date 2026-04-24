@@ -202,12 +202,210 @@ Query examples:
 - [x] Download House Oversight emails (5,082 threads)
 - [x] Download FBI Vault PDFs (16 from Archive.org)
 - [x] Save session memories to Letta
-- [ ] FBI Vault OCR (running in background)
+- [x] FBI Vault OCR complete (996 pages, 616,959 chars)
 - [ ] Build knowledge graph from extracted entities
 - [ ] Scale to remaining datasets (1-7, 9-10)
 - [ ] Cross-database integration and analysis
 - [ ] Advanced entity relationship mapping
 - [ ] Comprehensive report generation
+- [x] Validate corrected Congress historical download endpoints
+- [x] Import Congress 107th historical slice (10,791 bills, 553 members)
+- [x] Fix GovInfo historical offset-limit issue with split date windows
+- [x] Import GovInfo 2000 historical slice (8,543 packages)
+- [x] Government historical ingestion finalized (April 23, 2026)
+  - `federal_register_entries=737,940` (2000-2024)
+  - `congress_bills=359,467` (106th-119th)
+  - `congress_members=9,864`
+  - `congress_house_votes=2,738`
+  - `congress_house_vote_details=2,738`
+  - `congress_house_member_votes=1,185,626`
+  - `whitehouse_visitors=2,544,984` (2009-2024)
+  - `govinfo_bulk_import_status`: `FR=26`, `BILLSTATUS=52`, `BILLS=96`, `BILLSUM=48` completed
+
+## Historical Ingestion Notes (2026-04-22)
+
+- `download_congress_historical.py` previously used the wrong Congress.gov endpoints:
+  - Wrong: `/bill?congress=N`, `/member?congress=N`
+  - Correct: `/bill/N`, `/member/congress/N`
+- Verified corrected Congress 107th download:
+  - Bills: 10,791
+  - Members: 553
+  - Raw files: `/home/cbwinslow/workspace/epstein-data/raw-files/congress_historical/congress_107/`
+- Verified corrected Congress 108th-109th download/import:
+  - 108th: 10,669 bills, 544 members
+  - 109th: 13,072 bills, 546 members
+  - Import log: `/home/cbwinslow/workspace/epstein/logs/ingestion/congress_historical_batch_108_109_20260422.log`
+- Cleaned stale `congress_bills` contamination from earlier bad imports:
+  - Deleted 401 stray rows from test/current-snapshot files
+  - Deleted 54,945 duplicate bill rows
+  - Current `congress_bills` counts: 107th = 10,791, 108th = 10,669, 109th = 13,072, 118th = 19,315
+  - Current `congress_members` counts: 107th = 553, 108th = 544, 109th = 546, 118th = 2,691
+- `congress_members` required a schema fix for historical storage:
+  - Dropped unique constraint on `bioguide_id`
+  - Added unique index on `(bioguide_id, congress_number)`
+- `download_govinfo_historical.py` originally hit GovInfo 500 errors at `offset=10000`.
+  - Historical API downloader now follows the official GovInfo guidance and uses `offsetMark` pagination.
+- Verified GovInfo 2000 historical download/import:
+  - `BILLS`: 7,075
+  - `CRPT`: 849
+  - `FR`: 253
+  - `USCOURTS`: 366
+  - Total imported: 8,543
+- FEC historical coverage is already present in PostgreSQL:
+  - `fec_individual_contributions`: 447,189,732 rows
+  - Cycles present: 2000-2026
+
+## Historical Batch Status (2026-04-22)
+
+- **Congress historical batch**
+  - Scope: 108th-109th Congress
+  - Status: completed and imported
+  - Log: `/home/cbwinslow/workspace/epstein/logs/ingestion/congress_historical_batch_108_109_20260422.log`
+- **Congress historical batch**
+  - Scope: 110th-112th Congress
+  - Status: download running with patched worker model; imports queued per congress directory after download
+  - Worker model fix: process-wide rate limiter plus per-thread `requests.Session`, with bills and members downloaded concurrently inside each congress
+  - Log: `/home/cbwinslow/workspace/epstein/logs/ingestion/congress_historical_batch_110_112_20260422.log`
+- **GovInfo historical batch**
+  - Scope: year 2001 for `FR,BILLS,USCOURTS,CRPT`
+  - Status: completed and imported
+  - Log: `/home/cbwinslow/workspace/epstein/logs/ingestion/govinfo_historical_batch_2001_20260422.log`
+- **GovInfo historical batch**
+  - Scope: years 2002-2003 for `FR,BILLS,USCOURTS,CRPT`
+  - Status: completed and imported
+  - Worker model fix: process-wide rate limiter plus per-thread `requests.Session`
+  - Log: `/home/cbwinslow/workspace/epstein/logs/ingestion/govinfo_historical_batch_2002_2003_20260422.log`
+- GitHub tracking issues:
+  - Congress: `#51`
+  - GovInfo: `#52`
+  - SEC EDGAR: `#55`
+  - FARA: `#57`
+  - Senate vote retries/backfill: `#58`
+  - FARA completion + reconciliation: `#59`
+  - GovInfo 119 reconciliation: `#60`
+
+## Government Ingestion Run (2026-04-24 UTC)
+
+- Parallel workflows launched for:
+  - Congress historical (105th-119th)
+  - GovInfo bulk download/import (`BILLSTATUS`, `BILLS`, `BILLSUM`)
+  - Senate vote details
+  - FARA bulk normalization
+- Revalidated current counts:
+  - `congress_bills=368,651`
+  - `congress_members=10,413`
+  - `congress_house_votes=2,738`
+  - `congress_senate_votes=3,132` (partial)
+  - `congress_senate_member_votes=313,176` (partial)
+  - `congress_bill_text_versions=130,361`
+  - `govinfo_bulk_import_status=246`
+  - `fara_registrations=7,045`
+  - `fara_foreign_principals=17,358`
+  - `fara_short_forms=44,413`
+  - `fara_registrant_docs=124,224`
+- Blocker:
+  - `senate.gov` vote menus/details intermittently return HTTP 403 from this host; continue retry/backfill loop after source access recovers.
+
+## GovInfo Specialized Tables (2026-04-22)
+
+- `scripts/ingestion/import_govinfo.py` now populates:
+  - `federal_register_entries`
+  - `court_opinions`
+- Current verified counts after backfilling available downloaded data:
+  - `federal_register_entries`: 2,245
+  - `court_opinions`: 31,544
+- Year coverage currently visible:
+  - Federal Register: 2000-2003, 2020-2024
+  - Court opinions: 2000-2003, 2022-2024
+
+## Official Bulk Data Alignment (2026-04-22)
+
+- Cloned official upstream GovInfo/Congress support repos for reference:
+  - `/home/cbwinslow/workspace/epstein/research/upstream_refs/api.congress.gov`
+  - `/home/cbwinslow/workspace/epstein/research/upstream_refs/govinfo-api`
+  - `/home/cbwinslow/workspace/epstein/research/upstream_refs/govinfo-bulk-data`
+  - `/home/cbwinslow/workspace/epstein/research/upstream_refs/govinfo-bill-status`
+  - `/home/cbwinslow/workspace/epstein/research/upstream_refs/govinfo-rss`
+- Updated `download_govinfo_historical.py` to follow official GovInfo API guidance:
+  - use `offsetMark`
+  - use larger `pageSize`
+- Updated `download_congress_historical.py` to follow official Congress API guidance:
+  - `limit=250`
+  - pace for the documented `5,000 requests/hour`
+- Reworked `scripts/ingestion/download_govinfo_bulk.py` to use the actual GovInfo Bulk Data Repository instead of API package listing endpoints.
+  - Supports yearly `FR` ZIPs
+  - Supports per-congress/per-bill-type `BILLSTATUS` ZIPs
+  - Supports per-congress/per-session/per-bill-type `BILLS` ZIPs
+  - Supports per-congress/per-bill-type `BILLSUM` ZIPs
+  - Saves GovInfo bulk listing manifests next to the downloaded ZIPs
+- Added `scripts/ingestion/import_govinfo_billstatus_bulk.py` for GovInfo Bill Status XML ZIPs.
+  - Creates normalized child tables:
+    - `congress_bill_titles`
+    - `congress_bill_summaries`
+    - `congress_bill_actions`
+    - `congress_bill_cosponsors`
+    - `congress_bill_related_bills`
+    - `congress_bill_vote_references`
+  - Adds unique bill identity enforcement on `congress_bills (congress, bill_type, bill_number)`
+  - Adds `govinfo_bulk_import_status` for per-ZIP idempotent import tracking
+- Validated bulk downloads:
+  - `FR-2004.zip` downloaded to `/home/cbwinslow/workspace/epstein-data/raw-files/govinfo_bulk/fr/2004/`
+  - `BILLSTATUS-113-hjres.zip` downloaded to `/home/cbwinslow/workspace/epstein-data/raw-files/govinfo_bulk/billstatus/113/hjres/`
+  - `BILLS-113-1-hjres.zip` and `BILLS-113-2-hjres.zip` downloaded to `/home/cbwinslow/workspace/epstein-data/raw-files/govinfo_bulk/bills/113/`
+  - `BILLSUM-113-hjres.zip` downloaded to `/home/cbwinslow/workspace/epstein-data/raw-files/govinfo_bulk/billsum/113/hjres/`
+  - both ZIPs pass `unzip -l` inspection
+- Validated Bill Status bulk import:
+  - `BILLSTATUS-113-hjres.zip` imported as:
+    - `131` bills
+    - `350` titles
+    - `178` summaries
+    - `950` actions
+    - `1,837` cosponsors
+    - `217` related bill links
+    - `49` vote references
+- Fixed a real production failure in GovInfo bulk ingestion:
+  - Root cause: `download_govinfo_bulk.py` treated any existing nonzero ZIP as valid, so a corrupt `BILLSTATUS-113-hr.zip` blocked the whole Bill Status importer.
+  - Fix: downloader now validates ZIP integrity, re-downloads corrupt ZIPs, and writes through `.part` temp files.
+  - Fix: Bill Status importer now validates ZIPs before import, records per-file import status in `govinfo_bulk_import_status`, skips completed ZIPs, and continues past failed ZIPs instead of crashing the full run.
+- Added `scripts/ingestion/import_govinfo_billsum_bulk.py`.
+  - Imports GovInfo `BILLSUM` ZIPs into existing `congress_bill_summaries`
+  - Reuses `congress_bills`
+  - Reuses `govinfo_bulk_import_status` for per-ZIP idempotent tracking
+  - Validated on `BILLSUM-113-hjres.zip` with `178` summaries imported
+
+## Government Ingestion Finalized (2026-04-24)
+
+- Historical/bulk ingestion reached stable completion for currently scoped government sources.
+- Final validated GovInfo bulk import status:
+  - `BILLSTATUS completed=52`
+  - `BILLSUM completed=48`
+  - `BILLS completed=96`
+  - `FR completed=26`
+- Final validated database counts after 2026-04-24 reruns:
+  - `federal_register_entries=737,940` (`2000-01-03` to `2024-12-31`)
+  - `congress_bills=359,467` (106th-119th)
+  - `congress_members=9,864` (106th-119th)
+  - `congress_bill_text_versions=113,106` (113th-118th currently present)
+  - `congress_house_votes=2,738` (117th-119th)
+  - `congress_house_vote_details=2,738` (`pending_vote_details=0`)
+  - `congress_house_member_votes=1,185,626`
+  - `whitehouse_visitors=2,544,984` (2009-2024)
+- Reference logs:
+  - `docs/SESSION_LOGS/government_data_ingestion_20260423.md`
+  - `/home/cbwinslow/workspace/epstein/logs/ingestion/congress_historical_20260424_131710.log`
+  - `/home/cbwinslow/workspace/epstein/logs/ingestion/house_vote_details_20260424_131136.log`
+  - `/home/cbwinslow/workspace/epstein/logs/ingestion/house_vote_details_20260424_132859.log`
+
+### Runtime Status (checked 2026-04-24)
+
+- No active GovInfo/Congress/White House ingestion jobs required in steady state.
+
+### Remaining Government Gaps
+
+- Pre-107th Congress requires a Congress.gov API key and alternate pathing.
+- Senate vote-detail pipeline and tables are not yet implemented.
+- Pre-2009 White House visitor logs are not publicly disclosed for Bush/Trump terms.
+- SEC EDGAR and FARA remain optional expansion tracks.
 
 ---
 

@@ -10,6 +10,7 @@ import sys
 import json
 import logging
 import xml.etree.ElementTree as ET
+import re
 import psycopg2
 from pathlib import Path
 from datetime import datetime
@@ -83,6 +84,9 @@ def create_table():
         CREATE INDEX IF NOT EXISTS idx_sec_ticker ON sec_insider_transactions (ticker_symbol);
         CREATE INDEX IF NOT EXISTS idx_sec_date ON sec_insider_transactions (transaction_date);
         CREATE INDEX IF NOT EXISTS idx_sec_owner_name ON sec_insider_transactions (owner_name);
+        DROP INDEX IF EXISTS uq_sec_accession;
+        CREATE UNIQUE INDEX IF NOT EXISTS uq_sec_accession
+            ON sec_insider_transactions (accession_number);
     """)
     
     conn.commit()
@@ -107,15 +111,45 @@ def parse_atom_feed(filepath: Path) -> List[Dict]:
                 # Get filing info from entry
                 title = entry.find('atom:title', ns)
                 title_text = title.text if title is not None else ''
-                
-                # Parse Form 4 specific data from content if available
-                content = entry.find('atom:content', ns)
+                entry_id = entry.find('atom:id', ns)
+                updated = entry.find('atom:updated', ns)
+                summary = entry.find('atom:summary', ns)
+                link = entry.find("atom:link[@rel='alternate']", ns)
+
+                id_text = entry_id.text if entry_id is not None else ''
+                updated_text = updated.text if updated is not None else ''
+                summary_text = summary.text if summary is not None else ''
+                link_href = link.get('href', '') if link is not None else ''
+
+                accession = ''
+                m = re.search(r'accession-number=([0-9-]+)', id_text)
+                if m:
+                    accession = m.group(1)
+                elif link_href:
+                    m = re.search(r'/([0-9]{10}-[0-9]{2}-[0-9]{6})-', link_href)
+                    if m:
+                        accession = m.group(1)
+                if not accession:
+                    continue
+
+                filing_date = None
+                m = re.search(r'Filed:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})', summary_text)
+                if m:
+                    filing_date = m.group(1)
+                elif updated_text:
+                    filing_date = updated_text[:10]
+
+                issuer_name = title_text.split('(')[0].strip() if title_text else ''
+                issuer_cik = ''
+                m = re.search(r'\(([0-9]{5,10})\)', title_text)
+                if m:
+                    issuer_cik = m.group(1)
                 
                 record = {
-                    'accession_number': '',
-                    'filing_date': '',
-                    'issuer_name': title_text.split('-')[0].strip() if '-' in title_text else '',
-                    'issuer_cik': '',
+                    'accession_number': accession or None,
+                    'filing_date': filing_date,
+                    'issuer_name': issuer_name,
+                    'issuer_cik': issuer_cik or None,
                     'ticker_symbol': '',
                     'owner_name': '',
                     'owner_cik': '',
@@ -131,7 +165,10 @@ def parse_atom_feed(filepath: Path) -> List[Dict]:
                     'is_derivative': False,
                     'raw_data': json.dumps({
                         'title': title_text,
-                        'content': content.text if content is not None else ''
+                        'id': id_text,
+                        'updated': updated_text,
+                        'summary': summary_text,
+                        'link': link_href,
                     }),
                     'source_file': str(filepath.name)
                 }
@@ -154,6 +191,12 @@ def import_records(records: List[Dict]) -> int:
     cur = conn.cursor()
     
     inserted = 0
+    def _date_or_none(value):
+        if not value:
+            return None
+        value = str(value).strip()
+        return value or None
+
     for r in records:
         try:
             cur.execute("""
@@ -163,16 +206,22 @@ def import_records(records: List[Dict]) -> int:
                     security_title, shares, price_per_share, transaction_value,
                     ownership_type, nature_of_ownership, is_derivative, raw_data, source_file
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT DO NOTHING
+                ON CONFLICT (accession_number) DO UPDATE SET
+                    filing_date = EXCLUDED.filing_date,
+                    issuer_name = EXCLUDED.issuer_name,
+                    issuer_cik = EXCLUDED.issuer_cik,
+                    raw_data = EXCLUDED.raw_data,
+                    source_file = EXCLUDED.source_file,
+                    imported_at = NOW()
             """, (
-                r['accession_number'], r['filing_date'], r['issuer_name'], r['issuer_cik'],
+                r['accession_number'], _date_or_none(r['filing_date']), r['issuer_name'], r['issuer_cik'],
                 r['ticker_symbol'], r['owner_name'], r['owner_cik'], r['owner_title'],
-                r['transaction_date'], r['transaction_code'], r['security_title'],
+                _date_or_none(r['transaction_date']), r['transaction_code'], r['security_title'],
                 r['shares'], r['price_per_share'], r['transaction_value'],
                 r['ownership_type'], r['nature_of_ownership'], r['is_derivative'],
                 r['raw_data'], r['source_file']
             ))
-            inserted += 1
+            inserted += cur.rowcount
         except Exception as e:
             logger.debug(f"Insert failed: {e}")
     

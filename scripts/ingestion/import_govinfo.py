@@ -5,6 +5,7 @@ Source: api.govinfo.gov
 Tables: govinfo_packages, federal_register_entries, court_opinions
 """
 
+import argparse
 import json
 import logging
 import sys
@@ -170,23 +171,52 @@ def create_tables():
     logger.info("Tables and indexes created/verified")
 
 
+def payload_packages(data) -> List[Dict]:
+    """Return packages from either a wrapped API payload or a raw list file."""
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        return data.get('packages', [])
+    return []
+
+
+def infer_collection(filepath: Path, data: Dict, pkg: Dict) -> tuple[str, str]:
+    """Infer collection code/name from package, wrapper, or directory name."""
+    collection_code = (
+        pkg.get('collectionCode')
+        or pkg.get('docClass')
+        or data.get('collection')
+        or filepath.parent.parent.name.upper()
+    )
+    collection_names = {
+        'FR': 'Federal Register',
+        'BILLS': 'Bills',
+        'USCOURTS': 'Court Opinions',
+        'CRPT': 'Committee Reports',
+        'USCODE': 'United States Code',
+    }
+    collection_name = pkg.get('collectionName') or collection_names.get(collection_code, collection_code)
+    return collection_code, collection_name
+
+
 def parse_packages_file(filepath: Path) -> List[Dict]:
     records = []
     try:
         with open(filepath, 'r') as f:
             data = json.load(f)
         
-        for pkg in data.get('packages', []):
+        for pkg in payload_packages(data):
             # Parse lastModified date
             last_mod = pkg.get('lastModified', '')
             if last_mod:
                 last_mod = last_mod[:10]  # Get just the date part
+            collection_code, collection_name = infer_collection(filepath, data if isinstance(data, dict) else {}, pkg)
             
             record = {
                 'package_id': pkg.get('packageId', ''),
                 'title': pkg.get('title', ''),
-                'collection_code': pkg.get('collectionCode', ''),
-                'collection_name': pkg.get('collectionName', ''),
+                'collection_code': collection_code,
+                'collection_name': collection_name,
                 'date_issued': pkg.get('dateIssued') or None,
                 'congress': pkg.get('congress', 0) or 0,
                 'session': pkg.get('session', 0) or 0,
@@ -247,6 +277,10 @@ def import_packages(records: List[Dict]) -> int:
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (package_id) DO UPDATE SET
                     title = EXCLUDED.title,
+                    collection_code = EXCLUDED.collection_code,
+                    collection_name = EXCLUDED.collection_name,
+                    date_issued = EXCLUDED.date_issued,
+                    congress = EXCLUDED.congress,
                     raw_data = EXCLUDED.raw_data,
                     imported_at = NOW()
             """, (
@@ -270,6 +304,148 @@ def import_packages(records: List[Dict]) -> int:
     return inserted
 
 
+def import_federal_register_entries(records: List[Dict]) -> int:
+    """Populate federal_register_entries from GovInfo package summaries."""
+    fr_records = [r for r in records if r.get('collection_code') == 'FR']
+    if not fr_records:
+        return 0
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    inserted = 0
+
+    for r in fr_records:
+        try:
+            raw = json.loads(r['raw_data'])
+            cur.execute("""
+                INSERT INTO federal_register_entries (
+                    package_id, fr_doc_number, citation, title, abstract, dates,
+                    agencies, action, significant, rindicators, pdf_url, html_url,
+                    mods_url, premis_url, date_published, volume, page_start, page_end,
+                    number_of_pages, docket_ids, regulations_dot_gov_ids,
+                    correction_of_fr_doc_number, is_correction, su_doc_class_number,
+                    original_content_type, raw_data, source_file
+                ) VALUES (
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, %s, %s, %s
+                )
+                ON CONFLICT (package_id) DO UPDATE SET
+                    title = EXCLUDED.title,
+                    date_published = EXCLUDED.date_published,
+                    html_url = EXCLUDED.html_url,
+                    raw_data = EXCLUDED.raw_data,
+                    imported_at = NOW()
+            """, (
+                r['package_id'],
+                raw.get('frDocNumber') or raw.get('packageId'),
+                raw.get('citation') or '',
+                r['title'],
+                raw.get('abstract') or '',
+                raw.get('dates') or '',
+                ', '.join(raw.get('agencies', [])) if isinstance(raw.get('agencies'), list) else (raw.get('agencies') or ''),
+                raw.get('action') or '',
+                bool(raw.get('significant', False)),
+                ', '.join(raw.get('rindicators', [])) if isinstance(raw.get('rindicators'), list) else (raw.get('rindicators') or ''),
+                r['download_pdf_url'],
+                raw.get('packageLink') or r['detail_view_txt_url'],
+                raw.get('modsLink') or '',
+                raw.get('premisLink') or '',
+                r['date_issued'],
+                raw.get('volume'),
+                raw.get('pageStart'),
+                raw.get('pageEnd'),
+                raw.get('pages'),
+                ', '.join(raw.get('docketIds', [])) if isinstance(raw.get('docketIds'), list) else (raw.get('docketIds') or ''),
+                ', '.join(raw.get('regulationsDotGovIds', [])) if isinstance(raw.get('regulationsDotGovIds'), list) else (raw.get('regulationsDotGovIds') or ''),
+                raw.get('correctionOfFrDocNumber') or '',
+                bool(raw.get('isCorrection', False)),
+                r['su_doc_class_number'],
+                raw.get('originalContentType') or '',
+                r['raw_data'],
+                r['source_file'],
+            ))
+            inserted += 1
+        except Exception as e:
+            logger.debug(f"Federal Register insert failed: {e}")
+
+    conn.commit()
+    cur.close()
+    conn.close()
+    return inserted
+
+
+def import_court_opinions(records: List[Dict]) -> int:
+    """Populate court_opinions from GovInfo package summaries."""
+    court_records = [r for r in records if r.get('collection_code') == 'USCOURTS']
+    if not court_records:
+        return 0
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    inserted = 0
+
+    for r in court_records:
+        try:
+            raw = json.loads(r['raw_data'])
+            package_id = r['package_id']
+            package_tail = package_id.replace('USCOURTS-', '', 1) if package_id.startswith('USCOURTS-') else package_id
+            case_number = raw.get('caseNumber') or package_tail
+            court_name = raw.get('courtName') or package_tail.split('-', 1)[0]
+
+            cur.execute("""
+                INSERT INTO court_opinions (
+                    package_id, court_name, court_type, case_name, case_number,
+                    date_decided, date_filed, judges, attorneys, parties, nature_of_suit,
+                    cause, jurisdiction, jurisdiction_basis, case_source, case_source_area,
+                    case_source_state, case_source_subdivisions, pdf_url, html_url,
+                    summary, outcome, disposition, raw_data, source_file
+                ) VALUES (
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, %s, %s
+                )
+                ON CONFLICT (package_id) DO UPDATE SET
+                    case_name = EXCLUDED.case_name,
+                    date_filed = EXCLUDED.date_filed,
+                    html_url = EXCLUDED.html_url,
+                    raw_data = EXCLUDED.raw_data,
+                    imported_at = NOW()
+            """, (
+                package_id,
+                court_name,
+                raw.get('courtType') or '',
+                r['title'],
+                case_number,
+                raw.get('dateDecided') or r['date_issued'],
+                raw.get('dateFiled') or r['date_issued'],
+                ', '.join(raw.get('judges', [])) if isinstance(raw.get('judges'), list) else (raw.get('judges') or ''),
+                ', '.join(raw.get('attorneys', [])) if isinstance(raw.get('attorneys'), list) else (raw.get('attorneys') or ''),
+                ', '.join(raw.get('parties', [])) if isinstance(raw.get('parties'), list) else (raw.get('parties') or ''),
+                raw.get('natureOfSuit') or '',
+                raw.get('cause') or '',
+                raw.get('jurisdiction') or '',
+                raw.get('jurisdictionBasis') or '',
+                raw.get('caseSource') or '',
+                raw.get('caseSourceArea') or '',
+                raw.get('caseSourceState') or '',
+                ', '.join(raw.get('caseSourceSubdivisions', [])) if isinstance(raw.get('caseSourceSubdivisions'), list) else (raw.get('caseSourceSubdivisions') or ''),
+                r['download_pdf_url'],
+                raw.get('packageLink') or r['detail_view_txt_url'],
+                raw.get('summary') or '',
+                raw.get('outcome') or '',
+                raw.get('disposition') or '',
+                r['raw_data'],
+                r['source_file'],
+            ))
+            inserted += 1
+        except Exception as e:
+            logger.debug(f"Court opinion insert failed: {e}")
+
+    conn.commit()
+    cur.close()
+    conn.close()
+    return inserted
+
+
 def update_inventory(count: int):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -284,15 +460,31 @@ def update_inventory(count: int):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--base-dir', type=Path, default=BASE_DIR, help='Directory containing GovInfo JSON files')
+    parser.add_argument('--recursive', action='store_true', help='Scan JSON files recursively')
+    args = parser.parse_args()
+
     logger.info("=" * 80)
     logger.info("GOVINFO.GOV IMPORT")
     logger.info("=" * 80)
     
     create_tables()
     
-    json_files = []
-    for subdir in ['bills', 'crpt', 'fr', 'uscode', 'uscourts']:
-        json_files.extend(list((BASE_DIR / subdir).glob("*.json")))
+    if args.recursive:
+        json_files = sorted(
+            path for path in args.base_dir.glob("**/*.json")
+            if "_partial" not in path.name
+        )
+    else:
+        json_files = []
+        for subdir in ['bills', 'crpt', 'fr', 'uscode', 'uscourts']:
+            json_files.extend(
+                sorted(
+                    path for path in (args.base_dir / subdir).glob("*.json")
+                    if "_partial" not in path.name
+                )
+            )
     
     if not json_files:
         logger.warning("No JSON files found")
@@ -309,6 +501,12 @@ def main():
             imported = import_packages(records)
             total_packages += imported
             logger.info(f"  Imported {imported} packages")
+            fr_imported = import_federal_register_entries(records)
+            if fr_imported:
+                logger.info(f"  Imported {fr_imported} federal register entries")
+            court_imported = import_court_opinions(records)
+            if court_imported:
+                logger.info(f"  Imported {court_imported} court opinions")
     
     update_inventory(total_packages)
     
