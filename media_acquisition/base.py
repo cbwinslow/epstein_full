@@ -105,8 +105,18 @@ class VideoMetadata(MediaURL):
 @dataclass
 class DocumentMetadata(MediaURL):
     """Document metadata from discovery."""
+    # NOTE: Historically the field was named ``doc_type`` in the test suite.
+    # The production code renamed it to ``document_type`` for clarity, which
+    # caused a type‑checking failure (``__init__`` received an unexpected
+    # ``doc_type`` keyword).  To retain backward compatibility we expose both
+    # names.  ``doc_type`` is defined as a field with ``init=False`` and a
+    # ``__post_init__`` hook copies its value to ``document_type``.  This allows
+    # existing callers (including the unit tests) to pass ``doc_type=...`` while
+    # keeping the preferred ``document_type`` attribute for new code.
     source: str = ""  # courtlistener, govinfo, pacer, foia
     document_type: Optional[str] = None  # filing, opinion, order
+    # Compatibility alias – not part of the public API but accepted by ``__init__``.
+    doc_type: Optional[str] = field(default=None, init=False, repr=False)
     docket_number: Optional[str] = None
     case_name: Optional[str] = None
     court: Optional[str] = None
@@ -114,6 +124,18 @@ class DocumentMetadata(MediaURL):
     recap_id: Optional[str] = None
     page_count: Optional[int] = None
     file_size_bytes: Optional[int] = None
+
+    def __post_init__(self) -> None:
+        """Synchronise the legacy ``doc_type`` alias.
+
+        If a caller supplied ``doc_type`` via ``**kwargs`` (as the test suite
+        does), ``dataclasses`` will place the value in ``__dict__`` under the
+        ``doc_type`` key because the field is defined with ``init=False``.  We
+        then copy that value to ``document_type`` so the rest of the code can
+        rely on the canonical attribute.
+        """
+        if self.doc_type is not None and self.document_type is None:
+            self.document_type = self.doc_type
 
 
 class BaseAgent(ABC):

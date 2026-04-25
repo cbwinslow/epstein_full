@@ -205,12 +205,20 @@
 
 | Dataset | Records | Size | Timeframe | Source URL | Status |
 |---------|---------|------|-----------|------------|--------|
-| **Documents** | 22 | 1,344 pages | Various | https://vault.fbi.gov/ | ✅ Available |
+| **Documents** | 22 | 1,426 pages | Various | https://vault.fbi.gov/ | ✅ Complete |
 
 **Coverage:**
 - FBI investigations
 - Field office reports
 - Released under FOIA
+
+**PostgreSQL:**
+- Table: `documents` (efta_number LIKE 'FBI_VAULT_%')
+- 22 documents (FBI_VAULT_PART_01 through FBI_VAULT_PART_22)
+- 1,426 total pages
+- Import script: `scripts/import/import_fbi_vault.py`
+- Data location: `/home/cbwinslow/workspace/epstein-data/fbi-vault/`
+- Status: Downloaded + imported (text files present, PostgreSQL loaded)
 
 ---
 
@@ -320,7 +328,7 @@
 | SEC EDGAR Bulk | `scripts/download/download_sec_edgar_recent.py` | 🔴 Needs bulk run (197 rows only) | High |
 | GovInfo Expansion | `scripts/download/download_govinfo_bulk.py` | ✅ Complete (737K entries, 246 files) | Done |
 | 749K Missing Documents | - | 🔴 Gap identified | High |
-| FBI Vault | `scripts/download/download_fbi_vault.py` | 🔴 403 errors (all fail) | Medium |
+| FBI Vault | `scripts/import/import_fbi_vault.py` | ✅ Complete (22 docs, 1,426 pages) | Done |
 | Neo4j Graph Import | `scripts/import/import_neo4j_graph.py` | 📍 Needs import | High |
 | Knowledge Graph Build | `scripts/processing/master_unify.py` | 🔴 From entities | High |
 | Text Embeddings | `scripts/enrichment/embed_*.py` | 🔴 Expand coverage | Medium |
@@ -415,7 +423,7 @@
 ### Immediate (This Week)
 
 1. 🔴 **SEC EDGAR Bulk** - Run bulk import for Form 4/13F (Issue #55)
-2. 🔴 **FBI Vault** - 403 errors, all downloads fail (Issue #44)
+2. ✅ **FBI Vault** - Complete (22 docs, 1,426 pages in PostgreSQL) (Issue #44 resolved)
 3. 🔴 **749K Missing Documents** - Gap identification (Issue #39)
 4. 🔴 **Neo4j Graph Import** - Import knowledge graph (Issue #12)
 5. 🔴 **Knowledge Graph Build** - From document co-occurrence (Issue #30)
