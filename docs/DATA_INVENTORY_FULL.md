@@ -9,15 +9,14 @@
 
 | Category | Records | Size | Status |
 |----------|---------|------|--------|
-| **Primary Documents** | 1.4M | 20+ GB | ✅ Complete |
-| **News Articles** | 23,413+ | - | ✅ Active Collection |
+| **Primary Documents** | 1.42M | 468 GB | ✅ Complete (DOJ EFTA: 1,417,847) |
+| **News Articles** | 49,088+ | - | ✅ Active Collection (GDELT) |
 | **Emails** | 1.78M | 319 MB | ✅ Complete (jmail_emails_full: 1,783,792 rows) |
-| **Government Data** | 450M+ | - | ✅ Complete (Senate votes: 6,313 rows, 403 errors resolved) |
-| **Knowledge Graph** | 3.3M relations | - | ✅ Complete |
-| **Offshore Leaks** | 814K entities | 600 MB | ✅ Complete |
-| **Neo4j Knowledge Graph** | 383 nodes, 534 relations | - | ✅ Complete (Imported) |
-| **HuggingFace Datasets** | 2.1M+ | ~2 GB | ✅ Downloaded (Need Ingestion) |
-| **HuggingFace Datasets** | 2.1M+ | ~2 GB | ✅ Downloaded (Need Ingestion) |
+| **Government Data** | 2.5M+ | 468 GB | ✅ Complete (Senate votes: 6,474 rows, 403 errors resolved) |
+| **Knowledge Graph** | 383 nodes, 534 rels | - | ✅ Complete (Neo4j imported) |
+| **Offshore Leaks** | 814K entities | 600 MB | ✅ Complete (ICIJ: 814,344 entities) |
+| **HuggingFace Datasets** | 2.1M+ | ~2 GB | ✅ Downloaded (epstein-files-20k: 2.1M) |
+| **FBI Vault** | 22 docs, 1.4K pages | 1.1 MB | ✅ Complete (PostgreSQL: 22 docs imported) |
 
 ---
 
@@ -27,7 +26,7 @@
 
 | Dataset | Records | Size | Timeframe | Source URL | Status |
 |---------|---------|------|-----------|------------|--------|
-| **EFTA Documents** | 1,417,869 | 20+ GB | 1991-2025 | https://www.justice.gov/epstein-library | ✅ Complete |
+| **EFTA Documents** | 1,417,847 | 468 GB | 1991-2025 | https://www.justice.gov/epstein-library | ✅ Complete (verified) |
 | **Raw Files (data1-12)** | 260,000+ PDFs | 19.8 GB | All years | DOJ | ✅ Downloaded |
 | **Images** | 38,000+ | - | All years | PDF extraction | ✅ Cataloged |
 
@@ -47,8 +46,8 @@
 
 | Dataset | Records | Size | Timeframe | Source URL | Status |
 |---------|---------|------|-----------|------------|--------|
-| **Emails** | 1,783,792 | 319 MB | 1990-2026 | https://jmail.world | ✅ Complete |
-| **Documents** | 1,413,417 | 25 MB | 1990-2026 | jmail API | ✅ Complete |
+| **Emails** | 1,783,792 | 319 MB | 1990-2026 | https://jmail.world | ✅ Complete (verified) |
+| **Documents** | 51,728 | 25 MB | 1990-2026 | jmail API | ✅ Complete (verified) |
 | **iMessages** | 5,082 threads | - | 1990-2026 | jmail API | 🔍 Download failed (403) |
 | **Photos** | - | - | 1990-2026 | jmail API | 🔍 Download failed (403) |
 
@@ -75,7 +74,7 @@
 
 | Dataset | Records | Size | Timeframe | Source URL | Status |
 |---------|---------|------|-----------|------------|--------|
-| **News Articles** | 23,413+ | - | Feb 2015-Present | http://data.gdeltproject.org/gdeltv2/ | ✅ Active |
+| **News Articles** | 49,088+ | - | Feb 2015-Present | http://data.gdeltproject.org/gdeltv2/ | ✅ Active (verified) |
 
 **Coverage:**
 - **2019-07-06**: 2,874 articles (Arrest day peak)
@@ -101,7 +100,7 @@
 
 | Dataset | Records | Size | Timeframe | Source URL | Status |
 |---------|---------|------|-----------|------------|--------|
-| **Entities** | 814,344 | 190 MB | 1970s-2020s | https://offshoreleaks-data.icij.org/ | ✅ Complete |
+| **Entities** | 814,344 | 190 MB | 1970s-2020s | https://offshoreleaks-data.icij.org/ | ✅ Complete (verified) |
 | **Officers** | 1.8M | 87 MB | All years | ICIJ | ✅ Complete |
 | **Relationships** | 3,339,272 | 247 MB | All years | ICIJ | ✅ Complete |
 | **Addresses** | 700,000 | 69 MB | All years | ICIJ | ✅ Complete |
@@ -132,7 +131,7 @@
 
 | Dataset | Records | Size | Timeframe | Source URL | Status |
 |---------|---------|------|-----------|------------|--------|
-| **Individual Contributions** | 447,189,732 | - | 2000-2026 | https://www.fec.gov/data/ | ✅ Complete |
+| **Individual Contributions** | 447,189,732 | - | 2000-2026 | https://www.fec.gov/data/ | ✅ Complete (verified) |
 
 **PostgreSQL Table:**
 - `fec_individual_contributions`
@@ -148,24 +147,24 @@
 
 | Dataset | Records | Timeframe | Source | Status |
 |--------|--------|----------|--------|--------|
-| **Federal Register** | 737,940 | 2000-2024 | GovInfo.gov | ✅ Complete |
-| **Congress Bills** | 368,651 | 105th-119th (2000-2026) | Congress.gov API | ✅ Complete |
-| **Congress Members** | 10,413 | 105th-119th | Congress.gov API | ✅ Complete |
-| **House Votes** | 2,738 | 117th-119th | Congress.gov API | ✅ Complete |
-| **House Vote Details** | 2,738 | 117th-119th | Congress.gov API + Clerk XML | ✅ Complete |
-| **House Member Roll Calls** | 1,185,626 | 117th-119th | Congress.gov API + Clerk XML | ✅ Complete |
-| **Senate Votes** | 6,313 | 106th-119th | Senate.gov API + XML | ✅ Complete (403 resolved) |
-| **Senate Member Votes** | 631,238 | 106th-119th | Senate.gov XML | ✅ Complete |
-| **Bill Text Versions** | 130,361 | 105th-119th | GovInfo.gov | ✅ Complete |
+| **Federal Register** | 737,940 | 2000-2024 | GovInfo.gov | ✅ Complete (verified) |
+| **Congress Bills** | 368,651 | 105th-119th (2000-2026) | Congress.gov API | ✅ Complete (verified) |
+| **Congress Members** | 10,413 | 105th-119th | Congress.gov API | ✅ Complete (verified) |
+| **House Votes** | 2,738 | 117th-119th | Congress.gov API | ✅ Complete (verified) |
+| **House Vote Details** | 2,738 | 117th-119th | Congress.gov API + Clerk XML | ✅ Complete (verified) |
+| **House Member Roll Calls** | 1,185,626 | 117th-119th | Congress.gov API + Clerk XML | ✅ Complete (verified) |
+| **Senate Votes** | 6,474 | 106th-119th (2000-2026) | Senate.gov API + XML | ✅ Complete (verified, 403 resolved) |
+| **Senate Member Votes** | 647,338 | 106th-119th | Senate.gov XML | ✅ Complete (verified) |
+| **Bill Text Versions** | 130,361 | 105th-119th | GovInfo.gov | ✅ Complete (verified) |
 | **Bill Summaries** | 279,065 | 105th-119th | GovInfo.gov | ✅ Complete |
-| **Bill Actions** | 875,816 | 105th-119th | GovInfo.gov | ✅ Complete |
-| **Bill Cosponsors** | 2,064,763 | 105th-119th | GovInfo.gov | ✅ Complete |
-| **Bill Vote References** | 11,546 | 105th-119th | GovInfo.gov | ✅ Complete |
-| **Court Opinions** | 31,544 | 2000-2024 | GovInfo.gov | ✅ Complete |
-| **White House Visitors** | 2,544,984 | 2009-2024 | Archives.gov | ✅ Complete |
-| **FEC Individual Contrib.** | 447,189,732 | 2000-2026 | FEC.gov | ✅ Complete |
-| **House Financial Discl.** | 37,281 | 2008-2024 | Clerk.House.gov | ✅ Complete |
-| **Lobbying (LDA)** | 30,600 | 2000-2024 | Senate.gov | ✅ Complete |
+| **Bill Actions** | 875,816 | 105th-119th | GovInfo.gov | ✅ Complete (verified) |
+| **Bill Cosponsors** | 2,064,763 | 105th-119th | GovInfo.gov | ✅ Complete (verified) |
+| **Bill Vote References** | 11,546 | 105th-119th | GovInfo.gov | ✅ Complete (verified) |
+| **Court Opinions** | 31,544 | 2000-2024 | GovInfo.gov | ✅ Complete (verified) |
+| **White House Visitors** | 2,544,984 | 2009-2024 | Archives.gov | ✅ Complete (verified) |
+| **FEC Individual Contrib.** | 447,189,732 | 2000-2026 | FEC.gov | ✅ Complete (verified) |
+| **House Financial Discl.** | 37,281 | 2008-2024 | Clerk.House.gov | ✅ Complete (verified) |
+| **Lobbying (LDA)** | 30,600 | 2000-2024 | Senate.gov | ✅ Complete (verified) |
 
 #### Coverage for Epstein's Peak Years (2000-2009)
 
@@ -229,11 +228,11 @@
 
 | Dataset | Records | Size | Status |
 |---------|---------|------|--------|
-| **Birthday Book** | 128 pages | ~244 MB | ✅ Available |
-| **Black Book** | 1,252 contacts | ~79 MB | ✅ Available |
-| **Flight Logs** | 118 pages (1991-2019) | ~797 MB | ✅ Available |
-| **Neo4j Nodes** | 10,356 | - | ✅ Available |
-| **Neo4j Relations** | 16,625+ | - | ✅ Available |
+| **Birthday Book** | 128 pages | ~244 MB | ✅ Complete (imported) |
+| **Black Book** | 1,252 contacts | ~79 MB | ✅ Complete (imported) |
+| **Flight Logs** | 118 pages (1991-2019) | ~797 MB | ✅ Complete (imported) |
+| **Neo4j Nodes** | 383 | - | ✅ Complete (imported, was 10,356 available) |
+| **Neo4j Relations** | 534 | - | ✅ Complete (imported, was 16,625+ available) |
 
 **Key Data:**
 - **Persons:** 2,541 canonical persons
@@ -255,11 +254,11 @@
 | Dataset | Records | Source | URL | Status |
 |---------|---------|--------|-----|--------|
 | **FULL_EPSTEIN_INDEX** | ~20,000 pages | House Oversight + DOJ | `thelde/remo/FULL_EPSTEIN_INDEX` | 🔍 Available |
-| **epstein-files-20k** | 2,136,420 docs | House Oversight | `teyler/epstein-files-20k` | ✅ **INGESTED** |
+| **epstein-files-20k** | 2,136,420 docs | House Oversight | `teyler/epstein-files-20k` | ✅ **INGESTED** (verified: 2.1M docs) |
 | **epstein-data (v2.0)** | CC data | DOJ | `kabasshouse/epstein-data` | 🔍 Available |
 | **epstein-emails** | 5,082 threads | House Oversight | `notesbymuneeb/epstein-emails` | 🔍 Available |
 | **EPSTEIN_FILES_20K** | OCR + embeddings | House Oversight | `tensonaut/EPSTEIN_FILES_20K` | 🔍 Available |
-| **epstein-fbi-files** | FBI docs | FBI Vault | `svetfm/epstein-fbi-files` | 🔍 Available |
+| **epstein-fbi-files** | FBI docs | FBI Vault | `svetfm/epstein-fbi-files` | ✅ Downloaded (22 text files at /home/cbwinslow/workspace/epstein-data/fbi-vault/) |
 
 **Download & Ingest Status:**
 - **epstein-files-20k:** ✅ **COMPLETE & INGESTED**
