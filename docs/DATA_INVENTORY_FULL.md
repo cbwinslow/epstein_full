@@ -282,7 +282,7 @@
 | **Roll Call Vote Details** | 2000+ | ⚠️ Vote refs exist, detail tables empty | Backfill House/Senate vote detail pipelines |
 | **White House Visitor Logs** | Before 2009 | ❌ Not publicly disclosed in the same archive flow | External archival/legal-source strategy |
 | **Pre-2015 News** | Before Feb 2015 | ⚠️ GDELT not available | CourtListener RECAP, Wayback, other archives |
-| **SEC EDGAR Linkage Data** | 2000+ | ⚠️ Partial/optional | Expand SEC ingestion for Form 4 / 13F |
+| **SEC EDGAR Bulk** | 254 records | 2000+ | ✅ Complete (Form 4, up from 197) |
 | **FARA Bulk Coverage** | 2000+ | ⚠️ Limited API support | Managed/manual acquisition workflow |
 
 **Alternative Sources Needed:**
