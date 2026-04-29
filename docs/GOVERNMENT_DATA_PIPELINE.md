@@ -142,6 +142,11 @@ UNION ALL SELECT 'federal_register_entries|'||count(*)||'|'||min(date_published)
   - `#55` SEC EDGAR
   - `#57` FARA
 
+### Recent Updates
+- Senate vote‑detail 403 blocks have been resolved and backfill completed (see issue #101).
+- Pre‑107th Congress expansion is in planning (see issue #102).
+- Pre‑2009 White House logs ingestion is pending (see issue #103).
+
 ## Related Docs
 - `docs/GOV_DATA_INGESTION_SUMMARY.md`
 - `docs/DATA_INVENTORY_FULL.md`

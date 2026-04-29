@@ -110,41 +110,64 @@ def parse_amount(value: str) -> float:
         return 0.0
 
 
-def transform_row(row: list, headers: list, cycle: int) -> Optional[tuple]:
-    """Transform a single row from FEC format to PostgreSQL format"""
-    try:
-        data = dict(zip(headers, row))
+def transform_row(row: list, cycle: int) -> Optional[tuple]:
+    """Transform a single row from FEC format to PostgreSQL format
 
-        transaction_dt = parse_date(data.get("transaction_dt", ""))
-        amount = parse_amount(data.get("transaction_amt", "0"))
-        file_num = data.get("file_num", "").strip()
-        sub_id = data.get("sub_id", "").strip()
+    FEC itcont.txt format (21 pipe-delimited fields, NO header row):
+    01: cmte_id
+    02: amndt_ind
+    03: rpt_tp
+    04: transaction_pgi
+    05: image_num
+    06: transaction_tp
+    07: entity_tp
+    08: name
+    09: city
+    10: state
+    11: zip_code
+    12: employer
+    13: occupation
+    14: transaction_dt (MMDDYYYY)
+    15: transaction_amt
+    16: other_id
+    17: tran_id
+    18: file_num
+    19: memo_cd
+    20: memo_text
+    21: sub_id
+    """
+    try:
+        if len(row) < 21:
+            return None
+
+        transaction_dt = parse_date(row[13])  # Column 14: MMDDYYYY
+        amount = parse_amount(row[14])  # Column 15: amount
+        file_num = row[17].strip() if len(row) > 17 else ""
+        sub_id = row[20].strip() if len(row) > 20 else ""
 
         return (
-            data.get("cmte_id", "")[:9],
-            data.get("amndt_ind", "")[:1],
-            data.get("rpt_tp", "")[:3],
-            data.get("transaction_pgi", "")[:5],
-            data.get("image_num", "")[:18],
-            data.get("transaction_tp", "")[:3],
-            data.get("entity_tp", "")[:3],
-            data.get("name", "")[:200],
-            data.get("city", "")[:100],
-            data.get("state", "")[:2],
-            data.get("zip_code", "")[:9],
-            data.get("employer", "")[:200],
-            data.get("occupation", "")[:200],
+            row[0][:9],  # cmte_id
+            row[1][:1],  # amndt_ind
+            row[2][:3],  # rpt_tp
+            row[3][:5],  # transaction_pgi
+            row[4][:18],  # image_num
+            row[5][:3],  # transaction_tp
+            row[6][:3],  # entity_tp
+            row[7][:200],  # name
+            row[8][:100],  # city
+            row[9][:2],  # state
+            row[10][:9],  # zip_code
+            row[11][:200],  # employer
+            row[12][:200],  # occupation
             transaction_dt,
             amount,
-            data.get("other_id", "")[:9],
-            data.get("tran_id", "")[:32],
+            row[15][:9] if len(row) > 15 else "",  # other_id
+            row[16][:32] if len(row) > 16 else "",  # tran_id
             int(file_num) if file_num.isdigit() else None,
-            data.get("memo_cd", "")[:1],
-            data.get("memo_text", "")[:500],
+            row[18][:1] if len(row) > 18 else "",  # memo_cd
+            row[19][:500] if len(row) > 19 else "",  # memo_text
             int(sub_id) if sub_id.isdigit() else None,
             cycle,
-            "|".join(row),
-            "indiv24.zip",
         )
     except Exception as e:
         logger.debug(f"Transform failed: {e}")
@@ -171,9 +194,6 @@ def import_from_zip(zip_path: Path, cycle: int, batch_size: int = 10000) -> int:
                     text_io = io.TextIOWrapper(f, encoding="utf-8", errors="ignore")
                     reader = csv.reader(text_io, delimiter=delimiter, quoting=csv.QUOTE_NONE)
 
-                    # Read header
-                    headers = [h.strip().lower().replace(" ", "_") for h in next(reader)]
-
                     # Process in batches
                     batch = []
                     file_imported = 0
@@ -182,7 +202,7 @@ def import_from_zip(zip_path: Path, cycle: int, batch_size: int = 10000) -> int:
                         if len(row) < 10:
                             continue
 
-                        transformed = transform_row(row, headers, cycle)
+                        transformed = transform_row(row, cycle)
                         if transformed:
                             batch.append(transformed)
 
@@ -227,8 +247,8 @@ def insert_batch(batch: list) -> int:
                 transaction_tp, entity_tp, name, city, state, zip_code,
                 employer, occupation, transaction_dt, transaction_amt,
                 other_id, tran_id, file_num, memo_cd, memo_text, sub_id,
-                cycle, raw_data, source_file
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                cycle
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT DO NOTHING
         """,
             batch,

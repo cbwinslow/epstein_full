@@ -116,7 +116,7 @@ datasets = [
         "source_url": "https://disclosures-clerk.house.gov",
         "download_path": str(DATA_ROOT / "raw-files/house_fd"),
         "target_table": "house_financial_disclosures",
-        "description": "House Financial Disclosures (2008-2024)",
+        "description": "House Financial Disclosures (2008-2026)",
         "priority": "high",
         "download_status": "completed",
         "ingestion_status": "completed",

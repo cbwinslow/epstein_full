@@ -17,6 +17,14 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 - ✅ **Congress Bills Cleanup:** Removed 54,945 duplicate 118th rows and 401 stray snapshot/test rows
 - ✅ **FEC Historical Coverage Verified:** `fec_individual_contributions` already contains 447,189,732 rows across cycles 2000-2026
 
+**Recent Updates (April 25, 2026):**
+- ✅ **Documentation Updated:** `docs/GOVERNMENT_DATA_PIPELINE.md` and `AGENTS.md` now include a *Recent Updates* subsection summarizing issues #61‑63.
+- ✅ **GitHub Issues Created:**
+   - #61 – Resolve Senate vote‑detail 403 blocks and complete backfill.
+   - #62 – Plan pre‑107th Congress data expansion.
+   - #63 – Ingest pre‑2009 White House logs.
+- ✅ **Project Board Sync:** Issues #61‑63 added to the GitHub project board under the *Backlog* column.
+
 **Previous Updates (April 18, 2026):**
 - ✅ **DATA PIPELINE TRACKING SYSTEM:** Created `data_pipeline_tracking` table for systematic tracking of downloads/ingestion
 - ✅ **ICIJ Offshore Leaks:** 5,355,790 records imported (814K entities, 771K officers, 402K addresses, 25K intermediaries, 3K others, 3.3M relationships)
@@ -27,7 +35,8 @@ This document provides a complete inventory of all data in the Epstein Files Ana
 - ✅ **GovInfo.gov:** current-era packages plus historical 2000 slice imported into `govinfo_packages`
 - ✅ **FEC Individual Contributions Script:** Created for indiv24.zip (90M estimated records, 11GB) - import running in background
 - ✅ **Centralized Config:** Created config.py for all import scripts
-- ✅ **House Financial Disclosures:** 37,281 records (2008-2024) imported via workaround script
+- ✅ **House Financial Disclosures:** 50,429 records (2008-2026) imported via canonical financial disclosure importer
+- ✅ **House PTR Stock Transactions:** 18,521 conservative OCR-parsed rows from 8,150/8,150 available House PTR PDFs (2013-2026) loaded into `congress_trading`
 - 🔄 **Senate Financial Disclosures:** Not accessible from server (DNS resolution error for efts.senate.gov)
 - 🔄 **Senate LDA:** Not downloaded yet (tables don't exist)
 - 🔄 **FEC Individual Import:** In progress (90M records, 11GB)
@@ -122,7 +131,7 @@ python3 scripts/ingestion/query_pipeline_status.py
 | **Organizations** | Unknown | 55 (exposed_organizations) | Unknown | ❓ |
 | **Nonprofits** | Unknown | 33 (exposed_nonprofits) | Unknown | ❓ |
 | **FEC Contributions** | N/A | 447M (2000-2026) | N/A | 🆕 NEW |
-| **Congress Trading** | N/A | 0 (congress_trading) | N/A | 🆕 NEW (awaiting API key) |
+| **Congress Trading** | House PTR OCR | 18,521 (congress_trading) | N/A | ✅ House PTR OCR/load complete for 2013-2026 |
 
 ### Government Datasets (April 22, 2026)
 | Dataset | Source | Records | Status | Schema |
@@ -144,7 +153,7 @@ python3 scripts/ingestion/query_pipeline_status.py
 | **White House Visitors** | White House | 8 | ✅ Sample | whitehouse_visitors |
 | **SEC Insider Transactions** | SEC EDGAR | Placed | ✅ Schema | sec_insider_transactions |
 | **USA Spending Awards** | USASpending.gov | 100 | ✅ Sample | usa_spending_awards |
-| **House Financial Disclosures** | House Clerk | 37,281 | ✅ Imported | house_financial_disclosures |
+| **House Financial Disclosures** | House Clerk | 50,429 | ✅ Imported | house_financial_disclosures |
 | **Senate Financial Disclosures** | Senate eFD | 0 | ❌ DNS error | senate_financial_disclosures |
 
 **Total Government Records Ingested:** 447M+ plus current Congress/GovInfo/FD support tables; historical backfill remains in progress for Congress.gov and GovInfo.gov
@@ -419,10 +428,10 @@ node_id_start,node_id_end,rel_type,link,status,start_date,end_date,sourceID
 
 ### Secondary Gaps (Should Fix)
 
-4. **Embeddings (0 % complete)**
+4. **Embeddings (in progress)**
    - Need: 2,892,730 page embeddings
-   - Have: 0 embeddings generated
-   - Action: Run `epstein embed` pipeline
+   - Have: 1,872,650 `pages.rtx3060_embedding` rows observed during active remote Ollama run on 2026-04-27
+   - Action: Let `scripts/processing/rtx3060_embeddings.py` finish, then build/search-index the completed Nomic vector column
 
 5. **Persons Registry (36 missing)**
    - `persons_registry.json` has 1,614 entries

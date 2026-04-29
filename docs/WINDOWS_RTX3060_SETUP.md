@@ -391,10 +391,19 @@ $env:OLLAMA_HOST="0.0.0.0:11434"
 ollama serve
 ```
 
+For the current `cbwwin` setup, Ollama is expected at `192.168.4.25:11343`:
+
+```powershell
+$env:OLLAMA_HOST="0.0.0.0:11343"
+ollama serve
+```
+
 Verify it's listening:
 ```powershell
 netstat -an | findstr 11434
 # Should show: 0.0.0.0:11434 LISTENING
+netstat -an | findstr 11343
+# Current cbwwin endpoint should show: 0.0.0.0:11343 LISTENING
 ```
 
 #### 4. Configure Linux Script
@@ -402,10 +411,16 @@ netstat -an | findstr 11434
 Edit `/home/cbwinslow/workspace/epstein/scripts/processing/rtx3060_embeddings.py`:
 
 ```python
-WINDOWS_HOST = "192.168.4.25"  # Windows machine IP
-OLLAMA_PORT = "11434"
-OLLAMA_MODEL = "mxbai-embed-large:latest"
+OLLAMA_EMBED_ENDPOINT="http://192.168.4.25:11343/api/embed"
+OLLAMA_EMBED_MODEL="nomic-embed-text:latest"
+OLLAMA_EMBED_COLUMN="rtx3060_embedding"
+OLLAMA_EMBED_DIMS="768"
 ```
+
+The current default stays on `nomic-embed-text:latest` so existing
+`rtx3060_embedding` values do not need to be discarded. If changing to a larger
+model such as `mxbai-embed-large`, use a new column or run the generator with
+`--reset-column` so old vectors are regenerated instead of mixed.
 
 ### Running Embeddings Generation
 
@@ -414,6 +429,8 @@ OLLAMA_MODEL = "mxbai-embed-large:latest"
 ```bash
 cd /home/cbwinslow/workspace/epstein/scripts/processing
 python3 rtx3060_embeddings.py
+python3 rtx3060_embeddings.py --check-endpoint
+python3 rtx3060_embeddings.py --status
 ```
 
 #### Option B: Systemd Service (Production)
@@ -456,7 +473,7 @@ psql -U cbwinslow -d epstein -c "SELECT COUNT(*) - COUNT(rtx3060_embedding) as r
 ### Troubleshooting
 
 #### Connection Refused
-1. Verify Windows firewall allows port 11434
+1. Verify Windows firewall allows port 11343 for the current cbwwin setup, or 11434 if using Ollama's default local port
 2. Check Ollama is running: `ollama list`
 3. Verify Ollama listening on 0.0.0.0, not just localhost
 

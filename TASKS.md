@@ -150,6 +150,68 @@
 | 8.12 | Run setup and verify | ⬜ TODO | Run setup.sh, verify all imports |
 | 8.13 | Push to GitHub | ⬜ TODO | Commit all new files |
 
+## Backlog Issues
+
+| Issue | Title | Status |
+|------|-------|--------|
+| #65 | Add missing data source for DOJ archives | ⬜ TODO |
+| #66 | Implement facial recognition pipeline | ⬜ TODO |
+| #67 | Optimize embedding generation performance | ⬜ TODO |
+| #68 | Ingest Capitol Gains data | 🚧 IN_PROGRESS |
+
+---
+
+## Phase 8.5: CapitolGains Politician Stock Transaction Ingestion 🚧 IN_PROGRESS
+
+**Goal:** ingest congressional stock transaction/disclosure data into PostgreSQL for cross-reference analysis.
+
+**Current state revalidated 2026-04-27 UTC:**
+- GitHub issue: `#68` open, created for `ingest_capitolgains.py`.
+- Local upstream clone: `scripts/political_disclosures/CapitolGains/`.
+- Local project stubs: `ingest_capitolgains.py` and `epstein_capitolgains/{downloaders,etl,loader}.py`.
+- Existing database tables:
+  - `house_financial_disclosures`: 50,429 rows, years 2008-2026.
+  - `senate_financial_disclosures`: 0 rows.
+  - `congress_trading`: 18,521 House PTR OCR rows.
+  - `politician_financial_summary`: 0 rows.
+- Raw House PTR PDFs:
+  - 8,150/8,150 `P` filing PDFs downloaded and PDF-signature validated.
+  - Stored under `/home/cbwinslow/workspace/epstein-data/raw-files/financial_disclosures/house_ptr/{year}/{filing_id}.pdf`.
+  - Download manifest: `/home/cbwinslow/workspace/epstein-data/raw-files/financial_disclosures/manifests/house_ptr_download_20260426T132235Z.jsonl`.
+  - Total raw size: 670,588,048 bytes (~639.5 MB).
+- House PTR OCR / transaction extraction:
+  - OCR cache tables created: `house_ptr_ocr_pages`, `house_ptr_ocr_status`.
+  - OCR complete for 2013-2026: 8,150 filings, 21,098 pages, 0 OCR errors.
+  - `congress_trading`: 18,521 conservative parsed rows from House PTR OCR.
+  - Parsed rows currently span transaction dates 2012-02-27 to 2026-12-26, 326 politicians, 11,878 rows with tickers, 8,378 rows with House asset type codes, 5,653 source filings.
+  - Parser now handles transaction pages without repeated `Filing ID`, OCR punctuation before amount ranges, ticker-only continuation lines, 2018+ cap-gains columns, `S (partial)`, cents-valued amounts, OCR decimal hyphens, OCR periods after dates, OCR `S$` transaction type, bracket noise after dangling ranges, and wrapped amount/ticker lines.
+- Existing old scripts:
+  - `scripts/ingestion/import_financial_disclosures.py` imports House disclosure index metadata, now with `--house-years`, `--senate-years`, `--skip-house`, and `--skip-senate`.
+  - `scripts/ingestion/download/download_politicians_financial.py` created `congress_trading` and `politician_financial_summary` schemas, but does not load rows.
+- Backfill finding:
+  - House Clerk online bulk ZIP data is available for 2008-2026 from tested endpoints.
+  - House Clerk bulk ZIP endpoints return 404/unavailable for 2000-2007; those years likely require alternate scanned House Document/Google Books/GovInfo-style sources rather than the modern Clerk ZIPs.
+  - Senate eFD page states reports are available from 2012-present; older Senate reports require the Secretary of the Senate kiosk/public records path.
+  - Senate live portal is `efdsearch.senate.gov`; the old `efts.senate.gov` endpoint no longer resolves, and direct DataTables POST currently returns a Senate maintenance page from this host.
+  - House PTR PDFs are scanned image-only forms with no embedded text layer; transaction extraction requires OCR with table/coordinate handling.
+- Validation note: `python3 -m py_compile ingest_capitolgains.py epstein_capitolgains/*.py` passed. CapitolGains tests/imports currently fail because `appdirs` is missing from the active environment. `uv run` is blocked by the repo's unsatisfied `torch==2.3.1+cu118` dependency resolution.
+
+| # | Task | Status | Notes |
+|---|------|--------|-------|
+| 8.5.1 | Decide canonical implementation location | ⬜ TODO | Prefer project-owned `epstein_capitolgains/` + root CLI; keep cloned `scripts/political_disclosures/CapitolGains/` as upstream/reference unless intentionally vendoring |
+| 8.5.2 | Fix environment for CapitolGains validation | ⬜ TODO | Add/install `appdirs`, `playwright`, `python-dotenv`, `requests`; avoid triggering unsatisfied `uv` all-extra torch solve |
+| 8.5.3 | Replace root `ingest_capitolgains.py` placeholders | ⬜ TODO | Wire CLI to real project modules instead of creating empty files |
+| 8.5.4 | Implement House index downloader/import reuse | ✅ DONE | Promoted fixed implementation to `import_financial_disclosures.py`; imported 2008-2026, 50,429 rows; wrote availability audit under `raw-files/financial_disclosures/availability/` |
+| 8.5.5 | Implement Senate disclosure metadata ingest | ⚠️ BLOCKED | Current Senate table has 0 rows; live eFD covers 2012-present, but direct POST returned maintenance page; old `efts.senate.gov` DNS fails |
+| 8.5.6 | Extract actual PTR stock transactions | ✅ DONE | Downloaded and OCRed all available House PTR PDFs for 2013-2026; parser handles modern text-like OCR layout, cap-gains columns, partial sales, and wrapped amount/ticker lines; 2013 grid-style forms produced no conservative transaction rows and need separate table-coordinate parsing if required |
+| 8.5.7 | Load normalized transactions into `congress_trading` | ✅ DONE | Added source columns + hash upsert; loaded 18,521 conservative House PTR OCR rows from 5,653 source filings |
+| 8.5.8 | Add raw manifest/resume tracking | ✅ DONE | House PTR PDFs stored under `raw-files/financial_disclosures/house_ptr/`; JSONL manifest written with status, size, sha256 |
+| 8.5.9 | Add validation queries/report | ✅ DONE | Added `scripts/ingestion/validate_house_ptr_quality.sql`; OCR status 8,150/8,150 complete with 0 errors; `congress_trading` has 18,521 rows, 0 required-field nulls, 0 bad low/high ranges, 0 duplicate source hashes, and full source traceability to House metadata/OCR pages |
+| 8.5.10 | Update docs and issue #68 | 🚧 IN_PROGRESS | Task ledger updated after OCR/parser quality reassessment; add final issue close/split comment after Senate/pre-2008 decision |
+| 8.5.11 | Research alternate 2000-2007 House sources | ⬜ TODO | Candidate source: scanned House Document annual compilations (e.g. 2000 report appears as House Document 107-104 / Google Books metadata); not available through Clerk ZIP bulk |
+| 8.5.12 | Promote financial disclosure importer to canonical path | ✅ DONE | `import_financial_disclosures.py` is the canonical importer; legacy workaround/downloader names are compatibility wrappers only |
+| 8.5.13 | Embed House PTR OCR pages | ⬜ TODO | Active remote Nomic embedding job targets `pages.text_content`, not `house_ptr_ocr_pages.ocr_text`; add a disclosure-specific embedding path after the main page job completes or schedule it at low concurrency |
+
 ---
 
 ## Phase 9: Processing Pipeline 🔄
@@ -161,7 +223,7 @@
 | 9.3 | Run NER extraction on all text | ✅ Done | 9.1 or 9.2 |
 | 9.4 | Run facial recognition on images | ⬜ TODO | Install InsightFace + ONNX |
 | 9.5 | Transcribe audio/video files | ⬜ TODO | Install faster-whisper |
-| 9.6 | Generate text embeddings | ⬜ TODO | Install sentence-transformers |
+| 9.6 | Generate text embeddings | 🚧 IN_PROGRESS | Remote Ollama generator is running against `http://192.168.4.25:11343/api/embed` using `nomic-embed-text:latest`; latest observed progress 1,872,650/2,890,491 total, 59.1/sec, 0 errors |
 | 9.7 | Build updated knowledge graph | ✅ Done | 9.3 |
 | 9.8 | Cross-reference supplementary datasets | ⬜ TODO | 9.3, acquire supplementary data |
 | 9.9 | Run evaluation metrics | ✅ Done | 9.1–9.8 |

@@ -163,7 +163,7 @@
 | **Court Opinions** | 31,544 | 2000-2024 | GovInfo.gov | ✅ Complete (verified) |
 | **White House Visitors** | 2,544,984 | 2009-2024 | Archives.gov | ✅ Complete (verified) |
 | **FEC Individual Contrib.** | 447,189,732 | 2000-2026 | FEC.gov | ✅ Complete (verified) |
-| **House Financial Discl.** | 37,281 | 2008-2024 | Clerk.House.gov | ✅ Complete (verified) |
+| **House Financial Discl.** | 50,429 | 2008-2026 | Clerk.House.gov | ✅ Complete (verified) |
 | **Lobbying (LDA)** | 30,600 | 2000-2024 | Senate.gov | ✅ Complete (verified) |
 
 #### Coverage for Epstein's Peak Years (2000-2009)
@@ -187,7 +187,7 @@
 - `congress_bill_text_versions` - 113,106 versions
 - `whitehouse_visitors` - 2,544,984 visits
 - `fec_individual_contributions` - 447M+ contributions
-- `house_financial_disclosures` - 37,281 filings
+- `house_financial_disclosures` - 50,429 filings
 - `lda_filings` - 30,600 registrations
 
 #### Scripts

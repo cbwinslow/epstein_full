@@ -93,8 +93,8 @@
 | **File registry** | ✅ **COMPLETE** | — | 1,313,841 files with SHA-256 hashes |
 | **Text content** | ✅ **COMPLETE** | — | 1,380,935 documents with consolidated text (98.8%) |
 | **Entity extraction** | 🔄 **IN PROGRESS** | — | 2,146 entities extracted (3M expected) |
-| **BGE-M3 embeddings** | 🔄 **RUNNING** | ETA ~2.3 days | 1,400/2,872,262 (0.0%), 15/sec, 1024-dim |
-| **Qwen3 embeddings** | ⬜ **PENDING** | After BGE-M3 | 4096-dim, ~21 days estimated |
+| **Nomic page embeddings** | 🔄 **RUNNING** | ETA ~4.8 hours observed | Remote Ollama on cbwwin `192.168.4.25:11343`, 1,872,650/2,890,491 total, 59.1/sec, 0 errors |
+| **Qwen3 embeddings** | ⬜ **PENDING** | After Nomic review | 4096-dim, ~21 days estimated |
 | **Total disk** | **~500GB used** | | **~1.8TB free** |
 
 ### Download Coverage

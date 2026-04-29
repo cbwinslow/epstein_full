@@ -1,8 +1,10 @@
 #!/bin/bash
 # Check if embeddings generation is complete and send reminder
 
-DB_COUNT=$(psql -U cbwinslow -d epstein -t -c "SELECT COUNT(*) FROM pages WHERE rtx3060_embedding IS NOT NULL;" 2>/dev/null | xargs)
-TOTAL_COUNT=$(psql -U cbwinslow -d epstein -t -c "SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL;" 2>/dev/null | xargs)
+EMBED_COLUMN="${OLLAMA_EMBED_COLUMN:-rtx3060_embedding}"
+
+DB_COUNT=$(psql -U cbwinslow -d epstein -t -c "SELECT COUNT(*) FROM pages WHERE ${EMBED_COLUMN} IS NOT NULL;" 2>/dev/null | xargs)
+TOTAL_COUNT=$(psql -U cbwinslow -d epstein -t -c "SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10;" 2>/dev/null | xargs)
 
 if [ -z "$DB_COUNT" ] || [ -z "$TOTAL_COUNT" ]; then
     echo "Cannot connect to database"
@@ -12,7 +14,7 @@ fi
 REMAINING=$((TOTAL_COUNT - DB_COUNT))
 PERCENT=$(echo "scale=1; $DB_COUNT * 100 / $TOTAL_COUNT" | bc -l 2>/dev/null || echo "0")
 
-echo "Embeddings Progress: $DB_COUNT / $TOTAL_COUNT ($PERCENT%) - $REMAINING remaining"
+echo "Embeddings Progress (${EMBED_COLUMN}): $DB_COUNT / $TOTAL_COUNT ($PERCENT%) - $REMAINING remaining"
 
 if [ "$REMAINING" -lt 100 ]; then
     echo ""
@@ -29,11 +31,11 @@ if [ "$REMAINING" -lt 100 ]; then
     echo "Check status: sudo systemctl status epstein-embeddings"
     echo "View logs: tail /tmp/rtx3060_embeddings.log"
     echo "=========================================="
-    
+
     # Write completion files
     echo "Complete: $DB_COUNT embeddings generated at $(date)" > /tmp/EMBEDDINGS_COMPLETE_MARKER
     echo "Complete: $DB_COUNT embeddings generated at $(date)" > /home/cbwinslow/workspace/epstein/EMBEDDINGS_COMPLETE_MARKER
-    
+
     exit 0
 else
     echo "Still processing... $REMAINING pages remaining"

@@ -1,10 +1,26 @@
 # Embedding Model Standardization Plan
 
-> **Status:** PENDING - Waiting for all data to be loaded into PostgreSQL  
-> **Created:** March 31, 2026  
+> **Status:** PENDING - Waiting for all data to be loaded into PostgreSQL
+> **Created:** March 31, 2026
 > **Target:** Standardize on single embedding model across all tables
 
 ## Current State (Chaos)
+
+### Operational Update — April 26, 2026
+
+The active Linux-side embedding generator now targets the Windows `cbwwin`
+Ollama endpoint at `http://192.168.4.25:11343/api/embed`.
+
+- Script: `scripts/processing/rtx3060_embeddings.py`
+- Default model: `nomic-embed-text:latest`
+- Default target column: `pages.rtx3060_embedding`
+- Dimensions: 768
+- Existing compatible vectors: 37,750
+
+This keeps the existing `rtx3060_embedding` values instead of mixing a new
+model into the same column. If switching to a larger model such as
+`mxbai-embed-large`, use a new column or run with `--reset-column` so old
+vectors are regenerated.
 
 The database currently contains **incompatible embedding models** across different tables:
 
@@ -118,19 +134,19 @@ If regeneration is too costly:
 
 ```sql
 -- Verify all embeddings use same model
-SELECT model_name, COUNT(*) 
-FROM page_embeddings 
+SELECT model_name, COUNT(*)
+FROM page_embeddings
 GROUP BY model_name;
 -- Should show ONLY: nomic-ai/nomic-embed-text-v2-moe
 
 -- Verify embedding dimensions
-SELECT pg_column_size(embedding), COUNT(*) 
-FROM page_embeddings 
+SELECT pg_column_size(embedding), COUNT(*)
+FROM page_embeddings
 GROUP BY pg_column_size(embedding);
 -- Should show ONLY: 1544 bytes (384-dim float32)
 
 -- Test semantic similarity
-SELECT efta_number, page_number, 
+SELECT efta_number, page_number,
        embedding <=> query_embedding AS distance
 FROM page_embeddings
 WHERE efta_number = 'EFTA00000001'
@@ -145,8 +161,8 @@ After all embeddings are consistent:
 ```sql
 -- Recreate HNSW index for optimal performance
 DROP INDEX IF EXISTS idx_page_embeddings_vector;
-CREATE INDEX idx_page_embeddings_vector 
-ON page_embeddings 
+CREATE INDEX idx_page_embeddings_vector
+ON page_embeddings
 USING hnsw (embedding vector_cosine_ops)
 WITH (m = 16, ef_construction = 64);
 ```
