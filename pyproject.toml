@@ -40,7 +40,7 @@ dependencies = [
     "networkx>=3.0",                # Graph analysis
 
     # CLI & UI
-    "click>=8.0",                   # CLI framework
+    "click>=8.3.2",                   # CLI framework
     "rich>=13.0",                   # Terminal UI, dashboard
     "tqdm>=4.65",                   # Progress bars
 
