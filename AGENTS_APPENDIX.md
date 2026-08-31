@@ -54,7 +54,7 @@ configuration:
   rss_feeds_file: config/rss_feeds.json
   max_results_per_source: 10000
   newsapi_key: null  # Optional
-  
+
 runtime:
   max_workers: 5
   batch_size: 100
@@ -111,11 +111,11 @@ configuration:
   youtube_api_key: null  # Optional for higher quota
   use_web_scraping: true  # Fallback without API
   max_results_per_platform: 500
-  
+
 runtime:
   max_workers: 3
   youtube_quota_limit: 10000  # per day
-  
+
 free_tier_limits:
   youtube_api: 10000 quota/day (~40-50 videos with captions)
   youtube_scraping: Unlimited (slower)
@@ -183,11 +183,11 @@ configuration:
   keep_audio_files: false
   max_audio_duration: 7200  # 2 hours
   youtube_api_key: null
-  
+
 runtime:
   max_workers: 2
   whisper_batch_size: 1
-  
+
 gpu_requirements:
   tiny: ~1GB VRAM
   base: ~1GB VRAM
@@ -249,11 +249,11 @@ configuration:
   pacer_username: null
   pacer_password: null
   check_interval_hours: 24
-  
+
 runtime:
   max_workers: 2
   respect_robots_txt: true
-  
+
 free_access:
   court_listener: Full access (crowdsourced PACER)
   govinfo: Full access (public documents)
@@ -318,7 +318,7 @@ configuration:
   min_content_length: 500
   max_retries: 3
   respect_robots_txt: true
-  
+
 runtime:
   max_workers: 10
   batch_size: 50
@@ -383,7 +383,7 @@ configuration:
   ocr_gpu_device: 0  # Tesla K80
   download_timeout: 120
   max_file_size_mb: 100
-  
+
 runtime:
   max_workers: 5
   batch_size: 10
@@ -440,7 +440,7 @@ configuration:
   confidence_threshold: 0.7
   max_entities_per_type: 100
   fuzzy_match_threshold: 85  # For DB matching
-  
+
 runtime:
   use_gpu: true
   batch_size: 32
@@ -510,7 +510,7 @@ configuration:
     - "relationships and network"
     - "prison and death"
     - "document releases"
-    
+
 runtime:
   use_gpu: true
   batch_size: 16
@@ -527,6 +527,7 @@ runtime:
 @dataclass
 class DiscoveryResult:
     """Message from discovery agents to orchestrator."""
+
     agent_id: str
     query_id: str
     timestamp: datetime
@@ -534,10 +535,12 @@ class DiscoveryResult:
     items: List[MediaURL]
     query_params: Dict
     execution_time_ms: int
-    
+
+
 @dataclass
 class CollectionTask:
     """Message from orchestrator to collection agents."""
+
     task_id: str
     media_type: str  # news, video, document
     source_url: str
@@ -545,30 +548,36 @@ class CollectionTask:
     retry_count: int
     max_retries: int
     context: Dict  # Discovery metadata
-    
+
+
 @dataclass
 class CollectionResult:
     """Message from collection agents to orchestrator."""
+
     task_id: str
     success: bool
     media_id: Optional[int]  # Database ID
     error_message: Optional[str]
     storage_path: Optional[str]
     processing_time_ms: int
-    
+
+
 @dataclass
 class ProcessingTask:
     """Message for NLP processing agents."""
+
     task_id: str
     media_type: str
     media_id: int
     text_content: str
     extract_entities: bool
     analyze_text: bool
-    
+
+
 @dataclass
 class ProcessingResult:
     """Result from processing agents."""
+
     task_id: str
     entities: Optional[ExtractedEntities]
     analysis: Optional[TextAnalysis]
@@ -585,32 +594,32 @@ topics:
     description: "New articles discovered"
     publishers: [news-discovery-v2]
     subscribers: [orchestrator, logger]
-    
+
   discovery.video.found:
     description: "New videos discovered"
     publishers: [video-discovery-v2]
     subscribers: [orchestrator, logger]
-    
+
   discovery.document.found:
     description: "New documents discovered"
     publishers: [document-discovery-v2]
     subscribers: [orchestrator, logger]
-    
+
   collection.completed:
     description: "Media item successfully collected"
     publishers: [news-collector, video-transcriber, document-downloader]
     subscribers: [orchestrator, storage-manager, logger]
-    
+
   collection.failed:
     description: "Media collection failed"
     publishers: [all-collection-agents]
     subscribers: [orchestrator, error-handler, logger]
-    
+
   processing.completed:
     description: "NLP processing completed"
     publishers: [entity-extractor-v2, text-analyzer]
     subscribers: [orchestrator, storage-manager]
-    
+
   system.health:
     description: "Agent health status"
     publishers: [all-agents]

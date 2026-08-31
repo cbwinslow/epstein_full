@@ -31,9 +31,9 @@ from media_acquisition.agents.discovery.google_news import GoogleNewsScraper
 
 scraper = GoogleNewsScraper()
 result = scraper.search(
-    keywords=['Jeffrey Epstein', 'Ghislaine Maxwell'],
-    date_range=('2019-01-01', '2025-12-31'),
-    max_results=1000
+    keywords=["Jeffrey Epstein", "Ghislaine Maxwell"],
+    date_range=("2019-01-01", "2025-12-31"),
+    max_results=1000,
 )
 ```
 
@@ -66,7 +66,7 @@ from datasets import load_dataset
 dataset = load_dataset("fancyzhx/ag_news")
 ```
 
-**Relevance for Epstein Research**: 
+**Relevance for Epstein Research**:
 - AG News has general news but not specifically Epstein-related
 - Newsroom dataset might have relevant articles from major publications
 - Need to filter by date (2019-2025) and keywords

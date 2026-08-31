@@ -6,11 +6,11 @@
 -- =====================================================
 
 -- Get all tables with record counts
-SELECT 
+SELECT
     table_name,
     (SELECT COUNT(*) FROM information_schema.columns WHERE table_name = t.table_name) as column_count
 FROM information_schema.tables t
-WHERE table_schema = 'public' 
+WHERE table_schema = 'public'
 AND table_type = 'BASE TABLE'
 ORDER BY table_name;
 
@@ -30,23 +30,23 @@ ORDER BY records DESC;
 -- =====================================================
 
 -- Check email thread ID overlap
-SELECT 
+SELECT
     'hf_email_threads vs house_oversight_emails' as comparison,
     COUNT(*) as overlapping_thread_ids
 FROM hf_email_threads h
 INNER JOIN house_oversight_emails ho ON h.thread_id = ho.thread_id;
 
 -- Check subject overlap between email tables
-SELECT 
+SELECT
     'Subject overlap' as check_type,
     COUNT(*) as matches
 FROM hf_email_threads h
-INNER JOIN house_oversight_emails ho 
-    ON h.subject = ho.subject 
+INNER JOIN house_oversight_emails ho
+    ON h.subject = ho.subject
     AND h.subject IS NOT NULL;
 
 -- Check sender overlap
-SELECT 
+SELECT
     'Sender overlap' as check_type,
     COUNT(DISTINCT h.sender) as unique_senders_in_both
 FROM hf_email_threads h
@@ -57,15 +57,15 @@ INNER JOIN house_oversight_emails ho ON h.sender = ho.sender;
 -- =====================================================
 
 -- Extract EFT document IDs from various tables
-SELECT 
+SELECT
     'hf_house_oversight_docs' as source,
     COUNT(*) as total,
     COUNT(CASE WHEN doc_id LIKE 'EFT%' THEN 1 END) as eft_pattern_count
 FROM hf_house_oversight_docs;
 
 -- Common filename patterns
-SELECT 
-    CASE 
+SELECT
+    CASE
         WHEN doc_id LIKE 'EFT%' THEN 'EFT_*'
         WHEN doc_id LIKE '%email%' THEN '*email*'
         WHEN doc_id LIKE '%flight%' THEN '*flight*'
@@ -82,7 +82,7 @@ ORDER BY count DESC;
 -- =====================================================
 
 -- Files in SQL but not referenced in filesystem paths
-SELECT 
+SELECT
     file_path,
     doc_id,
     doc_type
@@ -98,7 +98,7 @@ LIMIT 20;
 -- =====================================================
 
 -- Null value analysis
-SELECT 
+SELECT
     'hf_epstein_files_20k' as table_name,
     COUNT(*) as total,
     COUNT(CASE WHEN content IS NULL THEN 1 END) as null_content,
@@ -106,7 +106,7 @@ SELECT
 FROM hf_epstein_files_20k;
 
 -- Duplicate IDs within same table
-SELECT 
+SELECT
     doc_id,
     COUNT(*) as occurrence_count
 FROM hf_house_oversight_docs
@@ -124,20 +124,20 @@ LIMIT 20;
 -- (Need to compare content hashes or filenames)
 
 -- Compare hf_epstein_files_20k with full_epstein_index
-SELECT 
+SELECT
     'ID overlap check' as analysis,
     COUNT(*) as matches
 FROM hf_epstein_files_20k hf
-INNER JOIN full_epstein_index fei 
+INNER JOIN full_epstein_index fei
     ON hf.id::text = fei.id::text;
 
 -- Check filename overlap between epstein-files-20k and house_oversight_docs
-SELECT 
+SELECT
     hf.filename,
     ho.doc_id,
     'potential_match' as match_type
 FROM hf_epstein_files_20k hf
-INNER JOIN hf_house_oversight_docs ho 
+INNER JOIN hf_house_oversight_docs ho
     ON hf.filename ILIKE '%' || ho.doc_id || '%'
     OR ho.doc_id ILIKE '%' || hf.filename || '%'
 LIMIT 50;
@@ -147,7 +147,7 @@ LIMIT 50;
 -- =====================================================
 
 -- Tables that might be merged or deduplicated
-SELECT 
+SELECT
     'hf_email_threads + house_oversight_emails' as suggestion,
     'MERGE - 100% thread_id overlap' as action,
     5082 as affected_records;

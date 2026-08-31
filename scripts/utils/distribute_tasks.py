@@ -49,17 +49,14 @@ class TaskDistributor:
         # Performance tracking
         self.performance_metrics = {
             "linux": {"ocr_speed": 0, "face_speed": 0, "ner_speed": 0},
-            "windows": {"ocr_speed": 0, "face_speed": 0, "ner_speed": 0}
+            "windows": {"ocr_speed": 0, "face_speed": 0, "ner_speed": 0},
         }
 
         # Setup logging
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler('logs/task_distribution.log'),
-                logging.StreamHandler()
-            ]
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[logging.FileHandler("logs/task_distribution.log"), logging.StreamHandler()],
         )
         self.logger = logging.getLogger(__name__)
 
@@ -90,17 +87,13 @@ class TaskDistributor:
     def run_ssh_command(self, host: str, command: str, timeout: int = 300) -> Tuple[bool, str, str]:
         """Execute SSH command and return success, stdout, stderr"""
         if host == "windows":
-            full_command = f"ssh {self.windows_user}@{self.windows_host} \"{command}\""
+            full_command = f'ssh {self.windows_user}@{self.windows_host} "{command}"'
         else:
             full_command = command
 
         try:
             result = subprocess.run(
-                full_command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=timeout
+                full_command, shell=True, capture_output=True, text=True, timeout=timeout
             )
 
             success = result.returncode == 0
@@ -132,12 +125,11 @@ class TaskDistributor:
             pattern = "*"
 
         success, stdout, stderr = self.run_ssh_command(
-            "linux",
-            f"find {data_path} -name '{pattern}' | head -1000"
+            "linux", f"find {data_path} -name '{pattern}' | head -1000"
         )
 
         if success:
-            files = stdout.split('\n')
+            files = stdout.split("\n")
             self.logger.info(f"Discovered {len(files)} files in {dataset}")
             return files
         else:
@@ -149,7 +141,7 @@ class TaskDistributor:
         # Base performance estimates (files per minute)
         base_performance = {
             "linux": {"ocr": 60, "face": 30, "ner": 200},
-            "windows": {"ocr": 200, "face": 80, "ner": 1500}
+            "windows": {"ocr": 200, "face": 80, "ner": 1500},
         }
 
         if target_machine in self.performance_metrics:
@@ -181,11 +173,7 @@ class TaskDistributor:
         """Create a new task"""
         task_id = f"{task_type}_{dataset}_{int(time.time())}"
 
-        return Task(
-            task_id=task_id,
-            task_type=task_type,
-            files=files
-        )
+        return Task(task_id=task_id, task_type=task_type, files=files)
 
     def transfer_data_to_windows(self, files: List[str], dataset: str) -> bool:
         """Transfer files to Windows machine"""
@@ -193,8 +181,7 @@ class TaskDistributor:
 
         # Create dataset directory on Windows
         success, _, _ = self.run_ssh_command(
-            "windows",
-            f"mkdir {self.windows_path}\\data\\{dataset}"
+            "windows", f"mkdir {self.windows_path}\\data\\{dataset}"
         )
 
         if not success:
@@ -208,9 +195,7 @@ class TaskDistributor:
             windows_dest = f"{self.windows_user}@{self.windows_host}:{self.windows_path}\\data\\{dataset}\\{filename}"
 
             success, _, stderr = self.run_ssh_command(
-                "linux",
-                f"rsync -avz {file_path} {windows_dest}",
-                timeout=120
+                "linux", f"rsync -avz {file_path} {windows_dest}", timeout=120
             )
 
             if not success:
@@ -278,7 +263,7 @@ class TaskDistributor:
             "processed": len(files) if success else 0,
             "success": success,
             "output": stdout,
-            "error": stderr if not success else None
+            "error": stderr if not success else None,
         }
 
     def _run_linux_face_detection(self, files: List[str]) -> Dict:
@@ -291,7 +276,7 @@ class TaskDistributor:
             "detected_faces": 0,  # Parse from output
             "processed": len(files) if success else 0,
             "success": success,
-            "error": stderr if not success else None
+            "error": stderr if not success else None,
         }
 
     def _run_linux_ner(self, files: List[str]) -> Dict:
@@ -304,7 +289,7 @@ class TaskDistributor:
             "extracted_entities": 0,  # Parse from output
             "processed": len(files) if success else 0,
             "success": success,
-            "error": stderr if not success else None
+            "error": stderr if not success else None,
         }
 
     def _run_windows_ocr(self, files: List[str]) -> Dict:
@@ -317,7 +302,7 @@ class TaskDistributor:
             "processed": len(files) if success else 0,
             "success": success,
             "output": stdout,
-            "error": stderr if not success else None
+            "error": stderr if not success else None,
         }
 
     def _run_windows_face_detection(self, files: List[str]) -> Dict:
@@ -329,7 +314,7 @@ class TaskDistributor:
             "detected_faces": 0,  # Parse from output
             "processed": len(files) if success else 0,
             "success": success,
-            "error": stderr if not success else None
+            "error": stderr if not success else None,
         }
 
     def _run_windows_ner(self, files: List[str]) -> Dict:
@@ -341,7 +326,7 @@ class TaskDistributor:
             "extracted_entities": 0,  # Parse from output
             "processed": len(files) if success else 0,
             "success": success,
-            "error": stderr if not success else None
+            "error": stderr if not success else None,
         }
 
     def process_task(self, task: Task) -> bool:
@@ -383,21 +368,24 @@ class TaskDistributor:
     def _update_task_in_db(self, task: Task):
         """Update task in database"""
         with sqlite3.connect(self.db_path) as conn:
-            conn.execute("""
-                INSERT OR REPLACE INTO tasks 
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO tasks
                 (task_id, task_type, files, status, assigned_to, start_time, end_time, results, error)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                task.task_id,
-                task.task_type,
-                json.dumps(task.files),
-                task.status,
-                task.assigned_to,
-                task.start_time,
-                task.end_time,
-                json.dumps(task.results) if task.results else None,
-                task.error
-            ))
+            """,
+                (
+                    task.task_id,
+                    task.task_type,
+                    json.dumps(task.files),
+                    task.status,
+                    task.assigned_to,
+                    task.start_time,
+                    task.end_time,
+                    json.dumps(task.results) if task.results else None,
+                    task.error,
+                ),
+            )
             conn.commit()
 
     def run_batch_processing(self, task_type: str, dataset: str, batch_size: int = 100):
@@ -412,7 +400,7 @@ class TaskDistributor:
             return
 
         # Create batches
-        batches = [files[i:i+batch_size] for i in range(0, len(files), batch_size)]
+        batches = [files[i : i + batch_size] for i in range(0, len(files), batch_size)]
         self.logger.info(f"Created {len(batches)} batches of {batch_size} files each")
 
         # Process batches
@@ -420,7 +408,7 @@ class TaskDistributor:
         failed = 0
 
         for i, batch_files in enumerate(batches):
-            self.logger.info(f"Processing batch {i+1}/{len(batches)}")
+            self.logger.info(f"Processing batch {i + 1}/{len(batches)}")
 
             task = self.create_task(task_type, batch_files, dataset)
 
@@ -439,7 +427,7 @@ class TaskDistributor:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
                 SELECT assigned_to, task_type, AVG(processing_time), COUNT(*)
-                FROM tasks 
+                FROM tasks
                 WHERE status = 'completed' AND processing_time IS NOT NULL
                 GROUP BY assigned_to, task_type
             """)
@@ -461,22 +449,14 @@ class TaskDistributor:
                 FROM tasks GROUP BY task_type, assigned_to, status
             """)
 
-            report = {
-                "summary": {},
-                "performance": self.performance_metrics,
-                "tasks": []
-            }
+            report = {"summary": {}, "performance": self.performance_metrics, "tasks": []}
 
             for row in cursor.fetchall():
                 task_type, machine, status, count, total_time = row
                 key = f"{task_type}_{machine}"
 
                 if key not in report["summary"]:
-                    report["summary"][key] = {
-                        "completed": 0,
-                        "failed": 0,
-                        "total_time": 0
-                    }
+                    report["summary"][key] = {"completed": 0, "failed": 0, "total_time": 0}
 
                 if status == "completed":
                     report["summary"][key]["completed"] = count
@@ -486,7 +466,7 @@ class TaskDistributor:
 
             # Save report
             report_path = "logs/task_distribution_report.json"
-            with open(report_path, 'w') as f:
+            with open(report_path, "w") as f:
                 json.dump(report, f, indent=2)
 
             self.logger.info(f"Report saved to {report_path}")
@@ -494,14 +474,14 @@ class TaskDistributor:
 
 def main():
     parser = argparse.ArgumentParser(description="Distribute tasks between Linux and Windows")
-    parser.add_argument("--task", choices=["ocr", "face", "ner"], required=True,
-                       help="Type of task to distribute")
-    parser.add_argument("--dataset", required=True,
-                       help="Dataset to process (e.g., data9)")
-    parser.add_argument("--batch-size", type=int, default=100,
-                       help="Number of files per batch")
-    parser.add_argument("--monitor", action="store_true",
-                       help="Monitor performance and generate report")
+    parser.add_argument(
+        "--task", choices=["ocr", "face", "ner"], required=True, help="Type of task to distribute"
+    )
+    parser.add_argument("--dataset", required=True, help="Dataset to process (e.g., data9)")
+    parser.add_argument("--batch-size", type=int, default=100, help="Number of files per batch")
+    parser.add_argument(
+        "--monitor", action="store_true", help="Monitor performance and generate report"
+    )
 
     args = parser.parse_args()
 

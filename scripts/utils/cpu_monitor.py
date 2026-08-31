@@ -33,7 +33,7 @@ from typing import Optional
 
 TEMP_WARN = 75
 TEMP_CRITICAL = 85
-LOAD_WARN_PCT = 80    # % of cores
+LOAD_WARN_PCT = 80  # % of cores
 MEM_WARN_PCT = 85
 MEM_CRITICAL_PCT = 95
 DEFAULT_REFRESH = 5
@@ -43,17 +43,19 @@ DEFAULT_REFRESH = 5
 # Data Models
 # =============================================================================
 
+
 @dataclass
 class CPUInfo:
     """CPU state snapshot."""
+
     cores_physical: int
     cores_logical: int
     model_name: str
-    temperature: Optional[float]       # °C (from sensors)
+    temperature: Optional[float]  # °C (from sensors)
     load_1min: float
     load_5min: float
     load_15min: float
-    load_percent: float                # % of total cores
+    load_percent: float  # % of total cores
     memory_total_gb: float
     memory_used_gb: float
     memory_available_gb: float
@@ -92,6 +94,7 @@ class CPUInfo:
 # =============================================================================
 # Data Collection
 # =============================================================================
+
 
 def get_cpu_info() -> CPUInfo:
     """Collect CPU information from /proc and sensors.
@@ -156,9 +159,7 @@ def get_cpu_info() -> CPUInfo:
 def _get_physical_cores() -> int:
     """Get physical CPU core count."""
     try:
-        result = subprocess.run(
-            ["lscpu"], capture_output=True, text=True, check=True
-        )
+        result = subprocess.run(["lscpu"], capture_output=True, text=True, check=True)
         for line in result.stdout.split("\n"):
             if "Core(s) per socket" in line:
                 cores = int(line.split(":")[1].strip())
@@ -192,9 +193,7 @@ def _get_cpu_temperature() -> Optional[float]:
     """
     # Try lm-sensors first
     try:
-        result = subprocess.run(
-            ["sensors", "-j"], capture_output=True, text=True, timeout=5
-        )
+        result = subprocess.run(["sensors", "-j"], capture_output=True, text=True, timeout=5)
         if result.returncode == 0:
             data = json.loads(result.stdout)
             # Look for coretemp or similar
@@ -225,8 +224,12 @@ def _get_cpu_temperature() -> Optional[float]:
 def _get_memory_info() -> dict:
     """Parse /proc/meminfo for memory statistics."""
     result = {
-        "total_gb": 0.0, "used_gb": 0.0, "available_gb": 0.0,
-        "percent": 0.0, "swap_total_gb": 0.0, "swap_used_gb": 0.0,
+        "total_gb": 0.0,
+        "used_gb": 0.0,
+        "available_gb": 0.0,
+        "percent": 0.0,
+        "swap_total_gb": 0.0,
+        "swap_used_gb": 0.0,
         "swap_percent": 0.0,
     }
 
@@ -276,6 +279,7 @@ def _get_uptime() -> float:
 # =============================================================================
 # Display
 # =============================================================================
+
 
 def format_uptime(seconds: float) -> str:
     """Format uptime as human-readable string."""
@@ -327,21 +331,25 @@ def snapshot(cpu: CPUInfo) -> str:
     # Load
     load_icon = "⚠" if cpu.load_status == "HIGH" else "✓"
     load_bar = render_bar(cpu.load_percent, 20, LOAD_WARN_PCT, 95)
-    lines.extend([
-        "",
-        f"  {load_icon} CPU Load: {cpu.load_percent:.1f}%  [{load_bar}]",
-        f"    1min: {cpu.load_1min:.2f}  5min: {cpu.load_5min:.2f}  15min: {cpu.load_15min:.2f}",
-    ])
+    lines.extend(
+        [
+            "",
+            f"  {load_icon} CPU Load: {cpu.load_percent:.1f}%  [{load_bar}]",
+            f"    1min: {cpu.load_1min:.2f}  5min: {cpu.load_5min:.2f}  15min: {cpu.load_15min:.2f}",
+        ]
+    )
 
     # Memory
     mem_icon = {"OK": "✓", "WARNING": "⚠", "CRITICAL": "🔴"}.get(cpu.mem_status, "?")
     mem_bar = render_bar(cpu.memory_percent, 20, MEM_WARN_PCT, MEM_CRITICAL_PCT)
-    lines.extend([
-        "",
-        f"  {icon} Memory: {cpu.memory_used_gb:.1f} / {cpu.memory_total_gb:.1f} GB ({cpu.memory_percent:.1f}%)",
-        f"    [{mem_bar}]",
-        f"    Available: {cpu.memory_available_gb:.1f} GB  Swap: {cpu.swap_used_gb:.1f} / {cpu.swap_total_gb:.1f} GB",
-    ])
+    lines.extend(
+        [
+            "",
+            f"  {icon} Memory: {cpu.memory_used_gb:.1f} / {cpu.memory_total_gb:.1f} GB ({cpu.memory_percent:.1f}%)",
+            f"    [{mem_bar}]",
+            f"    Available: {cpu.memory_available_gb:.1f} GB  Swap: {cpu.swap_used_gb:.1f} / {cpu.swap_total_gb:.1f} GB",
+        ]
+    )
 
     lines.append(f"\n{'=' * 60}\n")
     return "\n".join(lines)
@@ -369,6 +377,7 @@ def watch(refresh: int = DEFAULT_REFRESH, alert_temp: Optional[int] = None):
 # =============================================================================
 # Health Check
 # =============================================================================
+
 
 def health_check(cpu: CPUInfo) -> dict:
     """Run a health check and return status."""
@@ -408,10 +417,9 @@ def health_check(cpu: CPUInfo) -> dict:
 # Entry Point
 # =============================================================================
 
+
 def main():
-    parser = argparse.ArgumentParser(
-        description="CPU temperature, load, and memory monitor"
-    )
+    parser = argparse.ArgumentParser(description="CPU temperature, load, and memory monitor")
     parser.add_argument("--watch", action="store_true", help="Continuous mode")
     parser.add_argument("--refresh", type=int, default=DEFAULT_REFRESH)
     parser.add_argument("--alert", type=int, default=None, help="Alert threshold °C")

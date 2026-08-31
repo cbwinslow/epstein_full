@@ -4,7 +4,6 @@ Quick import for jmail supplementary data (iMessages, photos)
 Runs in parallel with main parquet processing
 """
 
-import logging
 import os
 
 import pandas as pd
@@ -51,17 +50,20 @@ def import_imessages():
 
             # Insert data
             for _, row in df.iterrows():
-                cur.execute("""
+                cur.execute(
+                    """
                     INSERT INTO jmail_imessages (conversation_id, participants, message_count, first_date, last_date, source_file)
                     VALUES (%s, %s, %s, %s, %s, %s)
-                """, (
-                    str(row.get('conversation_id', '')),
-                    str(row.get('participants', '')),
-                    int(row.get('message_count', 0)),
-                    str(row.get('first_date', '')),
-                    str(row.get('last_date', '')),
-                    file_path
-                ))
+                """,
+                    (
+                        str(row.get("conversation_id", "")),
+                        str(row.get("participants", "")),
+                        int(row.get("message_count", 0)),
+                        str(row.get("first_date", "")),
+                        str(row.get("last_date", "")),
+                        file_path,
+                    ),
+                )
             conn.commit()
 
         conn.close()
@@ -105,19 +107,22 @@ def import_photos():
             batch_size = 1000
             imported = 0
             for i in range(0, len(df), batch_size):
-                batch = df.iloc[i:i+batch_size]
+                batch = df.iloc[i : i + batch_size]
                 for _, row in batch.iterrows():
-                    cur.execute("""
+                    cur.execute(
+                        """
                         INSERT INTO jmail_photos (photo_id, file_name, file_path, date_taken, people_detected, source_file)
                         VALUES (%s, %s, %s, %s, %s, %s)
-                    """, (
-                        str(row.get('id', '')),
-                        str(row.get('file_name', '')),
-                        str(row.get('file_path', '')),
-                        str(row.get('date', '')),
-                        str(row.get('people', '')),
-                        file_path
-                    ))
+                    """,
+                        (
+                            str(row.get("id", "")),
+                            str(row.get("file_name", "")),
+                            str(row.get("file_path", "")),
+                            str(row.get("date", "")),
+                            str(row.get("people", "")),
+                            file_path,
+                        ),
+                    )
                 conn.commit()
                 imported += len(batch)
                 print(f"  Progress: {imported}/{len(df)} photos")

@@ -13,7 +13,7 @@
 - **What:** Insider trading, Form 4 (insider transactions), 13F (institutional holdings)
 - **Source:** sec.gov/cgi-bin/browse-edgar?action=getcurrent
 - **API:** EDGAR Search API (free, no key needed)
-- **Value:** 
+- **Value:**
   - Board memberships (Form 3/4/5)
   - Financial ties between individuals
   - Company ownership structures

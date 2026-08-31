@@ -195,27 +195,25 @@ pip install requests
 ```python
 import requests
 
+
 class EmbeddingsClient:
     def __init__(self, base_url: str):
-        self.base_url = base_url.rstrip('/')
-    
+        self.base_url = base_url.rstrip("/")
+
     def health(self) -> dict:
         response = requests.get(f"{self.base_url}/health")
         return response.json()
-    
+
     def embed(self, texts: list, batch_size: int = 32) -> list:
         response = requests.post(
-            f"{self.base_url}/embed",
-            json={"texts": texts, "batch_size": batch_size}
+            f"{self.base_url}/embed", json={"texts": texts, "batch_size": batch_size}
         )
         return response.json()["embeddings"]
-    
+
     def embed_title(self, text: str) -> list:
-        response = requests.post(
-            f"{self.base_url}/embed/title",
-            params={"text": text}
-        )
+        response = requests.post(f"{self.base_url}/embed/title", params={"text": text})
         return response.json()["embedding"]
+
 
 # Usage
 client = EmbeddingsClient("http://192.168.1.100:8000")
@@ -234,18 +232,20 @@ import requests
 
 # Generate embedding
 embedding = requests.post(
-    "http://192.168.1.100:8000/embed/title",
-    params={"text": "Article title"}
+    "http://192.168.1.100:8000/embed/title", params={"text": "Article title"}
 ).json()["embedding"]
 
 # Store in database
 conn = psycopg2.connect("postgresql://user:pass@localhost:5432/epstein")
 cur = conn.cursor()
-cur.execute("""
+cur.execute(
+    """
     UPDATE media_news_articles
     SET title_embedding = %s
     WHERE id = %s
-""", (embedding, article_id))
+""",
+    (embedding, article_id),
+)
 conn.commit()
 ```
 
@@ -315,8 +315,8 @@ Server logs output to console. For production, implement file logging:
 import logging
 
 logging.basicConfig(
-    filename='embeddings_server.log',
+    filename="embeddings_server.log",
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 ```

@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 """Import kabasshouse chunk embeddings (2.1M, 768-dim Gemini vectors)."""
-import time
+
 import signal
-from huggingface_hub import hf_hub_download
-import pyarrow.parquet as pq
+import time
+
 import psycopg2
+import pyarrow.parquet as pq
+from huggingface_hub import hf_hub_download
 
 DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 REPO = "kabasshouse/epstein-data"
 
 shutdown = False
-signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__('shutdown', True))
-signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__('shutdown', True))
+signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__("shutdown", True))
+signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__("shutdown", True))
 
 
 def log(msg):
@@ -67,7 +69,16 @@ def main():
                        (id, chunk_id, document_id, embedding, embedding_dim, model, source_text_hash, created_at)
                        VALUES (%s, %s, %s, %s::vector(768), %s, %s, %s, %s)
                        ON CONFLICT (chunk_id) DO NOTHING""",
-                    (ids[i], chunk_ids[i], doc_ids[i], vec, dims[i], models[i], hashes[i], created[i]),
+                    (
+                        ids[i],
+                        chunk_ids[i],
+                        doc_ids[i],
+                        vec,
+                        dims[i],
+                        models[i],
+                        hashes[i],
+                        created[i],
+                    ),
                 )
                 if cur.rowcount > 0:
                     inserted += 1
@@ -81,7 +92,9 @@ def main():
         total_inserted += inserted
         elapsed = time.time() - t0
         fname = file_path.split("/")[-1]
-        log(f"  {fname}: +{inserted:,} | total: {total_inserted:,} | {total_inserted / elapsed:.0f}/sec")
+        log(
+            f"  {fname}: +{inserted:,} | total: {total_inserted:,} | {total_inserted / elapsed:.0f}/sec"
+        )
 
     conn.close()
     elapsed = time.time() - t0

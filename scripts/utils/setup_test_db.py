@@ -3,36 +3,33 @@ Setup script for test database.
 Creates necessary tables and indexes for testing.
 """
 
-import os
 import sys
+
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 # Database configuration
-TEST_DB_NAME = 'epstein_test'
-DEFAULT_DB_URL = 'postgresql://cbwinslow:123qweasd@localhost:5432/postgres'
+TEST_DB_NAME = "epstein_test"
+DEFAULT_DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/postgres"
 
 
 def create_test_database():
     """Create test database if it doesn't exist."""
     conn = psycopg2.connect(DEFAULT_DB_URL)
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    
+
     with conn.cursor() as cur:
         # Check if database exists
-        cur.execute(
-            "SELECT EXISTS (SELECT FROM pg_database WHERE datname = %s)",
-            (TEST_DB_NAME,)
-        )
+        cur.execute("SELECT EXISTS (SELECT FROM pg_database WHERE datname = %s)", (TEST_DB_NAME,))
         exists = cur.fetchone()[0]
-        
+
         if not exists:
             print(f"Creating test database: {TEST_DB_NAME}")
             cur.execute(f"CREATE DATABASE {TEST_DB_NAME}")
             print(f"✓ Database {TEST_DB_NAME} created")
         else:
             print(f"✓ Database {TEST_DB_NAME} already exists")
-    
+
     conn.close()
 
 
@@ -40,7 +37,7 @@ def create_tables():
     """Create test tables."""
     test_db_url = f"postgresql://cbwinslow:123qweasd@localhost:5432/{TEST_DB_NAME}"
     conn = psycopg2.connect(test_db_url)
-    
+
     with conn.cursor() as cur:
         # Create media_collection_queue table
         cur.execute("""
@@ -57,7 +54,7 @@ def create_tables():
                 UNIQUE(source_url, media_type)
             )
         """)
-        
+
         # Create media_news_articles table
         cur.execute("""
             CREATE TABLE IF NOT EXISTS media_news_articles (
@@ -78,7 +75,7 @@ def create_tables():
                 stored_at TIMESTAMP DEFAULT NOW()
             )
         """)
-        
+
         # Create media_videos table
         cur.execute("""
             CREATE TABLE IF NOT EXISTS media_videos (
@@ -100,7 +97,7 @@ def create_tables():
                 stored_at TIMESTAMP DEFAULT NOW()
             )
         """)
-        
+
         # Create media_documents table
         cur.execute("""
             CREATE TABLE IF NOT EXISTS media_documents (
@@ -120,7 +117,7 @@ def create_tables():
                 stored_at TIMESTAMP DEFAULT NOW()
             )
         """)
-        
+
         # Create media_entities table
         cur.execute("""
             CREATE TABLE IF NOT EXISTS media_entities (
@@ -140,7 +137,7 @@ def create_tables():
                 updated_at TIMESTAMP DEFAULT NOW()
             )
         """)
-        
+
         # Create media_entity_mentions table
         cur.execute("""
             CREATE TABLE IF NOT EXISTS media_entity_mentions (
@@ -153,18 +150,22 @@ def create_tables():
                 mentioned_at TIMESTAMP DEFAULT NOW()
             )
         """)
-        
+
         # Create indexes
         cur.execute("CREATE INDEX IF NOT EXISTS idx_queue_status ON media_collection_queue(status)")
-        cur.execute("CREATE INDEX IF NOT EXISTS idx_queue_media_type ON media_collection_queue(media_type)")
-        cur.execute("CREATE INDEX IF NOT EXISTS idx_articles_domain ON media_news_articles(source_domain)")
+        cur.execute(
+            "CREATE INDEX IF NOT EXISTS idx_queue_media_type ON media_collection_queue(media_type)"
+        )
+        cur.execute(
+            "CREATE INDEX IF NOT EXISTS idx_articles_domain ON media_news_articles(source_domain)"
+        )
         cur.execute("CREATE INDEX IF NOT EXISTS idx_videos_platform ON media_videos(platform)")
         cur.execute("CREATE INDEX IF NOT EXISTS idx_entities_name ON media_entities(entity_name)")
         cur.execute("CREATE INDEX IF NOT EXISTS idx_entities_type ON media_entities(entity_type)")
-        
+
         conn.commit()
         print("✓ All tables and indexes created")
-    
+
     conn.close()
 
 
@@ -173,7 +174,7 @@ def main():
     print("=" * 60)
     print("SETTING UP TEST DATABASE")
     print("=" * 60)
-    
+
     try:
         create_test_database()
         create_tables()
@@ -184,6 +185,7 @@ def main():
     except Exception as e:
         print(f"✗ Setup failed: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

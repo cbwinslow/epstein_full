@@ -31,16 +31,15 @@ PG_DB = "epstein"
 
 def get_conn():
     return psycopg2.connect(
-        host=PG_HOST, port=PG_PORT,
-        user=PG_USER, password=PG_PASS,
-        dbname=PG_DB
+        host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASS, dbname=PG_DB
     )
 
 
 def search_fts(conn, query, limit=10):
     """Full-text search across pages."""
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT efta_number, page_number,
                ts_rank_cd(search_vector, q) AS rank,
                left(ts_headline('english', coalesce(text_content, ''), q), 200) AS snippet
@@ -48,7 +47,9 @@ def search_fts(conn, query, limit=10):
         WHERE search_vector @@ q
         ORDER BY rank DESC
         LIMIT %s
-    """, (query, limit))
+    """,
+        (query, limit),
+    )
 
     print(f"\n=== FTS Search: '{query}' ===")
     for efta, page, rank, snippet in cur.fetchall():
@@ -62,22 +63,28 @@ def search_entities(conn, name, limit=10):
     cur = conn.cursor()
 
     # Exact match first
-    cur.execute("""
+    cur.execute(
+        """
         SELECT id, name, entity_type, mention_count, metadata::text
         FROM entities WHERE name ILIKE %s
         ORDER BY mention_count DESC LIMIT %s
-    """, (f"%{name}%", limit))
+    """,
+        (f"%{name}%", limit),
+    )
 
     results = cur.fetchall()
     if not results:
         # Fuzzy match
-        cur.execute("""
+        cur.execute(
+            """
             SELECT id, name, entity_type, mention_count,
                    similarity(name, %s) AS sim
             FROM entities
             WHERE similarity(name, %s) > 0.3
             ORDER BY sim DESC LIMIT %s
-        """, (name, name, limit))
+        """,
+            (name, name, limit),
+        )
         results = cur.fetchall()
 
     print(f"\n=== Entity Search: '{name}' ===")
@@ -86,13 +93,16 @@ def search_entities(conn, name, limit=10):
         print(f"  {name} ({etype}) — {mentions} mentions")
 
         # Get relationships
-        cur.execute("""
+        cur.execute(
+            """
             SELECT e2.name, r.relationship_type, r.weight
             FROM relationships r
             JOIN entities e2 ON r.target_entity_id = e2.id
             WHERE r.source_entity_id = %s
             ORDER BY r.weight DESC LIMIT 5
-        """, (eid,))
+        """,
+            (eid,),
+        )
         for rel_name, rel_type, weight in cur.fetchall():
             print(f"    → {rel_type}: {rel_name} (weight: {weight})")
         print()
@@ -101,7 +111,8 @@ def search_entities(conn, name, limit=10):
 def search_emails(conn, query, limit=10):
     """Search emails by subject/from/content."""
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT efta_number, from_name, subject, date_sent,
                ts_rank_cd(to_tsvector('english', coalesce(subject, '')),
                           plainto_tsquery('english', %s)) AS rank
@@ -112,7 +123,9 @@ def search_emails(conn, query, limit=10):
            OR subject ILIKE %s
         ORDER BY rank DESC
         LIMIT %s
-    """, (query, query, f"%{query}%", f"%{query}%", limit))
+    """,
+        (query, query, f"%{query}%", f"%{query}%", limit),
+    )
 
     print(f"\n=== Email Search: '{query}' ===")
     for efta, from_name, subject, date, rank in cur.fetchall():
@@ -124,7 +137,8 @@ def search_emails(conn, query, limit=10):
 def search_transcripts(conn, query, limit=10):
     """Search transcripts."""
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT efta_number, duration_secs, word_count,
                ts_rank_cd(to_tsvector('english', coalesce(transcript, '')),
                           plainto_tsquery('english', %s)) AS rank,
@@ -134,7 +148,9 @@ def search_transcripts(conn, query, limit=10):
               @@ plainto_tsquery('english', %s)
         ORDER BY rank DESC
         LIMIT %s
-    """, (query, query, limit))
+    """,
+        (query, query, limit),
+    )
 
     print(f"\n=== Transcript Search: '{query}' ===")
     for efta, duration, words, rank, preview in cur.fetchall():
@@ -146,13 +162,16 @@ def search_transcripts(conn, query, limit=10):
 def search_redactions(conn, efta, limit=20):
     """Look up redactions for a specific EFTA."""
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT page_number, redaction_type, confidence, left(ocr_text, 100)
         FROM redactions
         WHERE efta_number = %s
         ORDER BY page_number
         LIMIT %s
-    """, (efta, limit))
+    """,
+        (efta, limit),
+    )
 
     print(f"\n=== Redactions for {efta} ===")
     for page, rtype, conf, text in cur.fetchall():

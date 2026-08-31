@@ -17,7 +17,6 @@ from pathlib import Path
 import pandas as pd
 import psycopg2
 
-
 # PostgreSQL connection
 PG_DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 
@@ -92,7 +91,7 @@ def safe_str(val, max_len=None):
 def prepare_dataframe(df):
     """Prepare dataframe for COPY import."""
     print("Preparing data...")
-    
+
     # Create a new dataframe with properly typed columns
     result = pd.DataFrame()
     result["id"] = df["id"]
@@ -112,10 +111,10 @@ def prepare_dataframe(df):
     result["release_batch"] = df["release_batch"].apply(safe_int)
     result["epstein_is_sender"] = df["epstein_is_sender"].apply(lambda x: safe_bool(x))
     result["all_participants"] = df["all_participants"].apply(lambda x: safe_str(x, 2000))
-    
+
     # Replace NaN with None for proper NULL handling
     result = result.where(pd.notna(result), None)
-    
+
     print(f"Prepared {len(result):,} rows")
     return result
 
@@ -124,16 +123,28 @@ def copy_from_dataframe(conn, df, table="jmail_emails"):
     """Use COPY to bulk load data from a dataframe."""
     # Create a StringIO buffer
     buffer = io.StringIO()
-    
+
     # Write data to buffer
     columns = [
-        "id", "doc_id", "message_index", "sender", "subject",
-        "to_recipients", "cc_recipients", "bcc_recipients",
-        "sent_at", "attachments", "account_email", "email_drop_id",
-        "folder_path", "is_promotional", "release_batch",
-        "epstein_is_sender", "all_participants"
+        "id",
+        "doc_id",
+        "message_index",
+        "sender",
+        "subject",
+        "to_recipients",
+        "cc_recipients",
+        "bcc_recipients",
+        "sent_at",
+        "attachments",
+        "account_email",
+        "email_drop_id",
+        "folder_path",
+        "is_promotional",
+        "release_batch",
+        "epstein_is_sender",
+        "all_participants",
     ]
-    
+
     for _, row in df.iterrows():
         values = []
         for col in columns:
@@ -142,23 +153,22 @@ def copy_from_dataframe(conn, df, table="jmail_emails"):
                 values.append("\\N")
             elif isinstance(val, str):
                 # Escape special characters for COPY
-                val = val.replace("\\", "\\\\").replace("\t", "\\t").replace("\n", "\\n").replace("\r", "\\r")
+                val = (
+                    val.replace("\\", "\\\\")
+                    .replace("\t", "\\t")
+                    .replace("\n", "\\n")
+                    .replace("\r", "\\r")
+                )
                 values.append(val)
             else:
                 values.append(str(val))
         buffer.write("\t".join(values) + "\n")
-    
+
     buffer.seek(0)
-    
+
     # Use COPY to load data
     with conn.cursor() as cur:
-        cur.copy_from(
-            buffer,
-            table,
-            columns=columns,
-            sep="\t",
-            null="\\N"
-        )
+        cur.copy_from(buffer, table, columns=columns, sep="\t", null="\\N")
     conn.commit()
 
 
@@ -166,12 +176,12 @@ def import_with_copy(df, conn, batch_size=10000):
     """Import using COPY in batches."""
     total = len(df)
     inserted = 0
-    
+
     print(f"\nImporting {total:,} emails using COPY (batch_size={batch_size:,})...")
-    
+
     for i in range(0, total, batch_size):
         batch = df.iloc[i : i + batch_size]
-        
+
         try:
             copy_from_dataframe(conn, batch)
             inserted += len(batch)
@@ -182,7 +192,8 @@ def import_with_copy(df, conn, batch_size=10000):
             with conn.cursor() as cur:
                 for _, row in batch.iterrows():
                     try:
-                        cur.execute("""
+                        cur.execute(
+                            """
                             INSERT INTO jmail_emails (
                                 id, doc_id, message_index, sender, subject,
                                 to_recipients, cc_recipients, bcc_recipients,
@@ -191,25 +202,42 @@ def import_with_copy(df, conn, batch_size=10000):
                                 epstein_is_sender, all_participants
                             ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                             ON CONFLICT (id) DO NOTHING
-                        """, (
-                            row["id"], row["doc_id"], row["message_index"],
-                            row["sender"], row["subject"],
-                            row["to_recipients"], row["cc_recipients"], row["bcc_recipients"],
-                            row["sent_at"], row["attachments"], row["account_email"],
-                            row["email_drop_id"], row["folder_path"], row["is_promotional"],
-                            row["release_batch"], row["epstein_is_sender"], row["all_participants"]
-                        ))
+                        """,
+                            (
+                                row["id"],
+                                row["doc_id"],
+                                row["message_index"],
+                                row["sender"],
+                                row["subject"],
+                                row["to_recipients"],
+                                row["cc_recipients"],
+                                row["bcc_recipients"],
+                                row["sent_at"],
+                                row["attachments"],
+                                row["account_email"],
+                                row["email_drop_id"],
+                                row["folder_path"],
+                                row["is_promotional"],
+                                row["release_batch"],
+                                row["epstein_is_sender"],
+                                row["all_participants"],
+                            ),
+                        )
                         if cur.rowcount > 0:
                             inserted += 1
-                    except Exception as e2:
+                    except Exception:
                         pass
             conn.commit()
-        
+
         # Progress update
         done = min(i + batch_size, total)
         pct = done / total * 100
-        print(f"\r  Progress: {done:,}/{total:,} ({pct:.1f}%) inserted={inserted:,}", end="", flush=True)
-    
+        print(
+            f"\r  Progress: {done:,}/{total:,} ({pct:.1f}%) inserted={inserted:,}",
+            end="",
+            flush=True,
+        )
+
     print(f"\n\nDone! Inserted: {inserted:,}")
     return inserted
 

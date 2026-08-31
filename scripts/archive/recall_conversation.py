@@ -13,8 +13,6 @@ Usage:
 
 import argparse
 import subprocess
-import sys
-from datetime import datetime, timedelta
 
 
 def recall_recent(days: int = 7, agent_id: str = "agent-1167f15a-a10a-4595-b962-ec0f372aae0d"):

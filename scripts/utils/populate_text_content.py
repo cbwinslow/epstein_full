@@ -24,25 +24,20 @@ Author: Epstein Files Analysis Project
 Date: 2026-03-23
 """
 
+import argparse
+import glob
+import logging
 import os
 import sys
-import logging
-import argparse
-import json
 import time
-import glob
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
-from datetime import datetime
 from dataclasses import dataclass
-from multiprocessing import Pool, cpu_count
-from tqdm import tqdm
-import psycopg2
-from psycopg2 import sql
-from psycopg2.extras import execute_values
-import pyarrow.parquet as pq
-import pyarrow as pa
+from typing import List, Optional, Tuple
+
 import pandas as pd
+import psycopg2
+import pyarrow.parquet as pq
+from psycopg2.extras import execute_values
+from tqdm import tqdm
 
 # Configure logging
 logging.basicConfig(
@@ -260,8 +255,8 @@ def insert_batch(records: List[TextContentRecord], conn, existing_ids: set) -> i
 
             # Insert with ON CONFLICT DO NOTHING (skip duplicates)
             query = """
-                INSERT INTO documents_content 
-                (document_id, filename, content, char_count, page_count, 
+                INSERT INTO documents_content
+                (document_id, filename, content, char_count, page_count,
                  processing_time)
                 VALUES %s
                 ON CONFLICT (document_id) DO NOTHING

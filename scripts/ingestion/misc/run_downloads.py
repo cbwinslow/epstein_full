@@ -26,7 +26,7 @@ from datetime import datetime, timedelta
 from glob import glob
 
 # Import shared configuration
-from epstein_config import RAW_FILES_DIR, LOGS_DIR
+from epstein_config import LOGS_DIR, RAW_FILES_DIR
 
 # === CONFIG ===
 RIPPER_DIR = "/home/cbwinslow/workspace/epstein/epstein-ripper"
@@ -36,14 +36,24 @@ PYTHON = "/home/cbwinslow/workspace/epstein/venv/bin/python3"
 LOG_DIR = str(LOGS_DIR)
 DISK_ALERT_PCT = 90
 PROGRESS_INTERVAL = 30  # seconds between status updates
-CHECK_INTERVAL = 10     # seconds between file count checks
+CHECK_INTERVAL = 10  # seconds between file count checks
 
 # Expected files per dataset (from DOJ page counts × 50 files/page + last page)
 EXPECTED = {
-    1: 3158, 2: 699, 3: 1729, 4: 2616, 5: 120,
-    6: 470, 7: 649, 8: 29348, 9: 103608, 10: 94287,
-    11: 52459, 12: 12820
+    1: 3158,
+    2: 699,
+    3: 1729,
+    4: 2616,
+    5: 120,
+    6: 470,
+    7: 649,
+    8: 29348,
+    9: 103608,
+    10: 94287,
+    11: 52459,
+    12: 12820,
 }
+
 
 class DownloadMonitor:
     """Monitors download progress and reports via tracker."""
@@ -95,22 +105,30 @@ class DownloadMonitor:
         """Update tracker with current counts for all datasets."""
         for ds in self.datasets:
             count = self.count_pdfs(ds)
-            subprocess.run([
-                PYTHON, TRACKER, "update",
-                "--id", f"doj-ds{ds}",
-                "--current", str(count)
-            ], capture_output=True)
+            subprocess.run(
+                [PYTHON, TRACKER, "update", "--id", f"doj-ds{ds}", "--current", str(count)],
+                capture_output=True,
+            )
 
     def register_datasets(self):
         """Register all datasets in tracker."""
         for ds in self.datasets:
-            subprocess.run([
-                PYTHON, TRACKER, "register",
-                "--id", f"doj-ds{ds}",
-                "--label", f"DOJ Dataset {ds} ({EXPECTED.get(ds, '?')} files)",
-                "--expected", str(EXPECTED.get(ds, 0)),
-                "--type", "download"
-            ], capture_output=True)
+            subprocess.run(
+                [
+                    PYTHON,
+                    TRACKER,
+                    "register",
+                    "--id",
+                    f"doj-ds{ds}",
+                    "--label",
+                    f"DOJ Dataset {ds} ({EXPECTED.get(ds, '?')} files)",
+                    "--expected",
+                    str(EXPECTED.get(ds, 0)),
+                    "--type",
+                    "download",
+                ],
+                capture_output=True,
+            )
 
     def print_status(self):
         """Print formatted status to console."""
@@ -152,12 +170,16 @@ class DownloadMonitor:
             rate_str = f"{rate:.1f} f/s" if rate > 0 else "---"
 
             print(f"\n  {status} Dataset {ds:>2}  [{bar}] {pct:5.1f}%")
-            print(f"    {count:>6,} / {expected:>6,} files  {self.format_bytes(size):>10}  {rate_str:>10}  ETA: {eta_str}")
+            print(
+                f"    {count:>6,} / {expected:>6,} files  {self.format_bytes(size):>10}  {rate_str:>10}  ETA: {eta_str}"
+            )
 
         overall_pct = (grand_total / grand_expected * 100) if grand_expected > 0 else 0
         print(f"\n{'─' * 78}")
         overall_bar = "█" * int(30 * overall_pct / 100) + "░" * (30 - int(30 * overall_pct / 100))
-        print(f"  OVERALL: [{overall_bar}] {overall_pct:.1f}%  ({grand_total:,} / {grand_expected:,} files)")
+        print(
+            f"  OVERALL: [{overall_bar}] {overall_pct:.1f}%  ({grand_total:,} / {grand_expected:,} files)"
+        )
         print(f"{'─' * 78}")
         print(f"\n  Ctrl+C to stop (resume-safe). Updates every {PROGRESS_INTERVAL}s.")
 
@@ -193,6 +215,7 @@ def run_download(datasets: str, headless: bool = True):
 
     # Start monitor in background thread
     import threading
+
     monitor_thread = threading.Thread(target=monitor.monitor_loop, daemon=True)
     monitor_thread.start()
 
@@ -200,8 +223,10 @@ def run_download(datasets: str, headless: bool = True):
     cmd = [
         PYTHON,
         os.path.join(RIPPER_DIR, "auto_ep_rip.py"),
-        "--datasets", datasets,
-        "--mode", "sync",
+        "--datasets",
+        datasets,
+        "--mode",
+        "sync",
     ]
     if headless:
         cmd.append("--headless")
@@ -214,12 +239,7 @@ def run_download(datasets: str, headless: bool = True):
 
     with open(log_file, "w") as log:
         monitor.process = subprocess.Popen(
-            cmd,
-            cwd=RAW_DIR,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            bufsize=1
+            cmd, cwd=RAW_DIR, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1
         )
 
         for line in monitor.process.stdout:
@@ -233,7 +253,11 @@ def run_download(datasets: str, headless: bool = True):
     monitor.update_tracker()
     monitor.print_status()
     print(f"\nLog saved to: {log_file}")
-    print("Download complete!" if monitor.process.returncode == 0 else f"Exited with code {monitor.process.returncode}")
+    print(
+        "Download complete!"
+        if monitor.process.returncode == 0
+        else f"Exited with code {monitor.process.returncode}"
+    )
 
 
 def monitor_only():
@@ -252,12 +276,13 @@ def monitor_only():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DOJ File Download Runner")
-    parser.add_argument("--datasets", type=str, default="1-12",
-                        help="Datasets to download (e.g. '1-12' or '1,5,9')")
-    parser.add_argument("--monitor", action="store_true",
-                        help="Monitor only (no download)")
-    parser.add_argument("--no-headless", action="store_true",
-                        help="Run browser with GUI (slower, more reliable)")
+    parser.add_argument(
+        "--datasets", type=str, default="1-12", help="Datasets to download (e.g. '1-12' or '1,5,9')"
+    )
+    parser.add_argument("--monitor", action="store_true", help="Monitor only (no download)")
+    parser.add_argument(
+        "--no-headless", action="store_true", help="Run browser with GUI (slower, more reliable)"
+    )
 
     args = parser.parse_args()
 

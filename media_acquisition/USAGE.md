@@ -86,17 +86,19 @@ python -m media_acquisition.master \
 import asyncio
 from media_acquisition import MediaAcquisitionSystem
 
+
 async def main():
     # Initialize system
     system = MediaAcquisitionSystem()
-    
+
     # Run collection
     await system.run_historical_collection(
-        start_date='2024-01-01',
-        end_date='2024-12-31',
-        media_types=['news', 'video', 'document'],
-        keywords=['Epstein', 'Maxwell']
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        media_types=["news", "video", "document"],
+        keywords=["Epstein", "Maxwell"],
     )
+
 
 asyncio.run(main())
 ```
