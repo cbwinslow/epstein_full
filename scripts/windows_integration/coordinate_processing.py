@@ -21,6 +21,7 @@ from typing import Dict, Optional
 @dataclass
 class ProcessingTask:
     """Represents a file processing task."""
+
     file_path: str
     file_hash: str
     file_size: int
@@ -30,22 +31,23 @@ class ProcessingTask:
     end_time: Optional[datetime] = None
     result_path: Optional[str] = None
 
+
 class LinuxCoordinator:
     def __init__(self):
         self.config = self.load_config()
-        self.tasks_db = Path(self.config['local_paths']['downloads']) / "tasks.json"
+        self.tasks_db = Path(self.config["local_paths"]["downloads"]) / "tasks.json"
         self.tasks = self.load_tasks()
 
     def load_config(self) -> Dict:
         """Load configuration from config file."""
         config_path = Path(__file__).parent / "config_windows.json"
-        with open(config_path, 'r') as f:
+        with open(config_path, "r") as f:
             return json.load(f)
 
     def load_tasks(self) -> Dict[str, ProcessingTask]:
         """Load existing tasks from database."""
         if self.tasks_db.exists():
-            with open(self.tasks_db, 'r') as f:
+            with open(self.tasks_db, "r") as f:
                 data = json.load(f)
                 return {k: ProcessingTask(**v) for k, v in data.items()}
         return {}
@@ -56,13 +58,13 @@ class LinuxCoordinator:
         for task_id, task in self.tasks.items():
             task_dict = task.__dict__.copy()
             # Convert datetime objects to strings
-            if task_dict['start_time']:
-                task_dict['start_time'] = task_dict['start_time'].isoformat()
-            if task_dict['end_time']:
-                task_dict['end_time'] = task_dict['end_time'].isoformat()
+            if task_dict["start_time"]:
+                task_dict["start_time"] = task_dict["start_time"].isoformat()
+            if task_dict["end_time"]:
+                task_dict["end_time"] = task_dict["end_time"].isoformat()
             data[task_id] = task_dict
 
-        with open(self.tasks_db, 'w') as f:
+        with open(self.tasks_db, "w") as f:
             json.dump(data, f, indent=2)
 
     def calculate_file_hash(self, file_path: str) -> str:
@@ -77,7 +79,7 @@ class LinuxCoordinator:
         """Transfer pending files to Windows worker."""
         print("📤 Transferring files to Windows worker...")
 
-        downloads_dir = Path(self.config['local_paths']['downloads'])
+        downloads_dir = Path(self.config["local_paths"]["downloads"])
         pending_files = list(downloads_dir.glob("*.pdf"))
 
         if not pending_files:
@@ -96,9 +98,7 @@ class LinuxCoordinator:
                 file_size = pdf_file.stat().st_size
 
                 # Transfer file
-                subprocess.run([
-                    "scp", str(pdf_file), remote_path
-                ], check=True, capture_output=True)
+                subprocess.run(["scp", str(pdf_file), remote_path], check=True, capture_output=True)
 
                 # Create task record
                 task = ProcessingTask(
@@ -106,7 +106,7 @@ class LinuxCoordinator:
                     file_hash=file_hash,
                     file_size=file_size,
                     status="pending",
-                    assigned_worker="windows_rtx3060"
+                    assigned_worker="windows_rtx3060",
                 )
 
                 self.tasks[pdf_file.name] = task
@@ -128,10 +128,16 @@ class LinuxCoordinator:
 
         try:
             # List remote results directory
-            result = subprocess.run([
-                "ssh", f"{self.config['linux_server']['user']}@{self.config['linux_server']['host']}",
-                f"ls -la {self.config['linux_server']['remote_path']}/results/"
-            ], capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                [
+                    "ssh",
+                    f"{self.config['linux_server']['user']}@{self.config['linux_server']['host']}",
+                    f"ls -la {self.config['linux_server']['remote_path']}/results/",
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
 
             if result.stdout.strip():
                 print("   Windows worker has results ready")
@@ -149,14 +155,16 @@ class LinuxCoordinator:
         print("📥 Transferring results from Windows worker...")
 
         remote_results_path = f"{self.config['linux_server']['user']}@{self.config['linux_server']['host']}:{self.config['linux_server']['remote_path']}/results/"
-        local_results_dir = Path(self.config['local_paths']['results'])
+        local_results_dir = Path(self.config["local_paths"]["results"])
         local_results_dir.mkdir(exist_ok=True)
 
         try:
             # Transfer results directory
-            subprocess.run([
-                "scp", "-r", remote_results_path, str(local_results_dir)
-            ], check=True, capture_output=True)
+            subprocess.run(
+                ["scp", "-r", remote_results_path, str(local_results_dir)],
+                check=True,
+                capture_output=True,
+            )
 
             print("   ✅ Results transferred from Windows")
             return True
@@ -169,7 +177,7 @@ class LinuxCoordinator:
         """Integrate Windows results into main pipeline."""
         print("🔗 Integrating Windows results into main pipeline...")
 
-        results_dir = Path(self.config['local_paths']['results'])
+        results_dir = Path(self.config["local_paths"]["results"])
 
         # Look for new results directories
         result_dirs = [d for d in results_dir.iterdir() if d.is_dir()]
@@ -197,6 +205,7 @@ class LinuxCoordinator:
 
                 # Clean up
                 import shutil
+
                 shutil.rmtree(result_dir)
 
                 print(f"   ✅ Integrated results for: {result_dir.name}")
@@ -262,13 +271,15 @@ class LinuxCoordinator:
     def run_coordination_loop(self):
         """Main coordination loop."""
         print("🚀 Starting Linux-Windows coordination...")
-        print(f"Target Windows Worker: {self.config['linux_server']['user']}@{self.config['linux_server']['host']}")
+        print(
+            f"Target Windows Worker: {self.config['linux_server']['user']}@{self.config['linux_server']['host']}"
+        )
         print()
 
         while True:
             try:
                 # Check for new files to process
-                downloads_dir = Path(self.config['local_paths']['downloads'])
+                downloads_dir = Path(self.config["local_paths"]["downloads"])
                 pending_files = list(downloads_dir.glob("*.pdf"))
 
                 if pending_files:
@@ -297,10 +308,12 @@ class LinuxCoordinator:
                 print(f"❌ Coordination error: {e}")
                 time.sleep(60)
 
+
 def main():
     """Main coordination function."""
     coordinator = LinuxCoordinator()
     coordinator.run_coordination_loop()
+
 
 if __name__ == "__main__":
     main()

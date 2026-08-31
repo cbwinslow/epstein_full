@@ -8,59 +8,59 @@
 
 CREATE TABLE IF NOT EXISTS master_data_registry (
     id SERIAL PRIMARY KEY,
-    
+
     -- Source Identification
     source_name VARCHAR(100) NOT NULL,           -- e.g., "DOJ_Epstein_Library", "jMail_Emails"
     source_type VARCHAR(50) NOT NULL,            -- "DOJ", "HuggingFace", "GitHub", "API", "ThirdParty"
     source_url TEXT,                             -- Original URL
     source_dataset_id VARCHAR(100),              -- Dataset identifier (e.g., "data1", "epstein-files-20k")
-    
+
     -- File/Content Tracking
     file_path TEXT,                              -- Local filesystem path
     file_count INTEGER,                          -- Number of files
     total_size_bytes BIGINT,                     -- Total size in bytes
     content_hash VARCHAR(64),                    -- SHA-256 of entire dataset (if applicable)
-    
+
     -- Status Tracking
     download_status VARCHAR(20) DEFAULT 'pending',  -- pending, downloading, complete, failed
     import_status VARCHAR(20) DEFAULT 'pending',      -- pending, importing, complete, failed, partial
     processing_status VARCHAR(20) DEFAULT 'pending', -- pending, processing, complete, failed
-    
+
     -- Timestamps
     download_started_at TIMESTAMPTZ,
     download_completed_at TIMESTAMPTZ,
     import_started_at TIMESTAMPTZ,
     import_completed_at TIMESTAMPTZ,
     last_verified_at TIMESTAMPTZ,
-    
+
     -- Record Counts
     expected_records INTEGER,                    -- Expected from source
     downloaded_records INTEGER,                  -- Actually downloaded
     imported_records INTEGER,                    -- Actually imported to DB
     failed_records INTEGER DEFAULT 0,            -- Failed to import
-    
+
     -- Metadata
     source_format VARCHAR(50),                   -- "PDF", "JSON", "Parquet", "CSV", "XML"
     compression VARCHAR(20),                     -- "gzip", "zip", "none"
     description TEXT,                            -- Human-readable description
     license TEXT,                                -- License info
-    
+
     -- Quality Metrics
     duplicate_count INTEGER DEFAULT 0,           -- Duplicates found/removed
     quality_score DECIMAL(5,2),                    -- 0-100 quality score
     issues JSONB,                                -- Array of issues found
-    
+
     -- Versioning
     source_version VARCHAR(20),                  -- Dataset version
     schema_version INTEGER DEFAULT 1,            -- Internal schema version
     replaces_registry_id INTEGER REFERENCES master_data_registry(id), -- If this replaces an older version
-    
+
     -- Audit
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     created_by VARCHAR(50) DEFAULT CURRENT_USER,
     notes TEXT,
-    
+
     -- Constraints
     UNIQUE(source_name, source_dataset_id, source_version)
 );
@@ -79,42 +79,42 @@ CREATE INDEX IF NOT EXISTS idx_registry_content_hash ON master_data_registry(con
 CREATE TABLE IF NOT EXISTS file_registry_detail (
     id SERIAL PRIMARY KEY,
     registry_id INTEGER REFERENCES master_data_registry(id) ON DELETE CASCADE,
-    
+
     -- File Identification
     filename VARCHAR(255) NOT NULL,
     relative_path TEXT,                          -- Path relative to dataset root
     full_path TEXT,                              -- Absolute path
-    
+
     -- Hashes for deduplication
     md5_hash VARCHAR(32),                        -- Fast MD5 for quick comparison
     sha256_hash VARCHAR(64),                       -- Secure SHA-256 for verification
     sha1_hash VARCHAR(40),                         -- Alternative hash
-    
+
     -- File Metadata
     file_size_bytes BIGINT,
     file_type VARCHAR(50),                         -- MIME type or extension
     modified_time TIMESTAMPTZ,
-    
+
     -- Content Analysis
     is_valid BOOLEAN DEFAULT TRUE,                 -- File integrity check passed
     corruption_type VARCHAR(50),                   -- If invalid: "HTML_POISON", "TRUNCATED", etc.
     header_signature VARCHAR(20),                  -- File header (e.g., "%PDF-1.4")
-    
+
     -- Database Linking
     efta_number VARCHAR(20),                       -- Links to documents.efta_number
     document_id INTEGER REFERENCES documents(id),  -- Links to documents.id
     page_ids INTEGER[],                            -- Array of linked page IDs
-    
+
     -- Status
     processing_status VARCHAR(20) DEFAULT 'pending', -- pending, ocr_complete, embedded, failed
-    
+
     -- Timestamps
     scanned_at TIMESTAMPTZ DEFAULT NOW(),
     processed_at TIMESTAMPTZ,
-    
+
     -- Audit
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    
+
     UNIQUE(registry_id, relative_path)
 );
 
@@ -133,47 +133,47 @@ CREATE INDEX IF NOT EXISTS idx_file_registry_status ON file_registry_detail(proc
 
 CREATE TABLE IF NOT EXISTS embedding_registry (
     id SERIAL PRIMARY KEY,
-    
+
     -- Source Reference
     registry_id INTEGER REFERENCES master_data_registry(id) ON DELETE CASCADE,
-    
+
     -- Embedding Model Info
     model_name VARCHAR(100) NOT NULL,              -- e.g., "all-MiniLM-L6-v2", "nomic-embed-text-v2-moe"
     model_dimensions INTEGER NOT NULL,             -- 384, 768, 1024
     model_version VARCHAR(50),                     -- Model version/tag
     model_source VARCHAR(50),                      -- "HuggingFace", "Ollama", "OpenAI", "Local"
-    
+
     -- Hardware/Performance
     compute_device VARCHAR(50),                    -- "RTX3060", "K80", "CPU"
     compute_host VARCHAR(100),                     -- Hostname/IP
     avg_generation_rate DECIMAL(10,2),               -- Pages/sec
-    
+
     -- Coverage
     total_pages INTEGER,                           -- Total pages processed
     unique_pages INTEGER,                          -- Deduplicated count
     failed_pages INTEGER DEFAULT 0,                -- Failed embeddings
-    
+
     -- Storage
     storage_table VARCHAR(100),                    -- "page_embeddings", "pages.embedding_nomic"
     storage_column VARCHAR(100),                   -- Column name if in pages table
     estimated_size_bytes BIGINT,                   -- Storage used
-    
+
     -- Status
     generation_status VARCHAR(20) DEFAULT 'pending', -- pending, generating, complete, failed, partial
-    
+
     -- Timestamps
     generation_started_at TIMESTAMPTZ,
     generation_completed_at TIMESTAMPTZ,
-    
+
     -- Quality
     quality_score DECIMAL(5,2),                    -- 0-100 based on validation
     sample_query_results JSONB,                    -- Test query results
-    
+
     -- Audit
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     notes TEXT,
-    
+
     UNIQUE(registry_id, model_name, model_dimensions)
 );
 
@@ -188,36 +188,36 @@ CREATE INDEX IF NOT EXISTS idx_embedding_registry_status ON embedding_registry(g
 
 CREATE TABLE IF NOT EXISTS duplicate_registry (
     id SERIAL PRIMARY KEY,
-    
+
     -- Duplicate Group
     content_hash VARCHAR(64) NOT NULL,             -- MD5 or SHA256 of content
     duplicate_type VARCHAR(50) NOT NULL,           -- "exact_file", "exact_text", "near_duplicate"
-    
+
     -- Canonical (master) record
     canonical_file_id INTEGER REFERENCES file_registry_detail(id),
     canonical_page_id INTEGER REFERENCES pages(id),
-    
+
     -- Duplicate records (JSON array for flexibility)
     duplicate_file_ids JSONB,                      -- Array of file_registry_detail IDs
     duplicate_page_ids JSONB,                      -- Array of page IDs
-    
+
     -- Analysis
     duplicate_count INTEGER,                       -- Number of duplicates (excluding canonical)
     total_size_bytes BIGINT,                       -- Total size of all duplicates
     space_saved_bytes BIGINT,                      -- Space if duplicates removed
-    
+
     -- Status
     resolution_status VARCHAR(20) DEFAULT 'identified', -- identified, verified, resolved, ignored
     resolution_action VARCHAR(50),                 -- "kept_canonical", "merged", "deleted"
-    
+
     -- Timestamps
     identified_at TIMESTAMPTZ DEFAULT NOW(),
     resolved_at TIMESTAMPTZ,
-    
+
     -- Audit
     identified_by VARCHAR(50) DEFAULT CURRENT_USER,
     notes TEXT,
-    
+
     UNIQUE(content_hash, duplicate_type)
 );
 
@@ -232,47 +232,47 @@ CREATE INDEX IF NOT EXISTS idx_duplicate_registry_type ON duplicate_registry(dup
 
 CREATE TABLE IF NOT EXISTS processing_log (
     id SERIAL PRIMARY KEY,
-    
+
     -- Operation Info
     operation_name VARCHAR(100) NOT NULL,          -- e.g., "OCR", "NER", "Embedding Generation"
     operation_type VARCHAR(50) NOT NULL,           -- "download", "import", "transform", "generate"
     registry_id INTEGER REFERENCES master_data_registry(id),
-    
+
     -- Status
     status VARCHAR(20) NOT NULL,                   -- started, running, completed, failed, cancelled
-    
+
     -- Progress
     total_items INTEGER,                           -- Total items to process
     processed_items INTEGER DEFAULT 0,             -- Items completed
     failed_items INTEGER DEFAULT 0,                -- Items failed
-    
+
     -- Performance
     started_at TIMESTAMPTZ,
     completed_at TIMESTAMPTZ,
     duration_seconds INTEGER,                      -- Calculated
     items_per_second DECIMAL(10,2),                  -- Performance metric
-    
+
     -- Resources
     cpu_percent DECIMAL(5,2),                        -- CPU usage
     memory_mb BIGINT,                                -- Memory used
     gpu_device VARCHAR(50),                          -- GPU used (if any)
     gpu_memory_mb BIGINT,                            -- GPU memory used
-    
+
     -- Error Tracking
     error_count INTEGER DEFAULT 0,
     last_error TEXT,
     error_log TEXT,                                  -- Full error details
-    
+
     -- Metadata
     command_line TEXT,                               -- Command/script that ran
     config JSONB,                                    -- Configuration used
-    
+
     -- Audit
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     hostname VARCHAR(100) DEFAULT (SELECT inet_server_addr()::TEXT),
     pid INTEGER,
-    
+
     notes TEXT
 );
 
@@ -287,7 +287,7 @@ CREATE INDEX IF NOT EXISTS idx_processing_log_time ON processing_log(created_at)
 
 -- View: Data Source Summary
 CREATE OR REPLACE VIEW v_data_source_summary AS
-SELECT 
+SELECT
     source_type,
     COUNT(*) as total_sources,
     SUM(file_count) as total_files,
@@ -302,7 +302,7 @@ ORDER BY total_records DESC;
 
 -- View: Embedding Coverage Summary
 CREATE OR REPLACE VIEW v_embedding_coverage_summary AS
-SELECT 
+SELECT
     er.model_name,
     er.model_dimensions,
     er.compute_device,
@@ -318,7 +318,7 @@ ORDER BY er.created_at DESC;
 
 -- View: Duplicate Summary
 CREATE OR REPLACE VIEW v_duplicate_summary AS
-SELECT 
+SELECT
     duplicate_type,
     COUNT(*) as duplicate_groups,
     SUM(duplicate_count) as total_duplicates,
@@ -331,7 +331,7 @@ GROUP BY duplicate_type;
 
 -- View: Processing Status Dashboard
 CREATE OR REPLACE VIEW v_processing_dashboard AS
-SELECT 
+SELECT
     operation_name,
     COUNT(*) as total_runs,
     COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed,
@@ -372,14 +372,14 @@ BEGIN
         p_file_path, p_expected_records, p_source_format, p_description,
         'pending', 'pending'
     )
-    ON CONFLICT (source_name, source_dataset_id, source_version) 
+    ON CONFLICT (source_name, source_dataset_id, source_version)
     DO UPDATE SET
         file_path = EXCLUDED.file_path,
         expected_records = EXCLUDED.expected_records,
         updated_at = NOW(),
         notes = COALESCE(master_data_registry.notes, '') || E'\nUpdated: ' || NOW()
     RETURNING id INTO v_id;
-    
+
     RETURN v_id;
 END;
 $$ LANGUAGE plpgsql;
@@ -449,7 +449,7 @@ BEGIN
         generation_status = 'regenerating',
         updated_at = NOW()
     RETURNING id INTO v_id;
-    
+
     RETURN v_id;
 END;
 $$ LANGUAGE plpgsql;
@@ -468,7 +468,7 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         mdr.source_name,
         mdr.source_dataset_id,
         mdr.download_status,
@@ -493,35 +493,35 @@ INSERT INTO master_data_registry (
     source_name, source_type, source_dataset_id, source_url,
     file_path, file_count, imported_records, source_format,
     download_status, import_status, processing_status, description
-) VALUES 
+) VALUES
     ('DOJ_Epstein_Library', 'DOJ', 'data1-12', 'https://www.justice.gov/epstein-library',
      '/home/cbwinslow/workspace/epstein-data/raw-files', 260000, 1400000, 'PDF',
      'complete', 'complete', 'complete', 'Primary DOJ Epstein document releases'),
-    
+
     ('jMail_Emails', 'API', 'emails_full', 'https://jmail.world',
      '/home/cbwinslow/workspace/epstein-data/downloads', NULL, 1783792, 'Parquet',
      'complete', 'complete', 'complete', 'jMail World email archive'),
-    
+
     ('jMail_Documents', 'API', 'documents', 'https://jmail.world',
      '/home/cbwinslow/workspace/epstein-data/downloads', NULL, 1413417, 'Parquet',
      'complete', 'complete', 'complete', 'jMail World document metadata'),
-    
+
     ('HF_epstein_files_20k', 'HuggingFace', 'epstein-files-20k', 'https://huggingface.co/datasets/teyler/epstein-files-20k',
      '/home/cbwinslow/workspace/epstein-data/hf-epstein-files-20k', NULL, 2136420, 'JSONL',
      'complete', 'complete', 'complete', 'House Oversight documents from HuggingFace'),
-    
+
     ('GDELT_News', 'API', 'gdelt_gkg', 'http://data.gdeltproject.org/gdeltv2/',
      '/home/cbwinslow/workspace/epstein-data/downloads/gdelt', NULL, 23413, 'CSV',
      'complete', 'complete', 'complete', 'GDELT news articles mentioning Epstein'),
-    
+
     ('ICIJ_Offshore_Leaks', 'ThirdParty', 'full-oldb', 'https://offshoreleaks-data.icij.org/',
      '/home/cbwinslow/workspace/epstein-data/downloads/icij_extracted', NULL, 3339272, 'CSV',
      'complete', 'complete', 'complete', 'ICIJ Offshore Leaks database'),
-    
+
     ('FEC_Contributions', 'API', 'individual_contributions', 'https://www.fec.gov/data/',
      '/home/cbwinslow/workspace/epstein-data/raw-files/fec', NULL, 5420940, 'CSV',
      'complete', 'complete', 'complete', 'FEC campaign finance data'),
-    
+
     ('FBI_Vault', 'ThirdParty', 'fbi-files', 'https://vault.fbi.gov/',
      '/home/cbwinslow/workspace/epstein-data/hf-datasets/fbi-files', 355, 236174, 'PDF',
      'complete', 'partial', 'complete', 'FBI Vault Epstein files')
@@ -533,24 +533,24 @@ INSERT INTO embedding_registry (
     registry_id, model_name, model_dimensions, compute_device,
     total_pages, storage_table, generation_status
 )
-SELECT 
+SELECT
     mdr.id,
-    CASE 
+    CASE
         WHEN mdr.source_name = 'DOJ_Epstein_Library' THEN 'all-MiniLM-L6-v2'
         WHEN mdr.source_name = 'FBI_Vault' THEN 'HuggingFace-768'
         ELSE 'unknown'
     END,
-    CASE 
+    CASE
         WHEN mdr.source_name IN ('DOJ_Epstein_Library', 'FBI_Vault') THEN 768
         ELSE 768
     END,
-    CASE 
+    CASE
         WHEN mdr.source_name = 'DOJ_Epstein_Library' THEN 'K80'
         WHEN mdr.source_name = 'FBI_Vault' THEN 'Pre-computed'
         ELSE 'Unknown'
     END,
     mdr.imported_records,
-    CASE 
+    CASE
         WHEN mdr.source_name = 'DOJ_Epstein_Library' THEN 'page_embeddings'
         WHEN mdr.source_name = 'FBI_Vault' THEN 'fbi_embeddings'
         ELSE 'unknown'
@@ -586,6 +586,6 @@ SELECT '  - get_source_status()' as function_name;
 -- Show initial data
 SELECT '' as separator;
 SELECT '=== INITIAL DATA SOURCES REGISTERED ===' as report;
-SELECT source_name, source_dataset_id, import_status, imported_records, source_type 
-FROM master_data_registry 
+SELECT source_name, source_dataset_id, import_status, imported_records, source_type
+FROM master_data_registry
 ORDER BY imported_records DESC;

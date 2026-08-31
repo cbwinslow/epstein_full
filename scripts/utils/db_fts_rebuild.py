@@ -31,9 +31,7 @@ DEFAULT_BATCH = 50000
 
 def get_conn():
     return psycopg2.connect(
-        host=PG_HOST, port=PG_PORT,
-        user=PG_USER, password=PG_PASS,
-        dbname=PG_DB
+        host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASS, dbname=PG_DB
     )
 
 
@@ -57,7 +55,9 @@ def check_fts(conn):
     print(f"  Coverage:       {pct}%")
 
     # Test search
-    cur.execute("SELECT COUNT(*) FROM pages WHERE search_vector @@ plainto_tsquery('english', 'Epstein')")
+    cur.execute(
+        "SELECT COUNT(*) FROM pages WHERE search_vector @@ plainto_tsquery('english', 'Epstein')"
+    )
     test = cur.fetchone()[0]
     print(f"  Search test:    {test:,} pages match 'Epstein'")
 
@@ -84,14 +84,17 @@ def rebuild_fts(conn, batch_size):
 
     while True:
         start = time.time()
-        cur2.execute("""
+        cur2.execute(
+            """
             UPDATE pages SET search_vector =
                 setweight(to_tsvector('english', coalesce(efta_number, '')), 'A') ||
                 setweight(to_tsvector('english', substring(coalesce(text_content, ''), 1, 50000)), 'B')
             WHERE id IN (
                 SELECT id FROM pages WHERE search_vector IS NULL LIMIT %s
             )
-        """, (batch_size,))
+        """,
+            (batch_size,),
+        )
 
         updated = cur2.rowcount
         done += updated

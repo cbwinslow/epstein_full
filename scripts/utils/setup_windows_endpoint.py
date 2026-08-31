@@ -6,47 +6,35 @@ This script creates the configuration and API endpoint spec
 
 import json
 import logging
-import os
 
 logging.basicConfig(level=logging.INFO)
 
 CONFIG = {
-    "endpoint": {
-        "host": "0.0.0.0",
-        "port": 8000,
-        "auth_token": "epstein-embeddings-2024"
-    },
+    "endpoint": {"host": "0.0.0.0", "port": 8000, "auth_token": "epstein-embeddings-2024"},
     "models": {
         "embedding": {
             "model_name": "nomic-ai/nomic-embed-text-v2-moe",
             "device": "cuda",
             "batch_size": 32,
             "max_length": 8192,
-            "trust_remote_code": True
+            "trust_remote_code": True,
         },
-        "reranker": {
-            "model_name": "jinaai/jina-reranker-v2-base-multilingual",
-            "device": "cuda"
-        }
+        "reranker": {"model_name": "jinaai/jina-reranker-v2-base-multilingual", "device": "cuda"},
     },
     "postgres": {
         "host": "windows-host",  # User will update this
         "port": 5432,
         "user": "cbwinslow",
         "password": "123qweasd",
-        "dbname": "epstein"
+        "dbname": "epstein",
     },
-    "batch": {
-        "chunk_size": 512,
-        "overlap": 128,
-        "max_workers": 4
-    }
+    "batch": {"chunk_size": 512, "overlap": 128, "max_workers": 4},
 }
 
 
 def generate_windows_script():
     """Generate Windows PowerShell setup script."""
-    script = '''
+    script = """
 # Windows Embeddings Endpoint Setup
 # Run as Administrator
 
@@ -70,7 +58,7 @@ python -c "from sentence_transformers import SentenceTransformer; SentenceTransf
 
 # 6. Run the embedding server
 python embeddings_server.py
-'''
+"""
     return script
 
 
@@ -145,14 +133,14 @@ async def embed_texts(
     """Generate embeddings for text batch."""
     if credentials.credentials != AUTH_TOKEN:
         raise HTTPException(status_code=401, detail="Invalid token")
-    
+
     embeddings = model.encode(
         request.texts,
         batch_size=request.batch_size,
         show_progress_bar=True,
         convert_to_numpy=True
     )
-    
+
     return EmbedResponse(
         embeddings=embeddings.tolist(),
         model="nomic-embed-text-v2-moe",
@@ -168,10 +156,10 @@ async def semantic_search(
     """Semantic search using pre-computed embeddings."""
     if credentials.credentials != AUTH_TOKEN:
         raise HTTPException(status_code=401, detail="Invalid token")
-    
+
     # Generate query embedding
     query_emb = model.encode([request.query], convert_to_numpy=True)[0]
-    
+
     # Connect to DB and search (requires embeddings to be stored)
     conn = psycopg2.connect(**PG_CONFIG)
     with conn.cursor() as cur:
@@ -184,7 +172,7 @@ async def semantic_search(
             ORDER BY embedding <=> %s::vector
             LIMIT %s
         """, (query_emb.tolist(), query_emb.tolist(), request.top_k))
-        
+
         results = []
         for row in cur.fetchall():
             results.append({
@@ -194,7 +182,7 @@ async def semantic_search(
                 "content": row[3][:500],
                 "distance": float(row[4])
             })
-    
+
     conn.close()
     return SearchResponse(results=results)
 
@@ -218,25 +206,25 @@ if __name__ == "__main__":
 def main():
     """Generate all Windows endpoint files."""
     logging.info("Generating Windows endpoint files...")
-    
+
     # Save config
     config_path = "/home/cbwinslow/workspace/epstein/windows_endpoint_config.json"
-    with open(config_path, 'w') as f:
+    with open(config_path, "w") as f:
         json.dump(CONFIG, f, indent=2)
     logging.info(f"✓ Config saved to {config_path}")
-    
+
     # Save PowerShell setup script
     ps_path = "/home/cbwinslow/workspace/epstein/scripts/windows_setup.ps1"
-    with open(ps_path, 'w') as f:
+    with open(ps_path, "w") as f:
         f.write(generate_windows_script())
     logging.info(f"✓ PowerShell setup saved to {ps_path}")
-    
+
     # Save embeddings server
     server_path = "/home/cbwinslow/workspace/epstein/scripts/embeddings_server.py"
-    with open(server_path, 'w') as f:
+    with open(server_path, "w") as f:
         f.write(generate_embeddings_server())
     logging.info(f"✓ Embeddings server saved to {server_path}")
-    
+
     # Print instructions
     print("\n" + "=" * 60)
     print("WINDOWS ENDPOINT SETUP")

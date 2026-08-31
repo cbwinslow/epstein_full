@@ -11,10 +11,10 @@ Usage:
     python scripts/embed_fast_cpu.py status       # Check progress
 """
 
-import sys
 import io
-import time
 import signal
+import sys
+import time
 
 import psycopg2
 from fastembed import TextEmbedding
@@ -27,8 +27,8 @@ BATCH_SIZE = 2048
 MAX_TEXT_LEN = 512
 
 shutdown = False
-signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__('shutdown', True))
-signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__('shutdown', True))
+signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__("shutdown", True))
+signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__("shutdown", True))
 
 
 def log(msg):
@@ -41,9 +41,13 @@ def main():
         cur = conn.cursor()
         cur.execute(f"SELECT COUNT(*) FROM pages WHERE {COLUMN} IS NOT NULL")
         filled = cur.fetchone()[0]
-        cur.execute("SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10")
+        cur.execute(
+            "SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10"
+        )
         total = cur.fetchone()[0]
-        log(f"{COLUMN}: {filled:,}/{total:,} ({filled/total*100:.1f}%) | Remaining: {total-filled:,}")
+        log(
+            f"{COLUMN}: {filled:,}/{total:,} ({filled / total * 100:.1f}%) | Remaining: {total - filled:,}"
+        )
         conn.close()
         return
 
@@ -68,7 +72,7 @@ def main():
     model = TextEmbedding(MODEL_NAME)
     log(f"Pages to embed: {total:,}")
     log(f"Batch size: {BATCH_SIZE}")
-    log(f"ETA: ~{total/500/60:.0f} min at ~500/sec\n")
+    log(f"ETA: ~{total / 500 / 60:.0f} min at ~500/sec\n")
 
     processed = 0
     errors = 0
@@ -76,12 +80,15 @@ def main():
     last_id = 0
 
     while not shutdown:
-        cur.execute(f"""
+        cur.execute(
+            f"""
             SELECT id, LEFT(text_content, %s) FROM pages
             WHERE {COLUMN} IS NULL AND text_content IS NOT NULL
               AND length(text_content) > 10 AND id > %s
             ORDER BY id LIMIT %s
-        """, (MAX_TEXT_LEN, last_id, BATCH_SIZE))
+        """,
+            (MAX_TEXT_LEN, last_id, BATCH_SIZE),
+        )
         rows = cur.fetchall()
         if not rows:
             break
@@ -122,10 +129,14 @@ def main():
         rate = processed / elapsed if elapsed > 0 else 0
         pct = processed / total * 100
         eta_min = (total - processed) / rate / 60 if rate > 0 else 0
-        log(f"  {processed:,}/{total:,} ({pct:.1f}%) | {rate:.0f}/sec | ETA: {eta_min:.0f}min | Err: {errors}")
+        log(
+            f"  {processed:,}/{total:,} ({pct:.1f}%) | {rate:.0f}/sec | ETA: {eta_min:.0f}min | Err: {errors}"
+        )
 
     elapsed = time.time() - t0
-    log(f"\nDone: {processed:,} in {elapsed/60:.0f}min ({processed/elapsed:.0f}/sec) | Errors: {errors}")
+    log(
+        f"\nDone: {processed:,} in {elapsed / 60:.0f}min ({processed / elapsed:.0f}/sec) | Errors: {errors}"
+    )
     conn.close()
 
 

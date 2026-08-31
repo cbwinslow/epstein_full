@@ -5,39 +5,39 @@
 ALTER TABLE pages ADD COLUMN IF NOT EXISTS content_hash VARCHAR(64);
 
 -- 2. Create index for fast duplicate lookup
-CREATE INDEX IF NOT EXISTS idx_pages_content_hash ON pages(content_hash) 
+CREATE INDEX IF NOT EXISTS idx_pages_content_hash ON pages(content_hash)
 WHERE content_hash IS NOT NULL;
 
 -- 3. Populate content_hash for existing pages
 -- Use MD5 for speed, SHA-256 for cryptographic security if needed
-UPDATE pages 
-SET content_hash = MD5(text_content) 
-WHERE text_content IS NOT NULL 
+UPDATE pages
+SET content_hash = MD5(text_content)
+WHERE text_content IS NOT NULL
   AND content_hash IS NULL;
 
 -- 4. Create duplicate detection view
 CREATE OR REPLACE VIEW v_duplicate_pages AS
-SELECT 
+SELECT
     content_hash,
     COUNT(*) as duplicate_count,
     MIN(id) as canonical_page_id,
     ARRAY_AGG(id ORDER BY id) as all_page_ids,
     ARRAY_AGG(DISTINCT efta_number ORDER BY efta_number) as source_documents,
     LEFT(MAX(text_content), 200) as sample_text
-FROM pages 
+FROM pages
 WHERE content_hash IS NOT NULL
 GROUP BY content_hash
 HAVING COUNT(*) > 1;
 
 -- 5. Create view for pages that need embeddings (deduplicated)
 CREATE OR REPLACE VIEW v_pages_need_embeddings AS
-SELECT 
+SELECT
     p.id,
     p.efta_number,
     p.page_number,
     p.text_content,
     p.content_hash,
-    CASE 
+    CASE
         WHEN pe.page_id IS NOT NULL THEN 'Has MiniLM embedding'
         WHEN p.rtx3060_embedding IS NOT NULL THEN 'Has Nomic embedding'
         ELSE 'No embedding'
@@ -50,8 +50,8 @@ WHERE p.text_content IS NOT NULL
   AND p.rtx3060_embedding IS NULL  -- No Nomic embedding
   AND p.id IN (
       -- Only the canonical (first) page for each unique content
-      SELECT MIN(id) 
-      FROM pages 
+      SELECT MIN(id)
+      FROM pages
       WHERE content_hash IS NOT NULL
       GROUP BY content_hash
   )
@@ -79,7 +79,7 @@ INSERT INTO embedding_coverage_summary (
     with_both_embeddings,
     needing_embeddings
 )
-SELECT 
+SELECT
     (SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL),
     (SELECT COUNT(DISTINCT content_hash) FROM pages WHERE content_hash IS NOT NULL),
     (SELECT COUNT(*) - COUNT(DISTINCT content_hash) FROM pages WHERE content_hash IS NOT NULL),

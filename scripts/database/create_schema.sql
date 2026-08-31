@@ -400,7 +400,7 @@ CREATE INDEX idx_fec_contributions_recipient_name ON fec_contributions(recipient
 CREATE INDEX idx_fec_contributions_contribution_date ON fec_contributions(contribution_date);
 
 -- Vector indexes (for pgvector)
--- CREATE INDEX idx_document_embeddings_vector ON document_embeddings 
+-- CREATE INDEX idx_document_embeddings_vector ON document_embeddings
 -- USING ivfflat (embedding_vector vector_cosine_ops) WITH (lists = 100);
 
 -- ============================================================================
@@ -409,7 +409,7 @@ CREATE INDEX idx_fec_contributions_contribution_date ON fec_contributions(contri
 
 -- Document summary view
 CREATE VIEW document_summary AS
-SELECT 
+SELECT
     d.id,
     d.efta_number,
     d.document_type,
@@ -424,7 +424,7 @@ GROUP BY d.id, d.efta_number, d.document_type, d.title, d.status, d.source_syste
 
 -- Entity relationship view
 CREATE VIEW entity_relationships AS
-SELECT 
+SELECT
     e1.name as source_name,
     e1.entity_type as source_type,
     r.relationship_type,
@@ -438,7 +438,7 @@ JOIN entities e2 ON r.target_entity_id = e2.id;
 
 -- Email summary view
 CREATE VIEW email_summary AS
-SELECT 
+SELECT
     e.id,
     e.efta_number,
     e.from_name,
@@ -455,25 +455,25 @@ GROUP BY e.id, e.efta_number, e.from_name, e.subject, e.sent_date, e.status;
 -- ============================================================================
 
 -- Foreign key constraints
-ALTER TABLE pages ADD CONSTRAINT fk_pages_document_id 
+ALTER TABLE pages ADD CONSTRAINT fk_pages_document_id
     FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE;
 
-ALTER TABLE relationships ADD CONSTRAINT fk_relationships_source_entity_id 
+ALTER TABLE relationships ADD CONSTRAINT fk_relationships_source_entity_id
     FOREIGN KEY (source_entity_id) REFERENCES entities(id) ON DELETE CASCADE;
 
-ALTER TABLE relationships ADD CONSTRAINT fk_relationships_target_entity_id 
+ALTER TABLE relationships ADD CONSTRAINT fk_relationships_target_entity_id
     FOREIGN KEY (target_entity_id) REFERENCES entities(id) ON DELETE CASCADE;
 
-ALTER TABLE email_participants ADD CONSTRAINT fk_email_participants_email_id 
+ALTER TABLE email_participants ADD CONSTRAINT fk_email_participants_email_id
     FOREIGN KEY (email_id) REFERENCES emails(id) ON DELETE CASCADE;
 
-ALTER TABLE rider_clauses ADD CONSTRAINT fk_rider_clauses_subpoena_id 
+ALTER TABLE rider_clauses ADD CONSTRAINT fk_rider_clauses_subpoena_id
     FOREIGN KEY (subpoena_id) REFERENCES subpoenas(id) ON DELETE CASCADE;
 
-ALTER TABLE clause_fulfillment ADD CONSTRAINT fk_clause_fulfillment_clause_id 
+ALTER TABLE clause_fulfillment ADD CONSTRAINT fk_clause_fulfillment_clause_id
     FOREIGN KEY (clause_id) REFERENCES rider_clauses(id) ON DELETE CASCADE;
 
-ALTER TABLE clause_fulfillment ADD CONSTRAINT fk_clause_fulfillment_return_id 
+ALTER TABLE clause_fulfillment ADD CONSTRAINT fk_clause_fulfillment_return_id
     FOREIGN KEY (return_id) REFERENCES returns(id) ON DELETE SET NULL;
 
 -- ============================================================================
@@ -489,21 +489,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_document_update 
-    BEFORE UPDATE ON documents 
+CREATE TRIGGER trigger_document_update
+    BEFORE UPDATE ON documents
     FOR EACH ROW EXECUTE FUNCTION update_document_timestamp();
 
 -- Update timestamp on pages
-CREATE TRIGGER trigger_page_update 
-    BEFORE UPDATE ON pages 
+CREATE TRIGGER trigger_page_update
+    BEFORE UPDATE ON pages
     FOR EACH ROW EXECUTE FUNCTION update_document_timestamp();
 
 -- Update timestamp on entities
-CREATE TRIGGER trigger_entity_update 
-    BEFORE UPDATE ON entities 
+CREATE TRIGGER trigger_entity_update
+    BEFORE UPDATE ON entities
     FOR EACH ROW EXECUTE FUNCTION update_document_timestamp();
 
 -- Update timestamp on relationships
-CREATE TRIGGER trigger_relationship_update 
-    BEFORE UPDATE ON relationships 
+CREATE TRIGGER trigger_relationship_update
+    BEFORE UPDATE ON relationships
     FOR EACH ROW EXECUTE FUNCTION update_document_timestamp();

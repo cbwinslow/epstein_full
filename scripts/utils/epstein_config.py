@@ -43,18 +43,25 @@ LEGACY_DATA_ROOT = Path("/home/cbwinslow/workspace/epstein-data")
 def ensure_dirs():
     """Ensure all data directories exist."""
     for dir_path in [
-        DATA_ROOT, RAW_FILES_DIR, DATABASES_DIR, PROCESSED_DIR,
-        KNOWLEDGE_GRAPH_DIR, LOGS_DIR, MODELS_DIR, DOWNLOADS_DIR, BACKUPS_DIR
+        DATA_ROOT,
+        RAW_FILES_DIR,
+        DATABASES_DIR,
+        PROCESSED_DIR,
+        KNOWLEDGE_GRAPH_DIR,
+        LOGS_DIR,
+        MODELS_DIR,
+        DOWNLOADS_DIR,
+        BACKUPS_DIR,
     ]:
         dir_path.mkdir(parents=True, exist_ok=True)
 
 
 def get_dataset_path(dataset_num: int) -> Path:
     """Get path to a specific DOJ dataset directory.
-    
+
     Args:
         dataset_num: Dataset number (1-12)
-        
+
     Returns:
         Path to dataset directory
     """
@@ -63,7 +70,7 @@ def get_dataset_path(dataset_num: int) -> Path:
 
 def get_all_dataset_paths() -> list[Path]:
     """Get paths to all DOJ dataset directories.
-    
+
     Returns:
         List of paths to data1 through data12
     """
@@ -72,20 +79,20 @@ def get_all_dataset_paths() -> list[Path]:
 
 def resolve_path(path_str: str) -> Path:
     """Resolve a path string, handling both old and new paths.
-    
+
     This function converts legacy /mnt/data paths to new workspace paths.
-    
+
     Args:
         path_str: Path string that may contain old or new path
-        
+
     Returns:
         Resolved Path object pointing to correct location
     """
     path_str = str(path_str)
-    
+
     # Convert legacy paths to new paths
     if "/home/cbwinslow/workspace/epstein-data" in path_str:
         relative = path_str.split("/home/cbwinslow/workspace/epstein-data")[1]
         return DATA_ROOT / relative.lstrip("/")
-    
+
     return Path(path_str)

@@ -12,15 +12,13 @@ Usage:
     python scripts/generate_embeddings.py status      # Check embedding status
 """
 
-import json
+import signal
 import sys
 import time
-import signal
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import psycopg2
 import requests
-from psycopg2.extras import execute_values
 
 DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 
@@ -93,11 +91,14 @@ def count_unembedded(conn, column):
 
 def get_pages_batch(conn, column, batch_size, offset):
     cur = conn.cursor()
-    cur.execute(f"""
+    cur.execute(
+        f"""
         SELECT id, text_content FROM pages
         WHERE {column} IS NULL AND text_content IS NOT NULL AND length(text_content) > 10
         ORDER BY id LIMIT %s OFFSET %s
-    """, (batch_size, offset))
+    """,
+        (batch_size, offset),
+    )
     return cur.fetchall()
 
 
@@ -121,7 +122,7 @@ def embed_batch(texts, server_url, timeout=300, max_text_len=1500):
                 emb = emb[0]
             embeddings.append(emb)
         return embeddings
-    except Exception as e:
+    except Exception:
         # Try one by one as fallback
         results = []
         for t in truncated:
@@ -148,8 +149,10 @@ def save_embeddings(conn, page_ids, embeddings, column, dims):
             vec = "[" + ",".join(f"{v:.6f}" for v in emb) + "]"
             rows.append((pid, vec))
     if rows:
-        cur.executemany(f"UPDATE pages SET {column} = %s::vector WHERE id = %s",
-                        [(vec, pid) for pid, vec in rows])
+        cur.executemany(
+            f"UPDATE pages SET {column} = %s::vector WHERE id = %s",
+            [(vec, pid) for pid, vec in rows],
+        )
         conn.commit()
     return len(rows)
 
@@ -159,12 +162,12 @@ def process_model(model_name):
     config = SERVERS[model_name]
     col = config["column"]
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Embedding generation: {model_name}")
     print(f"  Column: {col} ({config['dims']}-dim)")
     print(f"  Server: {config['url']}")
     print(f"  Batch: {config['batch_size']} x {config['concurrent']} concurrent")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     conn = get_conn()
     ensure_columns(conn)
@@ -187,14 +190,15 @@ def process_model(model_name):
             break
 
         # Split into sub-batches
-        sub_batches = [pages[i:i + config["batch_size"]]
-                       for i in range(0, len(pages), config["batch_size"])]
+        sub_batches = [
+            pages[i : i + config["batch_size"]] for i in range(0, len(pages), config["batch_size"])
+        ]
 
         with ThreadPoolExecutor(max_workers=config["concurrent"]) as ex:
             futs = {}
             for batch in sub_batches:
                 ids = [p[0] for p in batch]
-                texts = [(p[1] or "")[:config["max_text_len"]] for p in batch]
+                texts = [(p[1] or "")[: config["max_text_len"]] for p in batch]
                 futs[ex.submit(embed_batch, texts, config["url"])] = ids
 
             for fut in as_completed(futs):
@@ -208,12 +212,16 @@ def process_model(model_name):
         elapsed = time.time() - t0
         rate = processed / elapsed if elapsed > 0 else 0
         eta_h = (total - processed) / rate / 3600 if rate > 0 else 0
-        print(f"  {processed:,}/{total:,} ({processed/total*100:.1f}%) "
-              f"| {rate:.1f}/sec | ETA: {eta_h:.1f}h | Err: {errors}")
+        print(
+            f"  {processed:,}/{total:,} ({processed / total * 100:.1f}%) "
+            f"| {rate:.1f}/sec | ETA: {eta_h:.1f}h | Err: {errors}"
+        )
         offset += len(pages)
 
     elapsed = time.time() - t0
-    print(f"\n  {model_name}: {processed:,} done in {elapsed/3600:.1f}h ({processed/elapsed:.1f}/sec)")
+    print(
+        f"\n  {model_name}: {processed:,} done in {elapsed / 3600:.1f}h ({processed / elapsed:.1f}/sec)"
+    )
     conn.close()
 
 
@@ -223,7 +231,9 @@ def show_status():
     for col in ["qwen3_embedding", "bge_m3_embedding"]:
         cur.execute(f"SELECT COUNT(*) FROM pages WHERE {col} IS NOT NULL")
         have = cur.fetchone()[0]
-        cur.execute("SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10")
+        cur.execute(
+            "SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10"
+        )
         total = cur.fetchone()[0]
         pct = have / total * 100 if total > 0 else 0
         print(f"  {col}: {have:,}/{total:,} ({pct:.1f}%)")

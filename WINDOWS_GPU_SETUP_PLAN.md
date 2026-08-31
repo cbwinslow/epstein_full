@@ -6,7 +6,7 @@ This plan outlines how to configure the Windows machine with RTX 3060 for distri
 
 ## Current Infrastructure Status
 
-✅ **SSH Bidirectional Access**: 
+✅ **SSH Bidirectional Access**:
 - Windows ↔ Linux server (Galaxy) fully configured
 - Passwordless authentication working
 - Administrator access configured on Windows
@@ -109,7 +109,7 @@ python -c "from surya.ocr import run_ocr; print('Surya OCR ready')"
 ```
 Linux Server (Galaxy) → Windows RTX 3060
 ├── OCR Processing (GPU-intensive)
-├── Facial Recognition (GPU-intensive)  
+├── Facial Recognition (GPU-intensive)
 ├── NER Extraction (CPU/GPU hybrid)
 └── Transcription (GPU-intensive)
 ```

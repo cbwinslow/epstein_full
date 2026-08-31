@@ -16,11 +16,11 @@ def test_database_connection():
     try:
         # Database configuration
         config = {
-            'host': "localhost",
-            'port': 5432,
-            'database': "epstein",
-            'user': "cbwinslow",
-            'password': "123qweasd"
+            "host": "localhost",
+            "port": 5432,
+            "database": "epstein",
+            "user": "cbwinslow",
+            "password": "123qweasd",
         }
 
         conn = psycopg2.connect(**config)
@@ -29,21 +29,21 @@ def test_database_connection():
 
         # Check if source_system column exists in documents table
         cursor.execute("""
-            SELECT column_name FROM information_schema.columns 
+            SELECT column_name FROM information_schema.columns
             WHERE table_name = 'documents' AND column_name = 'source_system'
         """)
         doc_has_source = cursor.fetchone() is not None
 
         # Check if source_system column exists in pages table
         cursor.execute("""
-            SELECT column_name FROM information_schema.columns 
+            SELECT column_name FROM information_schema.columns
             WHERE table_name = 'pages' AND column_name = 'source_system'
         """)
         pages_has_source = cursor.fetchone() is not None
 
         # Check if source_system column exists in entities table
         cursor.execute("""
-            SELECT column_name FROM information_schema.columns 
+            SELECT column_name FROM information_schema.columns
             WHERE table_name = 'entities' AND column_name = 'source_system'
         """)
         entities_has_source = cursor.fetchone() is not None
@@ -62,9 +62,9 @@ def test_database_connection():
 
         # Show some sample data to verify structure
         cursor.execute("""
-            SELECT efta_number, file_name, source_system, ocr_method 
-            FROM documents 
-            WHERE source_system IS NOT NULL 
+            SELECT efta_number, file_name, source_system, ocr_method
+            FROM documents
+            WHERE source_system IS NOT NULL
             LIMIT 5
         """)
         samples = cursor.fetchall()
@@ -80,6 +80,7 @@ def test_database_connection():
     except Exception as e:
         print(f"❌ Database connection failed: {e}")
         return False
+
 
 def test_file_detection():
     """Test file detection."""
@@ -102,17 +103,18 @@ def test_file_detection():
 
     return True
 
+
 def test_sql_queries():
     """Test the SQL queries that will be used by the Windows RTX 3060 processor."""
     print("\n🧪 Testing SQL queries...")
 
     try:
         config = {
-            'host': "localhost",
-            'port': 5432,
-            'database': "epstein",
-            'user': "cbwinslow",
-            'password': "123qweasd"
+            "host": "localhost",
+            "port": 5432,
+            "database": "epstein",
+            "user": "cbwinslow",
+            "password": "123qweasd",
         }
 
         conn = psycopg2.connect(**config)
@@ -120,9 +122,10 @@ def test_sql_queries():
 
         # Test document insertion query structure
         test_efta = "TEST00000001"
-        cursor.execute("""
-            INSERT INTO documents (efta_number, file_name, file_size_bytes, sha256_hash, 
-                                 ocr_method, ocr_confidence, word_count, page_count, 
+        cursor.execute(
+            """
+            INSERT INTO documents (efta_number, file_name, file_size_bytes, sha256_hash,
+                                 ocr_method, ocr_confidence, word_count, page_count,
                                  source_system, created_at, updated_at)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, NOW(), NOW())
             ON CONFLICT (efta_number) DO UPDATE SET
@@ -136,14 +139,27 @@ def test_sql_queries():
                 source_system = EXCLUDED.source_system,
                 updated_at = NOW()
             RETURNING efta_number
-        """, (test_efta, "test.pdf", 1000, "test_hash", "test_method", 0.9, 100, 1, "Windows_RTX3060"))
+        """,
+            (
+                test_efta,
+                "test.pdf",
+                1000,
+                "test_hash",
+                "test_method",
+                0.9,
+                100,
+                1,
+                "Windows_RTX3060",
+            ),
+        )
 
         result = cursor.fetchone()
         print(f"✅ Document insertion test successful: {result[0]}")
 
         # Test pages insertion query structure
-        cursor.execute("""
-            INSERT INTO pages (efta_number, page_number, text_content, confidence, 
+        cursor.execute(
+            """
+            INSERT INTO pages (efta_number, page_number, text_content, confidence,
                              ocr_method, processing_time, word_count, source_system)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (efta_number, page_number) DO UPDATE SET
@@ -155,19 +171,24 @@ def test_sql_queries():
                 source_system = EXCLUDED.source_system,
                 updated_at = NOW()
             RETURNING COUNT(*)
-        """, (test_efta, 1, "Test page content", 0.9, "test_method", 1.0, 10, "Windows_RTX3060"))
+        """,
+            (test_efta, 1, "Test page content", 0.9, "test_method", 1.0, 10, "Windows_RTX3060"),
+        )
 
         pages_result = cursor.fetchone()
         print(f"✅ Pages insertion test successful: {pages_result[0]} pages")
 
         # Test entities insertion query structure
-        cursor.execute("""
-            INSERT INTO entities (entity_text, entity_type, efta_number, page_number, 
+        cursor.execute(
+            """
+            INSERT INTO entities (entity_text, entity_type, efta_number, page_number,
                                 start_char, end_char, start_token, end_token, source_system)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT DO NOTHING
             RETURNING COUNT(*)
-        """, ("Test Entity", "PERSON", test_efta, 1, 0, 10, 0, 2, "Windows_RTX3060"))
+        """,
+            ("Test Entity", "PERSON", test_efta, 1, 0, 10, 0, 2, "Windows_RTX3060"),
+        )
 
         entities_result = cursor.fetchone()
         print(f"✅ Entities insertion test successful: {entities_result[0]} entities")
@@ -187,6 +208,7 @@ def test_sql_queries():
     except Exception as e:
         print(f"❌ SQL query test failed: {e}")
         return False
+
 
 def main():
     """Main test function."""
@@ -218,10 +240,13 @@ def main():
 
     print("\n💡 Next steps:")
     print("   1. Run this on your Windows machine with RTX 3060")
-    print("   2. Install required packages: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121")
+    print(
+        "   2. Install required packages: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121"
+    )
     print("   3. Install Surya OCR: pip install surya-ocr")
     print("   4. Install spaCy models: python -m spacy download en_core_web_trf")
     print("   5. Run the full processing pipeline")
+
 
 if __name__ == "__main__":
     main()

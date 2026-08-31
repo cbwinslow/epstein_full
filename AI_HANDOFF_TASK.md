@@ -36,7 +36,7 @@ Subdirs needed: `govinfo/`, `fara/`, `lobbying/`, `fec_committees/`, `financial_
 
 ### What Has Been Tried (And Failed)
 1. ❌ `nohup python3 download_*.py &` - Processes exit immediately
-2. ❌ `screen -S ... python3 download_*.py` - Sessions don't persist  
+2. ❌ `screen -S ... python3 download_*.py` - Sessions don't persist
 3. ❌ Wrapper script with subprocess - No processes visible in `ps aux`
 4. ❌ Direct execution from epstein root - No output
 
@@ -128,7 +128,7 @@ du -sh /home/cbwinslow/workspace/epstein-data/raw-files/*/
 
 ### Estimated Completion Times
 - FEC Committees: 15 minutes
-- FARA: 10 minutes  
+- FARA: 10 minutes
 - Financial Disclosures: 20 minutes
 - Lobbying: 2 hours
 - GovInfo: 3-4 hours

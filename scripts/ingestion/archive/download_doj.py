@@ -31,7 +31,7 @@ from datetime import datetime
 from glob import glob
 
 # Import shared configuration
-from epstein_config import RAW_FILES_DIR, LOGS_DIR
+from epstein_config import LOGS_DIR, RAW_FILES_DIR
 
 # === PATHS ===
 RAW_DIR = str(RAW_FILES_DIR)
@@ -41,15 +41,15 @@ LOG_DIR = str(LOGS_DIR)
 
 # === EFTA RANGES (from Epstein-research-data) ===
 EFTA_RANGES = {
-    1:  (1, 3158),
-    2:  (3159, 3857),
-    3:  (3858, 5586),
-    4:  (5705, 8320),
-    5:  (8409, 8528),
-    6:  (8529, 8998),
-    7:  (9016, 9664),
-    8:  (9676, 39023),
-    9:  (39025, 1262781),
+    1: (1, 3158),
+    2: (3159, 3857),
+    3: (3858, 5586),
+    4: (5705, 8320),
+    5: (8409, 8528),
+    6: (8529, 8998),
+    7: (9016, 9664),
+    8: (9676, 39023),
+    9: (39025, 1262781),
     10: (1262782, 2205654),
     11: (2205655, 2730264),
     12: (2730265, 2858497),
@@ -57,12 +57,12 @@ EFTA_RANGES = {
 
 # === CONFIG ===
 DELAY_BETWEEN_DOWNLOADS = 0.3  # seconds
-DELAY_BETWEEN_BATCHES = 0.1    # seconds between files in a batch
-BATCH_SIZE = 10                 # files per batch
+DELAY_BETWEEN_BATCHES = 0.1  # seconds between files in a batch
+BATCH_SIZE = 10  # files per batch
 DISK_ALERT_PCT = 90
-PROGRESS_INTERVAL = 15          # seconds between status displays
+PROGRESS_INTERVAL = 15  # seconds between status displays
 MAX_RETRIES = 3
-CONCURRENCY = 5                 # parallel downloads per dataset
+CONCURRENCY = 5  # parallel downloads per dataset
 
 PDF_URL = "https://www.justice.gov/epstein/files/DataSet%20{ds}/EFTA{efta:08d}.pdf"
 AGE_GATE_URL = "https://www.justice.gov/epstein/doj-disclosures/data-set-{ds}-files?page=0"
@@ -104,7 +104,11 @@ class DOJDownloader:
         return len(glob(os.path.join(RAW_DIR, f"data{ds}", "*.pdf")))
 
     def total_size(self, ds: int) -> int:
-        return sum(os.path.getsize(f) for f in glob(os.path.join(RAW_DIR, f"data{ds}", "*.pdf")) if os.path.exists(f))
+        return sum(
+            os.path.getsize(f)
+            for f in glob(os.path.join(RAW_DIR, f"data{ds}", "*.pdf"))
+            if os.path.exists(f)
+        )
 
     def disk_pct(self) -> float:
         st = os.statvfs("/mnt/data")
@@ -137,15 +141,20 @@ class DOJDownloader:
 
     async def setup(self):
         from playwright.async_api import async_playwright
+
         self.pw_cm = async_playwright()
         self.pw = await self.pw_cm.__aenter__()
         self.browser = await self.pw.chromium.launch(
             headless=True,
-            args=['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-dev-shm-usage']
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+            ],
         )
         self.context = await self.browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            viewport={'width': 1280, 'height': 720}
+            viewport={"width": 1280, "height": 720},
         )
         await self.context.add_init_script(
             "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
@@ -155,7 +164,12 @@ class DOJDownloader:
         try:
             await page.goto(AGE_GATE_URL.format(ds=1), wait_until="networkidle", timeout=60000)
             # Try multiple selectors for age verification
-            for selector in ['#age-button-yes', '[name="age_verification"]', '#edit-age-verification', 'button:has-text("21")']:
+            for selector in [
+                "#age-button-yes",
+                '[name="age_verification"]',
+                "#edit-age-verification",
+                'button:has-text("21")',
+            ]:
                 try:
                     age_btn = await page.wait_for_selector(selector, timeout=5000)
                     if age_btn and await age_btn.is_visible():
@@ -194,8 +208,12 @@ class DOJDownloader:
         for attempt in range(MAX_RETRIES):
             try:
                 resp = await self.context.request.get(
-                    url, timeout=60000,
-                    headers={"Referer": "https://www.justice.gov/epstein/", "Accept": "application/pdf,*/*"}
+                    url,
+                    timeout=60000,
+                    headers={
+                        "Referer": "https://www.justice.gov/epstein/",
+                        "Accept": "application/pdf,*/*",
+                    },
                 )
 
                 if resp.status == 404:
@@ -217,7 +235,7 @@ class DOJDownloader:
 
             except Exception:
                 if attempt < MAX_RETRIES - 1:
-                    await asyncio.sleep(2 ** attempt)
+                    await asyncio.sleep(2**attempt)
 
         return False
 
@@ -245,7 +263,9 @@ class DOJDownloader:
         # Resume: skip EFTAs we already tried
         efta_list = [e for e in efta_list if e > last]
 
-        self.log(f"DS {ds}: {len(efta_list):,} files to download (resuming from EFTA{last+1:08d})")
+        self.log(
+            f"DS {ds}: {len(efta_list):,} files to download (resuming from EFTA{last + 1:08d})"
+        )
 
         downloaded = 0
         failed = 0
@@ -289,7 +309,9 @@ class DOJDownloader:
 
         print("=" * 78)
         print("  EPSTEIN DOJ FILE DOWNLOADER v2")
-        print(f"  Started: {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}  Elapsed: {str(elapsed).split('.')[0]}")
+        print(
+            f"  Started: {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}  Elapsed: {str(elapsed).split('.')[0]}"
+        )
         print(f"  Disk: {disk:.1f}% {'⚠️' if disk > DISK_ALERT_PCT else '✓'}")
         print("=" * 78)
 
@@ -311,19 +333,26 @@ class DOJDownloader:
             status = "✓" if pct >= 99 else "●"
             s = self.stats.get(ds, {})
 
-            print(f"  {status} DS {ds:>2} [{bar}] {pct:5.1f}%  {count:>7,} / {expected:>7,}  {self.fmt_size(size):>10}  +{s.get('downloaded',0)} new")
+            print(
+                f"  {status} DS {ds:>2} [{bar}] {pct:5.1f}%  {count:>7,} / {expected:>7,}  {self.fmt_size(size):>10}  +{s.get('downloaded', 0)} new"
+            )
 
         pct = (grand_total / grand_expected * 100) if grand_expected > 0 else 0
         bar = "█" * int(30 * pct / 100) + "░" * (30 - int(30 * pct / 100))
         print(f"\n{'─' * 78}")
-        print(f"  TOTAL [{bar}] {pct:.1f}%  {grand_total:,} / {grand_expected:,}  {self.fmt_size(grand_size)}")
+        print(
+            f"  TOTAL [{bar}] {pct:.1f}%  {grand_total:,} / {grand_expected:,}  {self.fmt_size(grand_size)}"
+        )
         print(f"{'─' * 78}")
         print(f"  Ctrl+C = stop (resume-safe). Updates every {PROGRESS_INTERVAL}s.")
 
     def update_tracker(self):
         for ds in self.datasets:
             count = self.count_pdfs(ds)
-            subprocess.run([PYTHON, TRACKER, "update", "--id", f"doj-ds{ds}", "--current", str(count)], capture_output=True)
+            subprocess.run(
+                [PYTHON, TRACKER, "update", "--id", f"doj-ds{ds}", "--current", str(count)],
+                capture_output=True,
+            )
 
     # ---- Main ----
 

@@ -28,8 +28,8 @@ URL_FILE = os.path.join(LOG_DIR, "hf_urls.txt")
 ARIA2_LOG = os.path.join(LOG_DIR, "hf_aria2c.log")
 
 # aria2c settings
-ARIA2_CONCURRENT = 8       # Parallel file downloads
-ARIA2_CONNECTIONS = 4      # Connections per file
+ARIA2_CONCURRENT = 8  # Parallel file downloads
+ARIA2_CONNECTIONS = 4  # Connections per file
 ARIA2_RETRIES = 5
 ARIA2_TIMEOUT = 60
 
@@ -52,6 +52,7 @@ def list_parquet_files() -> list:
     """List all parquet files in the HF repo."""
     try:
         from huggingface_hub import list_repo_files
+
         files = list_repo_files(REPO_ID, repo_type="dataset")
         return sorted([f for f in files if f.endswith(".parquet")])
     except Exception as e:
@@ -95,17 +96,24 @@ def run_aria2c(url_file: str) -> int:
     """
     cmd = [
         "aria2c",
-        "--input-file", url_file,
-        "--max-concurrent-downloads", str(ARIA2_CONCURRENT),
-        "--max-connection-per-server", str(ARIA2_CONNECTIONS),
-        "--retry-wait", "3",
-        "--max-tries", str(ARIA2_RETRIES),
-        "--timeout", str(ARIA2_TIMEOUT),
+        "--input-file",
+        url_file,
+        "--max-concurrent-downloads",
+        str(ARIA2_CONCURRENT),
+        "--max-connection-per-server",
+        str(ARIA2_CONNECTIONS),
+        "--retry-wait",
+        "3",
+        "--max-tries",
+        str(ARIA2_RETRIES),
+        "--timeout",
+        str(ARIA2_TIMEOUT),
         "--continue=true",
         "--auto-file-renaming=false",
         "--allow-overwrite=false",
         "--summary-interval=10",
-        "--log", ARIA2_LOG,
+        "--log",
+        ARIA2_LOG,
         "--log-level=notice",
         "--console-log-level=notice",
     ]
@@ -163,14 +171,14 @@ def print_status():
     present = results["present"]
     size_gb = results["total_size"] / (1024**3)
 
-    print(f"\n{'='*50}")
+    print(f"\n{'=' * 50}")
     print("  HF Parquet Download Status")
-    print(f"{'='*50}")
-    print(f"  Files:  {present}/{total} ({present/max(total,1)*100:.1f}%)")
+    print(f"{'=' * 50}")
+    print(f"  Files:  {present}/{total} ({present / max(total, 1) * 100:.1f}%)")
     print(f"  Size:   {size_gb:.1f} GB")
     print(f"  Missing: {results['missing']}")
     print(f"  Zero:   {results['zero_size']}")
-    print(f"{'='*50}\n")
+    print(f"{'=' * 50}\n")
 
 
 def main():
@@ -195,7 +203,7 @@ def main():
     print(f"Found {len(parquet_files)} parquet files")
 
     if args.test > 0:
-        parquet_files = parquet_files[:args.test]
+        parquet_files = parquet_files[: args.test]
         print(f"Test mode: downloading {len(parquet_files)} files")
 
     print("Generating URL list...")

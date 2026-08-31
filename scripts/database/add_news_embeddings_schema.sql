@@ -2,18 +2,18 @@
 CREATE EXTENSION IF NOT EXISTS vector;
 
 -- Add embedding columns to media_news_articles
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN IF NOT EXISTS title_embedding vector(768),
 ADD COLUMN IF NOT EXISTS summary_embedding vector(768),
 ADD COLUMN IF NOT EXISTS content_embedding vector(768);
 
 -- Add content hash for deduplication
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN IF NOT EXISTS content_hash VARCHAR(64),
 ADD COLUMN IF NOT EXISTS title_hash VARCHAR(64);
 
 -- Add clustering columns
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN IF NOT EXISTS cluster_id INTEGER,
 ADD COLUMN IF NOT EXISTS canonical_article_id INTEGER REFERENCES media_news_articles(id),
 ADD COLUMN IF NOT EXISTS is_duplicate BOOLEAN DEFAULT FALSE,
@@ -21,15 +21,15 @@ ADD COLUMN IF NOT EXISTS duplicate_reason VARCHAR(50),
 ADD COLUMN IF NOT EXISTS similarity_score FLOAT;
 
 -- Create vector indexes for semantic search
-CREATE INDEX IF NOT EXISTS idx_news_title_embedding 
+CREATE INDEX IF NOT EXISTS idx_news_title_embedding
 ON media_news_articles USING ivfflat(title_embedding vector_cosine_ops)
 WITH (lists = 100);
 
-CREATE INDEX IF NOT EXISTS idx_news_summary_embedding 
+CREATE INDEX IF NOT EXISTS idx_news_summary_embedding
 ON media_news_articles USING ivfflat(summary_embedding vector_cosine_ops)
 WITH (lists = 100);
 
-CREATE INDEX IF NOT EXISTS idx_news_content_embedding 
+CREATE INDEX IF NOT EXISTS idx_news_content_embedding
 ON media_news_articles USING ivfflat(content_embedding vector_cosine_ops)
 WITH (lists = 100);
 
@@ -74,29 +74,29 @@ CREATE INDEX IF NOT EXISTS idx_article_authors_article ON media_article_authors(
 CREATE INDEX IF NOT EXISTS idx_article_authors_author ON media_article_authors(author_id);
 
 -- Add language detection column
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN IF NOT EXISTS language_code VARCHAR(10) DEFAULT 'en';
 
 -- Add fact-checking columns
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN IF NOT EXISTS fact_check_status VARCHAR(50),
 ADD COLUMN IF NOT EXISTS fact_check_sources JSONB,
 ADD COLUMN IF NOT EXISTS correction_notes TEXT;
 
 -- Add social signals
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN IF NOT EXISTS social_media_shares JSONB,
 ADD COLUMN IF NOT EXISTS viral_score FLOAT,
 ADD COLUMN IF NOT EXISTS engagement_metrics JSONB;
 
 -- Add reading metrics
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN IF NOT EXISTS reading_time_seconds INTEGER,
 ADD COLUMN IF NOT EXISTS flesch_kincaid_grade FLOAT,
 ADD COLUMN IF NOT EXISTS complexity_score FLOAT;
 
 -- Add technical metadata
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN IF NOT EXISTS http_status INTEGER,
 ADD COLUMN IF NOT EXISTS response_time_ms INTEGER,
 ADD COLUMN IF NOT EXISTS content_type VARCHAR(100),

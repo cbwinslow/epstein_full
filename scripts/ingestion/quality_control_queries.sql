@@ -2,7 +2,7 @@
 -- Run these to verify data quality after enrichment
 
 -- 1. Overall Statistics
-SELECT 
+SELECT
     COUNT(*) as total_articles,
     COUNT(CASE WHEN word_count > 100 THEN 1 END) as enriched,
     COUNT(CASE WHEN word_count IS NULL OR word_count < 100 THEN 1 END) as pending,
@@ -13,8 +13,8 @@ SELECT
 FROM media_news_articles;
 
 -- 2. Articles by Word Count Category
-SELECT 
-    CASE 
+SELECT
+    CASE
         WHEN word_count < 100 THEN 'Short (<100)'
         WHEN word_count BETWEEN 100 AND 500 THEN 'Medium (100-500)'
         WHEN word_count BETWEEN 501 AND 2000 THEN 'Long (500-2000)'
@@ -30,8 +30,8 @@ ORDER BY MIN(word_count);
 -- 3. Find Junk/Ad Articles (to remove)
 SELECT id, title, word_count, source_domain, LEFT(content, 200) as content_preview
 FROM media_news_articles
-WHERE content LIKE '%cookie%' 
-   OR content LIKE '%GDPR%' 
+WHERE content LIKE '%cookie%'
+   OR content LIKE '%GDPR%'
    OR content LIKE '%browser check%'
    OR content LIKE '%ad blocker%'
    OR content LIKE '%subscribe%'
@@ -43,7 +43,7 @@ LIMIT 20;
 -- 4. Find Wrong Person Articles (false positives)
 SELECT id, title, word_count, source_domain, content
 FROM media_news_articles
-WHERE (title ILIKE '%michal epstein%' 
+WHERE (title ILIKE '%michal epstein%'
    OR title ILIKE '%theo epstein%'
    OR title ILIKE '%boris epstein%'
    OR title ILIKE '%epstein island%'
@@ -62,7 +62,7 @@ ORDER BY word_count DESC
 LIMIT 20;
 
 -- 6. Check for Duplicates by Fingerprint
-SELECT 
+SELECT
     all_topics->>'fingerprint' as fingerprint,
     COUNT(*) as count,
     STRING_AGG(DISTINCT title, ' | ' ORDER BY title) as titles
@@ -74,7 +74,7 @@ HAVING COUNT(*) > 1
 LIMIT 20;
 
 -- 7. Articles by Source Domain (top 20)
-SELECT 
+SELECT
     source_domain,
     COUNT(*) as article_count,
     AVG(word_count) as avg_words,
@@ -85,7 +85,7 @@ ORDER BY article_count DESC
 LIMIT 20;
 
 -- 8. Articles by Language
-SELECT 
+SELECT
     COALESCE(language, 'unknown') as lang,
     COUNT(*) as count,
     AVG(word_count) as avg_words
@@ -95,11 +95,11 @@ GROUP BY language
 ORDER BY count DESC;
 
 -- 9. Recent Enrichments (last hour)
-SELECT 
-    id, 
-    title, 
-    word_count, 
-    authors, 
+SELECT
+    id,
+    title,
+    word_count,
+    authors,
     language,
     source_domain,
     collected_at
@@ -110,7 +110,7 @@ ORDER BY collected_at DESC
 LIMIT 20;
 
 -- 10. Articles with Images
-SELECT 
+SELECT
     id,
     title,
     word_count,
@@ -123,8 +123,8 @@ LIMIT 20;
 
 -- 11. Quality Score Distribution
 -- High quality = >500 words, has author, has date
-SELECT 
-    CASE 
+SELECT
+    CASE
         WHEN word_count > 500 AND authors IS NOT NULL AND publish_date IS NOT NULL THEN 'High Quality'
         WHEN word_count > 200 AND (authors IS NOT NULL OR publish_date IS NOT NULL) THEN 'Medium Quality'
         WHEN word_count > 100 THEN 'Basic Quality'
@@ -139,8 +139,8 @@ ORDER BY MIN(word_count) DESC;
 
 -- 12. Delete Commands for Junk Articles (review first!)
 -- Uncomment and run after reviewing:
--- DELETE FROM media_news_articles 
--- WHERE content LIKE '%cookie%' 
+-- DELETE FROM media_news_articles
+-- WHERE content LIKE '%cookie%'
 --    OR content LIKE '%browser check%'
 --    OR content LIKE '%GDPR%'
 --    OR title ILIKE '%michal epstein%'
