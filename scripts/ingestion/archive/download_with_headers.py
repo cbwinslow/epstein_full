@@ -4,6 +4,7 @@ Download Epstein datasets with headers
 """
 
 import os
+
 import requests
 
 DATA_ROOT = "/home/cbwinslow/workspace/epstein-data/downloads"
@@ -11,7 +12,10 @@ os.makedirs(DATA_ROOT, exist_ok=True)
 
 urls = [
     ("https://data.jmail.world/v1/emails-slim.parquet", "emails-slim.parquet"),
-    ("https://www.courtlistener.com/api/rest/v3/?type=dockets&case_name__icontains=epstein&format=json", "courtlistener.json"),
+    (
+        "https://www.courtlistener.com/api/rest/v3/?type=dockets&case_name__icontains=epstein&format=json",
+        "courtlistener.json",
+    ),
 ]
 
 headers = {
@@ -27,17 +31,17 @@ for url, filename in urls:
     if os.path.exists(output_path) and os.path.getsize(output_path) > 1000000:
         print(f"Already exists: {filename}")
         continue
-    
+
     print(f"Downloading {filename}...")
     try:
         response = session.get(url, stream=True, timeout=300)
         response.raise_for_status()
-        
-        with open(output_path, 'wb') as f:
+
+        with open(output_path, "wb") as f:
             for chunk in response.iter_content(chunk_size=8192):
                 if chunk:
                     f.write(chunk)
-        
+
         size = os.path.getsize(output_path) / 1024 / 1024
         print(f"✓ Downloaded {filename} ({size:.1f} MB)")
     except Exception as e:

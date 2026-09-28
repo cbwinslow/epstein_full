@@ -14,11 +14,13 @@ os.makedirs(LOG_DIR, exist_ok=True)
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
+    format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler(f"{LOG_DIR}/hf_download_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"),
-        logging.StreamHandler()
-    ]
+        logging.FileHandler(
+            f"{LOG_DIR}/hf_download_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        ),
+        logging.StreamHandler(),
+    ],
 )
 
 DATASETS = [
@@ -32,18 +34,21 @@ def download_dataset(repo_id, local_name):
     """Download dataset from HuggingFace using huggingface-cli."""
     output_dir = f"{DATA_ROOT}/hf-datasets/{local_name}"
     os.makedirs(output_dir, exist_ok=True)
-    
+
     logging.info(f"Downloading {repo_id} to {output_dir}")
-    
+
     # Try huggingface-cli first
     cmd = [
-        "huggingface-cli", "download",
+        "huggingface-cli",
+        "download",
         repo_id,
-        "--repo-type", "dataset",
-        "--local-dir", output_dir,
-        "--resume-download"
+        "--repo-type",
+        "dataset",
+        "--local-dir",
+        output_dir,
+        "--resume-download",
     ]
-    
+
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
         if result.returncode == 0:
@@ -61,12 +66,12 @@ def main():
     logging.info("=" * 60)
     logging.info("HUGGINGFACE DATASET DOWNLOAD")
     logging.info("=" * 60)
-    
+
     success = 0
     for repo_id, local_name in DATASETS:
         if download_dataset(repo_id, local_name):
             success += 1
-    
+
     logging.info(f"\nComplete: {success}/{len(DATASETS)} datasets downloaded")
 
 

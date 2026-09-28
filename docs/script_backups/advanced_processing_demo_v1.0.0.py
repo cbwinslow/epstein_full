@@ -34,11 +34,12 @@ def run_command(cmd, description):
         print(f"✗ Exception: {e}")
         return False
 
+
 def demo_epstein_pipeline():
     """Demonstrate Epstein-Pipeline tools."""
-    print("\\n" + "="*60)
+    print("\\n" + "=" * 60)
     print("ADVANCED PROCESSING DEMO")
-    print("="*60)
+    print("=" * 60)
 
     # Test if epstein-pipeline is available
     success = run_command("epstein-pipeline --help", "Testing Epstein-Pipeline availability")
@@ -51,32 +52,43 @@ def demo_epstein_pipeline():
 
     # Demo commands (these would work if epstein-pipeline was available)
     demo_commands = [
-        ("epstein-pipeline ocr /mnt/data/epstein-project/raw-files/data9/ --output /mnt/data/epstein-project/processed/ocr/data9/ --backend surya",
-         "OCR with Surya backend"),
-        ("epstein-pipeline extract-entities /mnt/data/epstein-project/processed/ocr/data9/ --output /mnt/data/epstein-project/processed/entities/",
-         "Entity extraction"),
-        ("epstein-pipeline embed /mnt/data/epstein-project/processed/ocr/data9/ --output /mnt/data/epstein-project/processed/embeddings/",
-         "Generate embeddings"),
-        ("epstein-pipeline build-graph /mnt/data/epstein-project/processed/ --output /mnt/data/epstein-project/knowledge-graph/",
-         "Build knowledge graph"),
-        ("epstein-pipeline export sqlite /mnt/data/epstein-project/processed/ --output /mnt/data/epstein-project/databases/processed_corpus.db",
-         "Export to SQLite")
+        (
+            "epstein-pipeline ocr /mnt/data/epstein-project/raw-files/data9/ --output /mnt/data/epstein-project/processed/ocr/data9/ --backend surya",
+            "OCR with Surya backend",
+        ),
+        (
+            "epstein-pipeline extract-entities /mnt/data/epstein-project/processed/ocr/data9/ --output /mnt/data/epstein-project/processed/entities/",
+            "Entity extraction",
+        ),
+        (
+            "epstein-pipeline embed /mnt/data/epstein-project/processed/ocr/data9/ --output /mnt/data/epstein-project/processed/embeddings/",
+            "Generate embeddings",
+        ),
+        (
+            "epstein-pipeline build-graph /mnt/data/epstein-project/processed/ --output /mnt/data/epstein-project/knowledge-graph/",
+            "Build knowledge graph",
+        ),
+        (
+            "epstein-pipeline export sqlite /mnt/data/epstein-project/processed/ --output /mnt/data/epstein-project/databases/processed_corpus.db",
+            "Export to SQLite",
+        ),
     ]
 
     for cmd, desc in demo_commands:
         run_command(cmd, desc)
 
+
 def demo_advanced_ocr():
     """Demonstrate advanced OCR capabilities."""
-    print("\\n" + "="*60)
+    print("\\n" + "=" * 60)
     print("ADVANCED OCR DEMO")
-    print("="*60)
+    print("=" * 60)
 
     # Test different OCR backends
     backends = [
         ("PyMuPDF", "fitz (PyMuPDF)"),
         ("Surya", "GPU-accelerated OCR"),
-        ("Docling", "IBM fallback")
+        ("Docling", "IBM fallback"),
     ]
 
     for backend, description in backends:
@@ -99,17 +111,18 @@ def demo_advanced_ocr():
             print("  - Handles complex document layouts")
             print("  - Would need: pip install docling")
 
+
 def demo_entity_extraction():
     """Demonstrate advanced entity extraction."""
-    print("\\n" + "="*60)
+    print("\\n" + "=" * 60)
     print("ADVANCED ENTITY EXTRACTION DEMO")
-    print("="*60)
+    print("=" * 60)
 
     # Test different NER approaches
     approaches = [
         ("spaCy", "Transformer models (en_core_web_trf)"),
         ("GLiNER", "Zero-shot entity extraction"),
-        ("Regex", "Structured data patterns")
+        ("Regex", "Structured data patterns"),
     ]
 
     for approach, description in approaches:
@@ -134,18 +147,19 @@ def demo_entity_extraction():
             print("  - Bates numbers, email addresses")
             print("  - Already implemented in pipeline")
 
+
 def demo_analysis_capabilities():
     """Demonstrate analysis capabilities."""
-    print("\\n" + "="*60)
+    print("\\n" + "=" * 60)
     print("ANALYSIS CAPABILITIES DEMO")
-    print("="*60)
+    print("=" * 60)
 
     capabilities = [
         ("Knowledge Graph", "Entity relationship analysis"),
         ("Semantic Search", "Vector-based document search"),
         ("Timeline Analysis", "Chronological event reconstruction"),
         ("Financial Analysis", "Money flow pattern detection"),
-        ("Communication Analysis", "Email thread analysis")
+        ("Communication Analysis", "Email thread analysis"),
     ]
 
     for capability, description in capabilities:
@@ -177,11 +191,12 @@ def demo_analysis_capabilities():
             print("  - Analyze communication patterns")
             print("  - Identify key correspondents")
 
+
 def demo_scaling_approach():
     """Demonstrate scaling approach."""
-    print("\\n" + "="*60)
+    print("\\n" + "=" * 60)
     print("SCALING APPROACH DEMO")
-    print("="*60)
+    print("=" * 60)
 
     print("\\nCurrent Performance:")
     print("-" * 20)
@@ -205,10 +220,11 @@ def demo_scaling_approach():
     print("  4. Incremental processing with checkpointing")
     print("  5. Database optimization for large-scale storage")
 
+
 def main():
     """Main demonstration function."""
     print("Epstein Files - Advanced Processing Demo")
-    print("="*50)
+    print("=" * 50)
 
     demo_epstein_pipeline()
     demo_advanced_ocr()
@@ -216,9 +232,9 @@ def main():
     demo_analysis_capabilities()
     demo_scaling_approach()
 
-    print("\\n" + "="*60)
+    print("\\n" + "=" * 60)
     print("SUMMARY")
-    print("="*60)
+    print("=" * 60)
     print("\\n✓ Basic OCR + NER pipeline working")
     print("✓ 450 entities extracted from 20 sample files")
     print("✓ Integration with existing knowledge graph possible")
@@ -229,6 +245,7 @@ def main():
     print("  3. Implement full dataset processing")
     print("  4. Add semantic search capabilities")
     print("  5. Create web interface for analysis")
+
 
 if __name__ == "__main__":
     main()

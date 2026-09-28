@@ -6,7 +6,7 @@ This document provides the complete workflow for integrating the Windows RTX 306
 
 ## Prerequisites
 
-✅ **SSH Bidirectional Access**: 
+✅ **SSH Bidirectional Access**:
 - Windows ↔ Linux server (Galaxy) fully configured
 - Passwordless authentication working
 - Administrator access configured on Windows

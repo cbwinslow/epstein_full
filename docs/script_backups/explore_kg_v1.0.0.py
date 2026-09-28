@@ -7,19 +7,23 @@ import sys
 
 DB_PATH = "/mnt/data/epstein-project/databases/knowledge_graph.db"
 
+
 def connect():
     return sqlite3.connect(DB_PATH)
+
 
 def search_entities(query, conn):
     cursor = conn.execute(
         "SELECT id, name, entity_type, metadata FROM entities WHERE name LIKE ? ORDER BY name",
-        (f"%{query}%",)
+        (f"%{query}%",),
     )
     return cursor.fetchall()
 
+
 def get_relationships(entity_id, conn):
-    cursor = conn.execute("""
-        SELECT r.relationship_type, r.weight, 
+    cursor = conn.execute(
+        """
+        SELECT r.relationship_type, r.weight,
                e1.name as source, e2.name as target,
                r.metadata
         FROM relationships r
@@ -27,8 +31,11 @@ def get_relationships(entity_id, conn):
         JOIN entities e2 ON r.target_entity_id = e2.id
         WHERE r.source_entity_id = ? OR r.target_entity_id = ?
         ORDER BY r.weight DESC
-    """, (entity_id, entity_id))
+    """,
+        (entity_id, entity_id),
+    )
     return cursor.fetchall()
+
 
 def main():
     conn = connect()
@@ -66,7 +73,7 @@ def main():
         cursor = conn.execute("SELECT COUNT(*) FROM relationships")
         print(f"  Total relationships: {cursor.fetchone()[0]}")
         cursor = conn.execute("""
-            SELECT entity_type, COUNT(*) FROM entities 
+            SELECT entity_type, COUNT(*) FROM entities
             GROUP BY entity_type ORDER BY COUNT(*) DESC
         """)
         print("\n  Entity types:")
@@ -74,6 +81,7 @@ def main():
             print(f"    {row[0]}: {row[1]}")
 
     conn.close()
+
 
 if __name__ == "__main__":
     main()

@@ -25,12 +25,12 @@ Usage:
     python search_letta_memories.py --export memories.json
 """
 
-import sys
-import os
-import json
 import argparse
+import json
+import os
+import sys
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import Dict, List
 
 # Add scripts directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -52,11 +52,11 @@ def search_memories_by_type(memory_type: str, limit: int = 10) -> List[Dict]:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT id, memory_type, title, LEFT(content, 100) as preview, 
+                SELECT id, memory_type, title, LEFT(content, 100) as preview,
                        created_at, tags
-                FROM letta_memories 
+                FROM letta_memories
                 WHERE memory_type = %s
-                ORDER BY created_at DESC 
+                ORDER BY created_at DESC
                 LIMIT %s
             """,
                 (memory_type, limit),
@@ -96,11 +96,11 @@ def search_memories_by_content(search_term: str, limit: int = 10) -> List[Dict]:
             try:
                 cur.execute(
                     """
-                    SELECT id, memory_type, title, 
+                    SELECT id, memory_type, title,
                            similarity(content, %s) as score,
                            LEFT(content, 100) as preview,
                            created_at
-                    FROM letta_memories 
+                    FROM letta_memories
                     WHERE content % %s
                     ORDER BY score DESC
                     LIMIT %s
@@ -111,11 +111,11 @@ def search_memories_by_content(search_term: str, limit: int = 10) -> List[Dict]:
                 # Fallback to LIKE search
                 cur.execute(
                     """
-                    SELECT id, memory_type, title, 
+                    SELECT id, memory_type, title,
                            0.5 as score,
                            LEFT(content, 100) as preview,
                            created_at
-                    FROM letta_memories 
+                    FROM letta_memories
                     WHERE content LIKE %s OR title LIKE %s
                     ORDER BY created_at DESC
                     LIMIT %s
@@ -158,12 +158,12 @@ def search_memories_by_tags(tags: List[str], limit: int = 10) -> List[Dict]:
 
             cur.execute(
                 """
-                SELECT id, memory_type, title, 
+                SELECT id, memory_type, title,
                        LEFT(content, 100) as preview,
                        tags, created_at
-                FROM letta_memories 
+                FROM letta_memories
                 WHERE tags @> %s::text[]
-                ORDER BY created_at DESC 
+                ORDER BY created_at DESC
                 LIMIT %s
             """,
                 (tag_array, limit),
@@ -202,7 +202,7 @@ def get_agent_context(agent_name: str) -> List[Dict]:
             cur.execute(
                 """
                 SELECT context_key, context_value, created_at, updated_at
-                FROM letta_agent_context 
+                FROM letta_agent_context
                 WHERE agent_name = %s
                 ORDER BY updated_at DESC
             """,
@@ -245,7 +245,7 @@ def list_memory_types() -> List[Dict]:
             cur.execute("""
                 SELECT memory_type, COUNT(*) as count,
                        MAX(created_at) as latest
-                FROM letta_memories 
+                FROM letta_memories
                 GROUP BY memory_type
                 ORDER BY count DESC
             """)
@@ -278,9 +278,9 @@ def export_memories(output_file: str) -> bool:
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                SELECT id, memory_type, title, content, metadata, 
+                SELECT id, memory_type, title, content, metadata,
                        tags, created_at, updated_at
-                FROM letta_memories 
+                FROM letta_memories
                 ORDER BY created_at DESC
             """)
 

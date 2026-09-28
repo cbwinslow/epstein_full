@@ -7,10 +7,10 @@ Cleanup script for ~/workspace/epstein-data/
 """
 
 import os
-import shutil
 from pathlib import Path
 
 DATA_DIR = Path.home() / "workspace/epstein-data"
+
 
 def find_empty_dirs(path):
     """Find all empty directories."""
@@ -20,6 +20,7 @@ def find_empty_dirs(path):
             empty.append(Path(root))
     return empty
 
+
 def find_empty_files(path):
     """Find all empty files."""
     empty = []
@@ -28,11 +29,12 @@ def find_empty_files(path):
             empty.append(f)
     return empty
 
+
 def main():
-    print("="*70)
+    print("=" * 70)
     print("CLEANUP REPORT - epstein-data")
-    print("="*70)
-    
+    print("=" * 70)
+
     # 1. Check processed/ directory
     print("\n1. PROCESSED DIRECTORY:")
     processed = DATA_DIR / "processed"
@@ -41,7 +43,7 @@ def main():
         print(f"   Empty subdirectories: {len(empty_dirs)}")
         for d in empty_dirs:
             print(f"   - {d.relative_to(DATA_DIR)}")
-    
+
     # 2. Check downloads/ directory
     print("\n2. DOWNLOADS DIRECTORY:")
     downloads = DATA_DIR / "downloads"
@@ -49,12 +51,12 @@ def main():
     print(f"   Empty files: {len(empty_files)}")
     for f in empty_files[:10]:  # Show first 10
         print(f"   - {f.name} (0 bytes)")
-    
+
     empty_dirs = find_empty_dirs(downloads)
     print(f"   Empty directories: {len(empty_dirs)}")
     for d in empty_dirs[:10]:
         print(f"   - {d.relative_to(DATA_DIR)}")
-    
+
     # 3. Check backups/ directory
     print("\n3. BACKUPS DIRECTORY:")
     backups = DATA_DIR / "backups"
@@ -67,7 +69,7 @@ def main():
             if f.is_file():
                 size_mb = f.stat().st_size / (1024**2)
                 print(f"   - {f.name} ({size_mb:.0f} MB)")
-    
+
     # 4. Check external_repos/
     print("\n4. EXTERNAL REPOS:")
     external = DATA_DIR / "external_repos"
@@ -76,21 +78,22 @@ def main():
             if repo.is_dir():
                 items = list(repo.iterdir())
                 print(f"   - {repo.name}: {len(items)} items")
-    
+
     # 5. HF Directory naming
     print("\n5. HF DIRECTORY NAMING:")
     hf_dirs = [d for d in DATA_DIR.iterdir() if d.is_dir() and d.name.startswith("hf")]
     print(f"   HF directories: {len(hf_dirs)}")
     for d in sorted(hf_dirs, key=lambda x: x.name):
         print(f"   - {d.name}")
-    
-    print("\n" + "="*70)
+
+    print("\n" + "=" * 70)
     print("SUMMARY")
-    print("="*70)
+    print("=" * 70)
     print("✅ Task 1: HF naming standardized (all use 'hf-' prefix)")
     print("✅ Task 2: processed/ is empty (nothing to move)")
     print(f"⚠️  Task 3: {len(empty_files)} empty files in downloads/")
     print("✅ Task 4: external_repos/ checked")
+
 
 if __name__ == "__main__":
     main()

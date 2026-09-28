@@ -1,7 +1,7 @@
 # GitHub Projects for News Data Acquisition
 
-> **Document:** Open Source Projects for Reuse  
-> **Last Updated:** April 4, 2026  
+> **Document:** Open Source Projects for Reuse
+> **Last Updated:** April 4, 2026
 > **Purpose:** Catalog existing tools to avoid reinventing the wheel
 
 ---
@@ -9,9 +9,9 @@
 ## GDELT Project Tools
 
 ### 1. gdeltPyR (Python Framework) ⭐ HIGHLY RECOMMENDED
-**URL:** https://github.com/linwoodc3/gdeltPyR  
-**Stars:** 200+  
-**Language:** Python  
+**URL:** https://github.com/linwoodc3/gdeltPyR
+**Stars:** 200+
+**Language:** Python
 **License:** MIT
 
 **What it does:**
@@ -26,17 +26,17 @@ from gdelt import gdelt
 
 # Get GDELT data for specific dates
 g = gdelt.gdelt()
-results = g.Search(['2024 01 01'], table='events', coverage=True)
+results = g.Search(["2024 01 01"], table="events", coverage=True)
 # Filter for Epstein-related events
-epstein_events = results[results['Actor1Name'].str.contains('Epstein', case=False, na=False)]
+epstein_events = results[results["Actor1Name"].str.contains("Epstein", case=False, na=False)]
 ```
 
 ---
 
 ### 2. gdelt-doc-api (Python Client) ⭐ RECOMMENDED
-**URL:** https://github.com/alex9smith/gdelt-doc-api  
-**Stars:** 100+  
-**Language:** Python  
+**URL:** https://github.com/alex9smith/gdelt-doc-api
+**Stars:** 100+
+**Language:** Python
 **License:** MIT
 
 **What it does:**
@@ -51,18 +51,14 @@ from gdelt_doc_api import GdeltDoc
 gdelt = GdeltDoc()
 
 # Search for Epstein articles from 2019-2025
-articles = gdelt.article_search(
-    query="Epstein",
-    start_date="2019-01-01",
-    end_date="2025-12-31"
-)
+articles = gdelt.article_search(query="Epstein", start_date="2019-01-01", end_date="2025-12-31")
 ```
 
 ---
 
 ### 3. News-scraper (GDELT-Based) ⭐ RECOMMENDED
-**URL:** https://github.com/kenneth-zhou/News-scraper  
-**Language:** Python  
+**URL:** https://github.com/kenneth-zhou/News-scraper
+**Language:** Python
 **License:** Not specified
 
 **What it does:**
@@ -78,8 +74,8 @@ articles = gdelt.article_search(
 ---
 
 ### 4. newsfeed (GDELT CLI Tool)
-**URL:** https://github.com/Cyclododecene/newsfeed  
-**Language:** Python  
+**URL:** https://github.com/Cyclododecene/newsfeed
+**Language:** Python
 **License:** Not specified
 
 **What it does:**
@@ -95,8 +91,8 @@ python -m newsfeed --db gkg --version 2.0 --start 2019-07-01 --end 2019-08-31 --
 ---
 
 ### 5. gdeltnews (Web News NGrams Reconstructor)
-**URL:** https://github.com/iandreafc/gdeltnews  
-**Language:** Python  
+**URL:** https://github.com/iandreafc/gdeltnews
+**Language:** Python
 **License:** Not specified
 
 **What it does:**
@@ -112,9 +108,9 @@ python -m newsfeed --db gkg --version 2.0 --start 2019-07-01 --end 2019-08-31 --
 ## Wayback Machine / Internet Archive Tools
 
 ### 6. wayback-machine-downloader ⭐ ESSENTIAL
-**URL:** https://github.com/hartator/wayback-machine-downloader  
-**Stars:** 3,000+  
-**Language:** Ruby  
+**URL:** https://github.com/hartator/wayback-machine-downloader
+**Stars:** 3,000+
+**Language:** Ruby
 **License:** MIT
 
 **What it does:**
@@ -132,9 +128,9 @@ wayback_machine_downloader http://cnn.com/*epstein* --from 20190101 --to 2025123
 ---
 
 ### 7. waybackpy (Python Wayback Client)
-**URL:** https://github.com/akamhy/waybackpy  
-**Stars:** 500+  
-**Language:** Python  
+**URL:** https://github.com/akamhy/waybackpy
+**Stars:** 500+
+**Language:** Python
 **License:** MIT
 
 **What it does:**
@@ -156,9 +152,9 @@ snapshots = cdx_api.snapshots()
 ## News Article Extraction
 
 ### 8. newspaper3k (Article Extraction)
-**URL:** https://github.com/codelucas/newspaper  
-**Stars:** 13,000+  
-**Language:** Python  
+**URL:** https://github.com/codelucas/newspaper
+**Stars:** 13,000+
+**Language:** Python
 **License:** MIT
 
 **What it does:**
@@ -180,9 +176,9 @@ print(article.text)  # Full article text
 ---
 
 ### 9. news-please (News Article Extractor)
-**URL:** https://github.com/fhamborg/news-please  
-**Stars:** 2,500+  
-**Language:** Python  
+**URL:** https://github.com/fhamborg/news-please
+**Stars:** 2,500+
+**Language:** Python
 **License:** Apache 2.0
 
 **What it does:**
@@ -202,9 +198,9 @@ news-please -c wayback_urls.txt -o /data/news/
 ## General Web Scraping
 
 ### 10. Scrapy (Web Crawling Framework) ⭐ INDUSTRY STANDARD
-**URL:** https://github.com/scrapy/scrapy  
-**Stars:** 50,000+  
-**Language:** Python  
+**URL:** https://github.com/scrapy/scrapy
+**Stars:** 50,000+
+**Language:** Python
 **License:** BSD 3-Clause
 
 **What it does:**
@@ -220,9 +216,9 @@ news-please -c wayback_urls.txt -o /data/news/
 ---
 
 ### 11. BeautifulSoup (HTML Parsing)
-**URL:** https://github.com/wention/BeautifulSoup4  
-**Stars:** -  
-**Language:** Python  
+**URL:** https://github.com/wention/BeautifulSoup4
+**Stars:** -
+**Language:** Python
 **License:** MIT
 
 **Already in our stack - perfect for parsing Wayback HTML**
@@ -232,9 +228,9 @@ news-please -c wayback_urls.txt -o /data/news/
 ## RSS Feed Tools
 
 ### 12. feedparser (RSS/Atom Parser)
-**URL:** https://github.com/kurtmckee/feedparser  
-**Stars:** -  
-**Language:** Python  
+**URL:** https://github.com/kurtmckee/feedparser
+**Stars:** -
+**Language:** Python
 **License:** MIT
 
 **What it does:**
@@ -247,18 +243,20 @@ news-please -c wayback_urls.txt -o /data/news/
 import feedparser
 
 # Parse historical RSS feeds from Wayback
-d = feedparser.parse('https://wayback.archive.org/web/20190710000000/http://rss.cnn.com/rss/cnn_topstories.rss')
+d = feedparser.parse(
+    "https://wayback.archive.org/web/20190710000000/http://rss.cnn.com/rss/cnn_topstories.rss"
+)
 for entry in d.entries:
-    if 'epstein' in entry.title.lower():
+    if "epstein" in entry.title.lower():
         print(entry.link, entry.title)
 ```
 
 ---
 
 ### 13. RSS-Bridge (RSS Feed Generator)
-**URL:** https://github.com/RSS-Bridge/rss-bridge  
-**Stars:** 3,000+  
-**Language:** PHP  
+**URL:** https://github.com/RSS-Bridge/rss-bridge
+**Stars:** 3,000+
+**Language:** PHP
 **License:** Unlicense
 
 **What it does:**
@@ -272,9 +270,9 @@ for entry in d.entries:
 ## Search & Discovery
 
 ### 14. commoncrawl-py (Common Crawl Python)
-**URL:** https://github.com/commoncrawl/cc-pyspark  
-**Stars:** 400+  
-**Language:** Python  
+**URL:** https://github.com/commoncrawl/cc-pyspark
+**Stars:** 400+
+**Language:** Python
 **License:** Apache 2.0
 
 **What it does:**
@@ -288,9 +286,9 @@ for entry in d.entries:
 ---
 
 ### 15. cdx-toolkit (Wayback CDX API)
-**URL:** https://github.com/cocrawler/cdx-toolkit  
-**Stars:** 100+  
-**Language:** Python  
+**URL:** https://github.com/cocrawler/cdx-toolkit
+**Stars:** 100+
+**Language:** Python
 **License:** Apache 2.0
 
 **What it does:**
@@ -302,9 +300,9 @@ for entry in d.entries:
 ```python
 from cdx_toolkit import CDXFetcher
 
-fetcher = CDXFetcher(source='cc')
-for obj in fetcher.iter('cnn.com/epstein', from_ts='2019', to_ts='2025'):
-    print(obj['url'], obj['timestamp'])
+fetcher = CDXFetcher(source="cc")
+for obj in fetcher.iter("cnn.com/epstein", from_ts="2019", to_ts="2025"):
+    print(obj["url"], obj["timestamp"])
 ```
 
 ---
@@ -312,9 +310,9 @@ for obj in fetcher.iter('cnn.com/epstein', from_ts='2019', to_ts='2025'):
 ## Data Storage & Processing
 
 ### 16. newspaper4k (Fork with improvements)
-**URL:** https://github.com/Integralist/newspaper4k  
-**Stars:** -  
-**Language:** Python  
+**URL:** https://github.com/Integralist/newspaper4k
+**Stars:** -
+**Language:** Python
 **License:** MIT
 
 **What it does:**

@@ -9,9 +9,9 @@ Usage:
     python scripts/embed_cpu.py status       # Check progress
 """
 
+import signal
 import sys
 import time
-import signal
 
 import psycopg2
 from psycopg2.extras import execute_values
@@ -24,8 +24,8 @@ BATCH_SIZE = 2048
 MAX_TEXT_LEN = 512
 
 shutdown = False
-signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__('shutdown', True))
-signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__('shutdown', True))
+signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__("shutdown", True))
+signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__("shutdown", True))
 
 
 def log(msg):
@@ -36,11 +36,13 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == "status":
         conn = psycopg2.connect(DB_URL)
         cur = conn.cursor()
-        cur.execute("SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10")
+        cur.execute(
+            "SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10"
+        )
         total = cur.fetchone()[0]
         cur.execute("SELECT COUNT(*) FROM page_embeddings")
         emb = cur.fetchone()[0]
-        log(f"Embedded: {emb:,}/{total:,} ({emb/total*100:.1f}%) | Remaining: {total-emb:,}")
+        log(f"Embedded: {emb:,}/{total:,} ({emb / total * 100:.1f}%) | Remaining: {total - emb:,}")
         conn.close()
         return
 
@@ -57,7 +59,7 @@ def main():
         ORDER BY p.id
     """)
     all_ids = [r[0] for r in cur.fetchall()]
-    log(f"  Found {len(all_ids):,} unembedded pages in {time.time()-t0:.0f}s")
+    log(f"  Found {len(all_ids):,} unembedded pages in {time.time() - t0:.0f}s")
 
     if not all_ids:
         log("All pages already embedded!")
@@ -78,13 +80,16 @@ def main():
         if shutdown:
             break
 
-        batch_ids = all_ids[batch_start:batch_start + BATCH_SIZE]
+        batch_ids = all_ids[batch_start : batch_start + BATCH_SIZE]
 
         # Fetch text for this batch of IDs
-        cur.execute("""
+        cur.execute(
+            """
             SELECT id, LEFT(text_content, %s) FROM pages
             WHERE id = ANY(%s)
-        """, (MAX_TEXT_LEN, batch_ids))
+        """,
+            (MAX_TEXT_LEN, batch_ids),
+        )
         rows = cur.fetchall()
         # Maintain order
         row_dict = {r[0]: r[1] for r in rows}
@@ -123,10 +128,14 @@ def main():
         rate = processed / elapsed if elapsed > 0 else 0
         pct = processed / total * 100
         eta_min = (total - processed) / rate / 60 if rate > 0 else 0
-        log(f"  {processed:,}/{total:,} ({pct:.1f}%) | {rate:.0f}/sec | ETA: {eta_min:.0f}min | Err: {errors}")
+        log(
+            f"  {processed:,}/{total:,} ({pct:.1f}%) | {rate:.0f}/sec | ETA: {eta_min:.0f}min | Err: {errors}"
+        )
 
     elapsed = time.time() - t0
-    log(f"\nDone: {processed:,} in {elapsed/60:.0f}min ({processed/elapsed:.0f}/sec) | Errors: {errors}")
+    log(
+        f"\nDone: {processed:,} in {elapsed / 60:.0f}min ({processed / elapsed:.0f}/sec) | Errors: {errors}"
+    )
     conn.close()
 
 
