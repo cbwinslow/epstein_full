@@ -1,7 +1,7 @@
 # Data Gaps and Remaining Work
 
-> **Status:** Active tracking document  
-> **Created:** March 31, 2026  
+> **Status:** Active tracking document
+> **Created:** March 31, 2026
 > **Purpose:** Track what's downloaded vs loaded, identify gaps, plan remaining work
 
 ---
@@ -140,29 +140,29 @@ File: `migrations/002_views_and_validation.sql`
 
 ```sql
 -- Priority 1: Core relationships
-ALTER TABLE pages 
-    ADD CONSTRAINT fk_pages_documents 
+ALTER TABLE pages
+    ADD CONSTRAINT fk_pages_documents
     FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE;
 
-ALTER TABLE document_entities 
-    ADD CONSTRAINT fk_doc_entities_documents 
+ALTER TABLE document_entities
+    ADD CONSTRAINT fk_doc_entities_documents
     FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE;
 
-ALTER TABLE page_embeddings 
-    ADD CONSTRAINT fk_page_embeddings_pages 
+ALTER TABLE page_embeddings
+    ADD CONSTRAINT fk_page_embeddings_pages
     FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE;
 
-ALTER TABLE redactions 
-    ADD CONSTRAINT fk_redactions_documents 
+ALTER TABLE redactions
+    ADD CONSTRAINT fk_redactions_documents
     FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE;
 
 -- Priority 2: Supporting tables
-ALTER TABLE document_classification 
-    ADD CONSTRAINT fk_doc_class_documents 
+ALTER TABLE document_classification
+    ADD CONSTRAINT fk_doc_class_documents
     FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE;
 
-ALTER TABLE document_summary 
-    ADD CONSTRAINT fk_doc_summary_documents 
+ALTER TABLE document_summary
+    ADD CONSTRAINT fk_doc_summary_documents
     FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE;
 ```
 
@@ -221,8 +221,8 @@ WHERE NOT EXISTS (SELECT 1 FROM pages p WHERE p.id = pe.page_id);
 6. **Add unique constraints**
    ```sql
    -- Example
-   CREATE UNIQUE INDEX idx_unique_efta 
-   ON documents(efta_number) 
+   CREATE UNIQUE INDEX idx_unique_efta
+   ON documents(efta_number)
    WHERE efta_number IS NOT NULL;
    ```
 

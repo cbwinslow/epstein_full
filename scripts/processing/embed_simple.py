@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Minimal embedding generator - maximize GPU throughput."""
-import sys, time, signal, psycopg2, requests
+
+import signal
+import sys
+import time
+
+import psycopg2
+import requests
 from psycopg2.extras import execute_values
 
 DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
@@ -11,8 +17,8 @@ BATCH = 200
 MAX_TEXT = 200
 
 shutdown = False
-signal.signal(signal.SIGINT, lambda s,f: globals().__setitem__('shutdown', True))
-signal.signal(signal.SIGTERM, lambda s,f: globals().__setitem__('shutdown', True))
+signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__("shutdown", True))
+signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__("shutdown", True))
 
 conn = psycopg2.connect(DB_URL)
 cur = conn.cursor()
@@ -22,7 +28,9 @@ cur.execute(f"ALTER TABLE pages ADD COLUMN IF NOT EXISTS {COLUMN} vector({DIMS})
 conn.commit()
 
 # Count unembedded
-cur.execute(f"SELECT COUNT(*) FROM pages WHERE {COLUMN} IS NULL AND text_content IS NOT NULL AND length(text_content) > 10")
+cur.execute(
+    f"SELECT COUNT(*) FROM pages WHERE {COLUMN} IS NULL AND text_content IS NOT NULL AND length(text_content) > 10"
+)
 total = cur.fetchone()[0]
 print(f"Pages: {total:,} | Column: {COLUMN} | Dims: {DIMS}")
 if total == 0:
@@ -35,12 +43,15 @@ last_id = 0
 
 while not shutdown:
     # Read batch (keyset pagination - much faster than OFFSET)
-    cur.execute(f"""
+    cur.execute(
+        f"""
         SELECT id, LEFT(text_content, %s) FROM pages
         WHERE {COLUMN} IS NULL AND text_content IS NOT NULL AND length(text_content) > 10
           AND id > %s
         ORDER BY id LIMIT %s
-    """, (MAX_TEXT, last_id, BATCH))
+    """,
+        (MAX_TEXT, last_id, BATCH),
+    )
     rows = cur.fetchall()
     if not rows:
         break
@@ -70,7 +81,9 @@ while not shutdown:
             cur.execute("DROP TABLE IF EXISTS _tmp_emb")
             cur.execute(f"CREATE TEMP TABLE _tmp_emb (id INTEGER PRIMARY KEY, emb vector({DIMS}))")
             execute_values(cur, "INSERT INTO _tmp_emb (id, emb) VALUES %s", update_rows)
-            cur.execute(f"UPDATE pages SET {COLUMN} = te.emb FROM _tmp_emb te WHERE pages.id = te.id")
+            cur.execute(
+                f"UPDATE pages SET {COLUMN} = te.emb FROM _tmp_emb te WHERE pages.id = te.id"
+            )
             cur.execute("DROP TABLE _tmp_emb")
             conn.commit()
 
@@ -88,8 +101,10 @@ while not shutdown:
     rate = processed / elapsed if elapsed > 0 else 0
     eta = (total - processed) / rate / 3600 if rate > 0 else 0
     if processed % 1000 < BATCH:
-        print(f"  {processed:,}/{total:,} ({processed/total*100:.1f}%) | {rate:.0f}/sec | ETA: {eta:.1f}h | Err: {errors}")
+        print(
+            f"  {processed:,}/{total:,} ({processed / total * 100:.1f}%) | {rate:.0f}/sec | ETA: {eta:.1f}h | Err: {errors}"
+        )
 
 elapsed = time.time() - t0
-print(f"\nDone: {processed:,} in {elapsed/3600:.1f}h ({processed/elapsed:.0f}/sec)")
+print(f"\nDone: {processed:,} in {elapsed / 3600:.1f}h ({processed / elapsed:.0f}/sec)")
 conn.close()

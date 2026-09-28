@@ -47,7 +47,7 @@ check_postgres() {
 
 start_downloads() {
     log "Starting background downloads..."
-    
+
     # jmail emails download
     if [ ! -f "$DATA_ROOT/supplementary/emails-slim.parquet" ]; then
         log "Downloading jmail emails (38.8MB)..."
@@ -61,7 +61,7 @@ start_downloads() {
     else
         log "jmail emails already downloaded"
     fi
-    
+
     # jmail iMessages
     if [ ! -f "$DATA_ROOT/supplementary/imessage_conversations.parquet" ]; then
         log "Downloading jmail iMessage conversations..."
@@ -73,7 +73,7 @@ start_downloads() {
         ) &
         DOWNLOAD_PIDS+=("$!")
     fi
-    
+
     # jmail photos
     if [ ! -f "$DATA_ROOT/supplementary/photos.parquet" ]; then
         log "Downloading jmail photos metadata..."
@@ -85,26 +85,26 @@ start_downloads() {
         ) &
         DOWNLOAD_PIDS+=("$!")
     fi
-    
+
     log "Downloads started in background (PIDs: ${DOWNLOAD_PIDS[*]})"
 }
 
 start_ingestion() {
     log "Starting data ingestion..."
-    
+
     # Run Python unification script
     cd "$EPSTEIN_ROOT"
-    
+
     # Check if we have pandas for parquet processing
     if ! python3 -c "import pandas" 2>/dev/null; then
         warn "pandas not installed, installing..."
         pip install pandas pyarrow -q
     fi
-    
+
     # Start the unification process
     python3 scripts/master_unify.py --import-only 2>&1 | tee -a "$LOG_FILE" &
     INGESTION_PID=$!
-    
+
     echo $INGESTION_PID > "$PID_FILE"
     log "Ingestion started (PID: $INGESTION_PID)"
     log "Log file: $LOG_FILE"
@@ -112,7 +112,7 @@ start_ingestion() {
 
 show_status() {
     log "Checking process status..."
-    
+
     # Check downloads
     for pid in "${DOWNLOAD_PIDS[@]}"; do
         if kill -0 "$pid" 2>/dev/null; then
@@ -121,7 +121,7 @@ show_status() {
             log "Download PID $pid: COMPLETED"
         fi
     done
-    
+
     # Check ingestion
     if [ -f "$PID_FILE" ]; then
         pid=$(cat "$PID_FILE")
@@ -131,7 +131,7 @@ show_status() {
             log "Ingestion PID $pid: COMPLETED"
         fi
     fi
-    
+
     # Show recent log entries
     log "Recent progress:"
     tail -20 "$LOG_FILE" 2>/dev/null || log "No log entries yet"
@@ -139,7 +139,7 @@ show_status() {
 
 monitor_progress() {
     log "Starting progress monitor (Ctrl+C to stop)..."
-    
+
     while true; do
         clear
         echo "=========================================="
@@ -148,17 +148,17 @@ monitor_progress() {
         echo "Started: $TS"
         echo "Log: $LOG_FILE"
         echo ""
-        
+
         # Show process status
         echo "Active Processes:"
         ps aux | grep -E "(aria2c|master_unify)" | grep -v grep | while read line; do
             echo "  $line"
         done
-        
+
         echo ""
         echo "Recent Progress (last 30 lines):"
         tail -30 "$LOG_FILE" 2>/dev/null | tail -r | head -30 | tail -r
-        
+
         echo ""
         echo "Database Status:"
         PGPASSWORD=123qweasd psql -h localhost -U cbwinslow -d epstein -c "
@@ -172,10 +172,10 @@ monitor_progress() {
             UNION ALL
             SELECT 'jmail_emails: ' || COUNT(*) FROM jmail_emails
         " 2>/dev/null || echo "  (DB connection unavailable)"
-        
+
         echo ""
         echo "Press Ctrl+C to exit monitor. Processes continue in background."
-        
+
         sleep 5
     done
 }

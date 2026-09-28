@@ -27,13 +27,9 @@ def run_command(cmd: list, description: str) -> int:
     print(f"\n{'=' * 60}")
     print(f"Running: {description}")
     print(f"{'=' * 60}")
-    
+
     try:
-        result = subprocess.run(
-            cmd,
-            cwd=Path(__file__).parent.parent,
-            check=False
-        )
+        result = subprocess.run(cmd, cwd=Path(__file__).parent.parent, check=False)
         return result.returncode
     except KeyboardInterrupt:
         print("\n⚠️  Test run interrupted by user")
@@ -45,23 +41,20 @@ def run_command(cmd: list, description: str) -> int:
 
 def run_all_tests():
     """Run all tests."""
-    cmd = [
-        sys.executable, "-m", "pytest",
-        str(TEST_DIR),
-        "-v",
-        "--tb=short"
-    ]
+    cmd = [sys.executable, "-m", "pytest", str(TEST_DIR), "-v", "--tb=short"]
     return run_command(cmd, "All Tests")
 
 
 def run_unit_tests():
     """Run unit tests only."""
     cmd = [
-        sys.executable, "-m", "pytest",
+        sys.executable,
+        "-m",
+        "pytest",
         str(UNIT_TEST_DIR),
         "-v",
         "--tb=short",
-        "-x"  # Stop on first failure
+        "-x",  # Stop on first failure
     ]
     return run_command(cmd, "Unit Tests")
 
@@ -69,11 +62,14 @@ def run_unit_tests():
 def run_integration_tests():
     """Run integration tests."""
     cmd = [
-        sys.executable, "-m", "pytest",
+        sys.executable,
+        "-m",
+        "pytest",
         str(INTEGRATION_TEST_DIR),
         "-v",
         "--tb=short",
-        "-m", "integration"
+        "-m",
+        "integration",
     ]
     return run_command(cmd, "Integration Tests")
 
@@ -81,19 +77,21 @@ def run_integration_tests():
 def run_coverage():
     """Run tests with coverage report."""
     cmd = [
-        sys.executable, "-m", "pytest",
+        sys.executable,
+        "-m",
+        "pytest",
         str(TEST_DIR),
         "-v",
         "--tb=short",
         "--cov=media_acquisition",
         "--cov-report=html",
-        "--cov-report=term-missing"
+        "--cov-report=term-missing",
     ]
     code = run_command(cmd, "Tests with Coverage")
-    
+
     if code == 0:
-        print(f"\n✅ Coverage report generated: htmlcov/index.html")
-    
+        print("\n✅ Coverage report generated: htmlcov/index.html")
+
     return code
 
 
@@ -103,12 +101,12 @@ def run_ci_suite():
     code = run_unit_tests()
     if code != 0:
         return code
-    
+
     # Then run integration tests
     code = run_integration_tests()
     if code != 0:
         return code
-    
+
     # Finally run coverage
     return run_coverage()
 
@@ -116,10 +114,11 @@ def run_ci_suite():
 def setup_test_environment():
     """Setup test environment."""
     print("Setting up test environment...")
-    
+
     # Check if pytest is installed
     try:
         import pytest
+
         print(f"✓ pytest {pytest.__version__} installed")
     except ImportError:
         print("❌ pytest not installed. Installing test dependencies...")
@@ -127,7 +126,7 @@ def setup_test_environment():
         result = subprocess.run(cmd, cwd=Path(__file__).parent.parent)
         if result.returncode != 0:
             return False
-    
+
     # Setup test database
     setup_script = Path(__file__).parent / "setup_test_db.py"
     if setup_script.exists():
@@ -135,7 +134,7 @@ def setup_test_environment():
         result = subprocess.run([sys.executable, str(setup_script)])
         if result.returncode != 0:
             print("⚠️  Test database setup failed, continuing anyway...")
-    
+
     return True
 
 
@@ -151,36 +150,30 @@ Examples:
   %(prog)s integration  Run integration tests
   %(prog)s coverage     Run with coverage report
   %(prog)s ci           Run CI test suite
-        """
+        """,
     )
-    
+
     parser.add_argument(
         "command",
         nargs="?",
         default="all",
         choices=["all", "unit", "integration", "coverage", "ci"],
-        help="Test command to run (default: all)"
+        help="Test command to run (default: all)",
     )
-    
+
     parser.add_argument(
-        "--setup",
-        action="store_true",
-        help="Setup test environment before running tests"
+        "--setup", action="store_true", help="Setup test environment before running tests"
     )
-    
-    parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="Verbose output"
-    )
-    
+
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+
     args = parser.parse_args()
-    
+
     # Setup if requested
     if args.setup:
         if not setup_test_environment():
             return 1
-    
+
     # Run requested tests
     if args.command == "all":
         code = run_all_tests()
@@ -194,7 +187,7 @@ Examples:
         code = run_ci_suite()
     else:
         code = run_all_tests()
-    
+
     # Summary
     print(f"\n{'=' * 60}")
     if code == 0:
@@ -202,7 +195,7 @@ Examples:
     else:
         print(f"❌ Tests failed with exit code {code}")
     print(f"{'=' * 60}\n")
-    
+
     return code
 
 

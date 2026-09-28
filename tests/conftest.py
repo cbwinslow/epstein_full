@@ -3,32 +3,27 @@ Pytest configuration and fixtures for media acquisition tests.
 """
 
 import os
+import shutil
 import sys
 import tempfile
-import shutil
-from pathlib import Path
 from datetime import datetime
-from typing import Generator, AsyncGenerator, Optional
+from pathlib import Path
+from typing import Generator
 
 import pytest
 import pytest_asyncio
 
 # Add project root to path
-sys.path.insert(0, '/home/cbwinslow/workspace/epstein')
+sys.path.insert(0, "/home/cbwinslow/workspace/epstein")
 
-from media_acquisition.base import (
-    StorageManager, AgentConfig, NewsArticleURL, 
-    VideoMetadata, TaskResult
-)
+from media_acquisition.agents.collection.news import NewsCollector
 from media_acquisition.agents.discovery.news import NewsDiscoveryAgent
 from media_acquisition.agents.discovery.video import VideoDiscoveryAgent
-from media_acquisition.agents.collection.news import NewsCollector
-
+from media_acquisition.base import AgentConfig, NewsArticleURL, StorageManager
 
 # Database Configuration
 TEST_DATABASE_URL = os.getenv(
-    'TEST_DATABASE_URL',
-    'postgresql://cbwinslow:123qweasd@localhost:5432/epstein_test'
+    "TEST_DATABASE_URL", "postgresql://cbwinslow:123qweasd@localhost:5432/epstein_test"
 )
 
 
@@ -49,19 +44,14 @@ def temp_media_dir() -> Generator[Path, None, None]:
 @pytest.fixture(scope="function")
 def storage_manager(database_url: str, temp_media_dir: Path) -> StorageManager:
     """Create StorageManager for testing."""
-    return StorageManager(
-        connection_string=database_url,
-        base_path=str(temp_media_dir)
-    )
+    return StorageManager(connection_string=database_url, base_path=str(temp_media_dir))
 
 
 @pytest.fixture(scope="function")
 def agent_config() -> AgentConfig:
     """Create test agent configuration."""
     return AgentConfig(
-        agent_id="test-agent",
-        youtube_api_key="test_youtube_key",
-        newsapi_key="test_newsapi_key"
+        agent_id="test-agent", youtube_api_key="test_youtube_key", newsapi_key="test_newsapi_key"
     )
 
 
@@ -81,15 +71,15 @@ def mock_gdelt_response() -> dict:
                 "title": "Test Article About Epstein",
                 "seendate": "20240101120000",
                 "domain": "example.com",
-                "language": "en"
+                "language": "en",
             },
             {
                 "url": "https://example.com/article2",
                 "title": "Another Epstein Story",
                 "seendate": "20240102120000",
                 "domain": "example.com",
-                "language": "en"
-            }
+                "language": "en",
+            },
         ]
     }
 
@@ -105,7 +95,7 @@ def sample_news_article() -> NewsArticleURL:
         priority=5,
         keywords_matched=["Epstein"],
         discovery_method="test",
-        metadata={"author": "Test Author"}
+        metadata={"author": "Test Author"},
     )
 
 
@@ -122,7 +112,7 @@ def mock_youtube_response() -> list:
             "view_count": 100000,
             "upload_date": datetime.now(),
             "transcript_available": True,
-            "discovery_method": "youtube_api"
+            "discovery_method": "youtube_api",
         }
     ]
 
@@ -141,21 +131,20 @@ async def video_discovery_agent(agent_config: AgentConfig) -> VideoDiscoveryAgen
 
 
 @pytest_asyncio.fixture
-async def news_collector(agent_config: AgentConfig, storage_manager: StorageManager) -> NewsCollector:
+async def news_collector(
+    agent_config: AgentConfig, storage_manager: StorageManager
+) -> NewsCollector:
     """Create NewsCollector for testing."""
     return NewsCollector(agent_config, storage_manager)
 
 
 # Markers
 
+
 def pytest_configure(config):
     """Configure pytest markers."""
     config.addinivalue_line(
         "markers", "integration: mark test as integration test (requires database)"
     )
-    config.addinivalue_line(
-        "markers", "slow: mark test as slow running"
-    )
-    config.addinivalue_line(
-        "markers", "requires_api_key: mark test that requires API key"
-    )
+    config.addinivalue_line("markers", "slow: mark test as slow running")
+    config.addinivalue_line("markers", "requires_api_key: mark test that requires API key")

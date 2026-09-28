@@ -14,11 +14,13 @@ os.makedirs(LOG_DIR, exist_ok=True)
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
+    format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler(f"{LOG_DIR}/icij_download_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"),
-        logging.StreamHandler()
-    ]
+        logging.FileHandler(
+            f"{LOG_DIR}/icij_download_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        ),
+        logging.StreamHandler(),
+    ],
 )
 
 ICIJ_URLS = [
@@ -35,20 +37,22 @@ def download_icij():
     """Download ICIJ datasets using aria2c."""
     output_dir = f"{DATA_ROOT}/icij-data"
     os.makedirs(output_dir, exist_ok=True)
-    
+
     for url, name in ICIJ_URLS:
         logging.info(f"Downloading {name} from {url}")
-        
+
         cmd = [
             "aria2c",
-            "-d", output_dir,
-            "-o", f"{name}.zip",
+            "-d",
+            output_dir,
+            "-o",
+            f"{name}.zip",
             "--max-concurrent-downloads=4",
             "--split=16",
             "--continue=true",
-            url
+            url,
         ]
-        
+
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=7200)
             if result.returncode == 0:
@@ -63,7 +67,7 @@ def main():
     logging.info("=" * 60)
     logging.info("ICIJ OFFSHORE LEAKS DOWNLOAD")
     logging.info("=" * 60)
-    
+
     download_icij()
     logging.info("Complete")
 
