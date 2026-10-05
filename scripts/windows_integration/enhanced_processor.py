@@ -31,8 +31,9 @@ from surya.model.recognition.processor import load_processor as load_recognition
 from surya.ocr import run_ocr
 
 # Setup logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
 
 class EnhancedProcessor:
     def __init__(self):
@@ -45,7 +46,7 @@ class EnhancedProcessor:
     def load_config(self) -> Dict:
         """Load configuration."""
         config_path = Path(__file__).parent / "config_windows.json"
-        with open(config_path, 'r') as f:
+        with open(config_path, "r") as f:
             return json.load(f)
 
     def get_device(self) -> str:
@@ -65,10 +66,10 @@ class EnhancedProcessor:
         # Initialize Surya OCR models
         try:
             self.ocr_models = {
-                'detection_model': load_detection_model(),
-                'detection_processor': load_detection_processor(),
-                'recognition_model': load_recognition_model(),
-                'recognition_processor': load_recognition_processor()
+                "detection_model": load_detection_model(),
+                "detection_processor": load_detection_processor(),
+                "recognition_model": load_recognition_model(),
+                "recognition_processor": load_recognition_processor(),
             }
             logger.info("✅ Surya OCR models loaded")
         except Exception as e:
@@ -109,13 +110,15 @@ class EnhancedProcessor:
             page = doc.load_page(page_num)
             text = page.get_text()
 
-            text_content.append({
-                "page": page_num + 1,
-                "text": text,
-                "confidence": 1.0,  # PyMuPDF doesn't provide confidence
-                "method": "pymupdf",
-                "processing_time": 0.0
-            })
+            text_content.append(
+                {
+                    "page": page_num + 1,
+                    "text": text,
+                    "confidence": 1.0,  # PyMuPDF doesn't provide confidence
+                    "method": "pymupdf",
+                    "processing_time": 0.0,
+                }
+            )
 
         logger.info(f"✅ PyMuPDF extraction completed: {len(text_content)} pages")
         return text_content
@@ -142,12 +145,12 @@ class EnhancedProcessor:
             # Run OCR
             predictions = run_ocr(
                 [img],
-                [doc.language if hasattr(doc, 'language') else 'en'],
-                self.ocr_models['detection_model'],
-                self.ocr_models['detection_processor'],
-                self.ocr_models['recognition_model'],
-                self.ocr_models['recognition_processor'],
-                self.device
+                [doc.language if hasattr(doc, "language") else "en"],
+                self.ocr_models["detection_model"],
+                self.ocr_models["detection_processor"],
+                self.ocr_models["recognition_model"],
+                self.ocr_models["recognition_processor"],
+                self.device,
             )
 
             page_text = ""
@@ -163,14 +166,16 @@ class EnhancedProcessor:
             avg_confidence = total_confidence / confidence_count if confidence_count > 0 else 0.0
             processing_time = time.time() - start_time
 
-            text_content.append({
-                "page": page_num + 1,
-                "text": page_text.strip(),
-                "confidence": avg_confidence,
-                "method": "surya_ocr",
-                "processing_time": processing_time,
-                "word_count": len(page_text.split())
-            })
+            text_content.append(
+                {
+                    "page": page_num + 1,
+                    "text": page_text.strip(),
+                    "confidence": avg_confidence,
+                    "method": "surya_ocr",
+                    "processing_time": processing_time,
+                    "word_count": len(page_text.split()),
+                }
+            )
 
         logger.info(f"✅ Surya OCR completed: {len(text_content)} pages")
         return text_content
@@ -187,21 +192,21 @@ class EnhancedProcessor:
         total_entities = 0
 
         for page_data in text_content:
-            if not page_data['text'].strip():
+            if not page_data["text"].strip():
                 continue
 
-            doc = self.nlp(page_data['text'])
+            doc = self.nlp(page_data["text"])
 
             page_entities = []
             for ent in doc.ents:
                 entity_data = {
                     "text": ent.text,
                     "label": ent.label_,
-                    "page": page_data['page'],
+                    "page": page_data["page"],
                     "start": ent.start_char,
                     "end": ent.end_char,
                     "start_token": ent.start,
-                    "end_token": ent.end
+                    "end_token": ent.end,
                 }
                 page_entities.append(entity_data)
                 all_entities.append(entity_data)
@@ -214,9 +219,9 @@ class EnhancedProcessor:
     def analyze_document_quality(self, text_content: List[Dict]) -> Dict:
         """Analyze document quality metrics."""
         total_pages = len(text_content)
-        total_words = sum(page['word_count'] for page in text_content)
-        avg_confidence = np.mean([page['confidence'] for page in text_content])
-        processing_times = [page['processing_time'] for page in text_content]
+        total_words = sum(page["word_count"] for page in text_content)
+        avg_confidence = np.mean([page["confidence"] for page in text_content])
+        processing_times = [page["processing_time"] for page in text_content]
         avg_processing_time = np.mean(processing_times) if processing_times else 0
 
         quality_metrics = {
@@ -224,9 +229,9 @@ class EnhancedProcessor:
             "total_words": total_words,
             "avg_confidence": round(avg_confidence, 4),
             "avg_processing_time": round(avg_processing_time, 2),
-            "pages_with_text": sum(1 for page in text_content if page['text'].strip()),
+            "pages_with_text": sum(1 for page in text_content if page["text"].strip()),
             "avg_words_per_page": round(total_words / total_pages, 2) if total_pages > 0 else 0,
-            "ocr_method": text_content[0]['method'] if text_content else "unknown"
+            "ocr_method": text_content[0]["method"] if text_content else "unknown",
         }
 
         return quality_metrics
@@ -264,8 +269,14 @@ class EnhancedProcessor:
             logger.error(f"❌ Processing failed: {e}")
             return False
 
-    def save_results(self, pdf_path: str, text_content: List[Dict], entities: List[Dict],
-                    quality_metrics: Dict, output_dir: str):
+    def save_results(
+        self,
+        pdf_path: str,
+        text_content: List[Dict],
+        entities: List[Dict],
+        quality_metrics: Dict,
+        output_dir: str,
+    ):
         """Save processing results to JSON files."""
         base_name = Path(pdf_path).stem
 
@@ -275,33 +286,48 @@ class EnhancedProcessor:
 
         # Save OCR results
         ocr_file = proc_subdir / f"{base_name}_ocr.json"
-        with open(ocr_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "file": Path(pdf_path).name,
-                "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
-                "quality_metrics": quality_metrics,
-                "pages": text_content
-            }, f, indent=2, ensure_ascii=False)
+        with open(ocr_file, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "file": Path(pdf_path).name,
+                    "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "quality_metrics": quality_metrics,
+                    "pages": text_content,
+                },
+                f,
+                indent=2,
+                ensure_ascii=False,
+            )
 
         # Save entity results
         entity_file = proc_subdir / f"{base_name}_entities.json"
-        with open(entity_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "file": Path(pdf_path).name,
-                "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
-                "total_entities": len(entities),
-                "entities": entities
-            }, f, indent=2, ensure_ascii=False)
+        with open(entity_file, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "file": Path(pdf_path).name,
+                    "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "total_entities": len(entities),
+                    "entities": entities,
+                },
+                f,
+                indent=2,
+                ensure_ascii=False,
+            )
 
         # Save summary
         summary_file = proc_subdir / f"{base_name}_summary.json"
-        with open(summary_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "file": Path(pdf_path).name,
-                "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
-                "quality_metrics": quality_metrics,
-                "entity_summary": self.get_entity_summary(entities)
-            }, f, indent=2, ensure_ascii=False)
+        with open(summary_file, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "file": Path(pdf_path).name,
+                    "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "quality_metrics": quality_metrics,
+                    "entity_summary": self.get_entity_summary(entities),
+                },
+                f,
+                indent=2,
+                ensure_ascii=False,
+            )
 
         logger.info(f"📁 Results saved to: {proc_subdir}")
 
@@ -312,22 +338,22 @@ class EnhancedProcessor:
 
         entity_types = {}
         for entity in entities:
-            label = entity['label']
+            label = entity["label"]
             entity_types[label] = entity_types.get(label, 0) + 1
 
         return {
             "total": len(entities),
             "by_type": entity_types,
-            "top_types": sorted(entity_types.items(), key=lambda x: x[1], reverse=True)[:10]
+            "top_types": sorted(entity_types.items(), key=lambda x: x[1], reverse=True)[:10],
         }
 
     def run_processing_loop(self):
         """Main processing loop."""
         logger.info("🚀 Starting Enhanced Windows RTX 3060 processing worker...")
 
-        downloads_dir = self.config['local_paths']['downloads']
-        processing_dir = self.config['local_paths']['processing']
-        results_dir = self.config['local_paths']['results']
+        downloads_dir = self.config["local_paths"]["downloads"]
+        processing_dir = self.config["local_paths"]["processing"]
+        results_dir = self.config["local_paths"]["results"]
 
         while True:
             try:
@@ -370,10 +396,12 @@ class EnhancedProcessor:
                 logger.error(f"❌ Processing error: {e}")
                 time.sleep(60)
 
+
 def main():
     """Main function."""
     processor = EnhancedProcessor()
     processor.run_processing_loop()
+
 
 if __name__ == "__main__":
     main()

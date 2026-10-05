@@ -5,18 +5,15 @@ Uses multiprocessing for I/O parallelism + PostgreSQL COPY for fast inserts
 """
 
 import io
-import json
 import logging
 import multiprocessing as mp
 import os
 import time
 from datetime import datetime
-from pathlib import Path
 from typing import List, Tuple
 
 import pandas as pd
 import psycopg2
-from psycopg2.extras import RealDictCursor
 
 # Configuration
 DATA_ROOT = os.environ.get("EPSTEIN_DATA_ROOT", "/home/cbwinslow/workspace/epstein-data")
@@ -41,11 +38,8 @@ def setup_logging():
     log_file = f"{LOG_DIR}/parquet_parallel_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s [%(levelname)s] %(message)s',
-        handlers=[
-            logging.FileHandler(log_file),
-            logging.StreamHandler()
-        ]
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
     )
     return log_file
 
@@ -60,11 +54,11 @@ def process_file_to_buffer(file_path: str) -> Tuple[str, int, io.StringIO]:
 
         # Map parquet columns to table columns
         # HF parquet has: dataset_id, doc_id, file_name, text_content
-        if 'text_content' not in df.columns:
+        if "text_content" not in df.columns:
             return file_path, 0, None
 
-        df = df[df['text_content'].notna()]
-        df = df[df['text_content'].str.len() > 10]
+        df = df[df["text_content"].notna()]
+        df = df[df["text_content"].str.len() > 10]
 
         if len(df) == 0:
             return file_path, 0, None
@@ -72,9 +66,9 @@ def process_file_to_buffer(file_path: str) -> Tuple[str, int, io.StringIO]:
         # Create CSV buffer for COPY - match documents_content schema
         buffer = io.StringIO()
         for _, row in df.iterrows():
-            doc_id = str(row.get('doc_id', '')).replace('\t', ' ').replace('\n', ' ')
-            filename = str(row.get('file_name', '')).replace('\t', ' ').replace('\n', ' ')
-            content = str(row.get('text_content', '')).replace('\t', ' ').replace('\n', ' ')
+            doc_id = str(row.get("doc_id", "")).replace("\t", " ").replace("\n", " ")
+            filename = str(row.get("file_name", "")).replace("\t", " ").replace("\n", " ")
+            content = str(row.get("text_content", "")).replace("\t", " ").replace("\n", " ")
             char_count = len(content) if content else 0
             page_count = 1  # Default, could be extracted from metadata
 
@@ -111,10 +105,10 @@ def bulk_copy_to_postgres(files_batch: List[str], worker_id: int) -> Tuple[int, 
             with conn.cursor() as cur:
                 cur.copy_from(
                     buffer,
-                    'documents_content',
-                    columns=('efta_number', 'text_content', 'dataset', 'source_file'),
-                    sep='\t',
-                    null=''
+                    "documents_content",
+                    columns=("efta_number", "text_content", "dataset", "source_file"),
+                    sep="\t",
+                    null="",
                 )
                 conn.commit()
 
@@ -151,13 +145,12 @@ def parallel_process_parquet(parquet_dir: str, num_workers: int = NUM_WORKERS):
 
     # Split files among workers
     batch_size = (total_files + num_workers - 1) // num_workers
-    file_batches = [files[i:i + batch_size] for i in range(0, total_files, batch_size)]
+    file_batches = [files[i : i + batch_size] for i in range(0, total_files, batch_size)]
 
     # Process in parallel
     with mp.Pool(num_workers) as pool:
         results = pool.starmap(
-            bulk_copy_to_postgres,
-            [(batch, i) for i, batch in enumerate(file_batches)]
+            bulk_copy_to_postgres, [(batch, i) for i, batch in enumerate(file_batches)]
         )
 
     # Aggregate results
@@ -167,7 +160,9 @@ def parallel_process_parquet(parquet_dir: str, num_workers: int = NUM_WORKERS):
     elapsed = time.time() - start_time
     rate = total_rows / elapsed if elapsed > 0 else 0
 
-    logging.info(f"Complete: {total_files_done} files, {total_rows} rows in {elapsed:.1f}s ({rate:.0f} rows/sec)")
+    logging.info(
+        f"Complete: {total_files_done} files, {total_rows} rows in {elapsed:.1f}s ({rate:.0f} rows/sec)"
+    )
 
     return total_files_done, total_rows
 
@@ -196,5 +191,5 @@ def main():
 
 if __name__ == "__main__":
     # Required for multiprocessing
-    mp.set_start_method('spawn', force=True)
+    mp.set_start_method("spawn", force=True)
     exit(main())

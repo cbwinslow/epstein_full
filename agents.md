@@ -8,7 +8,7 @@ This directory contains AI assets that have been imported from the centralized A
 ### Skills Directory (`./skills/`)
 - **Symlinked Shared Skills**: These are symbolic links to the centralized shared skills
   - `cbw_rag` - Semantic search and file indexing
-  - `bitwarden` - Secure credential management  
+  - `bitwarden` - Secure credential management
   - `conversation_logging` - Automatic conversation logging
   - `letta_server` - Letta server health monitoring
   - `memory_sync` - Memory synchronization

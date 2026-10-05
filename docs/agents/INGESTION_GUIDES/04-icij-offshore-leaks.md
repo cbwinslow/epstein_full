@@ -1,10 +1,10 @@
 # Data Source: ICIJ Offshore Leaks
 
-> **Source:** https://offshoreleaks-data.icij.org/  
-> **Type:** Financial Data / Offshore Entities  
-> **License:** Open Database License (ODbL)  
-> **Status:** ✅ Complete (3.3M relationships imported)  
-> **Size:** ~600 MB extracted  
+> **Source:** https://offshoreleaks-data.icij.org/
+> **Type:** Financial Data / Offshore Entities
+> **License:** Open Database License (ODbL)
+> **Status:** ✅ Complete (3.3M relationships imported)
+> **Size:** ~600 MB extracted
 
 ---
 
@@ -94,17 +94,17 @@ tail -f /tmp/icij_import_v2.log
 #### icij_entities
 
 ```csv
-node_id, name, original_name, former_name, jurisdiction, 
-jurisdiction_description, company_type, address, internal_id, 
-incorporation_date, inactivation_date, struck_off_date, 
-dorm_date, status, service_provider, ibcRUC, country_codes, 
+node_id, name, original_name, former_name, jurisdiction,
+jurisdiction_description, company_type, address, internal_id,
+incorporation_date, inactivation_date, struck_off_date,
+dorm_date, status, service_provider, ibcRUC, country_codes,
 countries, sourceID, valid_until, note
 ```
 
 #### icij_relationships
 
 ```csv
-node_id_start, node_id_end, rel_type, link, status, 
+node_id_start, node_id_end, rel_type, link, status,
 start_date, end_date, sourceID
 ```
 
@@ -128,13 +128,13 @@ start_date, end_date, sourceID
 
 ```sql
 -- Find entities related to Epstein
-SELECT * FROM icij_entities 
+SELECT * FROM icij_entities
 WHERE name ILIKE '%epstein%'
 OR name ILIKE '%maxwell%'
 OR name ILIKE '%wexner%';
 
 -- Find officers related to Epstein network
-SELECT * FROM icij_officers 
+SELECT * FROM icij_officers
 WHERE name ILIKE '%epstein%'
 OR name ILIKE '%maxwell%';
 

@@ -75,7 +75,7 @@ echo "PHASE 2 COMPLETE: Downloading done"
 echo "========================================"
 
 # =========================================
-# PHASE 3: IMPORT ALL DATA TO POSTGRESQL  
+# PHASE 3: IMPORT ALL DATA TO POSTGRESQL
 # =========================================
 
 echo ""
@@ -85,8 +85,8 @@ echo "========================================"
 # Check what tables already exist
 echo "Checking existing PostgreSQL tables..."
 psql -d epstein -c "
-SELECT table_name FROM information_schema.tables 
-WHERE table_schema='public' 
+SELECT table_name FROM information_schema.tables
+WHERE table_schema='public'
 ORDER BY table_name;" 2>&1 | grep -E "congress|senate|sec_edgar|fbi|birthday|neo4j|black_book|flight" || echo "Some tables missing"
 
 # 1. Import Senate Vote Details (if downloaded)
@@ -132,7 +132,7 @@ fi
 echo ""
 echo "Verifying all PostgreSQL tables..."
 psql -d epstein -c "
-SELECT 
+SELECT
     'congress_senate_vote_details' as table,
     (SELECT COUNT(*) FROM congress_senate_vote_details) as records
 UNION ALL

@@ -8,19 +8,22 @@ tracking stored in PostgreSQL for crash/resume safety.
 
 from __future__ import annotations
 
-import json
 import logging
 import signal
-import sys
 import time
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Iterator
 
 import psycopg2
 import torch
 from rich.console import Console
-from rich.progress import BarColumn, MofNCompleteColumn, Progress, SpinnerColumn, TextColumn, TimeElapsedColumn, TimeRemainingColumn
+from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    TimeElapsedColumn,
+    TimeRemainingColumn,
+)
 from sentence_transformers import SentenceTransformer
 
 # PostgreSQL connection
@@ -29,7 +32,7 @@ DB_CONFIG = {
     "port": 5432,
     "database": "epstein",
     "user": "cbwinslow",
-    "password": "123qweasd"
+    "password": "123qweasd",
 }
 
 # Settings
@@ -66,21 +69,21 @@ def get_embedding_stats() -> dict:
     """Get current embedding statistics."""
     conn = get_connection()
     cur = conn.cursor()
-    
+
     cur.execute("SELECT COUNT(*) FROM pages")
     total_pages = cur.fetchone()[0]
-    
+
     cur.execute("SELECT COUNT(*) FROM page_embeddings")
     embedded_pages = cur.fetchone()[0]
-    
+
     cur.close()
     conn.close()
-    
+
     return {
         "total_pages": total_pages,
         "embedded_pages": embedded_pages,
         "remaining_pages": total_pages - embedded_pages,
-        "percent_complete": (embedded_pages / total_pages * 100) if total_pages > 0 else 0
+        "percent_complete": (embedded_pages / total_pages * 100) if total_pages > 0 else 0,
     }
 
 
@@ -88,8 +91,9 @@ def get_unembedded_pages(limit: int = MAX_PAGES_PER_BATCH) -> list[tuple]:
     """Fetch pages that don't have embeddings yet."""
     conn = get_connection()
     cur = conn.cursor()
-    
-    cur.execute("""
+
+    cur.execute(
+        """
         SELECT p.id, p.efta_number, p.page_number, p.text_content
         FROM pages p
         LEFT JOIN page_embeddings pe ON p.id = pe.page_id
@@ -98,12 +102,14 @@ def get_unembedded_pages(limit: int = MAX_PAGES_PER_BATCH) -> list[tuple]:
           AND LENGTH(p.text_content) > 10
         ORDER BY p.id
         LIMIT %s
-    """, (limit,))
-    
+    """,
+        (limit,),
+    )
+
     results = cur.fetchall()
     cur.close()
     conn.close()
-    
+
     return results
 
 
@@ -111,7 +117,7 @@ def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = 100) -> l
     """Split text into overlapping chunks."""
     if not text or len(text) <= chunk_size:
         return [text] if text else []
-    
+
     chunks = []
     start = 0
     while start < len(text):
@@ -120,7 +126,7 @@ def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = 100) -> l
         if end < len(text):
             # Look for sentence break
             for i in range(end, max(start + chunk_size // 2, end - 200), -1):
-                if i < len(text) and text[i] in '.!?':
+                if i < len(text) and text[i] in ".!?":
                     end = i + 1
                     break
             else:
@@ -129,12 +135,12 @@ def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = 100) -> l
                     if i < len(text) and text[i].isspace():
                         end = i
                         break
-        
+
         chunks.append(text[start:end].strip())
         start = end - overlap
         if start >= len(text):
             break
-    
+
     return [c for c in chunks if c]
 
 
@@ -142,15 +148,12 @@ def generate_embeddings_batch(texts: list[str], model: SentenceTransformer) -> l
     """Generate embeddings for a batch of texts."""
     if not texts:
         return []
-    
+
     # Generate embeddings
     embeddings = model.encode(
-        texts,
-        batch_size=BATCH_SIZE,
-        show_progress_bar=False,
-        convert_to_numpy=True
+        texts, batch_size=BATCH_SIZE, show_progress_bar=False, convert_to_numpy=True
     )
-    
+
     return embeddings.tolist()
 
 
@@ -158,14 +161,14 @@ def insert_embeddings_batch(records: list[tuple]) -> int:
     """Insert embeddings into PostgreSQL."""
     if not records:
         return 0
-    
+
     conn = get_connection()
     cur = conn.cursor()
-    
+
     try:
         # Use execute_values for batch insert with ON CONFLICT
         from psycopg2.extras import execute_values
-        
+
         execute_values(
             cur,
             """
@@ -178,7 +181,7 @@ def insert_embeddings_batch(records: list[tuple]) -> int:
                 chunk_text = EXCLUDED.chunk_text,
                 created_at = EXCLUDED.created_at
             """,
-            records
+            records,
         )
         conn.commit()
         return len(records)
@@ -194,45 +197,40 @@ def insert_embeddings_batch(records: list[tuple]) -> int:
 def process_pages_batch(pages: list[tuple], model: SentenceTransformer) -> int:
     """Process a batch of pages and generate embeddings."""
     records = []
-    
+
     for page_id, efta_number, page_number, text_content in pages:
         if shutdown_requested:
             break
-        
+
         if not text_content or len(text_content) < 10:
             continue
-        
+
         # Chunk the text
         chunks = chunk_text(text_content)
         if not chunks:
             continue
-        
+
         # For pages, we store the full page text as a single chunk
         # or average multiple chunks if needed
         if len(chunks) == 1:
             # Single chunk - embed directly
             embedding = generate_embeddings_batch([chunks[0]], model)[0]
-            records.append((
-                page_id,
-                embedding,
-                0,  # chunk_index
-                1,  # total_chunks
-                chunks[0][:1000],  # truncated chunk_text
-                int(time.time())
-            ))
+            records.append(
+                (
+                    page_id,
+                    embedding,
+                    0,  # chunk_index
+                    1,  # total_chunks
+                    chunks[0][:1000],  # truncated chunk_text
+                    int(time.time()),
+                )
+            )
         else:
             # Multiple chunks - embed each and store first (or average)
             # For simplicity, store first chunk's embedding
             embedding = generate_embeddings_batch([chunks[0]], model)[0]
-            records.append((
-                page_id,
-                embedding,
-                0,
-                len(chunks),
-                chunks[0][:1000],
-                int(time.time())
-            ))
-    
+            records.append((page_id, embedding, 0, len(chunks), chunks[0][:1000], int(time.time())))
+
     # Insert all records
     if records and not shutdown_requested:
         return insert_embeddings_batch(records)
@@ -245,31 +243,33 @@ def run_embedding_generation():
     console.print(f"Model: {MODEL_NAME}")
     console.print(f"Device: {DEVICE}")
     console.print()
-    
+
     # Get current stats
     stats = get_embedding_stats()
-    console.print(f"[bold]Current Status:[/bold]")
+    console.print("[bold]Current Status:[/bold]")
     console.print(f"  Total pages: {stats['total_pages']:,}")
     console.print(f"  Embedded: {stats['embedded_pages']:,} ({stats['percent_complete']:.1f}%)")
     console.print(f"  Remaining: {stats['remaining_pages']:,}")
     console.print()
-    
-    if stats['remaining_pages'] == 0:
+
+    if stats["remaining_pages"] == 0:
         console.print("[green]All pages already have embeddings![/green]")
         return
-    
+
     # Load model
     console.print(f"[bold]Loading model {MODEL_NAME}...[/bold]")
     model = SentenceTransformer(MODEL_NAME, device=DEVICE, trust_remote_code=True)
-    console.print(f"[green]Model loaded. Embedding dim: {model.get_sentence_embedding_dimension()}[/green]")
+    console.print(
+        f"[green]Model loaded. Embedding dim: {model.get_sentence_embedding_dimension()}[/green]"
+    )
     console.print()
-    
+
     # Progress tracking
-    total_embedded = stats['embedded_pages']
-    total_remaining = stats['remaining_pages']
+    total_embedded = stats["embedded_pages"]
+    total_remaining = stats["remaining_pages"]
     pages_processed = 0
     start_time = time.time()
-    
+
     with Progress(
         SpinnerColumn(),
         TextColumn("[bold blue]{task.description}"),
@@ -277,25 +277,25 @@ def run_embedding_generation():
         MofNCompleteColumn(),
         TimeElapsedColumn(),
         TimeRemainingColumn(),
-        console=console
+        console=console,
     ) as progress:
         task = progress.add_task("Generating embeddings", total=total_remaining)
-        
+
         while not shutdown_requested:
             # Fetch batch of unembedded pages
             pages = get_unembedded_pages(MAX_PAGES_PER_BATCH)
-            
+
             if not pages:
                 console.print("[green]No more pages to process![/green]")
                 break
-            
+
             # Process batch
             embedded_count = process_pages_batch(pages, model)
             pages_processed += len(pages)
-            
+
             # Update progress
             progress.update(task, advance=len(pages))
-            
+
             # Log progress every 1000 pages
             if pages_processed % 1000 == 0:
                 elapsed = time.time() - start_time
@@ -305,19 +305,21 @@ def run_embedding_generation():
                     f"({rate:.1f} pages/sec) - "
                     f"{total_embedded + pages_processed:,} total embedded[/dim]"
                 )
-    
+
     # Final stats
     final_stats = get_embedding_stats()
     elapsed = time.time() - start_time
-    
+
     console.print()
     console.print("[bold green]Embedding generation complete![/bold green]")
     console.print(f"  Pages processed this run: {pages_processed:,}")
     console.print(f"  Total embedded: {final_stats['embedded_pages']:,}")
     console.print(f"  Remaining: {final_stats['remaining_pages']:,}")
     console.print(f"  Percent complete: {final_stats['percent_complete']:.1f}%")
-    console.print(f"  Time elapsed: {elapsed/60:.1f} minutes")
-    console.print(f"  Average rate: {pages_processed/elapsed:.1f} pages/sec" if elapsed > 0 else "  N/A")
+    console.print(f"  Time elapsed: {elapsed / 60:.1f} minutes")
+    console.print(
+        f"  Average rate: {pages_processed / elapsed:.1f} pages/sec" if elapsed > 0 else "  N/A"
+    )
 
 
 if __name__ == "__main__":

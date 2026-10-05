@@ -11,13 +11,11 @@ Usage:
 import argparse
 import json
 import sys
-from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
 import psycopg2
 import psycopg2.extras
-
 
 # PostgreSQL connection
 PG_DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
@@ -150,7 +148,7 @@ def prepare_row(row):
         msg_idx = None
     else:
         msg_idx = str(msg_idx)  # Convert to string to handle both INT and UUID
-    
+
     return (
         str(row["id"]),
         safe_str(row.get("doc_id"), 200),
@@ -330,7 +328,9 @@ def main():
             print_summary(conn)
             return
 
-        inserted, skipped, errors = import_emails(df, conn, dry_run=args.dry_run, batch_size=args.batch_size)
+        inserted, skipped, errors = import_emails(
+            df, conn, dry_run=args.dry_run, batch_size=args.batch_size
+        )
 
         if not args.dry_run:
             print("Creating indexes...")
