@@ -4,8 +4,8 @@ Simple downloader for Epstein datasets
 """
 
 import os
-import urllib.request
 import ssl
+import urllib.request
 
 DATA_ROOT = "/home/cbwinslow/workspace/epstein-data/icij-data"
 os.makedirs(DATA_ROOT, exist_ok=True)
@@ -18,7 +18,10 @@ ssl_context.verify_mode = ssl.CERT_NONE
 urls = [
     ("https://offshoreleaks-data.icij.org/offshore_leaks_csv.2022-11-15.zip", "offshore-leaks.zip"),
     ("https://offshoreleaks-data.icij.org/panama_papers_csv.2022-05-01.zip", "panama-papers.zip"),
-    ("https://offshoreleaks-data.icij.org/paradise_papers_csv.2017-11-05.zip", "paradise-papers.zip"),
+    (
+        "https://offshoreleaks-data.icij.org/paradise_papers_csv.2017-11-05.zip",
+        "paradise-papers.zip",
+    ),
 ]
 
 for url, filename in urls:
@@ -26,7 +29,7 @@ for url, filename in urls:
     if os.path.exists(output_path):
         print(f"Already exists: {filename}")
         continue
-    
+
     print(f"Downloading {filename}...")
     try:
         urllib.request.urlretrieve(url, output_path)

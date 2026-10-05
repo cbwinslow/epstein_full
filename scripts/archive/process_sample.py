@@ -19,7 +19,7 @@ def process_pdf(pdf_path, nlp):
     """Process a single PDF file - extract text and entities."""
     try:
         doc = fitz.open(pdf_path)
-        text = ''
+        text = ""
         page_count = min(10, len(doc))  # Process up to 10 pages
 
         for page_num in range(page_count):
@@ -39,13 +39,15 @@ def process_pdf(pdf_path, nlp):
         entity_counts = defaultdict(int)
 
         for ent in doc_nlp.ents:
-            if ent.label_ in ['PERSON', 'ORG', 'GPE', 'DATE', 'MONEY', 'CARDINAL']:
-                entities.append({
-                    'text': ent.text,
-                    'label': ent.label_,
-                    'start': ent.start_char,
-                    'end': ent.end_char
-                })
+            if ent.label_ in ["PERSON", "ORG", "GPE", "DATE", "MONEY", "CARDINAL"]:
+                entities.append(
+                    {
+                        "text": ent.text,
+                        "label": ent.label_,
+                        "start": ent.start_char,
+                        "end": ent.end_char,
+                    }
+                )
                 entity_counts[ent.label_] += 1
 
         return text, len(text), page_count, entities
@@ -54,6 +56,7 @@ def process_pdf(pdf_path, nlp):
         print(f"Error processing {pdf_path}: {e}")
         return None, 0, 0, []
 
+
 def main():
     """Main processing function."""
     print("Epstein Files - Sample Processing Pipeline")
@@ -61,22 +64,22 @@ def main():
 
     # Load spaCy model
     try:
-        nlp = spacy.load('en_core_web_sm')
+        nlp = spacy.load("en_core_web_sm")
         print("✓ spaCy model loaded successfully")
     except Exception as e:
         print(f"✗ spaCy model error: {e}")
         return
 
     # Configuration
-    pdf_dir = '/home/cbwinslow/workspace/epstein-data/raw-files/data9/'
+    pdf_dir = "/home/cbwinslow/workspace/epstein-data/raw-files/data9/"
     sample_size = 20  # Process 20 files for demonstration
-    output_dir = '/home/cbwinslow/workspace/epstein/processed_sample/'
+    output_dir = "/home/cbwinslow/workspace/epstein/processed_sample/"
 
     # Create output directory
     os.makedirs(output_dir, exist_ok=True)
 
     # Get sample files
-    pdf_files = [f for f in os.listdir(pdf_dir) if f.endswith('.pdf')]
+    pdf_files = [f for f in os.listdir(pdf_dir) if f.endswith(".pdf")]
     sample_files = pdf_files[:sample_size]
 
     print(f"Processing {len(sample_files)} PDF files...")
@@ -111,22 +114,24 @@ def main():
         total_entities += len(entities)
 
         for entity in entities:
-            entity_type_counts[entity['label']] += 1
+            entity_type_counts[entity["label"]] += 1
 
         # Save results
         result = {
-            'filename': pdf_file,
-            'char_count': char_count,
-            'page_count': page_count,
-            'processing_time': processing_time,
-            'entities': entities,
-            'sample_text': text[:500] if text else ""
+            "filename": pdf_file,
+            "char_count": char_count,
+            "page_count": page_count,
+            "processing_time": processing_time,
+            "entities": entities,
+            "sample_text": text[:500] if text else "",
         }
 
         results.append(result)
 
         # Print progress
-        print(f"{i:2d}/{len(sample_files):2d} {pdf_file}: {char_count:6d} chars, {len(entities):3d} entities ({processing_time:.2f}s)")
+        print(
+            f"{i:2d}/{len(sample_files):2d} {pdf_file}: {char_count:6d} chars, {len(entities):3d} entities ({processing_time:.2f}s)"
+        )
 
     print()
     print("Processing Summary:")
@@ -134,7 +139,7 @@ def main():
     print(f"Files processed: {len(results)}/{len(sample_files)}")
     print(f"Total characters: {total_chars:,}")
     print(f"Total entities: {total_entities}")
-    print(f"Average processing time: {sum(processing_times)/len(processing_times):.2f}s")
+    print(f"Average processing time: {sum(processing_times) / len(processing_times):.2f}s")
     print()
 
     print("Entity Type Distribution:")
@@ -143,8 +148,8 @@ def main():
         print(f"  {entity_type:10s}: {count:4d}")
 
     # Save detailed results
-    output_file = os.path.join(output_dir, 'processing_results.json')
-    with open(output_file, 'w') as f:
+    output_file = os.path.join(output_dir, "processing_results.json")
+    with open(output_file, "w") as f:
         json.dump(results, f, indent=2)
 
     print(f"\\nDetailed results saved to: {output_file}")
@@ -154,7 +159,7 @@ def main():
     print("-" * 20)
     sample_entities = []
     for result in results:
-        for entity in result['entities'][:3]:  # Show first 3 entities per file
+        for entity in result["entities"][:3]:  # Show first 3 entities per file
             sample_entities.append(f"{entity['text']} ({entity['label']})")
         if len(sample_entities) >= 15:
             break
@@ -163,6 +168,7 @@ def main():
         print(f"  {entity}")
 
     print(f"\\n✓ Processing complete! Processed {len(results)} files successfully.")
+
 
 if __name__ == "__main__":
     main()

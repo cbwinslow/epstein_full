@@ -58,7 +58,7 @@ python scripts/populate_file_registry.py --report-only
 ### Procedure 2: Cross-Reference Validation
 ```sql
 -- Documents with files
-SELECT COUNT(DISTINCT d.efta_number) 
+SELECT COUNT(DISTINCT d.efta_number)
 FROM documents d
 JOIN file_registry r ON d.efta_number = r.efta_number;
 
@@ -69,11 +69,11 @@ LEFT JOIN file_registry r ON d.efta_number = r.efta_number
 WHERE r.efta_number IS NULL;
 
 -- Duplicate hashes (same file, multiple EFTA numbers)
-SELECT sha256_hash, COUNT(*) as count, 
+SELECT sha256_hash, COUNT(*) as count,
        STRING_AGG(efta_number, ', ') as efta_numbers
-FROM file_registry 
+FROM file_registry
 WHERE sha256_hash IS NOT NULL
-GROUP BY sha256_hash 
+GROUP BY sha256_hash
 HAVING COUNT(*) > 1;
 ```
 
@@ -81,20 +81,21 @@ HAVING COUNT(*) > 1;
 ```python
 # Check PDF header
 def is_valid_pdf(file_path):
-    with open(file_path, 'rb') as f:
-        return f.read(5) == b'%PDF-'
+    with open(file_path, "rb") as f:
+        return f.read(5) == b"%PDF-"
+
 
 # Check for HTML corruption (HTML saved as PDF)
 def header_is_html(file_path):
-    with open(file_path, 'rb') as f:
+    with open(file_path, "rb") as f:
         header = f.read(100).lower()
-        return b'<html' in header or b'<!doctype' in header
+        return b"<html" in header or b"<!doctype" in header
 ```
 
 ### Procedure 4: Database Consistency Check
 ```sql
 -- Table row counts vs expected
-SELECT 
+SELECT
     'documents' as table_name, COUNT(*) as row_count FROM documents
 UNION ALL
 SELECT 'file_registry', COUNT(*) FROM file_registry
@@ -188,19 +189,19 @@ CREATE TABLE letta_agent_context (
 ### Memory Retrieval Patterns
 ```python
 # By type and tags
-SELECT * FROM letta_memories 
-WHERE memory_type = 'processing_status' 
+SELECT * FROM letta_memories
+WHERE memory_type = 'processing_status'
 AND tags @> ARRAY['dataset8', 'completed'];
 
 # Semantic search (using pg_trgm or embeddings)
 SELECT *, similarity(content, 'file verification') as score
-FROM letta_memories 
+FROM letta_memories
 WHERE content % 'file verification'
 ORDER BY score DESC;
 
 # Agent context retrieval
-SELECT context_key, context_value 
-FROM letta_agent_context 
+SELECT context_key, context_value
+FROM letta_agent_context
 WHERE agent_name = 'epstein_processor';
 ```
 
@@ -302,11 +303,11 @@ CREATE TABLE file_registry (
 ```python
 # Typical memory allocation per worker
 worker_memory = {
-    'hash_context': '1KB',
-    'file_buffer': '64KB',
-    'metadata_object': '1KB',
-    'total_per_worker': '~66KB',
-    'total_38_workers': '~2.5MB'
+    "hash_context": "1KB",
+    "file_buffer": "64KB",
+    "metadata_object": "1KB",
+    "total_per_worker": "~66KB",
+    "total_38_workers": "~2.5MB",
 }
 ```
 
@@ -322,16 +323,16 @@ worker_memory = {
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2026-03-23  
-**Author**: Epstein Files Analysis Project  
+**Document Version**: 1.0
+**Last Updated**: 2026-03-23
+**Author**: Epstein Files Analysis Project
 **Status**: Active Verification Procedures## Critical Finding: OCR Already Complete (Added 2026-03-23)
 
 OCR processing is **redundant** - already completed by upstream sources.
 
 ### Evidence:
 1. **full_text_corpus.db**: 2,892,730 pages of OCR text for 1,397,796 EFTA numbers
-2. **hf-parquet files**: 318GB pre-extracted text in text_content column  
+2. **hf-parquet files**: 318GB pre-extracted text in text_content column
 3. **PostgreSQL pages table**: 2,892,730 pages already migrated
 4. **documents_content table**: Empty, needs population from hf-parquet
 
@@ -344,7 +345,7 @@ OCR processing is **redundant** - already completed by upstream sources.
 ### Conclusion:
 **DO NOT run OCR on PDFs again.** Instead:
 1. Populate documents_content table from hf-parquet text_content
-2. Use existing OCR text for NER and entity extraction  
+2. Use existing OCR text for NER and entity extraction
 3. Cross-reference with file registry to verify coverage
 
 This saves weeks of GPU processing time.
@@ -504,7 +505,7 @@ PGPASSWORD=123qweasd psql -h localhost -U cbwinslow -d epstein -c "SELECT memory
 ### Integration with Letta Memory System
 The NER extraction script updates agent context with:
 - Documents processed count
-- Entities extracted count  
+- Entities extracted count
 - Processing timestamp
 - Current batch information
 
@@ -587,4 +588,3 @@ letta archival-search agent-1167f15a-a10a-4595-b962-ec0f372aae0d "Epstein projec
 - `scripts/log_conversation.py` - Easy access wrapper
 - `docs/verification_procedures.md` - Updated with new system
 - Memory archives in `~/.conversation_logger/archives/`
-

@@ -10,12 +10,12 @@ Usage:
     python sync_to_letta_server.py --agent agent-1167f15a-a10a-4595-b962-ec0f372aae0d
 """
 
-import sys
-import os
-import json
-import subprocess
 import argparse
-from typing import List, Dict, Tuple
+import json
+import os
+import subprocess
+import sys
+from typing import Dict, List, Tuple
 
 # Add scripts directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -54,7 +54,7 @@ def fetch_custom_memories() -> List[Dict]:
         with conn.cursor() as cur:
             cur.execute("""
                 SELECT id, memory_type, title, content, metadata, tags, created_at
-                FROM letta_memories 
+                FROM letta_memories
                 ORDER BY created_at ASC
             """)
 
@@ -184,18 +184,18 @@ def save_conversation_to_letta(agent_id: str, conversation_file: str) -> bool:
 
         summary = f"""
         CONVERSATION LOG: {title}
-        
+
         Session: {os.path.basename(conversation_file)}
         Assistant messages: {assistant_messages}
         User messages: {user_messages}
         Total length: {len(content):,} characters
-        
+
         Key topics discussed:
         - Epstein files analysis project
         - File registry and text content population
         - NER entity extraction
         - Letta memory system integration
-        
+
         Status at end:
         - NER extraction: In progress (4.5%)
         - Text content: Complete (98.8% coverage)
@@ -230,7 +230,7 @@ def main():
     args = parser.parse_args()
 
     agent_id = get_agent_id(args.agent)
-    print(f"🧠 Syncing to Letta Server")
+    print("🧠 Syncing to Letta Server")
     print(f"   Agent: {args.agent} ({agent_id})")
     print("=" * 60)
 
@@ -262,27 +262,27 @@ def main():
                 # Update persona for important memories
                 if not persona_updated and update_agent_persona(agent_id, memory):
                     persona_updated = True
-                    print(f"  📝 Updated agent persona")
+                    print("  📝 Updated agent persona")
             else:
                 print(f"  ❌ Failed: {memory['title'][:50]}...")
 
     # Step 3: Save conversation log if provided
     if args.conversation:
-        print(f"\n📝 Saving conversation log...")
+        print("\n📝 Saving conversation log...")
         if not args.dry_run:
             save_conversation_to_letta(agent_id, args.conversation)
 
     # Summary
     print("\n" + "=" * 60)
-    print(f"📊 SYNC COMPLETE")
+    print("📊 SYNC COMPLETE")
     print(f"   ✅ Successfully synced: {success_count}/{len(memories)}")
     print(f"   📝 Agent persona updated: {'Yes' if persona_updated else 'No'}")
     print(f"   🤖 Agent ID: {agent_id}")
 
     # Show how to verify
-    print(f"\n🔍 To verify memories in Letta server:")
+    print("\n🔍 To verify memories in Letta server:")
     print(f'   letta archival-search {agent_id} "Epstein"')
-    print(f"   letta agents  # View all agents")
+    print("   letta agents  # View all agents")
     print(f'   letta send {agent_id} "What do you know about the Epstein project?"')
 
 

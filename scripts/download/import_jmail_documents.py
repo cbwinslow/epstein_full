@@ -8,15 +8,12 @@ Usage:
 """
 
 import argparse
-import json
 import sys
-from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
 import psycopg2
 import psycopg2.extras
-
 
 # PostgreSQL connection
 PG_DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
@@ -255,7 +252,9 @@ def main():
             print_summary(conn)
             return
 
-        inserted, skipped, errors = import_documents(df, conn, dry_run=args.dry_run, batch_size=args.batch_size)
+        inserted, skipped, errors = import_documents(
+            df, conn, dry_run=args.dry_run, batch_size=args.batch_size
+        )
 
         if not args.dry_run:
             print("Creating indexes...")

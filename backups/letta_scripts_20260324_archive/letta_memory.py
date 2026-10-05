@@ -402,7 +402,7 @@ def initialize_epstein_memories():
         title="Epstein Files Project Overview",
         content="""
         The Epstein Files Analysis Project is a comprehensive investigation into the Jeffrey Epstein case documents.
-        
+
         Key Components:
         - 268,000+ PDF documents from DOJ datasets
         - PostgreSQL database with 1.39M+ documents
@@ -410,7 +410,7 @@ def initialize_epstein_memories():
         - Entity extraction for people, organizations, locations, dates, financial data
         - Knowledge graph with 606+ entities and 2,300+ relationships
         - Multiple pre-built databases with specialized analysis
-        
+
         Processing Pipeline:
         1. Download datasets from DOJ website
         2. OCR extraction using PyMuPDF (text layer) and Surya (scanned pages)
@@ -418,7 +418,7 @@ def initialize_epstein_memories():
         4. Storage in PostgreSQL with FTS5 full-text search
         5. Knowledge graph building and relationship analysis
         6. Cross-referencing with pre-built databases
-        
+
         Current Status:
         - Dataset 8: 1000 files processed (2.4M pages, 3.1M characters, 47,901 entities)
         - PostgreSQL database: 1.39M documents
@@ -434,19 +434,19 @@ def initialize_epstein_memories():
         title="Current Processing Status",
         content="""
         Processing Pipeline Status:
-        
+
         ✅ Completed:
         - Dataset 8: 1000/1000 files processed (100%)
         - OCR extraction: All pages processed
         - Entity extraction: 47,901 entities identified
         - PostgreSQL integration: Documents_content table created
         - Memory system: Letta memory management active
-        
+
         🔄 In Progress:
         - Remaining datasets: 1-7, 9-10 (267K+ files remaining)
         - Full-scale processing: Ready to scale infrastructure
         - Cross-database integration: Linking with pre-built databases
-        
+
         📊 Statistics:
         - Total pages processed: 2,477
         - Total characters extracted: 3,142,201
@@ -457,7 +457,7 @@ def initialize_epstein_memories():
           - DATE: 8,345
           - CARDINAL: 12,339
           - MONEY: 639
-        
+
         🎯 Next Steps:
         1. Scale processing to remaining datasets
         2. Integrate with pre-built knowledge graphs
@@ -473,33 +473,33 @@ def initialize_epstein_memories():
         title="Technical Architecture",
         content="""
         System Architecture:
-        
+
         Infrastructure:
         - Ubuntu 24.04 LTS server
         - Python 3.12 with uv package manager
         - PostgreSQL 16 database (epstein)
         - 3 GPUs: 2x Tesla K80, 1x Tesla K40m
         - 128GB RAM, 1TB NVMe storage
-        
+
         Processing Pipeline:
         - OCR Backend: PyMuPDF (instant), Surya (GPU-accelerated), Docling (fallback)
         - NER: spaCy en_core_web_sm, GLiNER zero-shot, regex patterns
         - Storage: PostgreSQL with FTS5, pgvector for embeddings
         - Processing: Multi-threaded with 8 workers, chunked memory management
-        
+
         Database Schema:
         - documents: Core document metadata (1.39M records)
         - entities: Named entities with source references
         - documents_content: OCR text content and processing metadata
         - relationships: Entity relationships and co-occurrence data
         - letta_memories: Project knowledge and context
-        
+
         Integration Points:
         - Epstein-Pipeline: CLI tools for processing
         - Epstein-research-data: Pre-built analysis databases
         - epstein-ripper: DOJ download automation
         - Letta: Memory management and agent context
-        
+
         Performance:
         - Processing speed: ~0.97 seconds per file
         - Memory management: 50-page chunks for large documents
@@ -542,7 +542,7 @@ def initialize_epstein_memories():
         - documents_content: OCR text and processing metadata
         - relationships: Entity relationships
         - letta_memories: Project knowledge and context
-        
+
         Pre-built Databases:
         - full_text_corpus.db: 1.4M docs with FTS5 search
         - redaction_analysis_v2.db: 2.59M redactions

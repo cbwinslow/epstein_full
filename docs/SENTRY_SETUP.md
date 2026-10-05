@@ -73,6 +73,7 @@ from config.sentry_config import init_sentry, capture_exception
 # Initialize Sentry at startup
 init_sentry()
 
+
 # Example 1: Automatic error capture
 @capture_exception
 def process_large_dataset():
@@ -80,22 +81,24 @@ def process_large_dataset():
     # Your processing code here
     pass
 
+
 # Example 2: Manual error capture
 def manual_error_handling():
     try:
         risky_operation()
     except Exception as e:
         import sentry_sdk
+
         sentry_sdk.capture_exception(e)
         # Continue or re-raise
+
 
 # Example 3: Capture messages for non-errors
 def log_progress():
     import sentry_sdk
-    sentry_sdk.capture_message(
-        "Processing batch 1000/5000",
-        level="info"
-    )
+
+    sentry_sdk.capture_message("Processing batch 1000/5000", level="info")
+
 
 if __name__ == "__main__":
     process_large_dataset()

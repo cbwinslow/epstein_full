@@ -148,16 +148,16 @@ from media_acquisition.agents.discovery.news import NewsDiscoveryAgent
 from media_acquisition.base import AgentConfig
 
 config = AgentConfig(
-    agent_id='news-discovery',
-    database_url='postgresql://user:pass@localhost:5432/epstein',
-    storage_path='/path/to/storage'
+    agent_id="news-discovery",
+    database_url="postgresql://user:pass@localhost:5432/epstein",
+    storage_path="/path/to/storage",
 )
 
 agent = NewsDiscoveryAgent(config)
 results = await agent.search(
-    keywords=['Jeffrey Epstein', 'Epstein'],
-    date_range=('2019-01-01', '2025-12-31'),
-    max_results=10000
+    keywords=["Jeffrey Epstein", "Epstein"],
+    date_range=("2019-01-01", "2025-12-31"),
+    max_results=10000,
 )
 ```
 

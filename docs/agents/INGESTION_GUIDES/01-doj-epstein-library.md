@@ -1,10 +1,10 @@
 # Data Source: DOJ Epstein Library
 
-> **Source:** https://www.justice.gov/epstein-library  
-> **Type:** Official Government Documents  
-> **License:** Public Domain  
-> **Status:** ✅ Complete (260K+ PDFs downloaded)  
-> **Size:** 19.8 GB  
+> **Source:** https://www.justice.gov/epstein-library
+> **Type:** Official Government Documents
+> **License:** Public Domain
+> **Status:** ✅ Complete (260K+ PDFs downloaded)
+> **Size:** 19.8 GB
 
 ---
 

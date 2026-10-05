@@ -29,6 +29,7 @@ def check_spacy_model() -> bool:
     """Check if spaCy model loads."""
     try:
         import spacy
+
         nlp = spacy.load("en_core_web_sm")
         doc = nlp("Jeffrey Epstein traveled with Ghislaine Maxwell.")
         ents = [(e.text, e.label_) for e in doc.ents]
@@ -43,6 +44,7 @@ def check_parquet() -> bool:
     """Check if PyArrow can read parquet files."""
     try:
         import pyarrow
+
         print(f"  ✓ pyarrow.parquet (version {pyarrow.__version__})")
         return True
     except Exception as e:
@@ -54,6 +56,7 @@ def check_sqlite() -> bool:
     """Check SQLite with WAL mode."""
     try:
         import sqlite3
+
         conn = sqlite3.connect(":memory:")
         wal = conn.execute("PRAGMA journal_mode").fetchone()[0]
         conn.close()

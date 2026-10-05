@@ -11,21 +11,21 @@ Usage:
     python -u scripts/import_kabasshouse.py status      # Check import status
 """
 
-import sys
 import json
-import time
 import signal
+import sys
+import time
 
-import pyarrow.parquet as pq
 import psycopg2
+import pyarrow.parquet as pq
 from huggingface_hub import HfApi, hf_hub_download
 
 DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 REPO = "kabasshouse/epstein-data"
 
 shutdown = False
-signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__('shutdown', True))
-signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__('shutdown', True))
+signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__("shutdown", True))
+signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__("shutdown", True))
 
 
 def log(msg):
@@ -34,8 +34,8 @@ def log(msg):
 
 def get_parquet_files(subdir):
     api = HfApi()
-    files = list(api.list_repo_tree(REPO, repo_type='dataset', path_in_repo=f'data/{subdir}'))
-    return sorted([f for f in files if f.path.endswith('.parquet')], key=lambda x: x.path)
+    files = list(api.list_repo_tree(REPO, repo_type="dataset", path_in_repo=f"data/{subdir}"))
+    return sorted([f for f in files if f.path.endswith(".parquet")], key=lambda x: x.path)
 
 
 def import_entities():
@@ -68,7 +68,7 @@ def import_entities():
         conn.close()
         return
 
-    parquet_files = get_parquet_files('entities')
+    parquet_files = get_parquet_files("entities")
     log(f"Importing entities from {len(parquet_files)} files...")
 
     total_inserted = 0
@@ -77,7 +77,7 @@ def import_entities():
     for pf in parquet_files:
         if shutdown:
             break
-        path = hf_hub_download(REPO, pf.path, repo_type='dataset')
+        path = hf_hub_download(REPO, pf.path, repo_type="dataset")
         t = pq.read_table(path)
         cols = t.column_names
 
@@ -91,22 +91,27 @@ def import_entities():
                 row.append(val)
 
             try:
-                cur.execute("""
-                    INSERT INTO kabasshouse_entities 
+                cur.execute(
+                    """
+                    INSERT INTO kabasshouse_entities
                     (id, document_id, file_key, entity_type, entity_value, normalized_value, context, source_page, extraction_model)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (document_id, entity_type, entity_value) DO NOTHING
-                """, row)
+                """,
+                    row,
+                )
                 if cur.rowcount > 0:
                     inserted += 1
-            except Exception as e:
+            except Exception:
                 conn.rollback()
                 continue
 
         conn.commit()
         total_inserted += inserted
         elapsed = time.time() - t0
-        log(f"  {pf.path.split('/')[-1]}: +{inserted:,} | total: {total_inserted:,} | {total_inserted/elapsed:.0f}/sec")
+        log(
+            f"  {pf.path.split('/')[-1]}: +{inserted:,} | total: {total_inserted:,} | {total_inserted / elapsed:.0f}/sec"
+        )
 
     conn.close()
     log(f"Entities done: {total_inserted:,} inserted")
@@ -139,7 +144,7 @@ def import_chunks():
         conn.close()
         return
 
-    parquet_files = get_parquet_files('chunks')
+    parquet_files = get_parquet_files("chunks")
     log(f"Importing chunks from {len(parquet_files)} files...")
 
     total_inserted = 0
@@ -148,7 +153,7 @@ def import_chunks():
     for pf in parquet_files:
         if shutdown:
             break
-        path = hf_hub_download(REPO, pf.path, repo_type='dataset')
+        path = hf_hub_download(REPO, pf.path, repo_type="dataset")
         t = pq.read_table(path)
         cols = t.column_names
 
@@ -156,11 +161,14 @@ def import_chunks():
         for i in range(len(t)):
             row = [t.column(col)[i].as_py() for col in cols]
             try:
-                cur.execute("""
+                cur.execute(
+                    """
                     INSERT INTO kabasshouse_chunks (id, document_id, chunk_index, content, token_count, char_start, char_end)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (document_id, chunk_index) DO NOTHING
-                """, row)
+                """,
+                    row,
+                )
                 if cur.rowcount > 0:
                     inserted += 1
             except:
@@ -170,7 +178,9 @@ def import_chunks():
         conn.commit()
         total_inserted += inserted
         elapsed = time.time() - t0
-        log(f"  {pf.path.split('/')[-1]}: +{inserted:,} | total: {total_inserted:,} | {total_inserted/elapsed:.0f}/sec")
+        log(
+            f"  {pf.path.split('/')[-1]}: +{inserted:,} | total: {total_inserted:,} | {total_inserted / elapsed:.0f}/sec"
+        )
 
     conn.close()
     log(f"Chunks done: {total_inserted:,} inserted")
@@ -191,7 +201,9 @@ def import_embeddings():
             source_text_hash TEXT
         )
     """)
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_kce_doc ON kabasshouse_chunk_embeddings(document_id)")
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_kce_doc ON kabasshouse_chunk_embeddings(document_id)"
+    )
     conn.commit()
 
     cur.execute("SELECT COUNT(*) FROM kabasshouse_chunk_embeddings")
@@ -201,7 +213,7 @@ def import_embeddings():
         conn.close()
         return
 
-    parquet_files = get_parquet_files('embeddings_chunk')
+    parquet_files = get_parquet_files("embeddings_chunk")
     log(f"Importing embeddings from {len(parquet_files)} files...")
 
     total_inserted = 0
@@ -210,7 +222,7 @@ def import_embeddings():
     for pf in parquet_files:
         if shutdown:
             break
-        path = hf_hub_download(REPO, pf.path, repo_type='dataset')
+        path = hf_hub_download(REPO, pf.path, repo_type="dataset")
         t = pq.read_table(path)
         cols = t.column_names
 
@@ -224,11 +236,14 @@ def import_embeddings():
                 row.append(val)
 
             try:
-                cur.execute("""
+                cur.execute(
+                    """
                     INSERT INTO kabasshouse_chunk_embeddings (chunk_id, document_id, embedding, embedding_dim, model, source_text_hash)
                     VALUES (%s, %s, %s, %s, %s, %s)
                     ON CONFLICT (chunk_id) DO NOTHING
-                """, row)
+                """,
+                    row,
+                )
                 if cur.rowcount > 0:
                     inserted += 1
             except:
@@ -238,7 +253,9 @@ def import_embeddings():
         conn.commit()
         total_inserted += inserted
         elapsed = time.time() - t0
-        log(f"  {pf.path.split('/')[-1]}: +{inserted:,} | total: {total_inserted:,} | {total_inserted/elapsed:.0f}/sec")
+        log(
+            f"  {pf.path.split('/')[-1]}: +{inserted:,} | total: {total_inserted:,} | {total_inserted / elapsed:.0f}/sec"
+        )
 
     conn.close()
     log(f"Embeddings done: {total_inserted:,} inserted")
@@ -247,9 +264,15 @@ def import_embeddings():
 def show_status():
     conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
-    for t in ['kabasshouse_entities', 'kabasshouse_chunks', 'kabasshouse_chunk_embeddings',
-              'kabasshouse_financial_transactions', 'kabasshouse_derived_events',
-              'kabasshouse_curated_docs', 'house_oversight_emails']:
+    for t in [
+        "kabasshouse_entities",
+        "kabasshouse_chunks",
+        "kabasshouse_chunk_embeddings",
+        "kabasshouse_financial_transactions",
+        "kabasshouse_derived_events",
+        "kabasshouse_curated_docs",
+        "house_oversight_emails",
+    ]:
         try:
             cur.execute(f"SELECT COUNT(*) FROM {t}")
             log(f"  {t}: {cur.fetchone()[0]:,}")

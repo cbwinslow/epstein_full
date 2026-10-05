@@ -5,37 +5,32 @@ Leverages 128GB RAM to run 20-30 concurrent stages.
 Uses process pools + async for maximum throughput.
 """
 
-import asyncio
 import argparse
-import logging
-import multiprocessing as mp
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
-from datetime import datetime, timedelta
-from typing import List, Dict, Optional, Tuple, Any
+import asyncio
 import json
+import logging
 import sys
 import time
-import os
+from datetime import datetime
+from typing import Dict, List, Tuple
 
-sys.path.insert(0, '/home/cbwinslow/workspace/epstein')
+sys.path.insert(0, "/home/cbwinslow/workspace/epstein")
 
 from run_news_ingestion import (
+    collect_articles,
+    complete_ingestion_run,
     create_ingestion_run,
     update_run_results,
-    complete_ingestion_run,
-    collect_articles
 )
+
 from media_acquisition.agents.discovery.google_news import GoogleNewsScraper
 from media_acquisition.agents.discovery.rss_aggregator import RSSAggregatorAgent
-from media_acquisition.base import AgentConfig, StorageManager, NewsArticleURL
+from media_acquisition.base import NewsArticleURL, StorageManager
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('/tmp/mega_parallel_ingestion.log'),
-        logging.StreamHandler()
-    ]
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("/tmp/mega_parallel_ingestion.log"), logging.StreamHandler()],
 )
 logger = logging.getLogger(__name__)
 
@@ -52,12 +47,14 @@ class MegaParallelOrchestrator:
     Runs 20-30 stages concurrently with process pools.
     """
 
-    def __init__(self,
-                 keywords: List[str],
-                 start_year: int = 2000,
-                 end_year: int = 2024,
-                 articles_per_year: int = 1000,
-                 max_workers: int = 30):
+    def __init__(
+        self,
+        keywords: List[str],
+        start_year: int = 2000,
+        end_year: int = 2024,
+        articles_per_year: int = 1000,
+        max_workers: int = 30,
+    ):
         """
         Initialize mega-parallel orchestrator.
 
@@ -75,8 +72,8 @@ class MegaParallelOrchestrator:
         self.max_workers = max_workers
 
         # Connection pool for database
-        self.connection_string = 'postgresql://cbwinslow:123qweasd@localhost:5432/epstein'
-        self.base_path = '/home/cbwinslow/workspace/epstein-data/media'
+        self.connection_string = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
+        self.base_path = "/home/cbwinslow/workspace/epstein-data/media"
 
         # Stats tracking
         self.stats_lock = asyncio.Lock()
@@ -114,32 +111,25 @@ class MegaParallelOrchestrator:
 
         return chunks
 
-    async def discover_for_stage(self,
-                                 stage_id: str,
-                                 start_date: str,
-                                 end_date: str,
-                                 max_results: int) -> List[NewsArticleURL]:
+    async def discover_for_stage(
+        self, stage_id: str, start_date: str, end_date: str, max_results: int
+    ) -> List[NewsArticleURL]:
         """Run multi-source discovery for a single stage."""
         all_articles = []
         source_breakdown = {}
 
         # Create storage for this stage
-        storage = StorageManager(
-            connection_string=self.connection_string,
-            base_path=self.base_path
-        )
+        storage = StorageManager(connection_string=self.connection_string, base_path=self.base_path)
 
         # 1. Google News (fastest, most results)
         try:
             scraper = GoogleNewsScraper(delay=0.8)  # Reduced delay
             result = scraper.search(
-                keywords=self.keywords,
-                date_range=(start_date, end_date),
-                max_results=max_results
+                keywords=self.keywords, date_range=(start_date, end_date), max_results=max_results
             )
             if result.output:
                 all_articles.extend(result.output)
-                source_breakdown['google_news'] = len(result.output)
+                source_breakdown["google_news"] = len(result.output)
         except Exception as e:
             logger.warning(f"[Stage {stage_id[:8]}] Google News failed: {e}")
 
@@ -148,15 +138,16 @@ class MegaParallelOrchestrator:
             try:
                 rss_agent = RSSAggregatorAgent()
                 from datetime import datetime as dt
+
                 date_range_dt = (
-                    dt.strptime(start_date, '%Y-%m-%d'),
-                    dt.strptime(end_date, '%Y-%m-%d')
+                    dt.strptime(start_date, "%Y-%m-%d"),
+                    dt.strptime(end_date, "%Y-%m-%d"),
                 )
                 result = await rss_agent.discover(
                     keywords=self.keywords,
                     date_range=date_range_dt,
                     max_results=max_results - len(all_articles),
-                    max_sources=20  # Reduced for speed
+                    max_sources=20,  # Reduced for speed
                 )
                 await rss_agent.close()
 
@@ -164,22 +155,18 @@ class MegaParallelOrchestrator:
                     existing_urls = {a.url for a in all_articles}
                     new_articles = [a for a in result.output if a.url not in existing_urls]
                     all_articles.extend(new_articles)
-                    source_breakdown['rss'] = len(new_articles)
+                    source_breakdown["rss"] = len(new_articles)
             except Exception as e:
                 logger.warning(f"[Stage {stage_id[:8]}] RSS failed: {e}")
 
         # Update run with discovery results
-        await update_run_results(
-            stage_id, len(all_articles), 0, 0, 0, source_breakdown
-        )
+        await update_run_results(stage_id, len(all_articles), 0, 0, 0, source_breakdown)
 
         return all_articles
 
-    async def process_stage(self,
-                           start_date: str,
-                           end_date: str,
-                           max_results: int,
-                           worker_id: int) -> Dict:
+    async def process_stage(
+        self, start_date: str, end_date: str, max_results: int, worker_id: int
+    ) -> Dict:
         """Process a single stage with full pipeline."""
         stage_start_time = time.time()
 
@@ -189,7 +176,7 @@ class MegaParallelOrchestrator:
             start_date=start_date,
             end_date=end_date,
             max_results=max_results,
-            run_name=f"MegaParallel Stage {start_date} to {end_date}"
+            run_name=f"MegaParallel Stage {start_date} to {end_date}",
         )
 
         logger.info(f"[Worker {worker_id}] Stage {run_id[:8]}: {start_date} to {end_date}")
@@ -197,50 +184,45 @@ class MegaParallelOrchestrator:
         try:
             # Create storage for this worker
             storage = StorageManager(
-                connection_string=self.connection_string,
-                base_path=self.base_path
+                connection_string=self.connection_string, base_path=self.base_path
             )
 
             # Discovery
-            articles = await self.discover_for_stage(
-                run_id, start_date, end_date, max_results
-            )
+            articles = await self.discover_for_stage(run_id, start_date, end_date, max_results)
 
             if not articles:
-                await complete_ingestion_run(run_id, 'completed', 'No articles')
+                await complete_ingestion_run(run_id, "completed", "No articles")
                 async with self.stats_lock:
                     self.completed_stages += 1
-                return {'run_id': run_id, 'status': 'empty', 'discovered': 0}
+                return {"run_id": run_id, "status": "empty", "discovered": 0}
 
             # Queue articles
             queued = 0
             for article in articles:
                 try:
                     item_id = storage.queue_item(
-                        media_type='news',
+                        media_type="news",
                         source_url=article.url,
                         priority=article.priority,
                         keywords_matched=article.keywords_matched,
-                        discovered_by=f'mega-{worker_id}-{run_id[:8]}',
-                        ingestion_run_id=run_id
+                        discovered_by=f"mega-{worker_id}-{run_id[:8]}",
+                        ingestion_run_id=run_id,
                     )
                     if item_id:
                         queued += 1
                     else:
-                        storage.link_queue_item_to_run(article.url, 'news', run_id)
+                        storage.link_queue_item_to_run(article.url, "news", run_id)
                         queued += 1
                 except Exception as e:
                     logger.warning(f"[Worker {worker_id}] Queue failed: {e}")
 
             # Collection with high concurrency
             collected, failed = await collect_articles(
-                storage, run_id,
-                batch_size=BATCH_SIZE,
-                max_concurrent=MAX_CONCURRENT_COLLECTION
+                storage, run_id, batch_size=BATCH_SIZE, max_concurrent=MAX_CONCURRENT_COLLECTION
             )
 
             # Complete run
-            await complete_ingestion_run(run_id, 'completed')
+            await complete_ingestion_run(run_id, "completed")
 
             duration = time.time() - stage_start_time
 
@@ -253,45 +235,47 @@ class MegaParallelOrchestrator:
                 self.completed_stages += 1
 
             result = {
-                'run_id': run_id,
-                'status': 'completed',
-                'worker_id': worker_id,
-                'start_date': start_date,
-                'end_date': end_date,
-                'discovered': len(articles),
-                'queued': queued,
-                'collected': collected,
-                'failed': failed,
-                'duration_seconds': duration
+                "run_id": run_id,
+                "status": "completed",
+                "worker_id": worker_id,
+                "start_date": start_date,
+                "end_date": end_date,
+                "discovered": len(articles),
+                "queued": queued,
+                "collected": collected,
+                "failed": failed,
+                "duration_seconds": duration,
             }
 
-            logger.info(f"[Worker {worker_id}] ✓ Stage {run_id[:8]} complete: "
-                       f"{collected} collected in {duration:.1f}s")
+            logger.info(
+                f"[Worker {worker_id}] ✓ Stage {run_id[:8]} complete: "
+                f"{collected} collected in {duration:.1f}s"
+            )
 
             return result
 
         except Exception as e:
             logger.error(f"[Worker {worker_id}] ✗ Stage {run_id[:8]} failed: {e}")
-            await complete_ingestion_run(run_id, 'failed', str(e)[:500])
+            await complete_ingestion_run(run_id, "failed", str(e)[:500])
 
             async with self.stats_lock:
                 self.failed_stages += 1
 
-            return {'run_id': run_id, 'status': 'failed', 'error': str(e)}
+            return {"run_id": run_id, "status": "failed", "error": str(e)}
 
     async def run_mega_parallel(self):
         """Run all stages with mega-parallel processing."""
         chunks = self.generate_stage_chunks()
         total_stages = len(chunks)
 
-        logger.info(f"{'='*60}")
-        logger.info(f"MEGA-PARALLEL INGESTION")
-        logger.info(f"{'='*60}")
+        logger.info(f"{'=' * 60}")
+        logger.info("MEGA-PARALLEL INGESTION")
+        logger.info(f"{'=' * 60}")
         logger.info(f"Total stages: {total_stages}")
         logger.info(f"Max parallel workers: {self.max_workers}")
         logger.info(f"Collection concurrency: {MAX_CONCURRENT_COLLECTION}")
-        logger.info(f"RAM available: ~128GB")
-        logger.info(f"{'='*60}")
+        logger.info("RAM available: ~128GB")
+        logger.info(f"{'=' * 60}")
 
         # Create semaphore to limit concurrent stages
         semaphore = asyncio.Semaphore(self.max_workers)
@@ -302,10 +286,7 @@ class MegaParallelOrchestrator:
                 return await self.process_stage(start, end, max_r, idx % self.max_workers)
 
         # Create all tasks
-        tasks = [
-            process_with_limit((i, chunk))
-            for i, chunk in enumerate(chunks)
-        ]
+        tasks = [process_with_limit((i, chunk)) for i, chunk in enumerate(chunks)]
 
         # Progress reporting task
         async def report_progress():
@@ -319,12 +300,12 @@ class MegaParallelOrchestrator:
                 remaining = total_stages - completed - failed
                 pct = (completed / total_stages) * 100 if total_stages > 0 else 0
 
-                logger.info(f"\n{'='*60}")
+                logger.info(f"\n{'=' * 60}")
                 logger.info(f"PROGRESS: {completed}/{total_stages} ({pct:.1f}%)")
                 logger.info(f"Collected: {collected} articles")
                 logger.info(f"Failed stages: {failed}")
                 logger.info(f"Remaining: {remaining}")
-                logger.info(f"{'='*60}\n")
+                logger.info(f"{'=' * 60}\n")
 
         # Run all tasks with progress reporting
         progress_task = asyncio.create_task(report_progress())
@@ -348,41 +329,53 @@ class MegaParallelOrchestrator:
                 logger.error(f"Stage failed with exception: {result}")
 
         # Final summary
-        logger.info(f"\n{'='*60}")
-        logger.info(f"MEGA-PARALLEL INGESTION COMPLETE")
-        logger.info(f"{'='*60}")
-        logger.info(f"Total duration: {total_duration/3600:.1f} hours")
+        logger.info(f"\n{'=' * 60}")
+        logger.info("MEGA-PARALLEL INGESTION COMPLETE")
+        logger.info(f"{'=' * 60}")
+        logger.info(f"Total duration: {total_duration / 3600:.1f} hours")
         logger.info(f"Stages completed: {self.completed_stages}/{total_stages}")
         logger.info(f"Stages failed: {self.failed_stages}")
         logger.info(f"Total discovered: {self.total_discovered}")
         logger.info(f"Total queued: {self.total_queued}")
         logger.info(f"Total collected: {self.total_collected}")
         logger.info(f"Total failed: {self.total_failed}")
-        logger.info(f"Throughput: {self.total_collected/(total_duration/3600):.0f} articles/hour")
+        logger.info(
+            f"Throughput: {self.total_collected / (total_duration / 3600):.0f} articles/hour"
+        )
 
         return {
-            'total_stages': total_stages,
-            'completed': self.completed_stages,
-            'failed': self.failed_stages,
-            'total_discovered': self.total_discovered,
-            'total_collected': self.total_collected,
-            'duration_hours': total_duration / 3600,
-            'throughput_per_hour': self.total_collected / (total_duration / 3600) if total_duration > 0 else 0,
-            'stage_details': self.stage_results
+            "total_stages": total_stages,
+            "completed": self.completed_stages,
+            "failed": self.failed_stages,
+            "total_discovered": self.total_discovered,
+            "total_collected": self.total_collected,
+            "duration_hours": total_duration / 3600,
+            "throughput_per_hour": self.total_collected / (total_duration / 3600)
+            if total_duration > 0
+            else 0,
+            "stage_details": self.stage_results,
         }
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Mega-Parallel News Ingestion')
-    parser.add_argument('--start-year', type=int, default=2000)
-    parser.add_argument('--end-year', type=int, default=2024)
-    parser.add_argument('--articles-per-year', type=int, default=1000)
-    parser.add_argument('--max-workers', type=int, default=30,
-                       help='Number of parallel stage workers (default: 30)')
-    parser.add_argument('--collection-workers', type=int, default=20,
-                       help='Parallel collectors per stage (default: 20)')
-    parser.add_argument('--keywords', nargs='+',
-                       default=['Jeffrey Epstein', 'Epstein', 'Ghislaine Maxwell', 'Virginia Giuffre'])
+    parser = argparse.ArgumentParser(description="Mega-Parallel News Ingestion")
+    parser.add_argument("--start-year", type=int, default=2000)
+    parser.add_argument("--end-year", type=int, default=2024)
+    parser.add_argument("--articles-per-year", type=int, default=1000)
+    parser.add_argument(
+        "--max-workers", type=int, default=30, help="Number of parallel stage workers (default: 30)"
+    )
+    parser.add_argument(
+        "--collection-workers",
+        type=int,
+        default=20,
+        help="Parallel collectors per stage (default: 20)",
+    )
+    parser.add_argument(
+        "--keywords",
+        nargs="+",
+        default=["Jeffrey Epstein", "Epstein", "Ghislaine Maxwell", "Virginia Giuffre"],
+    )
 
     args = parser.parse_args()
 
@@ -396,7 +389,7 @@ def main():
         start_year=args.start_year,
         end_year=args.end_year,
         articles_per_year=args.articles_per_year,
-        max_workers=args.max_workers
+        max_workers=args.max_workers,
     )
 
     try:
@@ -404,7 +397,7 @@ def main():
 
         # Save results
         output_file = f"/tmp/mega_parallel_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        with open(output_file, 'w') as f:
+        with open(output_file, "w") as f:
             json.dump(results, f, indent=2, default=str)
 
         logger.info(f"\nResults saved to: {output_file}")
@@ -414,13 +407,15 @@ def main():
     except Exception as e:
         logger.error(f"Orchestrator failed: {e}")
         import traceback
+
         logger.error(traceback.format_exc())
         raise
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Set higher process limit for Linux
     import resource
+
     try:
         resource.setrlimit(resource.RLIMIT_NOFILE, (65536, 65536))
     except Exception:

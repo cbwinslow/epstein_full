@@ -2,9 +2,10 @@
 """
 Download jmail datasets with proper User-Agent headers.
 """
+
 import os
-import urllib.request
 import ssl
+import urllib.request
 from pathlib import Path
 
 # Create SSL context
@@ -15,25 +16,26 @@ ssl_context.verify_mode = ssl.CERT_NONE
 DATA_DIR = Path("/home/cbwinslow/workspace/epstein-data/downloads")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
+
 def download_file(url, output_path, description):
     """Download a file with proper headers."""
     print(f"\n[DOWNLOADING] {description}")
     print(f"  From: {url}")
     print(f"  To: {output_path}")
-    
+
     # Create request with headers
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept': 'application/octet-stream,application/x-parquet,*/*',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Accept-Encoding': 'identity',
-        'Connection': 'keep-alive',
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept": "application/octet-stream,application/x-parquet,*/*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "identity",
+        "Connection": "keep-alive",
     }
-    
+
     try:
         req = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(req, context=ssl_context, timeout=300) as response:
-            with open(output_path, 'wb') as f:
+            with open(output_path, "wb") as f:
                 f.write(response.read())
         size = os.path.getsize(output_path)
         print(f"  ✓ Complete - {size / 1024 / 1024:.1f} MB")
@@ -41,6 +43,7 @@ def download_file(url, output_path, description):
     except Exception as e:
         print(f"  ✗ Failed: {e}")
         return False
+
 
 # Download jmail datasets
 print("=" * 60)

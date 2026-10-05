@@ -11,7 +11,7 @@
 
 CREATE TABLE IF NOT EXISTS efta_crosswalk (
     efta_number VARCHAR(50) PRIMARY KEY,
-    
+
     -- Source flags (boolean for quick filtering)
     in_postgresql BOOLEAN DEFAULT FALSE,
     in_raw_files BOOLEAN DEFAULT FALSE,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS efta_crosswalk (
     in_hf_house_oversight BOOLEAN DEFAULT FALSE,
     in_hf_embeddings BOOLEAN DEFAULT FALSE,
     in_hf_emails BOOLEAN DEFAULT FALSE,
-    
+
     -- Detailed source info
     postgresql_dataset INTEGER,
     postgresql_ingested_at TIMESTAMP,
@@ -27,18 +27,18 @@ CREATE TABLE IF NOT EXISTS efta_crosswalk (
     raw_file_size BIGINT,
     hf_dataset_name TEXT,
     hf_downloaded_at TIMESTAMP,
-    
+
     -- Data quality tracking
     has_ocr BOOLEAN DEFAULT FALSE,
     has_embeddings BOOLEAN DEFAULT FALSE,
     has_entities BOOLEAN DEFAULT FALSE,
     has_classification BOOLEAN DEFAULT FALSE,
-    
+
     -- Cross-validation
     content_hash TEXT,  -- MD5 hash of content for deduplication
     last_verified_at TIMESTAMP,
     verification_status VARCHAR(20) DEFAULT 'unknown',
-    
+
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -64,7 +64,7 @@ BEGIN
     -- Insert new EFTA numbers from documents
     WITH inserted AS (
         INSERT INTO efta_crosswalk (efta_number, in_postgresql, postgresql_dataset, postgresql_ingested_at)
-        SELECT 
+        SELECT
             d.efta_number,
             TRUE,
             d.dataset,
@@ -75,11 +75,11 @@ BEGIN
         RETURNING efta_number
     )
     SELECT COUNT(*) INTO v_inserted FROM inserted;
-    
+
     -- Update existing records
     WITH updated AS (
         UPDATE efta_crosswalk ec
-        SET 
+        SET
             in_postgresql = TRUE,
             postgresql_dataset = d.dataset,
             postgresql_ingested_at = d.created_at,
@@ -90,7 +90,7 @@ BEGIN
         RETURNING ec.efta_number
     )
     SELECT COUNT(*) INTO v_updated FROM updated;
-    
+
     RETURN QUERY SELECT v_inserted, v_updated;
 END;
 $$ LANGUAGE plpgsql;
@@ -111,7 +111,7 @@ BEGIN
     WITH upserted AS (
         INSERT INTO efta_crosswalk (efta_number, hf_dataset_name)
         SELECT UNNEST(p_efta_numbers), p_dataset_name
-        ON CONFLICT (efta_number) 
+        ON CONFLICT (efta_number)
         DO UPDATE SET
             hf_dataset_name = EXCLUDED.hf_dataset_name,
             updated_at = CURRENT_TIMESTAMP,
@@ -119,23 +119,23 @@ BEGIN
         RETURNING efta_number
     )
     SELECT COUNT(*) INTO v_updated FROM upserted;
-    
+
     -- Update the specific source flag based on dataset name
     CASE p_dataset_name
         WHEN 'hf-ocr-complete' THEN
-            UPDATE efta_crosswalk SET in_hf_ocr_complete = TRUE 
+            UPDATE efta_crosswalk SET in_hf_ocr_complete = TRUE
             WHERE efta_number = ANY(p_efta_numbers) AND in_hf_ocr_complete = FALSE;
         WHEN 'hf-house-oversight' THEN
-            UPDATE efta_crosswalk SET in_hf_house_oversight = TRUE 
+            UPDATE efta_crosswalk SET in_hf_house_oversight = TRUE
             WHERE efta_number = ANY(p_efta_numbers) AND in_hf_house_oversight = FALSE;
         WHEN 'hf-embeddings' THEN
-            UPDATE efta_crosswalk SET in_hf_embeddings = TRUE 
+            UPDATE efta_crosswalk SET in_hf_embeddings = TRUE
             WHERE efta_number = ANY(p_efta_numbers) AND in_hf_embeddings = FALSE;
         WHEN 'hf-emails' THEN
-            UPDATE efta_crosswalk SET in_hf_emails = TRUE 
+            UPDATE efta_crosswalk SET in_hf_emails = TRUE
             WHERE efta_number = ANY(p_efta_numbers) AND in_hf_emails = FALSE;
     END CASE;
-    
+
     RETURN v_updated;
 END;
 $$ LANGUAGE plpgsql;
@@ -153,12 +153,12 @@ SELECT
     SUM(CASE WHEN in_hf_house_oversight THEN 1 ELSE 0 END) as in_hf_house_oversight,
     SUM(CASE WHEN in_hf_embeddings THEN 1 ELSE 0 END) as in_hf_embeddings,
     SUM(CASE WHEN in_hf_emails THEN 1 ELSE 0 END) as in_hf_emails,
-    
+
     -- Calculate overlaps
     SUM(CASE WHEN in_postgresql AND in_hf_ocr_complete THEN 1 ELSE 0 END) as pg_and_hf_ocr,
     SUM(CASE WHEN in_postgresql AND NOT in_hf_ocr_complete THEN 1 ELSE 0 END) as pg_only,
     SUM(CASE WHEN NOT in_postgresql AND in_hf_ocr_complete THEN 1 ELSE 0 END) as hf_ocr_only,
-    
+
     -- Data quality
     SUM(CASE WHEN has_ocr THEN 1 ELSE 0 END) as with_ocr,
     SUM(CASE WHEN has_embeddings THEN 1 ELSE 0 END) as with_embeddings,
@@ -172,7 +172,7 @@ FROM efta_crosswalk;
 CREATE OR REPLACE VIEW efta_missing_data_analysis AS
 SELECT
     efta_number,
-    CASE 
+    CASE
         WHEN in_postgresql AND NOT has_ocr THEN 'missing_ocr'
         WHEN in_postgresql AND NOT has_embeddings THEN 'missing_embeddings'
         WHEN in_hf_ocr_complete AND NOT in_postgresql THEN 'not_in_pg'
@@ -186,7 +186,7 @@ SELECT
     has_embeddings,
     has_entities
 FROM efta_crosswalk
-WHERE 
+WHERE
     (in_postgresql AND NOT has_ocr)
     OR (in_postgresql AND NOT has_embeddings)
     OR (in_hf_ocr_complete AND NOT in_postgresql)
@@ -204,7 +204,7 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         ec.content_hash,
         ARRAY_AGG(ec.efta_number) as efta_numbers,
         COUNT(*)::INTEGER as duplicate_count
@@ -230,7 +230,7 @@ RETURNS TABLE (
 BEGIN
     -- Check 1: EFTA numbers in PostgreSQL but not in crosswalk
     RETURN QUERY
-    SELECT 
+    SELECT
         'PG docs missing from crosswalk'::TEXT,
         'FAIL'::TEXT,
         COUNT(*)::TEXT || ' documents not tracked in crosswalk',
@@ -238,20 +238,20 @@ BEGIN
     FROM documents d
     LEFT JOIN efta_crosswalk ec ON d.efta_number = ec.efta_number
     WHERE ec.efta_number IS NULL;
-    
+
     -- Check 2: Orphaned crosswalk entries (no actual data)
     RETURN QUERY
-    SELECT 
+    SELECT
         'Orphaned crosswalk entries'::TEXT,
         CASE WHEN COUNT(*) > 0 THEN 'WARNING' ELSE 'PASS' END,
         COUNT(*)::TEXT || ' EFTA numbers with no source flags set',
         'MEDIUM'::TEXT
     FROM efta_crosswalk
     WHERE NOT (in_postgresql OR in_raw_files OR in_hf_ocr_complete OR in_hf_house_oversight);
-    
+
     -- Check 3: Duplicate content hashes
     RETURN QUERY
-    SELECT 
+    SELECT
         'Duplicate content by hash'::TEXT,
         CASE WHEN COUNT(*) > 0 THEN 'WARNING' ELSE 'PASS' END,
         COUNT(*)::TEXT || ' content hashes appear multiple times',
@@ -263,7 +263,7 @@ BEGIN
         GROUP BY content_hash
         HAVING COUNT(*) > 1
     ) dupes;
-    
+
     RETURN;
 END;
 $$ LANGUAGE plpgsql;

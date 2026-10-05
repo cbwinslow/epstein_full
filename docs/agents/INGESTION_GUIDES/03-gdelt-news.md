@@ -1,10 +1,10 @@
 # Data Source: GDELT News Articles
 
-> **Source:** http://data.gdeltproject.org/gdeltv2/  
-> **Type:** Global Knowledge Graph (GKG) 2.0  
-> **License:** Research Use  
-> **Status:** ✅ Active (23,413+ articles)  
-> **Coverage:** February 2015 - Present  
+> **Source:** http://data.gdeltproject.org/gdeltv2/
+> **Type:** Global Knowledge Graph (GKG) 2.0
+> **License:** Research Use
+> **Status:** ✅ Active (23,413+ articles)
+> **Coverage:** February 2015 - Present
 
 ---
 
@@ -126,20 +126,20 @@ The pipeline filters for these entities:
 
 ```python
 EPSTEIN_TERMS = [
-    'epstein',
-    'maxwell',
-    'ghislaine',
-    'giuffre',
-    'virginia roberts',
-    'les wexner',
-    'alan dershowitz',
-    'prince andrew',
-    'little st. james',
-    'zorro ranch',
-    'lolita express',
-    'jeffrey e.',
-    'j. epstein',
-    'epstein island'
+    "epstein",
+    "maxwell",
+    "ghislaine",
+    "giuffre",
+    "virginia roberts",
+    "les wexner",
+    "alan dershowitz",
+    "prince andrew",
+    "little st. james",
+    "zorro ranch",
+    "lolita express",
+    "jeffrey e.",
+    "j. epstein",
+    "epstein island",
 ]
 ```
 
@@ -185,14 +185,14 @@ EPSTEIN_TERMS = [
 ```bash
 # Check current coverage by year
 psql "postgresql://cbwinslow:123qweasd@localhost:5432/epstein" -c \
-    "SELECT EXTRACT(YEAR FROM publish_date)::int, COUNT(*) 
-     FROM media_news_articles WHERE discovery_source = 'gdelt' 
+    "SELECT EXTRACT(YEAR FROM publish_date)::int, COUNT(*)
+     FROM media_news_articles WHERE discovery_source = 'gdelt'
      GROUP BY 1 ORDER BY 1;"
 
 # Find gap periods
 psql "postgresql://cbwinslow:123qweasd@localhost:5432/epstein" -c \
-    "SELECT publish_date, COUNT(*) 
-     FROM media_news_articles WHERE discovery_source = 'gdelt' 
+    "SELECT publish_date, COUNT(*)
+     FROM media_news_articles WHERE discovery_source = 'gdelt'
      AND publish_date BETWEEN '2020-01-01' AND '2020-12-31'
      GROUP BY 1 ORDER BY 2 DESC LIMIT 10;"
 ```
