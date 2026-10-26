@@ -13,10 +13,8 @@ Imports:
 - DOJ audit CSVs → doj_audit_* tables
 """
 
-import json
 import csv
-import sys
-import os
+import json
 from pathlib import Path
 
 import psycopg2
@@ -232,18 +230,21 @@ def import_person_registry(conn):
 
     rows = []
     for p in data:
-        rows.append((
-            p.get("name", ""),
-            p.get("slug", ""),
-            p.get("category", ""),
-            p.get("aliases", []),
-            p.get("search_terms", []),
-            p.get("sources", []),
-        ))
+        rows.append(
+            (
+                p.get("name", ""),
+                p.get("slug", ""),
+                p.get("category", ""),
+                p.get("aliases", []),
+                p.get("search_terms", []),
+                p.get("sources", []),
+            )
+        )
 
-    execute_values(cur,
+    execute_values(
+        cur,
         "INSERT INTO person_registry (name, slug, category, aliases, search_terms, sources) VALUES %s",
-        rows
+        rows,
     )
     conn.commit()
     print(f"  person_registry: {len(rows)} rows imported")
@@ -266,16 +267,19 @@ def import_extracted_entities(conn):
     rows = []
     for entity_type in ["names", "organizations", "emails", "phones", "amounts"]:
         for e in data.get(entity_type, []):
-            rows.append((
-                e.get("entity_value", ""),
-                e.get("entity_type", entity_type.rstrip("s")),
-                e.get("document_count", 0),
-                e.get("efta_numbers", []),
-            ))
+            rows.append(
+                (
+                    e.get("entity_value", ""),
+                    e.get("entity_type", entity_type.rstrip("s")),
+                    e.get("document_count", 0),
+                    e.get("efta_numbers", []),
+                )
+            )
 
-    execute_values(cur,
+    execute_values(
+        cur,
         "INSERT INTO extracted_entities (entity_value, entity_type, document_count, efta_numbers) VALUES %s",
-        rows
+        rows,
     )
     conn.commit()
     print(f"  extracted_entities: {len(rows)} rows imported")
@@ -296,20 +300,23 @@ def import_phone_numbers(conn):
     with open(filepath) as f:
         reader = csv.DictReader(f)
         for row in reader:
-            rows.append((
-                row.get("number", ""),
-                row.get("formatted", ""),
-                int(row["call_count"]) if row.get("call_count") else 0,
-                row.get("valid", "").lower() == "true",
-                row.get("location", ""),
-                row.get("carrier", ""),
-                row.get("type", ""),
-                row.get("timezone", ""),
-            ))
+            rows.append(
+                (
+                    row.get("number", ""),
+                    row.get("formatted", ""),
+                    int(row["call_count"]) if row.get("call_count") else 0,
+                    row.get("valid", "").lower() == "true",
+                    row.get("location", ""),
+                    row.get("carrier", ""),
+                    row.get("type", ""),
+                    row.get("timezone", ""),
+                )
+            )
 
-    execute_values(cur,
+    execute_values(
+        cur,
         "INSERT INTO phone_numbers (number, formatted, call_count, valid, location, carrier, phone_type, timezone) VALUES %s",
-        rows
+        rows,
     )
     conn.commit()
     print(f"  phone_numbers: {len(rows)} rows imported")
@@ -349,9 +356,10 @@ def import_parquet_table(conn, filepath, table_name, column_map=None):
                 vals.append(str(v) if not isinstance(v, (int, float, bool)) else v)
         rows.append(tuple(vals))
 
-    execute_values(cur,
+    execute_values(
+        cur,
         f"INSERT INTO {table_name} ({col_str}, raw_data) VALUES %s",
-        [(r + (None,)) for r in rows]
+        [(r + (None,)) for r in rows],
     )
     conn.commit()
     print(f"  {table_name}: {len(rows)} rows imported")
@@ -373,19 +381,24 @@ def import_imessage_conversations(conn):
 
     rows = []
     for _, row in df.iterrows():
-        raw = json.dumps({k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str)
-        rows.append((
-            str(row.iloc[0]) if len(row) > 0 and not pd.isna(row.iloc[0]) else None,
-            None,  # participants
-            None,  # start_date
-            None,  # end_date
-            None,  # message_count
-            raw,
-        ))
+        raw = json.dumps(
+            {k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str
+        )
+        rows.append(
+            (
+                str(row.iloc[0]) if len(row) > 0 and not pd.isna(row.iloc[0]) else None,
+                None,  # participants
+                None,  # start_date
+                None,  # end_date
+                None,  # message_count
+                raw,
+            )
+        )
 
-    execute_values(cur,
+    execute_values(
+        cur,
         "INSERT INTO imessage_conversations (conversation_id, participants, start_date, end_date, message_count, raw_data) VALUES %s",
-        rows
+        rows,
     )
     conn.commit()
     print(f"  imessage_conversations: {len(rows)} rows imported")
@@ -407,21 +420,26 @@ def import_imessage_messages(conn):
 
     rows = []
     for _, row in df.iterrows():
-        raw = json.dumps({k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str)
-        rows.append((
-            str(row.iloc[0]) if len(row) > 0 and not pd.isna(row.iloc[0]) else None,
-            None,  # conversation_id
-            None,  # sender
-            None,  # recipient
-            None,  # text
-            None,  # timestamp
-            None,  # is_from_me
-            raw,
-        ))
+        raw = json.dumps(
+            {k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str
+        )
+        rows.append(
+            (
+                str(row.iloc[0]) if len(row) > 0 and not pd.isna(row.iloc[0]) else None,
+                None,  # conversation_id
+                None,  # sender
+                None,  # recipient
+                None,  # text
+                None,  # timestamp
+                None,  # is_from_me
+                raw,
+            )
+        )
 
-    execute_values(cur,
+    execute_values(
+        cur,
         "INSERT INTO imessage_messages (message_id, conversation_id, sender, recipient, text, timestamp, is_from_me, raw_data) VALUES %s",
-        rows
+        rows,
     )
     conn.commit()
     print(f"  imessage_messages: {len(rows)} rows imported")
@@ -443,15 +461,25 @@ def import_photo_metadata(conn):
 
     rows = []
     for _, row in df.iterrows():
-        raw = json.dumps({k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str)
-        rows.append((
-            str(row.iloc[0]) if len(row) > 0 and not pd.isna(row.iloc[0]) else None,
-            None, None, None, None, None, raw,
-        ))
+        raw = json.dumps(
+            {k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str
+        )
+        rows.append(
+            (
+                str(row.iloc[0]) if len(row) > 0 and not pd.isna(row.iloc[0]) else None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                raw,
+            )
+        )
 
-    execute_values(cur,
+    execute_values(
+        cur,
         "INSERT INTO photo_metadata (photo_id, filename, date, location, description, source, raw_data) VALUES %s",
-        rows
+        rows,
     )
     conn.commit()
     print(f"  photo_metadata: {len(rows)} rows imported")
@@ -473,12 +501,15 @@ def import_photo_faces(conn):
 
     rows = []
     for _, row in df.iterrows():
-        raw = json.dumps({k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str)
+        raw = json.dumps(
+            {k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str
+        )
         rows.append((None, None, None, None, None, raw))
 
-    execute_values(cur,
+    execute_values(
+        cur,
         "INSERT INTO photo_faces (face_id, photo_id, person_name, confidence, bbox, raw_data) VALUES %s",
-        rows
+        rows,
     )
     conn.commit()
     print(f"  photo_faces: {len(rows)} rows imported")
@@ -500,12 +531,13 @@ def import_photo_people(conn):
 
     rows = []
     for _, row in df.iterrows():
-        raw = json.dumps({k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str)
+        raw = json.dumps(
+            {k: str(v) if not pd.isna(v) else None for k, v in row.items()}, default=str
+        )
         rows.append((None, None, None, raw))
 
-    execute_values(cur,
-        "INSERT INTO photo_people (person_id, name, photo_count, raw_data) VALUES %s",
-        rows
+    execute_values(
+        cur, "INSERT INTO photo_people (person_id, name, photo_count, raw_data) VALUES %s", rows
     )
     conn.commit()
     print(f"  photo_people: {len(rows)} rows imported")
@@ -534,10 +566,7 @@ def import_csv_audit(conn, filepath, table_name):
             rows.append((efta, raw))
 
     if rows:
-        execute_values(cur,
-            f"INSERT INTO {table_name} (efta_number, raw_data) VALUES %s",
-            rows
-        )
+        execute_values(cur, f"INSERT INTO {table_name} (efta_number, raw_data) VALUES %s", rows)
     conn.commit()
     print(f"  {table_name}: {len(rows)} rows imported")
     return len(rows)
@@ -561,10 +590,7 @@ def import_csv_audit_entity(conn, filepath, table_name):
             rows.append((entity, raw))
 
     if rows:
-        execute_values(cur,
-            f"INSERT INTO {table_name} (entity_value, raw_data) VALUES %s",
-            rows
-        )
+        execute_values(cur, f"INSERT INTO {table_name} (entity_value, raw_data) VALUES %s", rows)
     conn.commit()
     print(f"  {table_name}: {len(rows)} rows imported")
     return len(rows)
@@ -601,13 +627,23 @@ def main():
     total += import_photo_people(conn)
 
     print("\n[7/8] Importing DOJ audit data...")
-    total += import_csv_audit(conn, DOJ_AUDIT / "CONFIRMED_REMOVED.csv", "doj_audit_confirmed_removed")
+    total += import_csv_audit(
+        conn, DOJ_AUDIT / "CONFIRMED_REMOVED.csv", "doj_audit_confirmed_removed"
+    )
     total += import_csv_audit(conn, DOJ_AUDIT / "FLAGGED_documents.csv", "doj_audit_flagged")
-    total += import_csv_audit(conn, DOJ_AUDIT / "FLAGGED_documents_details.csv", "doj_audit_flagged_details")
+    total += import_csv_audit(
+        conn, DOJ_AUDIT / "FLAGGED_documents_details.csv", "doj_audit_flagged_details"
+    )
     total += import_csv_audit(conn, DOJ_AUDIT / "SIZE_MISMATCHES.csv", "doj_audit_size_mismatches")
-    total += import_csv_audit(conn, ALTERATION / "classified_alterations.csv", "doj_audit_alterations")
-    total += import_csv_audit_entity(conn, ALTERATION / "removed_entities_export.csv", "doj_audit_removed_entities")
-    total += import_csv_audit(conn, DOJ_AUDIT / "sample_verification_results.csv", "doj_audit_sample_verification")
+    total += import_csv_audit(
+        conn, ALTERATION / "classified_alterations.csv", "doj_audit_alterations"
+    )
+    total += import_csv_audit_entity(
+        conn, ALTERATION / "removed_entities_export.csv", "doj_audit_removed_entities"
+    )
+    total += import_csv_audit(
+        conn, DOJ_AUDIT / "sample_verification_results.csv", "doj_audit_sample_verification"
+    )
 
     print("\n[8/8] Summary")
     print(f"  Total rows imported: {total:,}")

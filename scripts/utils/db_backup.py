@@ -37,10 +37,9 @@ PG_ENV = {**os.environ, "PGPASSWORD": PG_PASS}
 def get_tables():
     """Auto-discover all tables in the database."""
     import psycopg2
+
     conn = psycopg2.connect(
-        host=PG_HOST, port=PG_PORT,
-        user=PG_USER, password=PG_PASS,
-        dbname=PG_DB
+        host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASS, dbname=PG_DB
     )
     cur = conn.cursor()
     cur.execute("""
@@ -57,10 +56,17 @@ def backup_full(output_path):
     """Full database backup (schema + data)."""
     cmd = [
         "pg_dump",
-        "-h", PG_HOST, "-p", str(PG_PORT),
-        "-U", PG_USER, "-d", PG_DB,
+        "-h",
+        PG_HOST,
+        "-p",
+        str(PG_PORT),
+        "-U",
+        PG_USER,
+        "-d",
+        PG_DB,
         "-Fc",
-        "-f", output_path,
+        "-f",
+        output_path,
     ]
     subprocess.run(cmd, env=PG_ENV, check=True)
 
@@ -69,10 +75,17 @@ def backup_schema(output_path):
     """Schema-only backup."""
     cmd = [
         "pg_dump",
-        "-h", PG_HOST, "-p", str(PG_PORT),
-        "-U", PG_USER, "-d", PG_DB,
+        "-h",
+        PG_HOST,
+        "-p",
+        str(PG_PORT),
+        "-U",
+        PG_USER,
+        "-d",
+        PG_DB,
         "--schema-only",
-        "-f", output_path,
+        "-f",
+        output_path,
     ]
     subprocess.run(cmd, env=PG_ENV, check=True)
 
@@ -81,10 +94,17 @@ def backup_tables(tables, output_path):
     """Backup specific tables."""
     cmd = [
         "pg_dump",
-        "-h", PG_HOST, "-p", str(PG_PORT),
-        "-U", PG_USER, "-d", PG_DB,
+        "-h",
+        PG_HOST,
+        "-p",
+        str(PG_PORT),
+        "-U",
+        PG_USER,
+        "-d",
+        PG_DB,
         "-Fc",
-        "-f", output_path,
+        "-f",
+        output_path,
     ]
     for table in tables:
         cmd.extend(["-t", table])
@@ -104,22 +124,30 @@ def backup_all_tables(output_dir, timestamp):
         output = os.path.join(table_dir, f"{table}.dump")
         cmd = [
             "pg_dump",
-            "-h", PG_HOST, "-p", str(PG_PORT),
-            "-U", PG_USER, "-d", PG_DB,
+            "-h",
+            PG_HOST,
+            "-p",
+            str(PG_PORT),
+            "-U",
+            PG_USER,
+            "-d",
+            PG_DB,
             "-Fc",
-            "-t", table,
-            "-f", output,
+            "-t",
+            table,
+            "-f",
+            output,
         ]
         try:
             subprocess.run(cmd, env=PG_ENV, check=True, capture_output=True)
             size = os.path.getsize(output)
             total_size += size
-            size_mb = size / (1024 ** 2)
+            size_mb = size / (1024**2)
             print(f"  ✓ {table:<30} {size_mb:>8.1f} MB")
         except subprocess.CalledProcessError as e:
             print(f"  ✗ {table}: {e.stderr.decode()[:80]}")
 
-    total_mb = total_size / (1024 ** 2)
+    total_mb = total_size / (1024**2)
     print(f"\n  Total: {len(tables)} tables, {total_mb:.1f} MB")
     return table_dir
 
@@ -136,6 +164,7 @@ def rotate_backups(keep, backup_dir):
     if len(table_dirs) > keep:
         for old in table_dirs[:-keep]:
             import shutil
+
             shutil.rmtree(old)
             print(f"  Removed: {os.path.basename(old)}/")
 
@@ -144,8 +173,15 @@ def main():
     parser = argparse.ArgumentParser(description="PostgreSQL backup")
     parser.add_argument("--schema", action="store_true", help="Schema only")
     parser.add_argument("--tables", type=str, help="Comma-separated table names")
-    parser.add_argument("--all-tables", action="store_true", help="Auto-discover, per-table .dump files")
-    parser.add_argument("--rotate", type=int, default=DEFAULT_ROTATE, help=f"Keep last N backups (default: {DEFAULT_ROTATE})")
+    parser.add_argument(
+        "--all-tables", action="store_true", help="Auto-discover, per-table .dump files"
+    )
+    parser.add_argument(
+        "--rotate",
+        type=int,
+        default=DEFAULT_ROTATE,
+        help=f"Keep last N backups (default: {DEFAULT_ROTATE})",
+    )
     parser.add_argument("--dir", type=str, default=BACKUP_DIR, help="Backup directory")
     args = parser.parse_args()
 
@@ -162,20 +198,20 @@ def main():
         output = os.path.join(args.dir, f"epstein_schema_{timestamp}.sql")
         print(f"\nBacking up schema to {output}...")
         backup_schema(output)
-        size = os.path.getsize(output) / (1024 ** 2)
+        size = os.path.getsize(output) / (1024**2)
         print(f"  Size: {size:.1f} MB")
     elif args.tables:
         tables = args.tables.split(",")
         output = os.path.join(args.dir, f"epstein_tables_{timestamp}.dump")
         print(f"\nBacking up {len(tables)} tables to {output}...")
         backup_tables(tables, output)
-        size = os.path.getsize(output) / (1024 ** 2)
+        size = os.path.getsize(output) / (1024**2)
         print(f"  Size: {size:.1f} MB")
     else:
         output = os.path.join(args.dir, f"epstein_{timestamp}.dump")
         print(f"\nBacking up full database to {output}...")
         backup_full(output)
-        size = os.path.getsize(output) / (1024 ** 2)
+        size = os.path.getsize(output) / (1024**2)
         print(f"  Size: {size:.1f} MB")
 
     # Rotate

@@ -5,16 +5,16 @@ Fetches from 50+ RSS feeds with rate limiting and deduplication.
 """
 
 import asyncio
+import logging
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Dict, List, Optional, Set
+
 import aiohttp
 import feedparser
-from typing import List, Dict, Optional, Set
-from datetime import datetime, timedelta
-from dataclasses import dataclass
-from urllib.parse import urlparse
-import logging
 
-from media_acquisition.base import AgentConfig, DiscoveryAgent, TaskResult, NewsArticleURL
-from media_acquisition.sources.news_sources import get_sources_with_rss, NewsSource
+from media_acquisition.base import AgentConfig, DiscoveryAgent, NewsArticleURL, TaskResult
+from media_acquisition.sources.news_sources import NewsSource, get_sources_with_rss
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class RSSArticle:
     """Article from RSS feed."""
+
     title: str
     url: str
     published: Optional[datetime]
@@ -36,8 +37,8 @@ class RSSAggregatorAgent(DiscoveryAgent):
     Supports 50+ news sources with intelligent rate limiting.
     """
 
-    AGENT_ID = 'rss-aggregator-v1'
-    VERSION = '1.0.0'
+    AGENT_ID = "rss-aggregator-v1"
+    VERSION = "1.0.0"
 
     def __init__(self, config: Optional[AgentConfig] = None):
         super().__init__(config)
@@ -49,7 +50,7 @@ class RSSAggregatorAgent(DiscoveryAgent):
         """Initialize aiohttp session."""
         if not self.session:
             self.session = aiohttp.ClientSession(
-                headers={'User-Agent': 'EpsteinResearchBot/1.0 (Research Project)'}
+                headers={"User-Agent": "EpsteinResearchBot/1.0 (Research Project)"}
             )
 
     async def fetch_feed(self, source: NewsSource) -> List[RSSArticle]:
@@ -81,25 +82,29 @@ class RSSAggregatorAgent(DiscoveryAgent):
 
             for entry in feed.entries:
                 # Extract URL
-                url = entry.get('link', '')
+                url = entry.get("link", "")
                 if not url or url in self.discovered_urls:
                     continue
 
                 # Parse date
                 published = None
-                if hasattr(entry, 'published_parsed') and entry.published_parsed:
+                if hasattr(entry, "published_parsed") and entry.published_parsed:
                     published = datetime(*entry.published_parsed[:6])
-                elif hasattr(entry, 'updated_parsed') and entry.updated_parsed:
+                elif hasattr(entry, "updated_parsed") and entry.updated_parsed:
                     published = datetime(*entry.updated_parsed[:6])
 
-                articles.append(RSSArticle(
-                    title=entry.get('title', ''),
-                    url=url,
-                    published=published,
-                    source=source.name,
-                    summary=entry.get('summary', '')[:500] if hasattr(entry, 'summary') else None,
-                    author=entry.get('author', None)
-                ))
+                articles.append(
+                    RSSArticle(
+                        title=entry.get("title", ""),
+                        url=url,
+                        published=published,
+                        source=source.name,
+                        summary=entry.get("summary", "")[:500]
+                        if hasattr(entry, "summary")
+                        else None,
+                        author=entry.get("author", None),
+                    )
+                )
 
                 self.discovered_urls.add(url)
 
@@ -113,8 +118,9 @@ class RSSAggregatorAgent(DiscoveryAgent):
             logger.warning(f"Failed to fetch RSS from {source.name}: {e}")
             return []
 
-    def filter_by_keywords(self, articles: List[RSSArticle],
-                          keywords: List[str]) -> List[RSSArticle]:
+    def filter_by_keywords(
+        self, articles: List[RSSArticle], keywords: List[str]
+    ) -> List[RSSArticle]:
         """Filter articles by keywords in title or summary."""
         keyword_set = set(k.lower() for k in keywords)
         filtered = []
@@ -126,9 +132,12 @@ class RSSAggregatorAgent(DiscoveryAgent):
 
         return filtered
 
-    def filter_by_date(self, articles: List[RSSArticle],
-                      start_date: Optional[datetime],
-                      end_date: Optional[datetime]) -> List[RSSArticle]:
+    def filter_by_date(
+        self,
+        articles: List[RSSArticle],
+        start_date: Optional[datetime],
+        end_date: Optional[datetime],
+    ) -> List[RSSArticle]:
         """Filter articles by publication date range."""
         if not start_date and not end_date:
             return articles
@@ -149,11 +158,13 @@ class RSSAggregatorAgent(DiscoveryAgent):
 
         return filtered
 
-    async def discover(self,
-                      keywords: List[str],
-                      date_range: Optional[tuple] = None,
-                      max_results: int = 1000,
-                      max_sources: int = 50) -> TaskResult:
+    async def discover(
+        self,
+        keywords: List[str],
+        date_range: Optional[tuple] = None,
+        max_results: int = 1000,
+        max_sources: int = 50,
+    ) -> TaskResult:
         """
         Discover articles from RSS feeds across multiple sources.
 
@@ -166,7 +177,9 @@ class RSSAggregatorAgent(DiscoveryAgent):
         Returns:
             TaskResult with list of NewsArticleURL objects
         """
-        logger.info(f"RSS aggregation starting: {len(keywords)} keywords, max {max_results} results")
+        logger.info(
+            f"RSS aggregation starting: {len(keywords)} keywords, max {max_results} results"
+        )
 
         # Get RSS-enabled sources
         sources = get_sources_with_rss()
@@ -211,24 +224,26 @@ class RSSAggregatorAgent(DiscoveryAgent):
         news_urls = []
         for article in final_articles:
             matched_keywords = [k for k in keywords if k.lower() in article.title.lower()]
-            news_urls.append(NewsArticleURL(
-                url=article.url,
-                title=article.title,
-                priority=3,  # Medium priority for RSS
-                keywords_matched=matched_keywords,
-                discovery_method=f"rss-{article.source.lower().replace(' ', '-')}"
-            ))
+            news_urls.append(
+                NewsArticleURL(
+                    url=article.url,
+                    title=article.title,
+                    priority=3,  # Medium priority for RSS
+                    keywords_matched=matched_keywords,
+                    discovery_method=f"rss-{article.source.lower().replace(' ', '-')}",
+                )
+            )
 
         # Update metrics
-        self.metrics['items_discovered'] = len(news_urls)
-        self.metrics['sources_breakdown'] = {}
+        self.metrics["items_discovered"] = len(news_urls)
+        self.metrics["sources_breakdown"] = {}
 
         logger.info(f"RSS discovery complete: {len(news_urls)} articles")
 
         return TaskResult(
-            status='success',
+            status="success",
             output=news_urls,
-            metadata={'agent_id': self.AGENT_ID, 'metrics': self.metrics}
+            metadata={"agent_id": self.AGENT_ID, "metrics": self.metrics},
         )
 
     async def execute(self, task: Dict[str, any]) -> TaskResult:

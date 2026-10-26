@@ -114,7 +114,7 @@ Extract text from supplementary tables and re-embed with nomic:
 ```python
 # Process kabasshouse_chunk_embeddings
 for chunk in kabasshouse_chunks:
-    text = chunk['chunk_text']
+    text = chunk["chunk_text"]
     embedding = nomic_embed(text, truncate_dim=384)
     insert_to_new_table(chunk_id, embedding)
 

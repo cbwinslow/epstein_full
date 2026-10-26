@@ -12,13 +12,11 @@ Usage:
     python scripts/embed_match.py --split 1/2           # Split 1 of 2 (odd IDs)
 """
 
-import sys
-import io
-import time
-import signal
 import argparse
+import io
+import signal
+import time
 
-import torch
 import psycopg2
 from sentence_transformers import SentenceTransformer
 
@@ -30,8 +28,8 @@ ENCODE_BATCH = 256
 MAX_TEXT_LEN = 512
 
 shutdown = False
-signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__('shutdown', True))
-signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__('shutdown', True))
+signal.signal(signal.SIGINT, lambda s, f: globals().__setitem__("shutdown", True))
+signal.signal(signal.SIGTERM, lambda s, f: globals().__setitem__("shutdown", True))
 
 
 def log(msg):
@@ -50,9 +48,13 @@ def main():
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) FROM page_embeddings")
         emb = cur.fetchone()[0]
-        cur.execute("SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10")
+        cur.execute(
+            "SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10"
+        )
         total = cur.fetchone()[0]
-        log(f"page_embeddings: {emb:,}/{total:,} ({emb/total*100:.1f}%) | Remaining: {total-emb:,}")
+        log(
+            f"page_embeddings: {emb:,}/{total:,} ({emb / total * 100:.1f}%) | Remaining: {total - emb:,}"
+        )
         conn.close()
         return
 
@@ -85,7 +87,7 @@ def main():
     model = SentenceTransformer(MODEL_NAME, device=device)
     log(f"Model on {model.device}")
     log(f"Pages to embed: {total:,}")
-    log(f"ETA: ~{total/2500/60:.0f} min at ~2500/sec\n")
+    log(f"ETA: ~{total / 2500 / 60:.0f} min at ~2500/sec\n")
 
     processed = 0
     errors = 0
@@ -110,8 +112,11 @@ def main():
 
         try:
             embeddings = model.encode(
-                texts, batch_size=ENCODE_BATCH, show_progress_bar=False, device=device,
-                normalize_embeddings=True
+                texts,
+                batch_size=ENCODE_BATCH,
+                show_progress_bar=False,
+                device=device,
+                normalize_embeddings=True,
             )
 
             buf = io.StringIO()
@@ -121,7 +126,9 @@ def main():
             buf.seek(0)
 
             cur.execute("DROP TABLE IF EXISTS _tmp_emb")
-            cur.execute(f"CREATE TEMP TABLE _tmp_emb (id INTEGER PRIMARY KEY, emb vector({DIMS}), model VARCHAR)")
+            cur.execute(
+                f"CREATE TEMP TABLE _tmp_emb (id INTEGER PRIMARY KEY, emb vector({DIMS}), model VARCHAR)"
+            )
             cur.copy_from(buf, "_tmp_emb", columns=("id", "emb", "model"))
             cur.execute("""
                 INSERT INTO page_embeddings (page_id, embedding, model_name)
@@ -141,10 +148,14 @@ def main():
         rate = processed / elapsed if elapsed > 0 else 0
         pct = processed / total * 100
         eta_min = (total - processed) / rate / 60 if rate > 0 else 0
-        log(f"  {processed:,}/{total:,} ({pct:.1f}%) | {rate:.0f}/sec | ETA: {eta_min:.0f}min | Err: {errors}")
+        log(
+            f"  {processed:,}/{total:,} ({pct:.1f}%) | {rate:.0f}/sec | ETA: {eta_min:.0f}min | Err: {errors}"
+        )
 
     elapsed = time.time() - t0
-    log(f"\nDone: {processed:,} in {elapsed/60:.0f}min ({processed/elapsed:.0f}/sec) | Errors: {errors}")
+    log(
+        f"\nDone: {processed:,} in {elapsed / 60:.0f}min ({processed / elapsed:.0f}/sec) | Errors: {errors}"
+    )
     conn.close()
 
 

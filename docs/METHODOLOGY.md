@@ -152,6 +152,7 @@ from typing import List, Optional, Dict, Any
 from enum import Enum
 from datetime import datetime
 
+
 class EntityType(Enum):
     PERSON = "person"
     ORGANIZATION = "organization"
@@ -165,6 +166,7 @@ class EntityType(Enum):
     BATES_NUMBER = "bates_number"
     FLIGHT_ID = "flight_id"
 
+
 class RelationshipType(Enum):
     TRAVELED_WITH = "traveled_with"
     ASSOCIATED_WITH = "associated_with"
@@ -176,6 +178,7 @@ class RelationshipType(Enum):
     CO_OCCURS_WITH = "co_occurs_with"
     LOCATED_IN = "located_in"
     TRANSFERRED_TO = "transferred_to"
+
 
 class DocumentType(Enum):
     COURT_FILING = "court_filing"
@@ -195,13 +198,14 @@ class DocumentType(Enum):
 @dataclass
 class Document:
     """A single document (PDF page or logical document unit)."""
-    efta_number: str              # "EFTA00000001"
-    dataset_id: int               # 1-12
-    file_name: str                # "EFTA00000001.pdf"
-    file_type: str                # "pdf", "image", "audio", "video"
+
+    efta_number: str  # "EFTA00000001"
+    dataset_id: int  # 1-12
+    file_name: str  # "EFTA00000001.pdf"
+    file_type: str  # "pdf", "image", "audio", "video"
     page_count: int = 1
     ocr_text: Optional[str] = None
-    ocr_confidence: float = 0.0   # 0.0-1.0
+    ocr_confidence: float = 0.0  # 0.0-1.0
     document_type: Optional[DocumentType] = None
     classification_confidence: float = 0.0
     redaction_count: int = 0
@@ -211,51 +215,59 @@ class Document:
     created_at: Optional[datetime] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class Entity:
     """A named entity extracted from documents."""
-    id: str                       # unique identifier
-    name: str                     # canonical name
+
+    id: str  # unique identifier
+    name: str  # canonical name
     entity_type: EntityType
     aliases: List[str] = field(default_factory=list)
-    mention_count: int = 0        # number of documents mentioning this entity
+    mention_count: int = 0  # number of documents mentioning this entity
     first_seen: Optional[datetime] = None
     last_seen: Optional[datetime] = None
-    confidence: float = 0.0       # extraction confidence
+    confidence: float = 0.0  # extraction confidence
     metadata: Dict[str, Any] = field(default_factory=dict)
     # Source tracking
     source_documents: List[str] = field(default_factory=list)  # EFTA numbers
     source_pages: List[int] = field(default_factory=list)
 
+
 @dataclass
 class Relationship:
     """A relationship between two entities."""
-    id: str                       # unique identifier
-    source_entity_id: str         # entity.id
-    target_entity_id: str         # entity.id
+
+    id: str  # unique identifier
+    source_entity_id: str  # entity.id
+    target_entity_id: str  # entity.id
     relationship_type: RelationshipType
-    weight: float = 1.0           # strength / frequency
-    confidence: float = 0.0       # extraction confidence
-    context: str = ""             # text context where relationship was found
-    source_document: str = ""     # EFTA number
+    weight: float = 1.0  # strength / frequency
+    confidence: float = 0.0  # extraction confidence
+    context: str = ""  # text context where relationship was found
+    source_document: str = ""  # EFTA number
     metadata: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class FaceDetection:
     """A face detected in an image."""
-    id: str                       # unique identifier
-    source_document: str          # EFTA number
+
+    id: str  # unique identifier
+    source_document: str  # EFTA number
     source_page: int
-    bounding_box: tuple           # (x1, y1, x2, y2)
+    bounding_box: tuple  # (x1, y1, x2, y2)
     embedding: Optional[list] = None  # 512-D ArcFace vector
     identity_label: Optional[str] = None  # matched person name
-    confidence: float = 0.0       # detection confidence
-    similarity_score: float = 0.0 # match confidence
+    confidence: float = 0.0  # detection confidence
+    similarity_score: float = 0.0  # match confidence
     metadata: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class Transcription:
     """Audio/video transcription result."""
+
     source_file: str
     duration_seconds: float
     text: str
@@ -264,13 +276,15 @@ class Transcription:
     confidence: float = 0.0
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class Redaction:
     """A detected redaction in a document."""
-    document_id: str              # EFTA number
+
+    document_id: str  # EFTA number
     page_number: int
-    bbox: tuple                   # (x1, y1, x2, y2) of redacted region
-    redaction_type: str           # "proper", "improper", "partial"
+    bbox: tuple  # (x1, y1, x2, y2) of redacted region
+    redaction_type: str  # "proper", "improper", "partial"
     recovered_text: Optional[str] = None  # if recoverable
     confidence: float = 0.0
     metadata: Dict[str, Any] = field(default_factory=dict)
@@ -432,7 +446,7 @@ Phase 6: Evaluation & Validation
 
 ### OCR Accuracy (CER/WER)
 - **Challenge**: No official ground truth exists for DOJ documents
-- **Approach**: 
+- **Approach**:
   1. Sample 100 pages across document types
   2. Manual ground truth creation (2 independent transcribers)
   3. Compute inter-annotator agreement (Cohen's Kappa)
@@ -528,6 +542,7 @@ Used by multiple projects to find distinct social circles in the Epstein network
 
 ```python
 from networkx.algorithms.community import louvain_communities
+
 communities = louvain_communities(G, resolution=1.0)
 ```
 
@@ -543,6 +558,7 @@ Tim Smith's approach (Graph-Aware RAG paper):
 
 ```python
 import networkx as nx
+
 degree = nx.degree_centrality(G)
 betweenness = nx.betweenness_centrality(G)
 closeness = nx.closeness_centrality(G)

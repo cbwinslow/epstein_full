@@ -15,8 +15,9 @@ import fitz  # PyMuPDF
 import spacy
 
 # Setup logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
 
 def is_text_layer_pdf(pdf_path: str) -> bool:
     """Check if PDF has a text layer (not scanned)."""
@@ -33,6 +34,7 @@ def is_text_layer_pdf(pdf_path: str) -> bool:
         logger.error(f"Error checking text layer: {e}")
         return False
 
+
 def extract_text_with_pymupdf(pdf_path: str) -> list:
     """Extract text using PyMuPDF (fast for text-layer PDFs)."""
     logger.info(f"📄 Extracting text with PyMuPDF: {Path(pdf_path).name}")
@@ -44,17 +46,20 @@ def extract_text_with_pymupdf(pdf_path: str) -> list:
         page = doc.load_page(page_num)
         text = page.get_text()
 
-        text_content.append({
-            "page": page_num + 1,
-            "text": text,
-            "confidence": 1.0,  # PyMuPDF doesn't provide confidence
-            "method": "pymupdf",
-            "processing_time": 0.0,
-            "word_count": len(text.split())
-        })
+        text_content.append(
+            {
+                "page": page_num + 1,
+                "text": text,
+                "confidence": 1.0,  # PyMuPDF doesn't provide confidence
+                "method": "pymupdf",
+                "processing_time": 0.0,
+                "word_count": len(text.split()),
+            }
+        )
 
     logger.info(f"✅ PyMuPDF extraction completed: {len(text_content)} pages")
     return text_content
+
 
 def extract_entities(text_content: list, nlp) -> list:
     """Extract entities using spaCy."""
@@ -64,21 +69,21 @@ def extract_entities(text_content: list, nlp) -> list:
     total_entities = 0
 
     for page_data in text_content:
-        if not page_data['text'].strip():
+        if not page_data["text"].strip():
             continue
 
-        doc = nlp(page_data['text'])
+        doc = nlp(page_data["text"])
 
         page_entities = []
         for ent in doc.ents:
             entity_data = {
                 "text": ent.text,
                 "label": ent.label_,
-                "page": page_data['page'],
+                "page": page_data["page"],
                 "start": ent.start_char,
                 "end": ent.end_char,
                 "start_token": ent.start,
-                "end_token": ent.end
+                "end_token": ent.end,
             }
             page_entities.append(entity_data)
             all_entities.append(entity_data)
@@ -88,12 +93,13 @@ def extract_entities(text_content: list, nlp) -> list:
     logger.info(f"✅ Entity extraction completed: {total_entities} entities found")
     return all_entities
 
+
 def analyze_document_quality(text_content: list) -> dict:
     """Analyze document quality metrics."""
     total_pages = len(text_content)
-    total_words = sum(page['word_count'] for page in text_content)
-    avg_confidence = sum(page['confidence'] for page in text_content) / total_pages
-    processing_times = [page['processing_time'] for page in text_content]
+    total_words = sum(page["word_count"] for page in text_content)
+    avg_confidence = sum(page["confidence"] for page in text_content) / total_pages
+    processing_times = [page["processing_time"] for page in text_content]
     avg_processing_time = sum(processing_times) / len(processing_times) if processing_times else 0
 
     quality_metrics = {
@@ -101,12 +107,13 @@ def analyze_document_quality(text_content: list) -> dict:
         "total_words": total_words,
         "avg_confidence": round(avg_confidence, 4),
         "avg_processing_time": round(avg_processing_time, 2),
-        "pages_with_text": sum(1 for page in text_content if page['text'].strip()),
+        "pages_with_text": sum(1 for page in text_content if page["text"].strip()),
         "avg_words_per_page": round(total_words / total_pages, 2) if total_pages > 0 else 0,
-        "ocr_method": text_content[0]['method'] if text_content else "unknown"
+        "ocr_method": text_content[0]["method"] if text_content else "unknown",
     }
 
     return quality_metrics
+
 
 def process_file(pdf_path: str, output_dir: str, nlp) -> bool:
     """Process a single PDF file."""
@@ -133,42 +140,59 @@ def process_file(pdf_path: str, output_dir: str, nlp) -> bool:
 
         # Save OCR results
         ocr_file = proc_subdir / f"{base_name}_ocr.json"
-        with open(ocr_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "file": Path(pdf_path).name,
-                "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
-                "quality_metrics": quality_metrics,
-                "pages": text_content
-            }, f, indent=2, ensure_ascii=False)
+        with open(ocr_file, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "file": Path(pdf_path).name,
+                    "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "quality_metrics": quality_metrics,
+                    "pages": text_content,
+                },
+                f,
+                indent=2,
+                ensure_ascii=False,
+            )
 
         # Save entity results
         entity_file = proc_subdir / f"{base_name}_entities.json"
-        with open(entity_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "file": Path(pdf_path).name,
-                "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
-                "total_entities": len(entities),
-                "entities": entities
-            }, f, indent=2, ensure_ascii=False)
+        with open(entity_file, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "file": Path(pdf_path).name,
+                    "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "total_entities": len(entities),
+                    "entities": entities,
+                },
+                f,
+                indent=2,
+                ensure_ascii=False,
+            )
 
         # Save summary
         summary_file = proc_subdir / f"{base_name}_summary.json"
-        with open(summary_file, 'w', encoding='utf-8') as f:
+        with open(summary_file, "w", encoding="utf-8") as f:
             entity_types = {}
             for entity in entities:
-                label = entity['label']
+                label = entity["label"]
                 entity_types[label] = entity_types.get(label, 0) + 1
 
-            json.dump({
-                "file": Path(pdf_path).name,
-                "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
-                "quality_metrics": quality_metrics,
-                "entity_summary": {
-                    "total": len(entities),
-                    "by_type": entity_types,
-                    "top_types": sorted(entity_types.items(), key=lambda x: x[1], reverse=True)[:10]
-                }
-            }, f, indent=2, ensure_ascii=False)
+            json.dump(
+                {
+                    "file": Path(pdf_path).name,
+                    "processing_date": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "quality_metrics": quality_metrics,
+                    "entity_summary": {
+                        "total": len(entities),
+                        "by_type": entity_types,
+                        "top_types": sorted(entity_types.items(), key=lambda x: x[1], reverse=True)[
+                            :10
+                        ],
+                    },
+                },
+                f,
+                indent=2,
+                ensure_ascii=False,
+            )
 
         logger.info(f"📁 Results saved to: {proc_subdir}")
         logger.info("✅ Processing completed successfully")
@@ -177,6 +201,7 @@ def process_file(pdf_path: str, output_dir: str, nlp) -> bool:
     except Exception as e:
         logger.error(f"❌ Processing failed: {e}")
         return False
+
 
 def main():
     """Main function."""
@@ -222,6 +247,7 @@ def main():
             logger.error(f"❌ Failed to process: {pdf_file.name}")
 
     logger.info("🎉 Processing demo completed!")
+
 
 if __name__ == "__main__":
     main()

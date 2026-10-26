@@ -1,7 +1,7 @@
 # Epstein Files Project - Complete File Inventory
 
-**Date**: March 23, 2026  
-**Version**: v1.0.0  
+**Date**: March 23, 2026
+**Version**: v1.0.0
 **Purpose**: Comprehensive inventory of all project files with descriptions and usage
 
 ## Directory Structure

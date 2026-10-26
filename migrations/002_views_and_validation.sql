@@ -8,7 +8,7 @@
 
 -- View: Document summary with page count
 CREATE OR REPLACE VIEW v_document_summary AS
-SELECT 
+SELECT
     d.id,
     d.efta_number,
     d.dataset,
@@ -25,7 +25,7 @@ GROUP BY d.id, d.efta_number, d.dataset, d.title, d.date, d.source;
 
 -- View: Pages missing embeddings (for batch processing)
 CREATE OR REPLACE VIEW v_pages_missing_embeddings AS
-SELECT 
+SELECT
     p.id AS page_id,
     p.efta_number,
     p.page_number,
@@ -33,13 +33,13 @@ SELECT
     LEFT(p.text_content, 200) AS text_preview
 FROM pages p
 LEFT JOIN page_embeddings pe ON p.id = pe.page_id
-WHERE pe.page_id IS NULL 
+WHERE pe.page_id IS NULL
   AND p.text_content IS NOT NULL
   AND LENGTH(p.text_content) > 50;
 
 -- View: Entity frequency across documents
 CREATE OR REPLACE VIEW v_entity_frequency AS
-SELECT 
+SELECT
     de.entity_text,
     de.entity_label,
     COUNT(DISTINCT de.document_id) AS document_count,
@@ -52,7 +52,7 @@ ORDER BY mention_count DESC;
 
 -- View: Cross-reference between emails and documents
 CREATE OR REPLACE VIEW v_email_document_links AS
-SELECT 
+SELECT
     e.id AS email_id,
     e.sender,
     e.recipients,
@@ -66,15 +66,15 @@ WHERE d.efta_number IS NOT NULL;
 
 -- View: Document relationships via entity co-occurrence
 CREATE OR REPLACE VIEW v_document_relationships AS
-SELECT 
+SELECT
     de1.document_id AS doc1_id,
     de2.document_id AS doc2_id,
     de1.entity_text AS shared_entity,
     de1.entity_label AS entity_type,
     COUNT(*) AS shared_mentions
 FROM document_entities de1
-JOIN document_entities de2 
-    ON de1.entity_text = de2.entity_text 
+JOIN document_entities de2
+    ON de1.entity_text = de2.entity_text
     AND de1.document_id < de2.document_id
 WHERE de1.entity_label IN ('PERSON', 'ORG', 'GPE', 'LAW')
 GROUP BY de1.document_id, de2.document_id, de1.entity_text, de1.entity_label
@@ -82,7 +82,7 @@ HAVING COUNT(*) >= 2;
 
 -- View: Redaction analysis per document
 CREATE OR REPLACE VIEW v_document_redactions AS
-SELECT 
+SELECT
     r.document_id,
     d.efta_number,
     COUNT(*) AS redaction_count,
@@ -95,7 +95,7 @@ GROUP BY r.document_id, d.efta_number;
 
 -- View: Communication network (emails + connections)
 CREATE OR REPLACE VIEW v_communication_network AS
-SELECT 
+SELECT
     ep.email,
     ep.name,
     ep.entity_type,
@@ -108,7 +108,7 @@ ORDER BY email_count DESC;
 
 -- View: Dataset completeness status
 CREATE OR REPLACE VIEW v_dataset_status AS
-SELECT 
+SELECT
     dataset,
     COUNT(*) AS document_count,
     SUM(CASE WHEN text_content IS NOT NULL THEN 1 ELSE 0 END) AS with_text,
@@ -121,7 +121,7 @@ ORDER BY dataset;
 
 -- View: Duplicate detection candidates
 CREATE OR REPLACE VIEW v_duplicate_candidates AS
-SELECT 
+SELECT
     d1.id AS doc1_id,
     d2.id AS doc2_id,
     d1.efta_number AS efta1,
@@ -129,14 +129,14 @@ SELECT
     d1.sha256_hash,
     similarity(d1.title, d2.title) AS title_similarity
 FROM documents d1
-JOIN documents d2 
-    ON d1.sha256_hash = d2.sha256_hash 
+JOIN documents d2
+    ON d1.sha256_hash = d2.sha256_hash
     AND d1.id < d2.id
 WHERE d1.sha256_hash IS NOT NULL;
 
 -- View: Persons mentioned across multiple sources
 CREATE OR REPLACE VIEW v_cross_source_persons AS
-SELECT 
+SELECT
     p.full_name,
     COUNT(DISTINCT p.source_table) AS source_count,
     STRING_AGG(DISTINCT p.source_table, ', ') AS sources,
@@ -154,7 +154,7 @@ ORDER BY source_count DESC, total_mentions DESC;
 
 -- View: Flight passenger analysis
 CREATE OR REPLACE VIEW v_flight_analysis AS
-SELECT 
+SELECT
     f.tail_number,
     f.date,
     f.origin,
@@ -190,20 +190,20 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         'EFTa Number'::TEXT,
         d.efta_number IS NOT NULL AND validate_efta_number(d.efta_number),
-        CASE 
+        CASE
             WHEN d.efta_number IS NULL THEN 'Missing EFTA number'
             WHEN NOT validate_efta_number(d.efta_number) THEN 'Invalid format: ' || d.efta_number
             ELSE 'Valid'
         END
     FROM documents d WHERE d.id = doc_id
     UNION ALL
-    SELECT 
+    SELECT
         'Text Content'::TEXT,
         EXISTS(SELECT 1 FROM pages p WHERE p.document_id = doc_id AND p.text_content IS NOT NULL),
-        CASE 
+        CASE
             WHEN NOT EXISTS(SELECT 1 FROM pages p WHERE p.document_id = doc_id AND p.text_content IS NOT NULL)
             THEN 'No text content available'
             ELSE 'Has text content'
@@ -223,15 +223,15 @@ BEGIN
     IF NEW.efta_number IS NOT NULL AND NOT validate_efta_number(NEW.efta_number) THEN
         RAISE EXCEPTION 'Invalid EFTA number format: %', NEW.efta_number;
     END IF;
-    
+
     -- Set default source if not provided
     IF NEW.source IS NULL THEN
         NEW.source := 'imported';
     END IF;
-    
+
     -- Update timestamp
     NEW.updated_at := NOW();
-    
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -246,15 +246,15 @@ $$ LANGUAGE plpgsql;
 -- ============================================================================
 
 -- Index for entity lookups
-CREATE INDEX IF NOT EXISTS idx_document_entities_text_label 
+CREATE INDEX IF NOT EXISTS idx_document_entities_text_label
 ON document_entities(entity_text, entity_label);
 
 -- Index for email searches
-CREATE INDEX IF NOT EXISTS idx_emails_content_gin 
+CREATE INDEX IF NOT EXISTS idx_emails_content_gin
 ON emails USING gin(to_tsvector('english', content));
 
 -- Index for page text search
-CREATE INDEX IF NOT EXISTS idx_pages_text_gin 
+CREATE INDEX IF NOT EXISTS idx_pages_text_gin
 ON pages USING gin(to_tsvector('english', text_content));
 
 -- ============================================================================
@@ -268,10 +268,10 @@ ON pages USING gin(to_tsvector('english', text_content));
 -- ALTER TABLE documents ADD CONSTRAINT chk_efta_format CHECK (efta_number IS NULL OR efta_number ~ '^EFTA[0-9]{8}$');
 
 -- Add foreign key relationships (verify data integrity first)
--- ALTER TABLE pages ADD CONSTRAINT fk_pages_documents 
+-- ALTER TABLE pages ADD CONSTRAINT fk_pages_documents
 --     FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE;
 
--- ALTER TABLE document_entities ADD CONSTRAINT fk_doc_entities_documents 
+-- ALTER TABLE document_entities ADD CONSTRAINT fk_doc_entities_documents
 --     FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE;
 
 -- ============================================================================

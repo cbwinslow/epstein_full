@@ -8,7 +8,7 @@
 -- 1a. Find "suspicious" duplicates (same hash, different EFTA numbers)
 -- These might be legitimate duplicates OR false positives
 CREATE OR REPLACE VIEW v_suspicious_duplicates AS
-SELECT 
+SELECT
     MD5(p1.text_content) as content_hash,
     p1.id as page1_id,
     p1.efta_number as efta1,
@@ -18,7 +18,7 @@ SELECT
     p2.page_number as page_num2,
     LENGTH(p1.text_content) as text_length,
     LEFT(p1.text_content, 100) as sample_text,
-    CASE 
+    CASE
         WHEN p1.efta_number = p2.efta_number THEN 'SAME_DOCUMENT'
         ELSE 'DIFFERENT_DOCUMENTS'
     END as duplicate_type
@@ -31,7 +31,7 @@ LIMIT 1000;
 
 -- 1b. Find very short text that might be boilerplate
 CREATE OR REPLACE VIEW v_short_text_duplicates AS
-SELECT 
+SELECT
     MD5(text_content) as content_hash,
     COUNT(*) as occurrence_count,
     MIN(LENGTH(text_content)) as text_length,
@@ -46,19 +46,19 @@ ORDER BY COUNT(*) DESC;
 
 -- 1c. Find "identical except page number" patterns
 CREATE OR REPLACE VIEW v_page_number_duplicates AS
-SELECT 
+SELECT
     p1.efta_number,
     p1.page_number as page1,
     p2.page_number as page2,
     LENGTH(p1.text_content) as text_length,
     MD5(p1.text_content) as hash1,
     MD5(p2.text_content) as hash2,
-    CASE 
+    CASE
         WHEN p1.text_content = p2.text_content THEN 'EXACT_MATCH'
         ELSE 'NEAR_MATCH'
     END as match_type
 FROM pages p1
-JOIN pages p2 ON p1.efta_number = p2.efta_number 
+JOIN pages p2 ON p1.efta_number = p2.efta_number
     AND p1.text_content IS NOT NULL
     AND p2.text_content IS NOT NULL
     AND p1.page_number < p2.page_number
@@ -75,7 +75,7 @@ LIMIT 100;
 -- With 2.9M pages, collision probability is ~2^-128 (negligible)
 -- But let's verify no MD5 collisions on different text
 CREATE OR REPLACE VIEW v_md5_collision_check AS
-SELECT 
+SELECT
     MD5(text_content) as content_hash,
     COUNT(DISTINCT text_content) as unique_text_variants,
     COUNT(*) as total_pages,
@@ -87,7 +87,7 @@ HAVING COUNT(DISTINCT text_content) > 1;
 
 -- 2b. Distribution analysis - are duplicates evenly distributed?
 CREATE OR REPLACE VIEW v_duplicate_distribution AS
-SELECT 
+SELECT
     dataset,
     COUNT(*) as total_pages,
     COUNT(DISTINCT MD5(text_content)) as unique_hashes,
@@ -105,7 +105,7 @@ ORDER BY duplicate_count DESC;
 
 -- 3a. Get random sample of duplicates for manual review
 CREATE OR REPLACE VIEW v_duplicate_sample_for_review AS
-SELECT 
+SELECT
     MD5(p.text_content) as content_hash,
     p.id,
     p.efta_number,
@@ -134,7 +134,7 @@ LIMIT 100;
 -- 4a. Conservative deduplication (only within same EFTA, same text)
 -- This is 100% safe - same document, same text = definitely duplicate
 CREATE OR REPLACE VIEW v_safe_duplicates_same_doc AS
-SELECT 
+SELECT
     efta_number,
     MD5(text_content) as content_hash,
     MIN(id) as canonical_page_id,
@@ -150,7 +150,7 @@ HAVING COUNT(*) > 1;
 -- 4b. Aggressive deduplication (across different EFTA numbers)
 -- Review this carefully - might be false positives
 CREATE OR REPLACE VIEW v_aggressive_duplicates_across_docs AS
-SELECT 
+SELECT
     MD5(text_content) as content_hash,
     MIN(id) as canonical_page_id,
     ARRAY_AGG(id ORDER BY id) as all_page_ids,
@@ -173,7 +173,7 @@ HAVING COUNT(*) > 1
 -- Create a final recommendation view
 CREATE OR REPLACE VIEW v_dedup_recommendation AS
 WITH stats AS (
-    SELECT 
+    SELECT
         COUNT(*) as total_pages,
         COUNT(DISTINCT MD5(text_content)) as unique_hashes,
         COUNT(*) - COUNT(DISTINCT MD5(text_content)) as total_duplicates
@@ -188,18 +188,18 @@ aggressive_dedup AS (
     SELECT SUM(duplicate_count) as aggressive_remove
     FROM v_aggressive_duplicates_across_docs
 )
-SELECT 
+SELECT
     s.total_pages,
     s.unique_hashes,
     s.total_duplicates,
     ROUND(s.total_duplicates::numeric / s.total_pages * 100, 2) as dup_percentage,
     sd.safe_to_remove,
     ad.aggressive_remove,
-    CASE 
+    CASE
         WHEN sd.safe_to_remove > 0 THEN 'SAFE: Remove ' || sd.safe_to_remove || ' duplicates (same document)'
         ELSE 'SAFE: No same-document duplicates found'
     END as safe_recommendation,
-    CASE 
+    CASE
         WHEN ad.aggressive_remove > 0 THEN 'REVIEW: ' || ad.aggressive_remove || ' duplicates across documents - verify manually'
         ELSE 'No cross-document duplicates found'
     END as aggressive_recommendation
@@ -234,13 +234,13 @@ CROSS JOIN aggressive_dedup ad;
 
 -- This is the CONSERVATIVE approach - only dedup within same document
 CREATE OR REPLACE VIEW v_pages_need_embeddings_safe AS
-SELECT 
+SELECT
     p.id,
     p.efta_number,
     p.page_number,
     p.text_content,
     MD5(p.text_content) as content_hash,
-    CASE 
+    CASE
         WHEN pe.page_id IS NOT NULL THEN 'Has MiniLM'
         WHEN p.rtx3060_embedding IS NOT NULL THEN 'Has Nomic'
         ELSE 'Needs embedding'

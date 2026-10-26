@@ -231,15 +231,16 @@ python scripts/processing/master_unify.py \
 
 ```python
 # Key paths (all scripts use this)
-DATA_DIR = Path('/home/cbwinslow/workspace/epstein-data')
-SCRIPTS_DIR = Path('/home/cbwinslow/workspace/epstein/scripts')
-EPSTEIN_RIPPER_DIR = Path('/home/cbwinslow/workspace/epstein/epstein-ripper')
-EPSTEIN_PIPELINE_DIR = Path('/home/cbwinslow/workspace/epstein/epstein-pipeline')
+DATA_DIR = Path("/home/cbwinslow/workspace/epstein-data")
+SCRIPTS_DIR = Path("/home/cbwinslow/workspace/epstein/scripts")
+EPSTEIN_RIPPER_DIR = Path("/home/cbwinslow/workspace/epstein/epstein-ripper")
+EPSTEIN_PIPELINE_DIR = Path("/home/cbwinslow/workspace/epstein/epstein-pipeline")
 ```
 
 **Usage in scripts:**
 ```python
 import sys
+
 sys.path.insert(0, str(SCRIPTS_DIR))
 from config import DATA_DIR, EPSTEIN_RIPPER_DIR
 ```
@@ -261,22 +262,26 @@ vim scripts/download/download_newsource.py
 Download NEWSOURCE data for Epstein research.
 Usage: python scripts/download/download_newsource.py --year 2024
 """
+
 import argparse
 import sys
-sys.path.insert(0, '/home/cbwinslow/workspace/epstein/scripts')
+
+sys.path.insert(0, "/home/cbwinslow/workspace/epstein/scripts")
 from config import DATA_DIR
 
+
 def download_newsource(year):
-    output_dir = DATA_DIR / 'raw-files/newsource'
+    output_dir = DATA_DIR / "raw-files/newsource"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # TODO: Implement download logic
     print(f"Downloading NEWSOURCE for {year}...")
     pass
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--year', type=int)
+    parser.add_argument("--year", type=int)
     args = parser.parse_args()
     download_newsource(args.year)
 ```
@@ -317,8 +322,8 @@ vim docs/agents/MASTER_INDEX.md
 
 2. **Update `config.py` with new paths:**
    ```python
-   DATA_DIR = Path('/home/user/myproject-data')
-   SCRIPTS_DIR = Path('/home/user/myproject/scripts')
+   DATA_DIR = Path("/home/user/myproject-data")
+   SCRIPTS_DIR = Path("/home/user/myproject/scripts")
    ```
 
 3. **Follow the templates** in Section "How to Add a New Data Source"

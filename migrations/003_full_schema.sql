@@ -273,7 +273,7 @@ CREATE INDEX IF NOT EXISTS idx_fec_cn_id ON fec_candidate_master(cand_id);
 
 -- Create views for common queries
 CREATE OR REPLACE VIEW entity_summary AS
-SELECT 
+SELECT
     e.id,
     e.name,
     e.entity_type,
@@ -288,7 +288,7 @@ LEFT JOIN entity_relationships r ON e.id = r.source_entity_id OR e.id = r.target
 GROUP BY e.id, e.name, e.entity_type, e.category, e.document_count, e.mention_count, e.first_appeared, e.last_appeared;
 
 CREATE OR REPLACE VIEW document_stats AS
-SELECT 
+SELECT
     d.dataset,
     COUNT(*) as document_count,
     SUM(d.page_count) as total_pages,
@@ -309,9 +309,9 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-CREATE TRIGGER update_documents_updated_at 
-    BEFORE UPDATE ON documents 
-    FOR EACH ROW 
+CREATE TRIGGER update_documents_updated_at
+    BEFORE UPDATE ON documents
+    FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 -- Audit table for tracking data changes
@@ -328,7 +328,7 @@ CREATE TABLE IF NOT EXISTS audit_log (
 
 -- Full-text search configuration
 CREATE OR REPLACE VIEW document_search AS
-SELECT 
+SELECT
     d.id as document_id,
     d.efta_id,
     d.dataset,
@@ -340,7 +340,7 @@ GROUP BY d.id, d.efta_id, d.dataset, d.document_type;
 
 -- Create materialized view for faster entity lookups (refresh periodically)
 CREATE MATERIALIZED VIEW IF NOT EXISTS entity_lookup AS
-SELECT 
+SELECT
     e.id,
     e.name,
     e.normalized_name,

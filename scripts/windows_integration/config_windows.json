@@ -13,7 +13,7 @@
   },
   "packages": [
     "pymupdf",
-    "pyarrow", 
+    "pyarrow",
     "pandas",
     "numpy",
     "scipy",

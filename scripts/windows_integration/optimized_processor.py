@@ -4,7 +4,7 @@ Optimized Windows RTX 3060 Processing Pipeline
 
 Based on GitHub issues analysis and current bottlenecks:
 - Phase 9.1: OCR pipeline on downloaded PDFs (HIGH PRIORITY)
-- Phase 9.3: NER extraction on all document text (HIGH PRIORITY) 
+- Phase 9.3: NER extraction on all document text (HIGH PRIORITY)
 - Current bottleneck: Only 268K PDFs downloaded, need to process all
 - PostgreSQL has 2.9M pages but needs more OCR text content
 - Need to integrate with existing Linux PostgreSQL database
@@ -41,17 +41,16 @@ from surya.ocr import run_ocr
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('processing.log'),
-        logging.StreamHandler()
-    ]
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("processing.log"), logging.StreamHandler()],
 )
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class ProcessingConfig:
     """Configuration for processing pipeline."""
+
     # Database settings
     db_host: str = "localhost"
     db_port: int = 5432
@@ -69,6 +68,7 @@ class ProcessingConfig:
     downloads_dir: str = "downloads"
     results_dir: str = "results"
     temp_dir: str = "temp"
+
 
 class OptimizedProcessor:
     def __init__(self, config: ProcessingConfig):
@@ -97,10 +97,10 @@ class OptimizedProcessor:
         # Initialize Surya OCR models
         try:
             self.ocr_models = {
-                'detection_model': load_detection_model(),
-                'detection_processor': load_detection_processor(),
-                'recognition_model': load_recognition_model(),
-                'recognition_processor': load_recognition_processor()
+                "detection_model": load_detection_model(),
+                "detection_processor": load_detection_processor(),
+                "recognition_model": load_recognition_model(),
+                "recognition_processor": load_recognition_processor(),
             }
             logger.info("✅ Surya OCR models loaded")
         except Exception as e:
@@ -128,7 +128,7 @@ class OptimizedProcessor:
                 port=self.config.db_port,
                 database=self.config.db_name,
                 user=self.config.db_user,
-                password=self.config.db_password
+                password=self.config.db_password,
             )
             logger.info("✅ PostgreSQL connection established")
         except Exception as e:
@@ -161,14 +161,16 @@ class OptimizedProcessor:
             page = doc.load_page(page_num)
             text = page.get_text()
 
-            text_content.append({
-                "page": page_num + 1,
-                "text": text,
-                "confidence": 1.0,  # PyMuPDF doesn't provide confidence
-                "method": "pymupdf",
-                "processing_time": 0.0,
-                "word_count": len(text.split())
-            })
+            text_content.append(
+                {
+                    "page": page_num + 1,
+                    "text": text,
+                    "confidence": 1.0,  # PyMuPDF doesn't provide confidence
+                    "method": "pymupdf",
+                    "processing_time": 0.0,
+                    "word_count": len(text.split()),
+                }
+            )
 
         logger.info(f"✅ PyMuPDF extraction completed: {len(text_content)} pages")
         return text_content
@@ -195,12 +197,12 @@ class OptimizedProcessor:
             # Run OCR
             predictions = run_ocr(
                 [img],
-                [doc.language if hasattr(doc, 'language') else 'en'],
-                self.ocr_models['detection_model'],
-                self.ocr_models['detection_processor'],
-                self.ocr_models['recognition_model'],
-                self.ocr_models['recognition_processor'],
-                self.device
+                [doc.language if hasattr(doc, "language") else "en"],
+                self.ocr_models["detection_model"],
+                self.ocr_models["detection_processor"],
+                self.ocr_models["recognition_model"],
+                self.ocr_models["recognition_processor"],
+                self.device,
             )
 
             page_text = ""
@@ -216,14 +218,16 @@ class OptimizedProcessor:
             avg_confidence = total_confidence / confidence_count if confidence_count > 0 else 0.0
             processing_time = time.time() - start_time
 
-            text_content.append({
-                "page": page_num + 1,
-                "text": page_text.strip(),
-                "confidence": avg_confidence,
-                "method": "surya_ocr",
-                "processing_time": processing_time,
-                "word_count": len(page_text.split())
-            })
+            text_content.append(
+                {
+                    "page": page_num + 1,
+                    "text": page_text.strip(),
+                    "confidence": avg_confidence,
+                    "method": "surya_ocr",
+                    "processing_time": processing_time,
+                    "word_count": len(page_text.split()),
+                }
+            )
 
         logger.info(f"✅ Surya OCR completed: {len(text_content)} pages")
         return text_content
@@ -240,21 +244,21 @@ class OptimizedProcessor:
         total_entities = 0
 
         for page_data in text_content:
-            if not page_data['text'].strip():
+            if not page_data["text"].strip():
                 continue
 
-            doc = self.nlp(page_data['text'])
+            doc = self.nlp(page_data["text"])
 
             page_entities = []
             for ent in doc.ents:
                 entity_data = {
                     "text": ent.text,
                     "label": ent.label_,
-                    "page": page_data['page'],
+                    "page": page_data["page"],
                     "start": ent.start_char,
                     "end": ent.end_char,
                     "start_token": ent.start,
-                    "end_token": ent.end
+                    "end_token": ent.end,
                 }
                 page_entities.append(entity_data)
                 all_entities.append(entity_data)
@@ -267,9 +271,9 @@ class OptimizedProcessor:
     def analyze_document_quality(self, text_content: List[Dict]) -> Dict:
         """Analyze document quality metrics."""
         total_pages = len(text_content)
-        total_words = sum(page['word_count'] for page in text_content)
-        avg_confidence = np.mean([page['confidence'] for page in text_content])
-        processing_times = [page['processing_time'] for page in text_content]
+        total_words = sum(page["word_count"] for page in text_content)
+        avg_confidence = np.mean([page["confidence"] for page in text_content])
+        processing_times = [page["processing_time"] for page in text_content]
         avg_processing_time = np.mean(processing_times) if processing_times else 0
 
         quality_metrics = {
@@ -277,15 +281,16 @@ class OptimizedProcessor:
             "total_words": total_words,
             "avg_confidence": round(avg_confidence, 4),
             "avg_processing_time": round(avg_processing_time, 2),
-            "pages_with_text": sum(1 for page in text_content if page['text'].strip()),
+            "pages_with_text": sum(1 for page in text_content if page["text"].strip()),
             "avg_words_per_page": round(total_words / total_pages, 2) if total_pages > 0 else 0,
-            "ocr_method": text_content[0]['method'] if text_content else "unknown"
+            "ocr_method": text_content[0]["method"] if text_content else "unknown",
         }
 
         return quality_metrics
 
-    def save_to_postgresql(self, pdf_path: str, text_content: List[Dict], entities: List[Dict],
-                          quality_metrics: Dict):
+    def save_to_postgresql(
+        self, pdf_path: str, text_content: List[Dict], entities: List[Dict], quality_metrics: Dict
+    ):
         """Save processing results directly to PostgreSQL database."""
         if not self.db_conn:
             logger.error("❌ No database connection available")
@@ -296,13 +301,14 @@ class OptimizedProcessor:
             cursor = self.db_conn.cursor()
 
             # Calculate document hash for deduplication
-            with open(pdf_path, 'rb') as f:
+            with open(pdf_path, "rb") as f:
                 file_hash = hashlib.sha256(f.read()).hexdigest()
 
             # Insert document metadata with Windows RTX 3060 indicator
-            cursor.execute("""
-                INSERT INTO documents (efta_number, file_name, file_size_bytes, sha256_hash, 
-                                     ocr_method, ocr_confidence, word_count, page_count, 
+            cursor.execute(
+                """
+                INSERT INTO documents (efta_number, file_name, file_size_bytes, sha256_hash,
+                                     ocr_method, ocr_confidence, word_count, page_count,
                                      source_system, created_at, updated_at)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, NOW(), NOW())
                 ON CONFLICT (efta_number) DO UPDATE SET
@@ -315,25 +321,40 @@ class OptimizedProcessor:
                     page_count = EXCLUDED.page_count,
                     source_system = EXCLUDED.source_system,
                     updated_at = NOW()
-            """, (
-                efta_number, Path(pdf_path).name, Path(pdf_path).stat().st_size, file_hash,
-                quality_metrics['ocr_method'], quality_metrics['avg_confidence'],
-                quality_metrics['total_words'], quality_metrics['total_pages'],
-                "Windows_RTX3060"  # Clear indicator of Windows RTX 3060 processing
-            ))
+            """,
+                (
+                    efta_number,
+                    Path(pdf_path).name,
+                    Path(pdf_path).stat().st_size,
+                    file_hash,
+                    quality_metrics["ocr_method"],
+                    quality_metrics["avg_confidence"],
+                    quality_metrics["total_words"],
+                    quality_metrics["total_pages"],
+                    "Windows_RTX3060",  # Clear indicator of Windows RTX 3060 processing
+                ),
+            )
 
             # Insert pages with Windows RTX 3060 indicator
             page_data = []
             for page_data_item in text_content:
-                page_data.append((
-                    efta_number, page_data_item['page'], page_data_item['text'],
-                    page_data_item['confidence'], page_data_item['method'],
-                    page_data_item['processing_time'], page_data_item['word_count'],
-                    "Windows_RTX3060"  # Clear indicator of Windows RTX 3060 processing
-                ))
+                page_data.append(
+                    (
+                        efta_number,
+                        page_data_item["page"],
+                        page_data_item["text"],
+                        page_data_item["confidence"],
+                        page_data_item["method"],
+                        page_data_item["processing_time"],
+                        page_data_item["word_count"],
+                        "Windows_RTX3060",  # Clear indicator of Windows RTX 3060 processing
+                    )
+                )
 
-            execute_values(cursor, """
-                INSERT INTO pages (efta_number, page_number, text_content, confidence, 
+            execute_values(
+                cursor,
+                """
+                INSERT INTO pages (efta_number, page_number, text_content, confidence,
                                  ocr_method, processing_time, word_count, source_system)
                 VALUES %s
                 ON CONFLICT (efta_number, page_number) DO UPDATE SET
@@ -344,32 +365,49 @@ class OptimizedProcessor:
                     word_count = EXCLUDED.word_count,
                     source_system = EXCLUDED.source_system,
                     updated_at = NOW()
-            """, page_data)
+            """,
+                page_data,
+            )
 
             # Insert entities with Windows RTX 3060 indicator
             entity_data = []
             for entity in entities:
-                entity_data.append((
-                    entity['text'], entity['label'], efta_number, entity['page'],
-                    entity['start'], entity['end'], entity['start_token'], entity['end_token'],
-                    "Windows_RTX3060"  # Clear indicator of Windows RTX 3060 processing
-                ))
+                entity_data.append(
+                    (
+                        entity["text"],
+                        entity["label"],
+                        efta_number,
+                        entity["page"],
+                        entity["start"],
+                        entity["end"],
+                        entity["start_token"],
+                        entity["end_token"],
+                        "Windows_RTX3060",  # Clear indicator of Windows RTX 3060 processing
+                    )
+                )
 
             if entity_data:
-                execute_values(cursor, """
-                    INSERT INTO entities (entity_text, entity_type, efta_number, page_number, 
+                execute_values(
+                    cursor,
+                    """
+                    INSERT INTO entities (entity_text, entity_type, efta_number, page_number,
                                         start_char, end_char, start_token, end_token, source_system)
                     VALUES %s
                     ON CONFLICT DO NOTHING
-                """, entity_data)
+                """,
+                    entity_data,
+                )
 
             # Update FTS search vector for the document
-            full_text = " ".join(page['text'] for page in text_content if page['text'].strip())
+            full_text = " ".join(page["text"] for page in text_content if page["text"].strip())
             if full_text:
-                cursor.execute("""
+                cursor.execute(
+                    """
                     UPDATE documents SET search_vector = to_tsvector('english', %s)
                     WHERE efta_number = %s
-                """, (full_text, efta_number))
+                """,
+                    (full_text, efta_number),
+                )
 
             self.db_conn.commit()
             cursor.close()
@@ -431,14 +469,16 @@ class OptimizedProcessor:
             "total_pages": 0,
             "total_entities": 0,
             "avg_confidence": 0.0,
-            "processing_time": 0.0
+            "processing_time": 0.0,
         }
 
         start_time = time.time()
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.config.max_workers) as executor:
             # Submit all tasks
-            future_to_file = {executor.submit(self.process_file, pdf_file): pdf_file for pdf_file in pdf_files}
+            future_to_file = {
+                executor.submit(self.process_file, pdf_file): pdf_file for pdf_file in pdf_files
+            }
 
             # Process results as they complete
             for future in concurrent.futures.as_completed(future_to_file):
@@ -481,11 +521,13 @@ class OptimizedProcessor:
                 # Process in batches
                 batch_size = self.config.batch_size
                 for i in range(0, len(pdf_files), batch_size):
-                    batch = pdf_files[i:i + batch_size]
+                    batch = pdf_files[i : i + batch_size]
                     results = self.process_batch(batch)
 
                     # Log batch results
-                    logger.info(f"📊 Batch Results: {results['successful']}/{results['total_files']} successful")
+                    logger.info(
+                        f"📊 Batch Results: {results['successful']}/{results['total_files']} successful"
+                    )
                     logger.info(f"📊 Total entities extracted: {results['total_entities']}")
                     logger.info(f"📊 Average confidence: {results['avg_confidence']:.4f}")
 
@@ -500,11 +542,13 @@ class OptimizedProcessor:
                 logger.error(f"❌ Processing error: {e}")
                 time.sleep(60)
 
+
 def main():
     """Main function."""
     config = ProcessingConfig()
     processor = OptimizedProcessor(config)
     processor.run_processing_loop()
+
 
 if __name__ == "__main__":
     main()

@@ -3,13 +3,13 @@
 
 -- 1. View: Record counts for all main tables
 CREATE OR REPLACE VIEW v_table_record_counts AS
-SELECT 
+SELECT
     table_name,
-    (SELECT COUNT(*) FROM information_schema.tables t2 
-     WHERE t2.table_name = t1.table_name 
+    (SELECT COUNT(*) FROM information_schema.tables t2
+     WHERE t2.table_name = t1.table_name
      AND t2.table_schema = 'public') as exists,
     pg_size_pretty(pg_total_relation_size(quote_ident(table_name))) as total_size
-FROM (VALUES 
+FROM (VALUES
     ('hf_epstein_files_20k'),
     ('hf_house_oversight_docs'),
     ('hf_ocr_complete'),
@@ -30,33 +30,33 @@ ORDER BY table_name;
 
 -- 2. View: ICIJ Import Progress Summary
 CREATE OR REPLACE VIEW v_icij_import_summary AS
-SELECT 
+SELECT
     filename,
     status,
     worker_id,
     total_rows as expected,
     rows_imported as imported,
-    CASE WHEN total_rows > 0 
-         THEN ROUND(100.0 * rows_imported / total_rows, 2) 
-         ELSE 0 
+    CASE WHEN total_rows > 0
+         THEN ROUND(100.0 * rows_imported / total_rows, 2)
+         ELSE 0
     END as percent_complete,
     started_at,
     completed_at,
     EXTRACT(EPOCH FROM (COALESCE(completed_at, NOW()) - started_at))/60 as minutes_elapsed,
     error_message
 FROM icij_import_progress
-ORDER BY 
-    CASE status 
-        WHEN 'running' THEN 0 
-        WHEN 'pending' THEN 1 
-        WHEN 'complete' THEN 2 
-        ELSE 3 
+ORDER BY
+    CASE status
+        WHEN 'running' THEN 0
+        WHEN 'pending' THEN 1
+        WHEN 'complete' THEN 2
+        ELSE 3
     END,
     filename;
 
 -- 3. View: Cross-table relationship validation
 CREATE OR REPLACE VIEW v_icij_relationship_validation AS
-SELECT 
+SELECT
     'Orphaned relationships (entities)' as check_type,
     COUNT(*) as orphaned_count
 FROM icij_relationships r
@@ -65,7 +65,7 @@ WHERE e.node_id IS NULL
 
 UNION ALL
 
-SELECT 
+SELECT
     'Orphaned relationships (officers)' as check_type,
     COUNT(*) as orphaned_count
 FROM icij_relationships r
@@ -74,14 +74,14 @@ WHERE o.node_id IS NULL AND r.node_id_start NOT IN (SELECT node_id FROM icij_ent
 
 UNION ALL
 
-SELECT 
+SELECT
     'Total relationships' as check_type,
     COUNT(*) as count
 FROM icij_relationships;
 
 -- 4. View: Data quality checks for ICIJ
 CREATE OR REPLACE VIEW v_icij_data_quality AS
-SELECT 
+SELECT
     'Entities with no name' as check_name,
     COUNT(*) as issue_count,
     'High' as severity
@@ -90,7 +90,7 @@ WHERE name IS NULL OR TRIM(name) = ''
 
 UNION ALL
 
-SELECT 
+SELECT
     'Officers with no name',
     COUNT(*),
     'High'
@@ -99,7 +99,7 @@ WHERE name IS NULL OR TRIM(name) = ''
 
 UNION ALL
 
-SELECT 
+SELECT
     'Entities with no jurisdiction',
     COUNT(*),
     'Medium'
@@ -108,7 +108,7 @@ WHERE jurisdiction IS NULL OR TRIM(jurisdiction) = ''
 
 UNION ALL
 
-SELECT 
+SELECT
     'Relationships with missing start node',
     COUNT(*),
     'Critical'
@@ -117,7 +117,7 @@ WHERE node_id_start IS NULL OR TRIM(node_id_start) = ''
 
 UNION ALL
 
-SELECT 
+SELECT
     'Relationships with missing end node',
     COUNT(*),
     'Critical'
@@ -140,7 +140,7 @@ BEGIN
     UNION ALL SELECT 'HF Data Text', (SELECT COUNT(*) FROM hf_epstein_data_text), 'Complete'
     UNION ALL SELECT 'HF FBI Files', (SELECT COUNT(*) FROM fbi_vault_pages), 'Complete'
     UNION ALL SELECT 'HF Full Index', (SELECT COUNT(*) FROM full_epstein_index), 'Complete'
-    UNION ALL SELECT 'ICIJ Entities', (SELECT COUNT(*) FROM icij_entities), 
+    UNION ALL SELECT 'ICIJ Entities', (SELECT COUNT(*) FROM icij_entities),
         CASE WHEN (SELECT COUNT(*) FROM icij_entities) > 800000 THEN 'Complete' ELSE 'In Progress' END
     UNION ALL SELECT 'ICIJ Officers', (SELECT COUNT(*) FROM icij_officers),
         CASE WHEN (SELECT COUNT(*) FROM icij_officers) > 1500000 THEN 'Complete' ELSE 'In Progress' END
@@ -160,21 +160,21 @@ BEGIN
     SELECT 'icij_entities'::TEXT, COUNT(*) - COUNT(DISTINCT node_id)
     FROM icij_entities
     HAVING COUNT(*) > COUNT(DISTINCT node_id)
-    
+
     UNION ALL
-    
+
     SELECT 'icij_officers'::TEXT, COUNT(*) - COUNT(DISTINCT node_id)
     FROM icij_officers
     HAVING COUNT(*) > COUNT(DISTINCT node_id)
-    
+
     UNION ALL
-    
+
     SELECT 'icij_addresses'::TEXT, COUNT(*) - COUNT(DISTINCT node_id)
     FROM icij_addresses
     HAVING COUNT(*) > COUNT(DISTINCT node_id)
-    
+
     UNION ALL
-    
+
     SELECT 'icij_intermediaries'::TEXT, COUNT(*) - COUNT(DISTINCT node_id)
     FROM icij_intermediaries
     HAVING COUNT(*) > COUNT(DISTINCT node_id);
@@ -183,7 +183,7 @@ $$ LANGUAGE plpgsql;
 
 -- 7. View: HF Dataset Summary
 CREATE OR REPLACE VIEW v_hf_dataset_summary AS
-SELECT 
+SELECT
     'hf_epstein_files_20k' as table_name,
     COUNT(*) as total_records,
     COUNT(DISTINCT source_file) as source_files,
@@ -192,7 +192,7 @@ FROM hf_epstein_files_20k
 
 UNION ALL
 
-SELECT 
+SELECT
     'hf_house_oversight_docs',
     COUNT(*),
     COUNT(DISTINCT source_file),
@@ -201,7 +201,7 @@ FROM hf_house_oversight_docs
 
 UNION ALL
 
-SELECT 
+SELECT
     'hf_ocr_complete',
     COUNT(*),
     COUNT(DISTINCT source_file),
@@ -210,7 +210,7 @@ FROM hf_ocr_complete
 
 UNION ALL
 
-SELECT 
+SELECT
     'hf_embeddings',
     COUNT(*),
     NULL,
@@ -219,7 +219,7 @@ FROM hf_embeddings
 
 UNION ALL
 
-SELECT 
+SELECT
     'hf_epstein_data_text',
     COUNT(*),
     COUNT(DISTINCT source_file),
@@ -228,7 +228,7 @@ FROM hf_epstein_data_text
 
 UNION ALL
 
-SELECT 
+SELECT
     'full_epstein_index',
     COUNT(*),
     NULL,
@@ -248,40 +248,40 @@ DECLARE
     v_expected BIGINT;
 BEGIN
     -- HF Dataset checks
-    RETURN QUERY SELECT 'HF Datasets'::TEXT, 'epstein-files-20k count', 
+    RETURN QUERY SELECT 'HF Datasets'::TEXT, 'epstein-files-20k count',
         (SELECT COUNT(*)::TEXT FROM hf_epstein_files_20k), 'Info'::TEXT;
-    
+
     RETURN QUERY SELECT 'HF Datasets'::TEXT, 'house-oversight count',
         (SELECT COUNT(*)::TEXT FROM hf_house_oversight_docs), 'Info'::TEXT;
-    
+
     -- ICIJ Checks
     SELECT COUNT(*) INTO v_count FROM icij_entities;
     v_expected := 814617;
     RETURN QUERY SELECT 'ICIJ Entities'::TEXT, 'Record count',
-        v_count::TEXT || ' / ' || v_expected::TEXT || 
+        v_count::TEXT || ' / ' || v_expected::TEXT ||
         ' (' || ROUND(100.0 * v_count / v_expected, 1)::TEXT || '%)',
         CASE WHEN v_count >= v_expected THEN 'Success' ELSE 'In Progress' END::TEXT;
-    
+
     SELECT COUNT(*) INTO v_count FROM icij_officers;
     v_expected := 1800000;
     RETURN QUERY SELECT 'ICIJ Officers'::TEXT, 'Record count',
-        v_count::TEXT || ' / ' || v_expected::TEXT || 
+        v_count::TEXT || ' / ' || v_expected::TEXT ||
         ' (' || ROUND(100.0 * v_count / v_expected, 1)::TEXT || '%)',
         CASE WHEN v_count >= v_expected THEN 'Success' ELSE 'In Progress' END::TEXT;
-    
+
     SELECT COUNT(*) INTO v_count FROM icij_relationships;
     v_expected := 3339272;
     RETURN QUERY SELECT 'ICIJ Relationships'::TEXT, 'Record count',
-        v_count::TEXT || ' / ' || v_expected::TEXT || 
+        v_count::TEXT || ' / ' || v_expected::TEXT ||
         ' (' || ROUND(100.0 * v_count / v_expected, 1)::TEXT || '%)',
         CASE WHEN v_count >= v_expected THEN 'Success' ELSE 'In Progress' END::TEXT;
-    
+
     -- Overall status
     RETURN QUERY SELECT 'Overall'::TEXT, 'Total HF Records',
         (SELECT SUM(count)::TEXT FROM v_hf_dataset_summary), 'Info'::TEXT;
-    
+
     RETURN QUERY SELECT 'Overall'::TEXT, 'ICIJ Import Status',
-        (SELECT COUNT(*)::TEXT || ' of 6 files complete' 
+        (SELECT COUNT(*)::TEXT || ' of 6 files complete'
          FROM icij_import_progress WHERE status = 'complete'), 'Info'::TEXT;
 END;
 $$ LANGUAGE plpgsql;

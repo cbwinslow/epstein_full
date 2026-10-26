@@ -173,11 +173,11 @@ Edit the database configuration in `windows_processing.py`:
 
 ```python
 self.db_config = {
-    'host': 'localhost',
-    'port': 5432,
-    'database': 'epstein',
-    'user': 'cbwinslow',
-    'password': '123qweasd'
+    "host": "localhost",
+    "port": 5432,
+    "database": "epstein",
+    "user": "cbwinslow",
+    "password": "123qweasd",
 }
 ```
 
@@ -411,10 +411,10 @@ netstat -an | findstr 11343
 Edit `/home/cbwinslow/workspace/epstein/scripts/processing/rtx3060_embeddings.py`:
 
 ```python
-OLLAMA_EMBED_ENDPOINT="http://192.168.4.25:11343/api/embed"
-OLLAMA_EMBED_MODEL="nomic-embed-text:latest"
-OLLAMA_EMBED_COLUMN="rtx3060_embedding"
-OLLAMA_EMBED_DIMS="768"
+OLLAMA_EMBED_ENDPOINT = "http://192.168.4.25:11343/api/embed"
+OLLAMA_EMBED_MODEL = "nomic-embed-text:latest"
+OLLAMA_EMBED_COLUMN = "rtx3060_embedding"
+OLLAMA_EMBED_DIMS = "768"
 ```
 
 The current default stays on `nomic-embed-text:latest` so existing

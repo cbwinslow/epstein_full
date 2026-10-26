@@ -1,7 +1,7 @@
 # Data Acquisition Methods Documentation
 
-> **Document Version:** 1.0  
-> **Last Updated:** April 4, 2026  
+> **Document Version:** 1.0
+> **Last Updated:** April 4, 2026
 > **Purpose:** Document all data acquisition techniques for reproducibility and research transparency
 
 ---
@@ -38,9 +38,9 @@ All acquisition methods follow **industry best practices**:
 
 ### 1. DOJ EFTA Datasets (Primary)
 
-**Source:** https://www.justice.gov/epstein-epstein-grand-jury-documents  
-**Method:** Automated browser-based download (Playwright)  
-**Total Files:** 1,313,861 PDFs (177GB)  
+**Source:** https://www.justice.gov/epstein-epstein-grand-jury-documents
+**Method:** Automated browser-based download (Playwright)
+**Total Files:** 1,313,861 PDFs (177GB)
 **Coverage:** 94% of 1.4M EFTA numbers
 
 **Acquisition Steps:**
@@ -58,9 +58,9 @@ find /home/cbwinslow/workspace/epstein-data/raw-files/ -name "*.pdf" | wc -l
 
 ### 2. FEC Campaign Finance Data
 
-**Source:** https://www.fec.gov/data/browse-data/?tab=bulk-data  
-**Method:** Bulk file download via `wget` / `curl`  
-**Total Records:** 5,420,940+ individual contributions  
+**Source:** https://www.fec.gov/data/browse-data/?tab=bulk-data
+**Method:** Bulk file download via `wget` / `curl`
+**Total Records:** 5,420,940+ individual contributions
 **Coverage:** 1980-2026 (23 election cycles)
 
 **Acquisition Steps:**
@@ -87,9 +87,9 @@ python3 scripts/download_fec_bulk.py
 
 ### 3. ICIJ Offshore Leaks
 
-**Source:** https://offshoreleaks-data.icij.org/  
-**Method:** Direct zip download + extraction  
-**Size:** 69.7 MB (compressed), ~600 MB extracted  
+**Source:** https://offshoreleaks-data.icij.org/
+**Method:** Direct zip download + extraction
+**Size:** 69.7 MB (compressed), ~600 MB extracted
 **License:** Open Database License (ODbL)
 
 **Acquisition Steps:**
@@ -109,7 +109,7 @@ python3 scripts/import_icij.py
 
 **Coverage:**
 - Panama Papers (2016): 11.5M documents
-- Paradise Papers (2017): 13.4M documents  
+- Paradise Papers (2017): 13.4M documents
 - Pandora Papers (2021): 11.9M documents
 - Bahamas Leaks (2016): 1.3M documents
 - Offshore Leaks (2013): Original records
@@ -118,9 +118,9 @@ python3 scripts/import_icij.py
 
 ### 4. jmail.world Email Data
 
-**Source:** https://jmail.world/  
-**API Endpoint:** `https://data.jmail.world/v1/emails-slim.parquet`  
-**Method:** Direct parquet download  
+**Source:** https://jmail.world/
+**API Endpoint:** `https://data.jmail.world/v1/emails-slim.parquet`
+**Method:** Direct parquet download
 **Size:** 38.8 MB (1.78M emails)
 
 **Acquisition Steps:**
@@ -150,8 +150,8 @@ python3 scripts/import_jmail_documents.py
 
 ### 5. HuggingFace Datasets
 
-**Source:** https://huggingface.co/datasets  
-**Method:** Direct download via CDN (aria2c)  
+**Source:** https://huggingface.co/datasets
+**Method:** Direct download via CDN (aria2c)
 **Datasets:** 4 HuggingFace datasets (395,995 records)
 
 **Acquisition Steps:**
@@ -177,8 +177,8 @@ python3 scripts/import_house_oversight_embeddings.py
 
 ### 6. epsteinexposed.com Scraping
 
-**Source:** https://epsteinexposed.com/api/v2  
-**Method:** REST API calls (respecting rate limits)  
+**Source:** https://epsteinexposed.com/api/v2
+**Method:** REST API calls (respecting rate limits)
 **Rate Limit:** 100 req/hr anonymous, 1,000 req/hr with key
 
 **Acquisition Steps:**
@@ -236,6 +236,7 @@ CONFLICT_STRATEGY = "ON CONFLICT DO NOTHING"
 # Connection
 DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 
+
 def import_data(input_path: str, table_name: str):
     """
     Standardized import with:
@@ -246,6 +247,7 @@ def import_data(input_path: str, table_name: str):
     """
     # Implementation...
     pass
+
 
 if __name__ == "__main__":
     import_data(args.input, args.table)
@@ -310,8 +312,8 @@ if __name__ == "__main__":
 
 1. **Row Count Validation**
    ```sql
-   SELECT 'documents' as table_name, COUNT(*) as row_count 
-   FROM documents 
+   SELECT 'documents' as table_name, COUNT(*) as row_count
+   FROM documents
    HAVING COUNT(*) BETWEEN 1390000 AND 1400000;
    ```
 
