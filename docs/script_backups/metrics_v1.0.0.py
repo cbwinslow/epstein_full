@@ -19,6 +19,7 @@ import numpy as np
 # OCR Metrics
 # =============================================================================
 
+
 def levenshtein_distance(reference: str, hypothesis: str) -> Tuple[int, int, int, int]:
     """Compute Levenshtein distance with operation counts.
 
@@ -40,21 +41,21 @@ def levenshtein_distance(reference: str, hypothesis: str) -> Tuple[int, int, int
 
     for i in range(1, ref_len + 1):
         for j in range(1, hyp_len + 1):
-            if reference[i-1] == hypothesis[j-1]:
-                d[i][j] = d[i-1][j-1]
+            if reference[i - 1] == hypothesis[j - 1]:
+                d[i][j] = d[i - 1][j - 1]
             else:
-                d[i][j] = min(d[i-1][j-1] + 1, d[i-1][j] + 1, d[i][j-1] + 1)
+                d[i][j] = min(d[i - 1][j - 1] + 1, d[i - 1][j] + 1, d[i][j - 1] + 1)
 
     # Backtrack to count operations
     i, j = ref_len, hyp_len
     subs, dels, ins = 0, 0, 0
     while i > 0 or j > 0:
-        if i > 0 and j > 0 and reference[i-1] == hypothesis[j-1]:
-            i, j = i-1, j-1
-        elif i > 0 and j > 0 and d[i][j] == d[i-1][j-1] + 1:
+        if i > 0 and j > 0 and reference[i - 1] == hypothesis[j - 1]:
+            i, j = i - 1, j - 1
+        elif i > 0 and j > 0 and d[i][j] == d[i - 1][j - 1] + 1:
             subs += 1
-            i, j = i-1, j-1
-        elif i > 0 and d[i][j] == d[i-1][j] + 1:
+            i, j = i - 1, j - 1
+        elif i > 0 and d[i][j] == d[i - 1][j] + 1:
             dels += 1
             i -= 1
         else:
@@ -97,10 +98,10 @@ def word_error_rate(reference: str, hypothesis: str) -> float:
 
     for i in range(1, ref_len + 1):
         for j in range(1, hyp_len + 1):
-            if ref_words[i-1] == hyp_words[j-1]:
-                d[i][j] = d[i-1][j-1]
+            if ref_words[i - 1] == hyp_words[j - 1]:
+                d[i][j] = d[i - 1][j - 1]
             else:
-                d[i][j] = min(d[i-1][j-1] + 1, d[i-1][j] + 1, d[i][j-1] + 1)
+                d[i][j] = min(d[i - 1][j - 1] + 1, d[i - 1][j] + 1, d[i][j - 1] + 1)
 
     if ref_len == 0:
         return 0.0 if hyp_len == 0 else 100.0
@@ -109,16 +110,20 @@ def word_error_rate(reference: str, hypothesis: str) -> float:
 
 # OCR-aware substitution costs (common confusions)
 OCR_SUB_COSTS = {
-    ('O', '0'): 0.1, ('0', 'O'): 0.1,
-    ('1', 'l'): 0.1, ('l', '1'): 0.1,
-    ('1', 'I'): 0.1, ('I', '1'): 0.1,
-    ('5', 'S'): 0.2, ('S', '5'): 0.2,
-    ('8', 'B'): 0.2, ('B', '8'): 0.2,
+    ("O", "0"): 0.1,
+    ("0", "O"): 0.1,
+    ("1", "l"): 0.1,
+    ("l", "1"): 0.1,
+    ("1", "I"): 0.1,
+    ("I", "1"): 0.1,
+    ("5", "S"): 0.2,
+    ("S", "5"): 0.2,
+    ("8", "B"): 0.2,
+    ("B", "8"): 0.2,
 }
 
 
-def weighted_levenshtein(reference: str, hypothesis: str,
-                         sub_costs: dict = None) -> float:
+def weighted_levenshtein(reference: str, hypothesis: str, sub_costs: dict = None) -> float:
     """Weighted Levenshtein distance with OCR-aware costs."""
     if sub_costs is None:
         sub_costs = OCR_SUB_COSTS
@@ -132,12 +137,12 @@ def weighted_levenshtein(reference: str, hypothesis: str,
 
     for i in range(1, ref_len + 1):
         for j in range(1, hyp_len + 1):
-            if reference[i-1] == hypothesis[j-1]:
-                d[i][j] = d[i-1][j-1]
+            if reference[i - 1] == hypothesis[j - 1]:
+                d[i][j] = d[i - 1][j - 1]
             else:
-                pair = (reference[i-1], hypothesis[j-1])
+                pair = (reference[i - 1], hypothesis[j - 1])
                 sub_cost = sub_costs.get(pair, 1.0)
-                d[i][j] = min(d[i-1][j-1] + sub_cost, d[i-1][j] + 1, d[i][j-1] + 1)
+                d[i][j] = min(d[i - 1][j - 1] + sub_cost, d[i - 1][j] + 1, d[i][j - 1] + 1)
 
     return d[ref_len][hyp_len]
 
@@ -146,9 +151,11 @@ def weighted_levenshtein(reference: str, hypothesis: str,
 # NER Metrics
 # =============================================================================
 
+
 @dataclass
 class EntitySpan:
     """Named entity span for evaluation."""
+
     entity_type: str
     start: int
     end: int
@@ -158,14 +165,16 @@ class EntitySpan:
         return hash((self.entity_type, self.start, self.end))
 
     def __eq__(self, other):
-        return (self.entity_type == other.entity_type and
-                self.start == other.start and
-                self.end == other.end)
+        return (
+            self.entity_type == other.entity_type
+            and self.start == other.start
+            and self.end == other.end
+        )
 
 
-def compute_ner_metrics(true_entities: List[EntitySpan],
-                        pred_entities: List[EntitySpan],
-                        entity_types: List[str] = None) -> Dict:
+def compute_ner_metrics(
+    true_entities: List[EntitySpan], pred_entities: List[EntitySpan], entity_types: List[str] = None
+) -> Dict:
     """Compute NER metrics under 4 evaluation schemas.
 
     Schemas:
@@ -178,20 +187,21 @@ def compute_ner_metrics(true_entities: List[EntitySpan],
         entity_types = list(set(e.entity_type for e in true_entities + pred_entities))
 
     results = {}
-    for schema in ['strict', 'exact', 'partial', 'type']:
+    for schema in ["strict", "exact", "partial", "type"]:
         results[schema] = _ner_schema(true_entities, pred_entities, schema)
 
-    results['by_type'] = {}
+    results["by_type"] = {}
     for ent_type in entity_types:
         t = [e for e in true_entities if e.entity_type == ent_type]
         p = [e for e in pred_entities if e.entity_type == ent_type]
-        results['by_type'][ent_type] = {s: _ner_schema(t, p, s) for s in ['strict', 'exact', 'partial', 'type']}
+        results["by_type"][ent_type] = {
+            s: _ner_schema(t, p, s) for s in ["strict", "exact", "partial", "type"]
+        }
 
     return results
 
 
-def _ner_schema(true_ents: List[EntitySpan], pred_ents: List[EntitySpan],
-                schema: str) -> Dict:
+def _ner_schema(true_ents: List[EntitySpan], pred_ents: List[EntitySpan], schema: str) -> Dict:
     """Compute metrics for a specific NER evaluation schema."""
     correct, partial_count, missed = 0, 0, 0
     matched = set()
@@ -203,12 +213,12 @@ def _ner_schema(true_ents: List[EntitySpan], pred_ents: List[EntitySpan],
                 continue
             overlap = not (true_ent.end < pred_ent.start or pred_ent.end < true_ent.start)
 
-            if schema == 'strict':
+            if schema == "strict":
                 match = true_ent == pred_ent
-            elif schema == 'exact':
+            elif schema == "exact":
                 match = true_ent.start == pred_ent.start and true_ent.end == pred_ent.end
-            elif schema in ('partial', 'type'):
-                if schema == 'type':
+            elif schema in ("partial", "type"):
+                if schema == "type":
                     match = overlap and true_ent.entity_type == pred_ent.entity_type
                 else:
                     match = overlap
@@ -237,7 +247,7 @@ def _ner_schema(true_ents: List[EntitySpan], pred_ents: List[EntitySpan],
     possible = len(true_ents)
     actual = len(pred_ents)
 
-    if schema in ('strict', 'exact'):
+    if schema in ("strict", "exact"):
         precision = correct / actual if actual > 0 else 0.0
         recall = correct / possible if possible > 0 else 0.0
     else:
@@ -247,10 +257,15 @@ def _ner_schema(true_ents: List[EntitySpan], pred_ents: List[EntitySpan],
     f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
 
     return {
-        'correct': correct, 'partial': partial_count,
-        'missed': missed, 'spurious': spurious,
-        'possible': possible, 'actual': actual,
-        'precision': precision, 'recall': recall, 'f1': f1,
+        "correct": correct,
+        "partial": partial_count,
+        "missed": missed,
+        "spurious": spurious,
+        "possible": possible,
+        "actual": actual,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
     }
 
 
@@ -258,8 +273,8 @@ def _ner_schema(true_ents: List[EntitySpan], pred_ents: List[EntitySpan],
 # Facial Recognition Metrics
 # =============================================================================
 
-def compute_verification_metrics(similarity_scores: np.ndarray,
-                                 labels: np.ndarray) -> Dict:
+
+def compute_verification_metrics(similarity_scores: np.ndarray, labels: np.ndarray) -> Dict:
     """Compute facial verification metrics (1:1).
 
     Args:
@@ -283,7 +298,7 @@ def compute_verification_metrics(similarity_scores: np.ndarray,
     tar_at_far = {}
     for target_far in [0.001, 0.01, 0.1]:
         idx = np.where(fpr <= target_far)[0]
-        tar_at_far[f'tar@far={target_far}'] = tpr[idx[-1]] if len(idx) > 0 else 0.0
+        tar_at_far[f"tar@far={target_far}"] = tpr[idx[-1]] if len(idx) > 0 else 0.0
 
     # d-prime (distribution separability)
     genuine_scores = similarity_scores[labels == 1]
@@ -295,23 +310,25 @@ def compute_verification_metrics(similarity_scores: np.ndarray,
             d_prime = (np.mean(genuine_scores) - np.mean(impostor_scores)) / np.sqrt(pooled_var)
 
     return {
-        'auc': auc_score,
-        'eer': eer,
-        'eer_threshold': thresholds[eer_idx],
-        'd_prime': d_prime,
-        'genuine_mean': float(np.mean(genuine_scores)) if len(genuine_scores) > 0 else 0,
-        'genuine_std': float(np.std(genuine_scores)) if len(genuine_scores) > 0 else 0,
-        'impostor_mean': float(np.mean(impostor_scores)) if len(impostor_scores) > 0 else 0,
-        'impostor_std': float(np.std(impostor_scores)) if len(impostor_scores) > 0 else 0,
+        "auc": auc_score,
+        "eer": eer,
+        "eer_threshold": thresholds[eer_idx],
+        "d_prime": d_prime,
+        "genuine_mean": float(np.mean(genuine_scores)) if len(genuine_scores) > 0 else 0,
+        "genuine_std": float(np.std(genuine_scores)) if len(genuine_scores) > 0 else 0,
+        "impostor_mean": float(np.mean(impostor_scores)) if len(impostor_scores) > 0 else 0,
+        "impostor_std": float(np.std(impostor_scores)) if len(impostor_scores) > 0 else 0,
         **tar_at_far,
     }
 
 
-def identification_rate(probe_embeddings: np.ndarray,
-                        gallery_embeddings: np.ndarray,
-                        probe_labels: np.ndarray,
-                        gallery_labels: np.ndarray,
-                        k_values: List[int] = None) -> Dict:
+def identification_rate(
+    probe_embeddings: np.ndarray,
+    gallery_embeddings: np.ndarray,
+    probe_labels: np.ndarray,
+    gallery_labels: np.ndarray,
+    k_values: List[int] = None,
+) -> Dict:
     """Compute rank-k identification rate (1:N).
 
     Args:
@@ -328,6 +345,7 @@ def identification_rate(probe_embeddings: np.ndarray,
         k_values = [1, 5, 10]
 
     from sklearn.metrics.pairwise import cosine_similarity
+
     sim_matrix = cosine_similarity(probe_embeddings, gallery_embeddings)
 
     results = {}
@@ -337,7 +355,7 @@ def identification_rate(probe_embeddings: np.ndarray,
             top_k = np.argsort(sim_matrix[i])[::-1][:k]
             if label in gallery_labels[top_k]:
                 correct += 1
-        results[f'rank_{k}'] = correct / len(probe_labels)
+        results[f"rank_{k}"] = correct / len(probe_labels)
 
     return results
 
@@ -346,8 +364,8 @@ def identification_rate(probe_embeddings: np.ndarray,
 # Knowledge Graph Metrics
 # =============================================================================
 
-def pairwise_precision(prediction: Dict[str, str],
-                       reference: Dict[str, str]) -> float:
+
+def pairwise_precision(prediction: Dict[str, str], reference: Dict[str, str]) -> float:
     """Pairwise precision for entity resolution."""
     pred_pairs = _get_pairs(prediction)
     ref_pairs = _get_pairs(reference)
@@ -356,8 +374,7 @@ def pairwise_precision(prediction: Dict[str, str],
     return len(pred_pairs & ref_pairs) / len(pred_pairs)
 
 
-def pairwise_recall(prediction: Dict[str, str],
-                    reference: Dict[str, str]) -> float:
+def pairwise_recall(prediction: Dict[str, str], reference: Dict[str, str]) -> float:
     """Pairwise recall for entity resolution."""
     pred_pairs = _get_pairs(prediction)
     ref_pairs = _get_pairs(reference)
@@ -380,8 +397,7 @@ def _get_pairs(clustering: Dict[str, str]) -> Set[Tuple[str, str]]:
     return pairs
 
 
-def b_cubed_f1(prediction: Dict[str, str],
-               reference: Dict[str, str]) -> Tuple[float, float, float]:
+def b_cubed_f1(prediction: Dict[str, str], reference: Dict[str, str]) -> Tuple[float, float, float]:
     """B-Cubed precision, recall, F1 for entity resolution."""
     pred_clusters = defaultdict(set)
     ref_clusters = defaultdict(set)
@@ -408,8 +424,9 @@ def b_cubed_f1(prediction: Dict[str, str],
     return p, r, f1
 
 
-def relationship_precision(predicted: List[Tuple[str, str, str]],
-                           reference: Set[Tuple[str, str, str]]) -> float:
+def relationship_precision(
+    predicted: List[Tuple[str, str, str]], reference: Set[Tuple[str, str, str]]
+) -> float:
     """Precision of extracted relationship triples."""
     if len(predicted) == 0:
         return 0.0
@@ -420,9 +437,11 @@ def relationship_precision(predicted: List[Tuple[str, str, str]],
 # Evaluation Runner
 # =============================================================================
 
+
 @dataclass
 class OCRMetrics:
     """Container for OCR evaluation results."""
+
     cer: float = 0.0
     wer: float = 0.0
     weighted_lev: float = 0.0
@@ -440,6 +459,9 @@ def evaluate_ocr_page(reference: str, hypothesis: str) -> OCRMetrics:
         cer=character_error_rate(reference, hypothesis),
         wer=word_error_rate(reference, hypothesis),
         weighted_lev=weighted_levenshtein(reference, hypothesis),
-        substitutions=subs, deletions=dels, insertions=ins,
-        total_chars_ref=len(reference), total_chars_hyp=len(hypothesis),
+        substitutions=subs,
+        deletions=dels,
+        insertions=ins,
+        total_chars_ref=len(reference),
+        total_chars_hyp=len(hypothesis),
     )

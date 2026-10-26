@@ -1,9 +1,9 @@
 # Data Source: Third-Party GitHub Repositories
 
-> **Source:** Various GitHub repositories  
-> **Type:** Community curated data and knowledge graphs  
-> **License:** Various Open Source  
-> **Status:** 🔴 Not Yet Ingested (10K+ nodes available)  
+> **Source:** Various GitHub repositories
+> **Type:** Community curated data and knowledge graphs
+> **License:** Various Open Source
+> **Status:** 🔴 Not Yet Ingested (10K+ nodes available)
 
 ---
 
@@ -105,15 +105,16 @@ import json
 import asyncpg
 import asyncio
 
+
 async def import_black_book():
     # Load external CSV/JSON
-    with open('/home/cbwinslow/workspace/epstein-data/external_repos/epstein-network-data/data/external_sources/black_book/processed/complete.json') as f:
+    with open(
+        "/home/cbwinslow/workspace/epstein-data/external_repos/epstein-network-data/data/external_sources/black_book/processed/complete.json"
+    ) as f:
         contacts = json.load(f)
-    
-    conn = await asyncpg.connect(
-        "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
-    )
-    
+
+    conn = await asyncpg.connect("postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
+
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS black_book_contacts (
             id SERIAL PRIMARY KEY,
@@ -126,23 +127,25 @@ async def import_black_book():
             source TEXT DEFAULT 'dleerdefi/github'
         )
     """)
-    
+
     for contact in contacts:
-        await conn.execute("""
-            INSERT INTO black_book_contacts 
+        await conn.execute(
+            """
+            INSERT INTO black_book_contacts
             (name, addresses, phone_numbers, emails, professional_affiliations, metadata)
             VALUES ($1, $2, $3, $4, $5, $6)
             ON CONFLICT DO NOTHING
         """,
-            contact.get('name'),
-            contact.get('addresses', []),
-            contact.get('phone_numbers', []),
-            contact.get('emails', []),
-            contact.get('professional_affiliations', []),
-            contact
+            contact.get("name"),
+            contact.get("addresses", []),
+            contact.get("phone_numbers", []),
+            contact.get("emails", []),
+            contact.get("professional_affiliations", []),
+            contact,
         )
-    
+
     await conn.close()
+
 
 if __name__ == "__main__":
     asyncio.run(import_black_book())
@@ -158,15 +161,16 @@ import asyncpg
 import asyncio
 from datetime import datetime
 
+
 async def import_flight_logs():
     # Load extracted flight data
-    with open('/home/cbwinslow/workspace/epstein-data/external_repos/epstein-network-data/data/final/flight_logs/flights.json') as f:
+    with open(
+        "/home/cbwinslow/workspace/epstein-data/external_repos/epstein-network-data/data/final/flight_logs/flights.json"
+    ) as f:
         flights = json.load(f)
-    
-    conn = await asyncpg.connect(
-        "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
-    )
-    
+
+    conn = await asyncpg.connect("postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
+
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS flight_logs_github (
             id SERIAL PRIMARY KEY,
@@ -179,22 +183,24 @@ async def import_flight_logs():
             source TEXT DEFAULT 'dleerdefi/github'
         )
     """)
-    
+
     for flight in flights:
-        await conn.execute("""
-            INSERT INTO flight_logs_github 
+        await conn.execute(
+            """
+            INSERT INTO flight_logs_github
             (flight_date, aircraft, departure_airport, arrival_airport, passengers, notes)
             VALUES ($1, $2, $3, $4, $5, $6)
         """,
-            flight.get('date'),
-            flight.get('aircraft'),
-            flight.get('departure'),
-            flight.get('arrival'),
-            flight.get('passengers', []),
-            flight.get('notes')
+            flight.get("date"),
+            flight.get("aircraft"),
+            flight.get("departure"),
+            flight.get("arrival"),
+            flight.get("passengers", []),
+            flight.get("notes"),
         )
-    
+
     await conn.close()
+
 
 if __name__ == "__main__":
     asyncio.run(import_flight_logs())
@@ -210,13 +216,14 @@ import asyncpg
 import asyncio
 from pathlib import Path
 
+
 async def import_neo4j_graph():
-    base_path = Path('/home/cbwinslow/workspace/epstein-data/external_repos/epstein-network-data/data/final/epstein_notes')
-    
-    conn = await asyncpg.connect(
-        "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
+    base_path = Path(
+        "/home/cbwinslow/workspace/epstein-data/external_repos/epstein-network-data/data/final/epstein_notes"
     )
-    
+
+    conn = await asyncpg.connect("postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
+
     # Create tables
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS kg_persons (
@@ -227,7 +234,7 @@ async def import_neo4j_graph():
             aliases TEXT[],
             embeddings VECTOR(1024)
         );
-        
+
         CREATE TABLE IF NOT EXISTS kg_flights (
             id TEXT PRIMARY KEY,
             flight_date DATE,
@@ -235,7 +242,7 @@ async def import_neo4j_graph():
             departure_airport TEXT,
             arrival_airport TEXT
         );
-        
+
         CREATE TABLE IF NOT EXISTS kg_relationships (
             id SERIAL PRIMARY KEY,
             from_id TEXT,
@@ -244,34 +251,46 @@ async def import_neo4j_graph():
             properties JSONB
         );
     """)
-    
+
     # Import nodes
-    nodes_path = base_path / 'nodes'
-    
+    nodes_path = base_path / "nodes"
+
     # Import persons
-    with open(nodes_path / 'persons.csv') as f:
+    with open(nodes_path / "persons.csv") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            await conn.execute("""
+            await conn.execute(
+                """
                 INSERT INTO kg_persons (id, name, normalized_name, entity_type)
                 VALUES ($1, $2, $3, 'person')
                 ON CONFLICT DO NOTHING
-            """, row['id'], row['name'], row.get('normalized_name'))
-    
+            """,
+                row["id"],
+                row["name"],
+                row.get("normalized_name"),
+            )
+
     # Import relationships
-    rels_path = base_path / 'relationships'
-    
-    for rel_file in rels_path.glob('*.csv'):
+    rels_path = base_path / "relationships"
+
+    for rel_file in rels_path.glob("*.csv"):
         rel_type = rel_file.stem
         with open(rel_file) as f:
             reader = csv.DictReader(f)
             for row in reader:
-                await conn.execute("""
+                await conn.execute(
+                    """
                     INSERT INTO kg_relationships (from_id, to_id, rel_type, properties)
                     VALUES ($1, $2, $3, $4)
-                """, row['from'], row['to'], rel_type, row)
-    
+                """,
+                    row["from"],
+                    row["to"],
+                    rel_type,
+                    row,
+                )
+
     await conn.close()
+
 
 if __name__ == "__main__":
     asyncio.run(import_neo4j_graph())
@@ -323,5 +342,5 @@ if __name__ == "__main__":
 
 ---
 
-*Last Updated: April 10, 2026*  
+*Last Updated: April 10, 2026*
 *Status: Ready for Implementation*

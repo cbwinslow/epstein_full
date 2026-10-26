@@ -31,9 +31,9 @@ from typing import Optional
 # =============================================================================
 
 # Temperature thresholds (Celsius)
-TEMP_WARN = 75       # Warning threshold
-TEMP_CRITICAL = 85   # Critical threshold
-TEMP_SHUTDOWN = 90   # Shutdown threshold
+TEMP_WARN = 75  # Warning threshold
+TEMP_CRITICAL = 85  # Critical threshold
+TEMP_SHUTDOWN = 90  # Shutdown threshold
 
 # Default refresh interval (seconds)
 DEFAULT_REFRESH = 5
@@ -43,20 +43,22 @@ DEFAULT_REFRESH = 5
 # Data Models
 # =============================================================================
 
+
 @dataclass
 class GPUInfo:
     """Snapshot of GPU state."""
+
     index: int
     name: str
-    temperature_gpu: int           # °C
+    temperature_gpu: int  # °C
     temperature_memory: Optional[int]  # °C (may be N/A)
-    power_draw: float              # Watts
-    power_limit: float             # Watts
-    fan_speed: Optional[int]       # % (may be N/A on Tesla)
-    memory_used: int               # MiB
-    memory_total: int              # MiB
-    memory_percent: float          # %
-    gpu_utilization: int           # %
+    power_draw: float  # Watts
+    power_limit: float  # Watts
+    fan_speed: Optional[int]  # % (may be N/A on Tesla)
+    memory_used: int  # MiB
+    memory_total: int  # MiB
+    memory_percent: float  # %
+    gpu_utilization: int  # %
     timestamp: str
 
     @property
@@ -75,6 +77,7 @@ class GPUInfo:
 # GPU Query
 # =============================================================================
 
+
 def query_gpus() -> list[GPUInfo]:
     """Query all NVIDIA GPUs using nvidia-smi.
 
@@ -86,12 +89,13 @@ def query_gpus() -> list[GPUInfo]:
     """
     # Check nvidia-smi exists
     try:
-        subprocess.run(["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
-                       capture_output=True, check=True)
-    except FileNotFoundError:
-        raise RuntimeError(
-            "nvidia-smi not found. Install NVIDIA drivers or check PATH."
+        subprocess.run(
+            ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+            capture_output=True,
+            check=True,
         )
+    except FileNotFoundError:
+        raise RuntimeError("nvidia-smi not found. Install NVIDIA drivers or check PATH.")
     except subprocess.CalledProcessError as e:
         raise RuntimeError(f"nvidia-smi failed: {e.stderr.decode().strip()}")
 
@@ -110,10 +114,10 @@ def query_gpus() -> list[GPUInfo]:
 
     try:
         result = subprocess.run(
-            ["nvidia-smi",
-             f"--query-gpu={query_fields}",
-             "--format=csv,noheader,nounits"],
-            capture_output=True, text=True, check=True
+            ["nvidia-smi", f"--query-gpu={query_fields}", "--format=csv,noheader,nounits"],
+            capture_output=True,
+            text=True,
+            check=True,
         )
     except subprocess.CalledProcessError as e:
         raise RuntimeError(f"nvidia-smi query failed: {e.stderr.strip()}")
@@ -167,6 +171,7 @@ def query_gpus() -> list[GPUInfo]:
 # Display
 # =============================================================================
 
+
 def format_gpu_card(gpu: GPUInfo) -> str:
     """Format a single GPU as a readable card."""
     status_icon = {
@@ -184,11 +189,13 @@ def format_gpu_card(gpu: GPUInfo) -> str:
     if gpu.temperature_memory is not None:
         lines.append(f"    Mem Temp: {gpu.temperature_memory}°C")
 
-    lines.extend([
-        f"    Power:   {gpu.power_draw:.0f}W / {gpu.power_limit:.0f}W ({gpu.power_draw/gpu.power_limit*100:.0f}%)",
-        f"    Memory:  {gpu.memory_used:,} / {gpu.memory_total:,} MiB ({gpu.memory_percent:.1f}%)",
-        f"    GPU Util:{gpu.gpu_utilization}%",
-    ])
+    lines.extend(
+        [
+            f"    Power:   {gpu.power_draw:.0f}W / {gpu.power_limit:.0f}W ({gpu.power_draw / gpu.power_limit * 100:.0f}%)",
+            f"    Memory:  {gpu.memory_used:,} / {gpu.memory_total:,} MiB ({gpu.memory_percent:.1f}%)",
+            f"    GPU Util:{gpu.gpu_utilization}%",
+        ]
+    )
 
     if gpu.fan_speed is not None:
         lines.append(f"    Fan:     {gpu.fan_speed}%")
@@ -248,6 +255,7 @@ def get_json(gpus: list[GPUInfo]) -> str:
 # Health Check
 # =============================================================================
 
+
 def health_check(gpus: list[GPUInfo]) -> dict:
     """Run a health check and return status.
 
@@ -281,30 +289,24 @@ def health_check(gpus: list[GPUInfo]) -> dict:
 # Entry Point
 # =============================================================================
 
+
 def main():
-    parser = argparse.ArgumentParser(
-        description="NVIDIA GPU temperature and utilization monitor"
+    parser = argparse.ArgumentParser(description="NVIDIA GPU temperature and utilization monitor")
+    parser.add_argument("--watch", action="store_true", help="Continuous monitoring mode")
+    parser.add_argument(
+        "--refresh",
+        type=int,
+        default=DEFAULT_REFRESH,
+        help=f"Refresh interval in seconds (default: {DEFAULT_REFRESH})",
     )
     parser.add_argument(
-        "--watch", action="store_true",
-        help="Continuous monitoring mode"
+        "--alert",
+        type=int,
+        default=None,
+        help=f"Alert threshold temperature (default: {TEMP_WARN}°C)",
     )
-    parser.add_argument(
-        "--refresh", type=int, default=DEFAULT_REFRESH,
-        help=f"Refresh interval in seconds (default: {DEFAULT_REFRESH})"
-    )
-    parser.add_argument(
-        "--alert", type=int, default=None,
-        help=f"Alert threshold temperature (default: {TEMP_WARN}°C)"
-    )
-    parser.add_argument(
-        "--json", action="store_true",
-        help="Output as JSON"
-    )
-    parser.add_argument(
-        "--health", action="store_true",
-        help="Run health check and exit with code"
-    )
+    parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--health", action="store_true", help="Run health check and exit with code")
 
     args = parser.parse_args()
 

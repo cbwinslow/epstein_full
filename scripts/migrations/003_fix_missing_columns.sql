@@ -1,5 +1,5 @@
 -- Fix missing columns in media_news_articles
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN IF NOT EXISTS publication_date TIMESTAMP,
 ADD COLUMN IF NOT EXISTS extraction_date TIMESTAMP,
 ADD COLUMN IF NOT EXISTS language TEXT,

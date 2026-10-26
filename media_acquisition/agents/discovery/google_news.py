@@ -9,9 +9,10 @@ import logging
 import time
 from typing import List, Optional, Tuple
 from urllib.parse import quote_plus, urlparse
+
 import requests
 
-from media_acquisition.base import DiscoveryAgent, AgentConfig, TaskResult, NewsArticleURL
+from media_acquisition.base import AgentConfig, DiscoveryAgent, NewsArticleURL, TaskResult
 
 logger = logging.getLogger(__name__)
 
@@ -39,9 +40,9 @@ class GoogleNewsScraper(DiscoveryAgent):
         super().__init__(config)
         self.delay = delay
         self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        })
+        self.session.headers.update(
+            {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+        )
         self.last_request_time = 0
 
     def _rate_limit(self):
@@ -53,10 +54,9 @@ class GoogleNewsScraper(DiscoveryAgent):
             time.sleep(sleep_time)
         self.last_request_time = time.time()
 
-    def search(self,
-               keywords: List[str],
-               date_range: Tuple[str, str],
-               max_results: int = 1000) -> TaskResult:
+    def search(
+        self, keywords: List[str], date_range: Tuple[str, str], max_results: int = 1000
+    ) -> TaskResult:
         """Search Google News for articles.
 
         Args:
@@ -88,16 +88,12 @@ class GoogleNewsScraper(DiscoveryAgent):
 
         logger.info(f"Google News search complete: {len(unique_articles)} unique articles")
 
-        status = 'success' if len(unique_articles) > 0 else 'failure'
-        return TaskResult(
-            status=status,
-            output=unique_articles
-        )
+        status = "success" if len(unique_articles) > 0 else "failure"
+        return TaskResult(status=status, output=unique_articles)
 
-    def _search_keyword(self,
-                       keyword: str,
-                       date_range: Tuple[str, str],
-                       max_results: int) -> List[NewsArticleURL]:
+    def _search_keyword(
+        self, keyword: str, date_range: Tuple[str, str], max_results: int
+    ) -> List[NewsArticleURL]:
         """Search for a single keyword using RSS feed (more reliable than scraping)."""
         results = []
 
@@ -122,13 +118,13 @@ class GoogleNewsScraper(DiscoveryAgent):
             root = ET.fromstring(response.content)
 
             # Find all items
-            items = root.findall('.//item')
+            items = root.findall(".//item")
 
             for item in items[:max_results]:
-                title = item.findtext('title', '')
-                link = item.findtext('link', '')
-                pub_date = item.findtext('pubDate', '')
-                description = item.findtext('description', '')
+                title = item.findtext("title", "")
+                link = item.findtext("link", "")
+                pub_date = item.findtext("pubDate", "")
+                description = item.findtext("description", "")
 
                 # Use Google News URL directly
                 # The article downloader will follow redirects when fetching content
@@ -141,6 +137,7 @@ class GoogleNewsScraper(DiscoveryAgent):
                 try:
                     # Format: Mon, 07 Apr 2026 12:00:00 GMT
                     from email.utils import parsedate_to_datetime
+
                     publish_dt = parsedate_to_datetime(pub_date)
                 except:
                     publish_dt = None
@@ -148,19 +145,18 @@ class GoogleNewsScraper(DiscoveryAgent):
                 # Extract source domain
                 domain = urlparse(real_url).netloc
 
-                results.append(NewsArticleURL(
-                    url=real_url,
-                    title=title,
-                    source_domain=domain,
-                    publish_date=publish_dt,
-                    discovery_method='google_news',
-                    priority=2,  # Higher priority than RSS
-                    keywords_matched=[keyword],
-                    metadata={
-                        'description': description,
-                        'rss_url': link
-                    }
-                ))
+                results.append(
+                    NewsArticleURL(
+                        url=real_url,
+                        title=title,
+                        source_domain=domain,
+                        publish_date=publish_dt,
+                        discovery_method="google_news",
+                        priority=2,  # Higher priority than RSS
+                        keywords_matched=[keyword],
+                        metadata={"description": description, "rss_url": link},
+                    )
+                )
 
         except Exception as e:
             logger.warning(f"Google News RSS fetch failed for '{keyword}': {e}")
@@ -174,7 +170,7 @@ class GoogleNewsScraper(DiscoveryAgent):
             return None
 
         # If it's already a direct URL, return it
-        if not ('news.google.com' in google_url or 'google.com/news' in google_url):
+        if not ("news.google.com" in google_url or "google.com/news" in google_url):
             return google_url
 
         try:
@@ -185,21 +181,24 @@ class GoogleNewsScraper(DiscoveryAgent):
         except:
             # Fallback: try to extract from URL parameters
             import urllib.parse
+
             parsed = urllib.parse.urlparse(google_url)
             params = urllib.parse.parse_qs(parsed.query)
 
             # Look for 'url' parameter
-            if 'url' in params:
-                return params['url'][0]
+            if "url" in params:
+                return params["url"][0]
 
             return None
 
-    def discover(self, keywords: List[str] = None, date_range: Tuple[str, str] = None) -> List[NewsArticleURL]:
+    def discover(
+        self, keywords: List[str] = None, date_range: Tuple[str, str] = None
+    ) -> List[NewsArticleURL]:
         """Discovery interface for compatibility."""
         if keywords is None:
             keywords = []
         if date_range is None:
-            date_range = ('2019-01-01', '2025-12-31')
+            date_range = ("2019-01-01", "2025-12-31")
 
         result = self.search(keywords, date_range)
         output = result.output if result.output else []

@@ -10,13 +10,14 @@ Usage:
     python scripts/fec_downloader.py manual   # Run without rate limit check
 """
 
-import sys
-import os
 import json
+import os
+import sys
 import time
-import requests
-import psycopg2
 from datetime import datetime
+
+import psycopg2
+import requests
 
 DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 API_KEY = "FpB5TzG4hjf7W9IwjBsdTKGyQImqhhidMKRLDXFm"
@@ -62,17 +63,21 @@ def get_persons(conn):
 
 def fetch_donations(name, page=1):
     """Fetch one page of FEC donations for a person."""
-    resp = requests.get(API_BASE, params={
-        "api_key": API_KEY,
-        "contributor_name": name,
-        "per_page": PER_PAGE,
-        "page": page,
-        "sort_hide_null": True
-    }, timeout=15)
-    
+    resp = requests.get(
+        API_BASE,
+        params={
+            "api_key": API_KEY,
+            "contributor_name": name,
+            "per_page": PER_PAGE,
+            "page": page,
+            "sort_hide_null": True,
+        },
+        timeout=15,
+    )
+
     if resp.status_code == 429:
         return None, 0, True  # rate limited
-    
+
     resp.raise_for_status()
     data = resp.json()
     return data.get("results", []), data.get("pagination", {}).get("count", 0), False
@@ -84,17 +89,17 @@ def normalize_name(name):
         return name
     n = name.strip().upper()
     # Bloomberg variants
-    if n in ('BLOOMBERG, MICHAEL', 'BLOOMBERG, MICHAEL RUBENS'):
-        return 'BLOOMBERG, MICHAEL R.'
+    if n in ("BLOOMBERG, MICHAEL", "BLOOMBERG, MICHAEL RUBENS"):
+        return "BLOOMBERG, MICHAEL R."
     # Lutnick variants
-    if n in ('LUTNICK, HOWARD', 'LUTNICK, HOWARD W', 'LUTNICK, HOWARD W. MR.'):
-        return 'LUTNICK, HOWARD W.'
+    if n in ("LUTNICK, HOWARD", "LUTNICK, HOWARD W", "LUTNICK, HOWARD W. MR."):
+        return "LUTNICK, HOWARD W."
     # Murdoch variants
-    if n == 'MURDOCH, K RUPERT':
-        return 'MURDOCH, K. RUPERT'
+    if n == "MURDOCH, K RUPERT":
+        return "MURDOCH, K. RUPERT"
     # Hoffman variants
-    if n == 'HOFFMAN, REID':
-        return 'HOFFMAN, REID G.'
+    if n == "HOFFMAN, REID":
+        return "HOFFMAN, REID G."
     return n
 
 
@@ -107,26 +112,29 @@ def save_donations(conn, results):
         if not txn_id:
             continue
         try:
-            cur.execute("""
+            cur.execute(
+                """
                 INSERT INTO fec_donations
                 (fec_transaction_id, contributor_name, contributor_city, contributor_state,
-                 contributor_employer, contributor_occupation, recipient_name, 
+                 contributor_employer, contributor_occupation, recipient_name,
                  recipient_committee_id, amount, donation_date, memo_text)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT DO NOTHING
-            """, (
-                txn_id,
-                normalize_name(r.get("contributor_name", "")),
-                r.get("contributor_city", ""),
-                r.get("contributor_state", ""),
-                r.get("contributor_employer", ""),
-                r.get("contributor_occupation", ""),
-                r.get("recipient_name", ""),
-                r.get("committee_id", ""),
-                r.get("contribution_receipt_amount"),
-                r.get("contribution_receipt_date"),
-                r.get("memo_text", "")
-            ))
+            """,
+                (
+                    txn_id,
+                    normalize_name(r.get("contributor_name", "")),
+                    r.get("contributor_city", ""),
+                    r.get("contributor_state", ""),
+                    r.get("contributor_employer", ""),
+                    r.get("contributor_occupation", ""),
+                    r.get("recipient_name", ""),
+                    r.get("committee_id", ""),
+                    r.get("contribution_receipt_amount"),
+                    r.get("contribution_receipt_date"),
+                    r.get("memo_text", ""),
+                ),
+            )
             if cur.rowcount > 0:
                 new += 1
         except:
@@ -138,15 +146,15 @@ def save_donations(conn, results):
 def run():
     state = load_state()
     state["last_run"] = datetime.now().isoformat()
-    
+
     conn = psycopg2.connect(DB_URL)
     persons = get_persons(conn)
-    
+
     start_idx = state.get("last_person_index", 0)
     total_new = 0
     requests_used = 0
     max_requests = 55  # Leave buffer under 60/hr limit
-    
+
     for i in range(start_idx, len(persons)):
         if requests_used >= max_requests:
             log(f"Used {requests_used} requests. Stopping to stay under rate limit.")
@@ -154,30 +162,34 @@ def run():
             save_state(state)
             conn.close()
             return total_new
-        
+
         name = persons[i]
-        
+
         try:
             results, total_avail, rate_limited = fetch_donations(name, page=1)
             requests_used += 1
-            
+
             if rate_limited:
                 log(f"Rate limited at person {i} ({name}). Stopping.")
                 state["last_person_index"] = i
                 save_state(state)
                 conn.close()
                 return total_new
-            
+
             if total_avail == 0:
                 continue
-            
+
             new = save_donations(conn, results)
             total_new += new
             state["total_downloaded"] = state.get("total_downloaded", 0) + new
-            
+
             # If more pages, fetch up to 5 more (5 more requests)
             pages_fetched = 1
-            while total_avail > pages_fetched * PER_PAGE and pages_fetched < 5 and requests_used < max_requests:
+            while (
+                total_avail > pages_fetched * PER_PAGE
+                and pages_fetched < 5
+                and requests_used < max_requests
+            ):
                 pages_fetched += 1
                 results, _, rate_limited = fetch_donations(name, page=pages_fetched)
                 requests_used += 1
@@ -186,19 +198,19 @@ def run():
                 new = save_donations(conn, results)
                 total_new += new
                 state["total_downloaded"] = state.get("total_downloaded", 0) + new
-            
+
             if new > 0:
                 log(f"{name}: {total_avail} total, +{new} new (requests: {requests_used})")
-            
+
         except Exception as e:
             log(f"{name}: error - {e}")
-        
+
         time.sleep(0.5)
-    
+
     state["last_person_index"] = 0  # Reset for next cycle
     save_state(state)
     conn.close()
-    
+
     cur2 = psycopg2.connect(DB_URL).cursor()
     cur2.execute("SELECT COUNT(*) FROM fec_donations")
     total = cur2.fetchone()[0]
@@ -215,8 +227,8 @@ def show_status():
     cur.execute("SELECT COUNT(DISTINCT contributor_name) FROM fec_donations")
     unique = cur.fetchone()[0]
     conn.close()
-    
-    print(f"\nFEC Downloader Status:")
+
+    print("\nFEC Downloader Status:")
     print(f"  In database: {db_count} donations from {unique} contributors")
     print(f"  Last person index: {state.get('last_person_index', 0)}")
     print(f"  Total downloaded: {state.get('total_downloaded', 0)}")

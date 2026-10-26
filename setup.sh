@@ -83,11 +83,11 @@ create_venv() {
 # =============================================================================
 install_deps() {
     log "Installing dependencies from pyproject.toml..."
-    
+
     # Core deps
     "$UV" pip install -e "$PROJECT_DIR" 2>&1 | tail -3
     ok "Core dependencies installed"
-    
+
     # GPU deps (if not --core mode)
     if [ "$MODE" = "full" ] || [ "$MODE" = "docker" ]; then
         log "Installing GPU dependencies..."
@@ -119,7 +119,7 @@ install_playwright() {
 # =============================================================================
 install_system_deps() {
     log "Installing system dependencies..."
-    
+
     # Check if we can use apt
     if command -v apt-get &>/dev/null; then
         sudo apt-get install -y \
@@ -141,9 +141,9 @@ install_system_deps() {
 # =============================================================================
 verify() {
     log "Verifying installation..."
-    
+
     local errors=0
-    
+
     # Python version
     PY_VER=$("$VENV_DIR/bin/python" --version 2>&1 | awk '{print $2}')
     if [[ "$PY_VER" == 3.12* ]]; then
@@ -152,7 +152,7 @@ verify() {
         err "Python $PY_VER (expected 3.12.x)"
         errors=$((errors + 1))
     fi
-    
+
     # Critical imports
     for pkg in spacy pymupdf pyarrow rich click numpy scipy sklearn rapidfuzz insightface cv2; do
         if "$VENV_DIR/bin/python" -c "import $pkg" 2>/dev/null; then
@@ -162,7 +162,7 @@ verify() {
             errors=$((errors + 1))
         fi
     done
-    
+
     # spaCy model
     if "$VENV_DIR/bin/python" -c "import spacy; spacy.load('en_core_web_sm')" 2>/dev/null; then
         ok "spaCy en_core_web_sm"
@@ -170,7 +170,7 @@ verify() {
         err "spaCy model not loaded"
         errors=$((errors + 1))
     fi
-    
+
     # Playwright
     if "$VENV_DIR/bin/python" -c "import playwright" 2>/dev/null; then
         ok "playwright"
@@ -178,7 +178,7 @@ verify() {
         err "playwright import failed"
         errors=$((errors + 1))
     fi
-    
+
     # PyArrow (Apache Parquet)
     if "$VENV_DIR/bin/python" -c "import pyarrow.parquet" 2>/dev/null; then
         ok "pyarrow.parquet (Apache Parquet reader)"
@@ -186,7 +186,7 @@ verify() {
         err "pyarrow.parquet failed"
         errors=$((errors + 1))
     fi
-    
+
     # SQLite
     if "$VENV_DIR/bin/python" -c "import sqlite3; print(sqlite3.sqlite_version)" 2>/dev/null; then
         ok "sqlite3"
@@ -194,7 +194,7 @@ verify() {
         err "sqlite3 failed"
         errors=$((errors + 1))
     fi
-    
+
     # System tools
     for tool in aria2c curl jq sqlite3; do
         if command -v $tool &>/dev/null; then
@@ -204,7 +204,7 @@ verify() {
             errors=$((errors + 1))
         fi
     done
-    
+
     echo ""
     if [ $errors -eq 0 ]; then
         echo -e "${GREEN}============================================${NC}"
@@ -245,9 +245,9 @@ main() {
     echo -e "${CYAN}║  Mode: $(printf '%-38s' $MODE)║${NC}"
     echo -e "${CYAN}╚══════════════════════════════════════════════╝${NC}"
     echo ""
-    
+
     cd "$PROJECT_DIR"
-    
+
     case $MODE in
         verify)
             verify

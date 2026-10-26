@@ -1,7 +1,7 @@
 # Embedding Migration Plan - Least Effort Approach
 
-> **Status:** Draft - April 16, 2026  
-> **Goal:** Minimize GPU usage while maximizing embedding coverage  
+> **Status:** Draft - April 16, 2026
+> **Goal:** Minimize GPU usage while maximizing embedding coverage
 > **Principle:** Keep all existing data, use optimal model for new work
 
 ---
@@ -108,11 +108,11 @@ pages.embedding_nomic (vector)    -- Current rtx3060_embedding (rename)
 ```sql
 -- Just add column reference
 ALTER TABLE pages ADD COLUMN IF NOT EXISTS has_minilm_embedding BOOLEAN DEFAULT FALSE;
-UPDATE pages SET has_minilm_embedding = TRUE 
+UPDATE pages SET has_minilm_embedding = TRUE
 WHERE id IN (SELECT page_id FROM page_embeddings);
 
 -- Create index for fast lookup
-CREATE INDEX idx_pages_has_minilm ON pages(has_minilm_embedding) 
+CREATE INDEX idx_pages_has_minilm ON pages(has_minilm_embedding)
 WHERE has_minilm_embedding = TRUE;
 ```
 
@@ -141,19 +141,19 @@ ALTER TABLE pages RENAME COLUMN rtx3060_embedding TO embedding_nomic;
 
 ```sql
 CREATE OR REPLACE VIEW v_pages_with_embeddings AS
-SELECT 
+SELECT
     p.id,
     p.efta_number,
     p.page_number,
     p.text_content,
     COALESCE(p.embedding_minilm, p.embedding_nomic) as embedding,  -- Prefer MiniLM
-    CASE 
+    CASE
         WHEN p.embedding_minilm IS NOT NULL THEN 'minilm'
         WHEN p.embedding_nomic IS NOT NULL THEN 'nomic'
         ELSE NULL
     END as embedding_model
 FROM pages p
-WHERE p.embedding_minilm IS NOT NULL 
+WHERE p.embedding_minilm IS NOT NULL
    OR p.embedding_nomic IS NOT NULL;
 ```
 
@@ -174,7 +174,7 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         p.id,
         p.efta_number,
         LEFT(p.text_content, 500),
@@ -183,10 +183,10 @@ BEGIN
     FROM pages p
     WHERE p.embedding_minilm IS NOT NULL
         AND 1 - (p.embedding_minilm <=> query_embedding) > match_threshold
-    
+
     UNION ALL
-    
-    SELECT 
+
+    SELECT
         p.id,
         p.efta_number,
         LEFT(p.text_content, 500),
@@ -196,7 +196,7 @@ BEGIN
     WHERE p.embedding_nomic IS NOT NULL
         AND 1 - (p.embedding_nomic <=> query_embedding) > match_threshold
         AND p.embedding_minilm IS NULL  -- Avoid duplicates
-    
+
     ORDER BY similarity DESC
     LIMIT max_results;
 END;
@@ -222,7 +222,7 @@ CREATE TABLE IF NOT EXISTS embedding_migration_log (
 
 -- Log entries
 INSERT INTO embedding_migration_log (phase, pages_processed, embeddings_generated, gpu_hours, notes)
-VALUES 
+VALUES
     ('Initial state', 2892730, 1561755, 0, 'MiniLM embeddings from K80s'),
     ('Deduplication', 2892730, 0, 0, 'Identified ~392K duplicate pages'),
     ('Nomic embeddings', 900000, 900000, 15, 'Generated for unique pages missing embeddings');
@@ -253,5 +253,5 @@ VALUES
 
 ---
 
-*Last Updated: April 16, 2026*  
+*Last Updated: April 16, 2026*
 *Status: Draft - Pending User Approval*

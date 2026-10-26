@@ -15,13 +15,10 @@ Usage:
 
 import argparse
 import csv
-import sys
-from datetime import datetime
 from pathlib import Path
 
 import psycopg2
 import psycopg2.extras
-
 
 # PostgreSQL connection
 PG_DSN = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
@@ -195,55 +192,153 @@ CREATE INDEX IF NOT EXISTS idx_icij_rel_type ON icij_relationships(rel_type);
 FILES_CONFIG = {
     "nodes-entities.csv": {
         "table": "icij_entities",
-        "columns": ["node_id", "name", "original_name", "former_name", "jurisdiction",
-                   "jurisdiction_description", "company_type", "address", "internal_id",
-                   "incorporation_date", "inactivation_date", "struck_off_date", "dorm_date",
-                   "status", "service_provider", "ibcRUC", "country_codes", "countries",
-                   "sourceID", "valid_until", "note"]
+        "columns": [
+            "node_id",
+            "name",
+            "original_name",
+            "former_name",
+            "jurisdiction",
+            "jurisdiction_description",
+            "company_type",
+            "address",
+            "internal_id",
+            "incorporation_date",
+            "inactivation_date",
+            "struck_off_date",
+            "dorm_date",
+            "status",
+            "service_provider",
+            "ibcRUC",
+            "country_codes",
+            "countries",
+            "sourceID",
+            "valid_until",
+            "note",
+        ],
     },
     "nodes-officers.csv": {
         "table": "icij_officers",
-        "columns": ["node_id", "name", "original_name", "former_name", "jurisdiction",
-                   "jurisdiction_description", "company_type", "address", "internal_id",
-                   "incorporation_date", "inactivation_date", "struck_off_date", "dorm_date",
-                   "status", "service_provider", "ibcRUC", "country_codes", "countries",
-                   "sourceID", "valid_until", "note"]
+        "columns": [
+            "node_id",
+            "name",
+            "original_name",
+            "former_name",
+            "jurisdiction",
+            "jurisdiction_description",
+            "company_type",
+            "address",
+            "internal_id",
+            "incorporation_date",
+            "inactivation_date",
+            "struck_off_date",
+            "dorm_date",
+            "status",
+            "service_provider",
+            "ibcRUC",
+            "country_codes",
+            "countries",
+            "sourceID",
+            "valid_until",
+            "note",
+        ],
     },
     "nodes-addresses.csv": {
         "table": "icij_addresses",
-        "columns": ["node_id", "name", "original_name", "former_name", "jurisdiction",
-                   "jurisdiction_description", "company_type", "address", "internal_id",
-                   "incorporation_date", "inactivation_date", "struck_off_date", "dorm_date",
-                   "status", "service_provider", "ibcRUC", "country_codes", "countries",
-                   "sourceID", "valid_until", "note"]
+        "columns": [
+            "node_id",
+            "name",
+            "original_name",
+            "former_name",
+            "jurisdiction",
+            "jurisdiction_description",
+            "company_type",
+            "address",
+            "internal_id",
+            "incorporation_date",
+            "inactivation_date",
+            "struck_off_date",
+            "dorm_date",
+            "status",
+            "service_provider",
+            "ibcRUC",
+            "country_codes",
+            "countries",
+            "sourceID",
+            "valid_until",
+            "note",
+        ],
     },
     "nodes-intermediaries.csv": {
         "table": "icij_intermediaries",
-        "columns": ["node_id", "name", "original_name", "former_name", "jurisdiction",
-                   "jurisdiction_description", "company_type", "address", "internal_id",
-                   "incorporation_date", "inactivation_date", "struck_off_date", "dorm_date",
-                   "status", "service_provider", "ibcRUC", "country_codes", "countries",
-                   "sourceID", "valid_until", "note"]
+        "columns": [
+            "node_id",
+            "name",
+            "original_name",
+            "former_name",
+            "jurisdiction",
+            "jurisdiction_description",
+            "company_type",
+            "address",
+            "internal_id",
+            "incorporation_date",
+            "inactivation_date",
+            "struck_off_date",
+            "dorm_date",
+            "status",
+            "service_provider",
+            "ibcRUC",
+            "country_codes",
+            "countries",
+            "sourceID",
+            "valid_until",
+            "note",
+        ],
     },
     "nodes-others.csv": {
         "table": "icij_others",
-        "columns": ["node_id", "name", "original_name", "former_name", "jurisdiction",
-                   "jurisdiction_description", "company_type", "address", "internal_id",
-                   "incorporation_date", "inactivation_date", "struck_off_date", "dorm_date",
-                   "status", "service_provider", "ibcRUC", "country_codes", "countries",
-                   "sourceID", "valid_until", "note"]
+        "columns": [
+            "node_id",
+            "name",
+            "original_name",
+            "former_name",
+            "jurisdiction",
+            "jurisdiction_description",
+            "company_type",
+            "address",
+            "internal_id",
+            "incorporation_date",
+            "inactivation_date",
+            "struck_off_date",
+            "dorm_date",
+            "status",
+            "service_provider",
+            "ibcRUC",
+            "country_codes",
+            "countries",
+            "sourceID",
+            "valid_until",
+            "note",
+        ],
     },
     "relationships.csv": {
         "table": "icij_relationships",
-        "columns": ["node_id_start", "node_id_end", "rel_type", "link", "status",
-                   "start_date", "end_date", "sourceID"]
-    }
+        "columns": [
+            "node_id_start",
+            "node_id_end",
+            "rel_type",
+            "link",
+            "status",
+            "start_date",
+            "end_date",
+            "sourceID",
+        ],
+    },
 }
 
 
 def safe_value(val):
     """Clean CSV value for PostgreSQL."""
-    if val is None or val == '':
+    if val is None or val == "":
         return None
     return val.strip()
 
@@ -253,83 +348,89 @@ def import_csv_file(filepath, table, columns, conn, dry_run=False, batch_size=BA
     total_rows = 0
     inserted = 0
     errors = 0
-    
+
     print(f"\nImporting {filepath.name} -> {table}...")
-    
+
     # Count total rows
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         total_rows = sum(1 for _ in f) - 1  # Exclude header
-    
+
     print(f"  Total rows to import: {total_rows:,}")
-    
+
     if dry_run:
         print(f"  [DRY RUN] Would import {total_rows:,} rows")
         return total_rows, 0, 0
-    
+
     # Build INSERT SQL
-    placeholders = ','.join(['%s'] * len(columns))
-    insert_sql = f"INSERT INTO {table} ({','.join(columns)}) VALUES ({placeholders}) ON CONFLICT DO NOTHING"
-    
+    placeholders = ",".join(["%s"] * len(columns))
+    insert_sql = (
+        f"INSERT INTO {table} ({','.join(columns)}) VALUES ({placeholders}) ON CONFLICT DO NOTHING"
+    )
+
     # Import with autocommit for batch inserts
     ac_conn = psycopg2.connect(PG_DSN)
     ac_conn.autocommit = True
-    
+
     try:
         batch = []
         processed = 0
-        
-        with open(filepath, 'r', encoding='utf-8') as f:
+
+        with open(filepath, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
-            
+
             for row in reader:
                 try:
                     values = [safe_value(row.get(col)) for col in columns]
                     batch.append(values)
-                    
+
                     if len(batch) >= batch_size:
                         with ac_conn.cursor() as cur:
                             cur.executemany(insert_sql, batch)
                             inserted += len(batch)
                         batch = []
-                        
+
                         processed += batch_size
                         pct = min(processed / total_rows * 100, 100)
-                        print(f"\r  Progress: {processed:,}/{total_rows:,} ({pct:.1f}%)", end='', flush=True)
-                        
+                        print(
+                            f"\r  Progress: {processed:,}/{total_rows:,} ({pct:.1f}%)",
+                            end="",
+                            flush=True,
+                        )
+
                 except Exception as e:
                     errors += 1
                     if errors <= 5:
                         print(f"\n  Error on row {processed}: {e}")
-        
+
         # Insert remaining batch
         if batch:
             with ac_conn.cursor() as cur:
                 cur.executemany(insert_sql, batch)
                 inserted += len(batch)
             processed += len(batch)
-        
+
         print(f"\r  Progress: {processed:,}/{total_rows:,} (100.0%)")
         print(f"  Done! Inserted: {inserted:,}, Errors: {errors}")
-        
+
     finally:
         ac_conn.close()
-    
+
     return total_rows, inserted, errors
 
 
 def print_summary(conn):
     """Print summary statistics."""
     print("\n=== ICIJ Import Summary ===")
-    
+
     tables = [
-        ('icij_entities', 'Entities'),
-        ('icij_officers', 'Officers'),
-        ('icij_addresses', 'Addresses'),
-        ('icij_intermediaries', 'Intermediaries'),
-        ('icij_others', 'Others'),
-        ('icij_relationships', 'Relationships')
+        ("icij_entities", "Entities"),
+        ("icij_officers", "Officers"),
+        ("icij_addresses", "Addresses"),
+        ("icij_intermediaries", "Intermediaries"),
+        ("icij_others", "Others"),
+        ("icij_relationships", "Relationships"),
     ]
-    
+
     total_records = 0
     for table, label in tables:
         with conn.cursor() as cur:
@@ -337,9 +438,9 @@ def print_summary(conn):
             count = cur.fetchone()[0]
             total_records += count
             print(f"  {label}: {count:,}")
-    
+
     print(f"\n  Total: {total_records:,} records")
-    
+
     # Show source breakdown
     print("\n=== Sources ===")
     with conn.cursor() as cur:
@@ -374,30 +475,30 @@ def main():
             conn.commit()
 
         total_stats = {"total": 0, "inserted": 0, "errors": 0}
-        
+
         # Import each file
         files_to_import = [args.file] if args.file else list(FILES_CONFIG.keys())
-        
+
         for filename in files_to_import:
             if filename not in FILES_CONFIG:
                 print(f"ERROR: Unknown file {filename}")
                 continue
-                
+
             filepath = ICIJ_DIR / filename
             if not filepath.exists():
                 print(f"WARNING: {filepath} not found, skipping")
                 continue
-            
+
             config = FILES_CONFIG[filename]
             total, inserted, errors = import_csv_file(
-                filepath, 
-                config["table"], 
+                filepath,
+                config["table"],
                 config["columns"],
                 conn,
                 dry_run=args.dry_run,
-                batch_size=args.batch_size
+                batch_size=args.batch_size,
             )
-            
+
             total_stats["total"] += total
             total_stats["inserted"] += inserted
             total_stats["errors"] += errors

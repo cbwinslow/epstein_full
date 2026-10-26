@@ -1,13 +1,13 @@
 # Duplicate Analysis Report
-**Date:** April 13, 2026  
+**Date:** April 13, 2026
 **Purpose:** Find duplicates and overlaps across all Epstein datasets
 
 ---
 
 ## 📊 Summary
 
-**Total Filesystem Data:** 17.41 GB across 2,092 files  
-**Total SQL Records:** 4M+ records across multiple tables  
+**Total Filesystem Data:** 17.41 GB across 2,092 files
+**Total SQL Records:** 4M+ records across multiple tables
 **Duplicate Issues Found:** 3 critical overlaps
 
 ---
@@ -48,52 +48,52 @@
 ### 3. DATASET-BY-DATASET ANALYSIS
 
 #### ✅ epstein-files-20k (teyler/epstein-files-20k)
-**Filesystem:** 127 MB (2 files)  
-**SQL:** `hf_epstein_files_20k` - 2,136,420 records  
+**Filesystem:** 127 MB (2 files)
+**SQL:** `hf_epstein_files_20k` - 2,136,420 records
 **Status:** ✅ Complete, no duplicates
 
 #### ✅ House Oversight TXT
-**Filesystem:** 100.7 MB (7 files)  
-**SQL:** `hf_house_oversight_docs` - 1,791,798 records  
+**Filesystem:** 100.7 MB (7 files)
+**SQL:** `hf_house_oversight_docs` - 1,791,798 records
 **Status:** ✅ Complete, unique data
 
 #### ⚠️ Email Threads (PARQUET)
-**Filesystem:** 4.4 MB (7 files)  
-**SQL:** `hf_email_threads` - 5,082 records  
-**Status:** ❌ **DUPLICATE** - Same as house_oversight_emails  
+**Filesystem:** 4.4 MB (7 files)
+**SQL:** `hf_email_threads` - 5,082 records
+**Status:** ❌ **DUPLICATE** - Same as house_oversight_emails
 **Action:** Drop table, keep files for reference only
 
 #### 🔄 OCR Complete
-**Filesystem:** 1,348.9 MB (1 file)  
-**SQL:** `hf_ocr_complete` - Importing  
-**Status:** 🔄 Running  
+**Filesystem:** 1,348.9 MB (1 file)
+**SQL:** `hf_ocr_complete` - Importing
+**Status:** 🔄 Running
 **Unique:** OCR text from 20K documents
 
 #### 📁 Embeddings
-**Filesystem:** 340.9 MB (1 file)  
-**SQL:** ⏳ Not imported  
-**Status:** Ready to import  
+**Filesystem:** 340.9 MB (1 file)
+**SQL:** ⏳ Not imported
+**Status:** Ready to import
 **Unique:** Vector embeddings (different from house_oversight_embeddings)
 
 #### 📁 Epstein Data Text
-**Filesystem:** 2,198.1 MB (17 files)  
-**SQL:** ⏳ Not imported  
-**Status:** Ready to import  
+**Filesystem:** 2,198.1 MB (17 files)
+**SQL:** ⏳ Not imported
+**Status:** Ready to import
 **Unique:** Extracted text content
 
 #### 📁 Images (2 datasets)
-**Filesystem:** 4,891.9 MB + 4,273.2 MB = 9.17 GB  
-**SQL:** ⏳ Metadata not imported  
-**Status:** Keep on disk, import metadata only  
+**Filesystem:** 4,891.9 MB + 4,273.2 MB = 9.17 GB
+**SQL:** ⏳ Metadata not imported
+**Status:** Keep on disk, import metadata only
 
 #### 📁 FBI Files
-**Filesystem:** 4,541.4 MB (355 PDFs + metadata)  
-**SQL:** `fbi_vault_pages` - 1,426 records  
+**Filesystem:** 4,541.4 MB (355 PDFs + metadata)
+**SQL:** `fbi_vault_pages` - 1,426 records
 **Status:** ✅ Metadata in SQL, PDFs on disk
 
 #### 📁 Full Index
-**Filesystem:** 4.2 MB (32 files)  
-**SQL:** `full_epstein_index` - 8,531 records  
+**Filesystem:** 4.2 MB (32 files)
+**SQL:** `full_epstein_index` - 8,531 records
 **Status:** ✅ Already imported
 
 ---
@@ -124,7 +124,7 @@ Run these to find more duplicates:
 
 ```sql
 -- Check EFT document ID overlap
-SELECT 
+SELECT
     doc_id,
     (SELECT COUNT(*) FROM full_epstein_index WHERE id::text = doc_id) as in_full_index
 FROM hf_house_oversight_docs
@@ -132,17 +132,17 @@ WHERE doc_id LIKE 'EFT%'
 LIMIT 100;
 
 -- Content similarity check (sampling)
-SELECT 
+SELECT
     hf.id,
     hf.content as content_20k,
     ho.title as content_ho
 FROM hf_epstein_files_20k hf
-JOIN hf_house_oversight_docs ho 
+JOIN hf_house_oversight_docs ho
     ON hf.content ILIKE '%' || ho.title || '%'
 LIMIT 10;
 
 -- Check if OCR duplicates original text
-SELECT 
+SELECT
     o.doc_id,
     o.ocr_text,
     e.content as original_text

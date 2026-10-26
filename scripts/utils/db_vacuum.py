@@ -32,9 +32,7 @@ PG_DB = "epstein"
 def get_conn():
     """Get PostgreSQL connection."""
     return psycopg2.connect(
-        host=PG_HOST, port=PG_PORT,
-        user=PG_USER, password=PG_PASS,
-        dbname=PG_DB
+        host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASS, dbname=PG_DB
     )
 
 

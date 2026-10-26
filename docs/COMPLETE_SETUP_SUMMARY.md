@@ -96,7 +96,7 @@ python windows_processing.py
 -- Documents table with OCR results
 documents (id, efta_number, ocr_text, ocr_confidence, ...)
 
--- Entities table with NER results  
+-- Entities table with NER results
 entities (id, name, entity_type, aliases, ...)
 
 -- Relationships table with co-occurrence analysis

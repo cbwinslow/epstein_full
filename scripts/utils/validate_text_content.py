@@ -16,12 +16,12 @@ Checks:
     5. Error detection
 """
 
-import sys
-import logging
 import argparse
+import logging
+import sys
 from datetime import datetime
+
 import psycopg2
-from psycopg2 import sql
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -68,7 +68,7 @@ def validate_counts(conn):
 
         # Documents missing content
         cur.execute("""
-            SELECT COUNT(*) 
+            SELECT COUNT(*)
             FROM documents d
             LEFT JOIN documents_content dc ON d.id = dc.document_id
             WHERE dc.document_id IS NULL
@@ -91,13 +91,13 @@ def validate_text_quality(conn):
     with conn.cursor() as cur:
         # Text length statistics
         cur.execute("""
-            SELECT 
+            SELECT
                 COUNT(*) as total,
                 AVG(char_count) as avg_length,
                 MIN(char_count) as min_length,
                 MAX(char_count) as max_length,
                 PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY char_count) as median_length
-            FROM documents_content 
+            FROM documents_content
             WHERE char_count > 0
         """)
         result = cur.fetchone()
@@ -143,7 +143,7 @@ def validate_foreign_keys(conn):
     with conn.cursor() as cur:
         # Orphaned content (document_id not in documents table)
         cur.execute("""
-            SELECT COUNT(*) 
+            SELECT COUNT(*)
             FROM documents_content dc
             LEFT JOIN documents d ON dc.document_id = d.id
             WHERE d.id IS NULL
@@ -153,9 +153,9 @@ def validate_foreign_keys(conn):
 
         # Duplicate document_ids (should be none due to unique constraint)
         cur.execute("""
-            SELECT document_id, COUNT(*) 
-            FROM documents_content 
-            GROUP BY document_id 
+            SELECT document_id, COUNT(*)
+            FROM documents_content
+            GROUP BY document_id
             HAVING COUNT(*) > 1
         """)
         duplicates = cur.fetchall()
@@ -171,7 +171,7 @@ def validate_sample_content(conn, sample_size=5):
     with conn.cursor() as cur:
         cur.execute(
             """
-            SELECT dc.document_id, d.efta_number, dc.char_count, 
+            SELECT dc.document_id, d.efta_number, dc.char_count,
                    LEFT(dc.content, 100) as preview
             FROM documents_content dc
             JOIN documents d ON dc.document_id = d.id

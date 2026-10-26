@@ -1,7 +1,7 @@
 # Epstein Files Processing Scripts - Version Control & Documentation
 
-**Date**: March 23, 2026  
-**Version**: v1.0.0  
+**Date**: March 23, 2026
+**Version**: v1.0.0
 **Purpose**: Track script versions, functionality, and usage for reproducible research
 
 ## Version Control System

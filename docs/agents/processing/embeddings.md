@@ -68,18 +68,21 @@ from typing import List, Optional
 app = FastAPI(title="Embeddings API", version="1.0.0")
 
 # Load model on GPU
-model = SentenceTransformer('nomic-ai/nomic-embed-text-v2-moe', 
-                          trust_remote_code=True,
-                          device='cuda')
+model = SentenceTransformer(
+    "nomic-ai/nomic-embed-text-v2-moe", trust_remote_code=True, device="cuda"
+)
+
 
 class EmbeddingRequest(BaseModel):
     texts: List[str]
     batch_size: Optional[int] = 32
 
+
 class EmbeddingResponse(BaseModel):
     embeddings: List[List[float]]
     dimension: int
     model: str
+
 
 @app.get("/")
 async def root():
@@ -87,12 +90,14 @@ async def root():
         "service": "Embeddings API",
         "model": "nomic-ai/nomic-embed-text-v2-moe",
         "device": str(model.device),
-        "dimensions": 768
+        "dimensions": 768,
     }
+
 
 @app.get("/health")
 async def health():
     return {"status": "healthy", "device": str(model.device)}
+
 
 @app.post("/embed", response_model=EmbeddingResponse)
 async def embed(request: EmbeddingRequest):
@@ -101,17 +106,18 @@ async def embed(request: EmbeddingRequest):
             request.texts,
             batch_size=request.batch_size,
             show_progress_bar=False,
-            convert_to_numpy=True
+            convert_to_numpy=True,
         )
-        
+
         return EmbeddingResponse(
             embeddings=embeddings.tolist(),
             dimension=embeddings.shape[1],
             dimension=768,
-            model="nomic-ai/nomic-embed-text-v2-moe"
+            model="nomic-ai/nomic-embed-text-v2-moe",
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/embed/title")
 async def embed_title(text: str):
@@ -119,11 +125,13 @@ async def embed_title(text: str):
     embedding = model.encode(text, show_progress_bar=False)
     return {"embedding": embedding.tolist(), "dimension": 768}
 
+
 @app.post("/embed/summary")
 async def embed_summary(text: str):
     """Generate embedding for article summary"""
     embedding = model.encode(text, show_progress_bar=False)
     return {"embedding": embedding.tolist(), "dimension": 768}
+
 
 @app.post("/embed/content")
 async def embed_content(text: str):
@@ -131,8 +139,10 @@ async def embed_content(text: str):
     embedding = model.encode(text, show_progress_bar=False)
     return {"embedding": embedding.tolist(), "dimension": 768}
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
@@ -163,48 +173,40 @@ import requests
 import psycopg2
 from typing import List, Optional
 
+
 class EmbeddingsClient:
     """Client for Windows GPU embeddings endpoint"""
-    
+
     def __init__(self, base_url: str):
-        self.base_url = base_url.rstrip('/')
-        
+        self.base_url = base_url.rstrip("/")
+
     def health(self) -> dict:
         """Check if endpoint is healthy"""
         response = requests.get(f"{self.base_url}/health")
         return response.json()
-    
+
     def embed(self, texts: List[str], batch_size: int = 32) -> List[List[float]]:
         """Generate embeddings for multiple texts"""
         response = requests.post(
-            f"{self.base_url}/embed",
-            json={"texts": texts, "batch_size": batch_size}
+            f"{self.base_url}/embed", json={"texts": texts, "batch_size": batch_size}
         )
         return response.json()["embeddings"]
-    
+
     def embed_title(self, text: str) -> List[float]:
         """Generate embedding for title"""
-        response = requests.post(
-            f"{self.base_url}/embed/title",
-            params={"text": text}
-        )
+        response = requests.post(f"{self.base_url}/embed/title", params={"text": text})
         return response.json()["embedding"]
-    
+
     def embed_summary(self, text: str) -> List[float]:
         """Generate embedding for summary"""
-        response = requests.post(
-            f"{self.base_url}/embed/summary",
-            params={"text": text}
-        )
+        response = requests.post(f"{self.base_url}/embed/summary", params={"text": text})
         return response.json()["embedding"]
-    
+
     def embed_content(self, text: str) -> List[float]:
         """Generate embedding for content"""
-        response = requests.post(
-            f"{self.base_url}/embed/content",
-            params={"text": text}
-        )
+        response = requests.post(f"{self.base_url}/embed/content", params={"text": text})
         return response.json()["embedding"]
+
 
 # Usage
 client = EmbeddingsClient("http://192.168.1.100:8000")
@@ -226,30 +228,39 @@ logger = logging.getLogger(__name__)
 # Windows GPU endpoint
 EMBEDDINGS_URL = "http://192.168.1.100:8000"  # Update with Windows IP
 
+
 def get_articles_without_embeddings(conn, limit=1000):
     """Get articles that don't have embeddings yet"""
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT id, title, summary, content
         FROM media_news_articles
         WHERE title_embedding IS NULL
         AND title IS NOT NULL
         ORDER BY collected_at DESC
         LIMIT %s
-    """, (limit,))
+    """,
+        (limit,),
+    )
     return cur.fetchall()
+
 
 def update_article_embeddings(conn, article_id, title_emb, summary_emb, content_emb):
     """Update article with embeddings"""
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         UPDATE media_news_articles
         SET title_embedding = %s,
             summary_embedding = %s,
             content_embedding = %s
         WHERE id = %s
-    """, (title_emb, summary_emb, content_emb, article_id))
+    """,
+        (title_emb, summary_emb, content_emb, article_id),
+    )
     conn.commit()
+
 
 def main():
     logger.info("Connecting to embeddings endpoint...")
@@ -259,49 +270,47 @@ def main():
     except Exception as e:
         logger.error(f"Cannot connect to embeddings endpoint: {e}")
         return
-    
-    conn = psycopg2.connect('postgresql://cbwinslow:123qweasd@localhost:5432/epstein')
-    
+
+    conn = psycopg2.connect("postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
+
     articles = get_articles_without_embeddings(conn, limit=1000)
     logger.info(f"Found {len(articles)} articles to process")
-    
+
     processed = 0
     for i, (article_id, title, summary, content) in enumerate(articles, 1):
         try:
             # Generate embeddings via Windows GPU
             title_emb = requests.post(
-                f"{EMBEDDINGS_URL}/embed/title",
-                params={"text": title}
+                f"{EMBEDDINGS_URL}/embed/title", params={"text": title}
             ).json()["embedding"]
-            
+
             summary_emb = None
             if summary:
                 summary_emb = requests.post(
-                    f"{EMBEDDINGS_URL}/embed/summary",
-                    params={"text": summary}
+                    f"{EMBEDDINGS_URL}/embed/summary", params={"text": summary}
                 ).json()["embedding"]
-            
+
             content_emb = None
             if content and len(content) > 100:
                 content_emb = requests.post(
-                    f"{EMBEDDINGS_URL}/embed/content",
-                    params={"text": content}
+                    f"{EMBEDDINGS_URL}/embed/content", params={"text": content}
                 ).json()["embedding"]
-            
+
             # Update database
             update_article_embeddings(conn, article_id, title_emb, summary_emb, content_emb)
             processed += 1
-            
+
             if i % 10 == 0:
                 logger.info(f"Progress: {i}/{len(articles)} processed")
-                
+
         except Exception as e:
             logger.error(f"Error processing article {article_id}: {e}")
-    
+
     conn.close()
     logger.info(f"Complete: {processed} articles processed")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 
@@ -346,12 +355,12 @@ embeddings = client.embed(texts, batch_size=32)
 Embeddings are stored in `media_news_articles`:
 
 ```sql
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN title_embedding vector(768),
 ADD COLUMN summary_embedding vector(768),
 ADD COLUMN content_embedding vector(768);
 
-CREATE INDEX idx_news_title_embedding 
+CREATE INDEX idx_news_title_embedding
 ON media_news_articles USING ivfflat(title_embedding vector_cosine_ops);
 ```
 
@@ -361,7 +370,7 @@ Once embeddings are generated, use pgvector for semantic search:
 
 ```sql
 -- Find similar articles
-SELECT id, title, 
+SELECT id, title,
        1 - (title_embedding <=> '[0.1,0.2,...]'::vector) as similarity
 FROM media_news_articles
 ORDER BY title_embedding <=> '[0.1,0.2,...]'::vector

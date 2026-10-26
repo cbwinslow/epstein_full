@@ -5,7 +5,7 @@ Runs in a loop, scanning watched paths, updating the shared state.
 
 Usage:
   python3 file_watcher.py &
-  
+
   # Or add watches manually:
   python3 file_watcher.py --once
 """
@@ -14,7 +14,6 @@ import os
 import subprocess
 import sys
 import time
-from pathlib import Path
 
 # Import shared configuration
 from epstein_config import DATABASES_DIR, RAW_FILES_DIR
@@ -48,20 +47,25 @@ WATCHES = [
     ("doj-ds12", str(RAW_FILES_DIR / "data12"), "*.pdf"),
 ]
 
+
 def count_files(directory: str, pattern: str) -> tuple:
     """Count files and total size matching a glob pattern."""
     from glob import glob
+
     matches = glob(os.path.join(directory, pattern))
     total_size = sum(os.path.getsize(f) for f in matches if os.path.exists(f))
     return len(matches), total_size
 
+
 def run_tracker(*args):
     subprocess.run([PYTHON, TRACKER] + list(args), capture_output=True)
+
 
 def update_all():
     for task_id, directory, pattern in WATCHES:
         count, size = count_files(directory, pattern)
         run_tracker("update", "--id", task_id, "--current", str(size))
+
 
 def main():
     once = "--once" in sys.argv
@@ -81,6 +85,7 @@ def main():
         except Exception as e:
             print(f"Error: {e}")
             time.sleep(POLL_INTERVAL)
+
 
 if __name__ == "__main__":
     main()
