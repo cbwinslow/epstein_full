@@ -49,15 +49,15 @@ INSERT INTO data_inventory (source_name, source_type, description, target_table,
 
 -- Create summary view
 CREATE OR REPLACE VIEW v_data_inventory_summary AS
-SELECT 
+SELECT
     source_type,
     status,
     COUNT(*) as source_count,
     SUM(expected_records) as total_expected,
     SUM(actual_records) as total_actual,
-    CASE WHEN SUM(expected_records) > 0 
+    CASE WHEN SUM(expected_records) > 0
          THEN ROUND(100.0 * SUM(actual_records) / SUM(expected_records), 2)
-         ELSE 0 
+         ELSE 0
     END as completion_pct
 FROM data_inventory
 GROUP BY source_type, status
@@ -65,7 +65,7 @@ ORDER BY source_type, status;
 
 -- Create overall summary view
 CREATE OR REPLACE VIEW v_overall_data_summary AS
-SELECT 
+SELECT
     SUM(CASE WHEN status = 'complete' THEN 1 ELSE 0 END) as complete_sources,
     SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) as in_progress_sources,
     SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_sources,
@@ -82,17 +82,17 @@ DECLARE
     v_table TEXT;
     rec RECORD;
 BEGIN
-    FOR rec IN SELECT di.source_name, di.target_table, di.actual_records 
-               FROM data_inventory di 
+    FOR rec IN SELECT di.source_name, di.target_table, di.actual_records
+               FROM data_inventory di
                WHERE di.target_table IS NOT NULL LOOP
         BEGIN
             EXECUTE format('SELECT COUNT(*)::INTEGER FROM %I', rec.target_table) INTO v_count;
             RETURN QUERY SELECT rec.source_name::TEXT, rec.actual_records::INTEGER, v_count;
-            
-            UPDATE data_inventory 
-            SET actual_records = v_count, 
+
+            UPDATE data_inventory
+            SET actual_records = v_count,
                 last_updated = NOW(),
-                status = CASE 
+                status = CASE
                     WHEN v_count >= rec.expected_records * 0.95 THEN 'complete'
                     WHEN v_count > 0 THEN 'in_progress'
                     ELSE 'pending'

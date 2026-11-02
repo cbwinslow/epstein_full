@@ -12,17 +12,17 @@ CREATE EXTENSION IF NOT EXISTS "pg_trgm";  -- For text similarity search
 
 CREATE TABLE media_news_articles (
     id SERIAL PRIMARY KEY,
-    
+
     -- Source information
     source_domain VARCHAR(100) NOT NULL,
     source_name VARCHAR(100),
     source_category VARCHAR(50),  -- mainstream, investigative, tabloid, blog, academic
-    
+
     -- URLs
     article_url TEXT NOT NULL,
     wayback_url TEXT,
     canonical_url TEXT,
-    
+
     -- Content metadata
     title TEXT NOT NULL,
     authors TEXT[],
@@ -32,32 +32,32 @@ CREATE TABLE media_news_articles (
     summary TEXT,
     keywords TEXT[],
     word_count INTEGER,
-    
+
     -- Analysis
     sentiment_score FLOAT,  -- -1.0 to 1.0
     subjectivity_score FLOAT,  -- 0.0 to 1.0
     primary_topic VARCHAR(50),
     topic_confidence FLOAT,
     all_topics JSONB,
-    
+
     -- Cross-references with our existing data
     entities_mentioned JSONB,  -- {persons: [], organizations: [], locations: []}
     related_person_ids INTEGER[],  -- FK to exposed_persons
     related_flight_ids INTEGER[],  -- FK to exposed_flights
     related_document_ids INTEGER[],  -- FK to documents
-    
+
     -- Collection metadata
     discovery_source VARCHAR(50),  -- gdelt, wayback, rss, newsapi, manual
     collection_method VARCHAR(50),  -- direct, wayback, api
     extraction_method VARCHAR(50),  -- newspaper3k, news-please, readability
     extraction_confidence FLOAT,
     gdelt_event_id BIGINT,
-    
+
     -- Timestamps
     discovered_at TIMESTAMP,
     collected_at TIMESTAMP DEFAULT NOW(),
     analyzed_at TIMESTAMP,
-    
+
     -- Constraints
     CONSTRAINT unique_article_url UNIQUE (article_url)
 );
@@ -74,13 +74,13 @@ CREATE INDEX idx_news_persons ON media_news_articles USING GIN(related_person_id
 CREATE INDEX idx_news_flights ON media_news_articles USING GIN(related_flight_ids);
 
 -- Full-text search
-CREATE INDEX idx_news_content_search ON media_news_articles 
+CREATE INDEX idx_news_content_search ON media_news_articles
     USING GIN(to_tsvector('english', COALESCE(content, '')));
-CREATE INDEX idx_news_title_search ON media_news_articles 
+CREATE INDEX idx_news_title_search ON media_news_articles
     USING GIN(to_tsvector('english', COALESCE(title, '')));
 
 -- Trigram index for fuzzy text search
-CREATE INDEX idx_news_title_trgm ON media_news_articles 
+CREATE INDEX idx_news_title_trgm ON media_news_articles
     USING GIN(title gin_trgm_ops);
 
 -- ============================================================================
@@ -89,7 +89,7 @@ CREATE INDEX idx_news_title_trgm ON media_news_articles
 
 CREATE TABLE media_videos (
     id SERIAL PRIMARY KEY,
-    
+
     -- Video metadata
     video_id VARCHAR(50) NOT NULL,
     platform VARCHAR(50) NOT NULL,  -- youtube, vimeo, internet_archive
@@ -101,7 +101,7 @@ CREATE TABLE media_videos (
     duration_seconds INTEGER,
     view_count BIGINT,
     like_count INTEGER,
-    
+
     -- Transcript
     transcript_text TEXT,
     transcript_path TEXT,  -- File path if stored separately
@@ -109,18 +109,18 @@ CREATE TABLE media_videos (
     transcript_language VARCHAR(10) DEFAULT 'en',
     is_auto_transcript BOOLEAN DEFAULT TRUE,
     transcript_segments JSONB,  -- [{start: 0.0, end: 5.0, text: "..."}]
-    
+
     -- Analysis
     entities_mentioned JSONB,
     related_person_ids INTEGER[],
     sentiment_score FLOAT,
     key_topics TEXT[],
-    
+
     -- Collection metadata
     discovery_source VARCHAR(50),
     collected_at TIMESTAMP DEFAULT NOW(),
     transcript_collected_at TIMESTAMP,
-    
+
     -- Unique constraint
     UNIQUE(video_id, platform)
 );
@@ -132,7 +132,7 @@ CREATE INDEX idx_video_persons ON media_videos USING GIN(related_person_ids);
 CREATE INDEX idx_video_entities ON media_videos USING GIN(entities_mentioned);
 
 -- Full-text search on transcripts
-CREATE INDEX idx_video_transcript_search ON media_videos 
+CREATE INDEX idx_video_transcript_search ON media_videos
     USING GIN(to_tsvector('english', COALESCE(transcript_text, '')));
 
 -- ============================================================================
@@ -141,7 +141,7 @@ CREATE INDEX idx_video_transcript_search ON media_videos
 
 CREATE TABLE media_documents (
     id SERIAL PRIMARY KEY,
-    
+
     -- Document metadata
     source VARCHAR(50) NOT NULL,  -- court_listener, govinfo, pacer, foia, direct
     document_type VARCHAR(50),  -- filing, opinion, order, release, report
@@ -154,33 +154,33 @@ CREATE TABLE media_documents (
     court_code VARCHAR(20),
     filing_date DATE,
     filing_timestamp TIMESTAMP,
-    
+
     -- URLs and files
     url TEXT,
     file_path TEXT,
     original_filename TEXT,
-    
+
     -- Content
     text_content TEXT,
     extracted_entities JSONB,
     summary TEXT,
     key_findings TEXT[],
-    
+
     -- File info
     page_count INTEGER,
     file_size_bytes BIGINT,
     mime_type VARCHAR(50),
     checksum VARCHAR(64),  -- SHA-256
-    
+
     -- Cross-references
     related_person_ids INTEGER[],
     related_case_ids INTEGER[],
-    
+
     -- Collection metadata
     discovered_at TIMESTAMP,
     collected_at TIMESTAMP DEFAULT NOW(),
     analyzed_at TIMESTAMP,
-    
+
     -- Unique constraint per source
     UNIQUE(source, docket_number, filing_date)
 );
@@ -194,9 +194,9 @@ CREATE INDEX idx_doc_persons ON media_documents USING GIN(related_person_ids);
 CREATE INDEX idx_doc_entities ON media_documents USING GIN(extracted_entities);
 
 -- Full-text search
-CREATE INDEX idx_doc_content_search ON media_documents 
+CREATE INDEX idx_doc_content_search ON media_documents
     USING GIN(to_tsvector('english', COALESCE(text_content, '')));
-CREATE INDEX idx_doc_title_search ON media_documents 
+CREATE INDEX idx_doc_title_search ON media_documents
     USING GIN(to_tsvector('english', COALESCE(title, '')));
 
 -- ============================================================================
@@ -265,20 +265,20 @@ CREATE INDEX idx_queue_ingestion_run ON media_collection_queue(ingestion_run_id)
 
 CREATE TABLE media_collection_queue (
     id SERIAL PRIMARY KEY,
-    
+
     -- Task info
     media_type VARCHAR(50) NOT NULL,  -- news, video, document
     source_url TEXT NOT NULL,
     source_platform VARCHAR(50),
     priority INTEGER DEFAULT 5,  -- 1 (high) to 10 (low)
     status VARCHAR(50) DEFAULT 'pending',  -- pending, processing, completed, failed, retry
-    
+
     -- Discovery metadata
     discovered_by VARCHAR(50),  -- Agent ID
     discovery_date TIMESTAMP DEFAULT NOW(),
     keywords_matched TEXT[],
     metadata JSONB,  -- Additional discovery context
-    
+
     -- Processing
     worker_id VARCHAR(100),
     started_at TIMESTAMP,
@@ -286,11 +286,11 @@ CREATE TABLE media_collection_queue (
     error_message TEXT,
     retry_count INTEGER DEFAULT 0,
     max_retries INTEGER DEFAULT 3,
-    
+
     -- Result
     result_id INTEGER,  -- ID in respective media table
     result_metadata JSONB,
-    
+
     -- Unique constraint
     UNIQUE(source_url, media_type)
 );
@@ -310,22 +310,22 @@ CREATE TABLE media_collection_stats (
     date DATE NOT NULL,
     media_type VARCHAR(50) NOT NULL,
     agent_id VARCHAR(50),
-    
+
     -- Discovery stats
     discovered_count INTEGER DEFAULT 0,
-    
+
     -- Collection stats
     attempted_count INTEGER DEFAULT 0,
     success_count INTEGER DEFAULT 0,
     failed_count INTEGER DEFAULT 0,
-    
+
     -- Storage stats
     storage_bytes BIGINT DEFAULT 0,
     items_added INTEGER DEFAULT 0,
-    
+
     -- Performance
     avg_processing_time_ms INTEGER,
-    
+
     UNIQUE(date, media_type, agent_id)
 );
 
@@ -338,27 +338,27 @@ CREATE INDEX idx_stats_type ON media_collection_stats(media_type);
 
 CREATE TABLE media_entity_mentions (
     id SERIAL PRIMARY KEY,
-    
+
     -- Source media
     media_type VARCHAR(50) NOT NULL,  -- news, video, document
     media_id INTEGER NOT NULL,
-    
+
     -- Entity from our database
     entity_type VARCHAR(50) NOT NULL,  -- person, organization, location
     entity_id INTEGER NOT NULL,
     entity_name VARCHAR(255),
-    
+
     -- Mention details
     mention_count INTEGER DEFAULT 1,
     first_mention_position INTEGER,
     mention_contexts TEXT[],  -- Surrounding text snippets
-    
+
     -- Confidence
     match_confidence FLOAT,
     match_method VARCHAR(50),  -- exact, fuzzy, ml
-    
+
     collected_at TIMESTAMP DEFAULT NOW(),
-    
+
     -- Unique constraint
     UNIQUE(media_type, media_id, entity_type, entity_id)
 );
@@ -374,7 +374,7 @@ CREATE INDEX idx_mentions_confidence ON media_entity_mentions(match_confidence D
 
 -- View: Media coverage timeline
 CREATE OR REPLACE VIEW v_media_coverage_timeline AS
-SELECT 
+SELECT
     publish_date as date,
     COUNT(DISTINCT CASE WHEN source_type = 'news' THEN id END) as news_count,
     COUNT(DISTINCT CASE WHEN source_type = 'video' THEN id END) as video_count,
@@ -391,7 +391,7 @@ ORDER BY publish_date;
 
 -- View: Top mentioned persons across all media
 CREATE OR REPLACE VIEW v_media_top_persons AS
-SELECT 
+SELECT
     p.id as person_id,
     p.name,
     COUNT(DISTINCT me.media_id || '_' || me.media_type) as total_mentions,
@@ -405,7 +405,7 @@ ORDER BY total_mentions DESC;
 
 -- View: Media source breakdown
 CREATE OR REPLACE VIEW v_media_source_breakdown AS
-SELECT 
+SELECT
     source_domain as source,
     'news' as media_type,
     COUNT(*) as total_articles,
@@ -417,7 +417,7 @@ GROUP BY source_domain
 
 UNION ALL
 
-SELECT 
+SELECT
     platform as source,
     'video' as media_type,
     COUNT(*) as total_videos,
@@ -429,7 +429,7 @@ GROUP BY platform
 
 UNION ALL
 
-SELECT 
+SELECT
     source,
     'document' as media_type,
     COUNT(*) as total_docs,
@@ -441,7 +441,7 @@ GROUP BY source;
 
 -- View: Recent collection activity
 CREATE OR REPLACE VIEW v_recent_collection AS
-SELECT 
+SELECT
     mq.id,
     mq.media_type,
     mq.source_url,
@@ -451,10 +451,10 @@ SELECT
     mq.discovery_date,
     mq.started_at,
     mq.completed_at,
-    CASE 
-        WHEN mq.completed_at IS NOT NULL AND mq.started_at IS NOT NULL 
+    CASE
+        WHEN mq.completed_at IS NOT NULL AND mq.started_at IS NOT NULL
         THEN EXTRACT(EPOCH FROM (mq.completed_at - mq.started_at))::INTEGER
-        ELSE NULL 
+        ELSE NULL
     END as duration_seconds,
     mq.error_message,
     COALESCE(na.title, vd.title, md.title) as media_title
@@ -480,7 +480,7 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         mq.media_type,
         COUNT(*) FILTER (WHERE mq.status = 'pending') as pending,
         COUNT(*) FILTER (WHERE mq.status = 'processing') as processing,
@@ -513,7 +513,7 @@ BEGIN
     )
     ON CONFLICT (source_url, media_type) DO NOTHING
     RETURNING id INTO v_id;
-    
+
     RETURN v_id;
 END;
 $$ LANGUAGE plpgsql;
@@ -541,7 +541,7 @@ BEGIN
         ORDER BY mq.priority ASC, mq.id ASC
         LIMIT p_limit
     )
-    RETURNING media_collection_queue.id, 
+    RETURNING media_collection_queue.id,
               media_collection_queue.source_url,
               media_collection_queue.keywords_matched,
               media_collection_queue.metadata;
@@ -560,22 +560,22 @@ RETURNS TABLE (
 BEGIN
     -- Search news articles
     RETURN QUERY
-    SELECT 
+    SELECT
         'news'::VARCHAR as media_type,
         na.id as media_id,
         na.title,
         na.article_url as url,
-        ts_rank(to_tsvector('english', na.title || ' ' || COALESCE(na.content, '')), 
+        ts_rank(to_tsvector('english', na.title || ' ' || COALESCE(na.content, '')),
                 plainto_tsquery('english', p_query)) as rank
     FROM media_news_articles na
     WHERE to_tsvector('english', na.title || ' ' || COALESCE(na.content, ''))
           @@ plainto_tsquery('english', p_query)
     ORDER BY rank DESC
     LIMIT 50;
-    
+
     -- Search videos
     RETURN QUERY
-    SELECT 
+    SELECT
         'video'::VARCHAR as media_type,
         vd.id as media_id,
         vd.title,
@@ -587,10 +587,10 @@ BEGIN
           @@ plainto_tsquery('english', p_query)
     ORDER BY rank DESC
     LIMIT 50;
-    
+
     -- Search documents
     RETURN QUERY
-    SELECT 
+    SELECT
         'document'::VARCHAR as media_type,
         md.id as media_id,
         md.title,
@@ -632,6 +632,6 @@ COMMENT ON TABLE media_entity_mentions IS 'Cross-reference between media and our
 INSERT INTO media_collection_stats (date, media_type, agent_id)
 SELECT CURRENT_DATE, 'news', 'init'
 WHERE NOT EXISTS (
-    SELECT 1 FROM media_collection_stats 
+    SELECT 1 FROM media_collection_stats
     WHERE date = CURRENT_DATE AND media_type = 'news'
 );

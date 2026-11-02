@@ -4,15 +4,15 @@ Generate embeddings for news articles using remote Windows GPU endpoint
 Usage: python3 scripts/generate_news_embeddings_remote.py
 """
 
-import requests
-import psycopg2
-import logging
 import hashlib
+import logging
 from typing import Optional
 
+import psycopg2
+import requests
+
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ DB_URL = "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
 def generate_content_hash(title: str, content: str) -> str:
     """Generate SHA-256 hash for deduplication."""
     text = f"{title}|||{content}"
-    return hashlib.sha256(text.encode('utf-8')).hexdigest()
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def check_endpoint_health() -> bool:
@@ -44,14 +44,17 @@ def check_endpoint_health() -> bool:
 def get_articles_without_embeddings(conn, limit: int = 1000) -> list:
     """Get articles that don't have embeddings yet."""
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT id, title, summary, content
         FROM media_news_articles
         WHERE title_embedding IS NULL
         AND title IS NOT NULL
         ORDER BY collected_at DESC
         LIMIT %s
-    """, (limit,))
+    """,
+        (limit,),
+    )
     return cur.fetchall()
 
 
@@ -62,7 +65,7 @@ def generate_embedding_remote(text: str) -> Optional[list]:
             f"{EMBEDDINGS_URL}/embed",
             json={"texts": [text], "batch_size": 1},
             headers={"Authorization": f"Bearer {AUTH_TOKEN}"},
-            timeout=30
+            timeout=30,
         )
         if response.status_code == 200:
             return response.json()["embeddings"][0]
@@ -74,13 +77,20 @@ def generate_embedding_remote(text: str) -> Optional[list]:
         return None
 
 
-def update_article_embeddings(conn, article_id: int, title_emb: list, 
-                             summary_emb: Optional[list], content_emb: Optional[list],
-                             content_hash: Optional[str], title_hash: str) -> bool:
+def update_article_embeddings(
+    conn,
+    article_id: int,
+    title_emb: list,
+    summary_emb: Optional[list],
+    content_emb: Optional[list],
+    content_hash: Optional[str],
+    title_hash: str,
+) -> bool:
     """Update article with embeddings and hashes."""
     try:
         cur = conn.cursor()
-        cur.execute("""
+        cur.execute(
+            """
             UPDATE media_news_articles
             SET title_embedding = %s,
                 summary_embedding = %s,
@@ -88,7 +98,9 @@ def update_article_embeddings(conn, article_id: int, title_emb: list,
                 content_hash = %s,
                 title_hash = %s
             WHERE id = %s
-        """, (title_emb, summary_emb, content_emb, content_hash, title_hash, article_id))
+        """,
+            (title_emb, summary_emb, content_emb, content_hash, title_hash, article_id),
+        )
         conn.commit()
         return True
     except Exception as e:
@@ -101,12 +113,12 @@ def main():
     logger.info("=" * 60)
     logger.info("NEWS ARTICLE EMBEDDING GENERATION (REMOTE GPU)")
     logger.info("=" * 60)
-    
+
     # Check endpoint health
     if not check_endpoint_health():
         logger.error("Embeddings endpoint is not available. Exiting.")
         return
-    
+
     # Database connection
     try:
         conn = psycopg2.connect(DB_URL)
@@ -114,62 +126,62 @@ def main():
     except Exception as e:
         logger.error(f"Cannot connect to database: {e}")
         return
-    
+
     # Get articles without embeddings
     logger.info("Fetching articles without embeddings...")
     articles = get_articles_without_embeddings(conn, limit=1000)
     logger.info(f"Found {len(articles)} articles to process")
-    
+
     if len(articles) == 0:
         logger.info("No articles to process. Exiting.")
         conn.close()
         return
-    
+
     # Process articles
     processed = 0
     skipped = 0
     errors = 0
-    
+
     for i, (article_id, title, summary, content) in enumerate(articles, 1):
         try:
             # Generate hashes
-            title_hash = hashlib.sha256(title.encode('utf-8')).hexdigest()
+            title_hash = hashlib.sha256(title.encode("utf-8")).hexdigest()
             content_hash = generate_content_hash(title, content) if content else None
-            
+
             # Generate title embedding
             title_emb = generate_embedding_remote(title)
             if title_emb is None:
                 logger.warning(f"Skipping article {article_id}: failed to generate title embedding")
                 skipped += 1
                 continue
-            
+
             # Generate summary embedding
             summary_emb = None
             if summary and len(summary.strip()) > 10:
                 summary_emb = generate_embedding_remote(summary)
-            
+
             # Generate content embedding
             content_emb = None
             if content and len(content.strip()) > 100:
                 content_emb = generate_embedding_remote(content)
-            
+
             # Update database
             if update_article_embeddings(
-                conn, article_id, 
-                title_emb, summary_emb, content_emb,
-                content_hash, title_hash
+                conn, article_id, title_emb, summary_emb, content_emb, content_hash, title_hash
             ):
                 processed += 1
-            
+
             if i % 10 == 0:
-                logger.info(f"Progress: {i}/{len(articles)} processed ({processed} successful, {skipped} skipped, {errors} errors)")
-                
+                logger.info(
+                    f"Progress: {i}/{len(articles)} processed ({processed} successful, {skipped} skipped, {errors} errors)"
+                )
+
         except Exception as e:
             logger.error(f"Error processing article {article_id}: {e}")
             errors += 1
-    
+
     conn.close()
-    
+
     logger.info("")
     logger.info("=" * 60)
     logger.info("EMBEDDING GENERATION COMPLETE")
@@ -180,5 +192,5 @@ def main():
     logger.info(f"Total: {len(articles)}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

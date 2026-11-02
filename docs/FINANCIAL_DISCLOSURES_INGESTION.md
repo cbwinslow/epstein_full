@@ -197,7 +197,7 @@ from capitolgains.utils.representative_scraper import HouseDisclosureScraper
 from capitolgains.utils.senator_scraper import SenateDisclosureScraper
 
 # Get Congress members
-congress = Congress(api_key='YOUR_API_KEY')
+congress = Congress(api_key="YOUR_API_KEY")
 members = congress.get_all_members()
 
 # Get House disclosures
@@ -325,7 +325,7 @@ from capitolgains.utils.representative_scraper import HouseDisclosureScraper
 from capitolgains.utils.senator_scraper import SenateDisclosureScraper
 
 # Get Congress members
-congress = Congress(api_key='YOUR_API_KEY')
+congress = Congress(api_key="YOUR_API_KEY")
 members = congress.get_all_members()
 
 # Get House disclosures

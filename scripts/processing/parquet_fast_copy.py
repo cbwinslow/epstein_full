@@ -32,11 +32,8 @@ def setup_logging():
     log_file = f"{LOG_DIR}/parquet_fast_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s [%(levelname)s] %(message)s',
-        handlers=[
-            logging.FileHandler(log_file),
-            logging.StreamHandler()
-        ]
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
     )
     return log_file
 
@@ -45,7 +42,7 @@ def extract_doc_number(doc_id: str) -> int:
     """Extract numeric part from doc_id like EFTA00012345 -> 12345"""
     if not doc_id:
         return 0
-    match = re.search(r'(\d+)', str(doc_id))
+    match = re.search(r"(\d+)", str(doc_id))
     return int(match.group(1)) if match else 0
 
 
@@ -54,11 +51,11 @@ def process_and_copy_file(file_path: str, conn) -> int:
     try:
         df = pd.read_parquet(file_path)
 
-        if 'text_content' not in df.columns:
+        if "text_content" not in df.columns:
             return 0
 
-        df = df[df['text_content'].notna()]
-        df = df[df['text_content'].str.len() > 10]
+        df = df[df["text_content"].notna()]
+        df = df[df["text_content"].str.len() > 10]
 
         if len(df) == 0:
             return 0
@@ -68,10 +65,10 @@ def process_and_copy_file(file_path: str, conn) -> int:
         rows = 0
 
         for _, row in df.iterrows():
-            doc_id_str = str(row.get('doc_id', ''))
+            doc_id_str = str(row.get("doc_id", ""))
             document_id = extract_doc_number(doc_id_str)
-            filename = str(row.get('file_name', '')) or ''
-            content = str(row.get('text_content', '')) or ''
+            filename = str(row.get("file_name", "")) or ""
+            content = str(row.get("text_content", "")) or ""
             char_count = len(content) if content else 0
             page_count = 1
 
@@ -79,7 +76,9 @@ def process_and_copy_file(file_path: str, conn) -> int:
                 # Escape for CSV - wrap in quotes, escape internal quotes
                 filename_clean = filename.replace('"', '""')[:250]
                 content_clean = content.replace('"', '""')
-                buffer.write(f'"{document_id}","{filename_clean}","{content_clean}",{char_count},{page_count}\n')
+                buffer.write(
+                    f'"{document_id}","{filename_clean}","{content_clean}",{char_count},{page_count}\n'
+                )
                 rows += 1
 
         if rows == 0:
@@ -89,9 +88,9 @@ def process_and_copy_file(file_path: str, conn) -> int:
         buffer.seek(0)
         with conn.cursor() as cur:
             cur.copy_expert(
-                """COPY documents_content (document_id, filename, content, char_count, page_count) 
+                """COPY documents_content (document_id, filename, content, char_count, page_count)
                    FROM STDIN WITH CSV""",
-                buffer
+                buffer,
             )
             conn.commit()
 
@@ -125,7 +124,9 @@ def main():
         if i % 10 == 0 or i == len(files):
             elapsed = time.time() - start_time
             rate = i / elapsed if elapsed > 0 else 0
-            logging.info(f"Progress: {i}/{len(files)} files, {total_rows} rows, {rate:.1f} files/sec")
+            logging.info(
+                f"Progress: {i}/{len(files)} files, {total_rows} rows, {rate:.1f} files/sec"
+            )
 
     conn.close()
 
