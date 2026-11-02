@@ -26,7 +26,7 @@ from datetime import datetime
 from glob import glob
 
 # Import shared configuration
-from epstein_config import RAW_FILES_DIR, LOGS_DIR, FULL_TEXT_CORPUS_DB
+from epstein_config import LOGS_DIR, RAW_FILES_DIR
 
 # =============================================================================
 # Configuration Constants
@@ -38,21 +38,24 @@ LOG_DIR = str(LOGS_DIR)
 TRACKER = "/home/cbwinslow/workspace/epstein/scripts/tracker.py"
 PYTHON = "/home/cbwinslow/workspace/epstein/venv/bin/python3"
 EFTA_LIST_FILE = os.path.join(LOG_DIR, "efta_to_download.json")
-REMOVED_CSV = "/home/cbwinslow/workspace/epstein/Epstein-research-data/doj_audit/CONFIRMED_REMOVED.csv"
+REMOVED_CSV = (
+    "/home/cbwinslow/workspace/epstein/Epstein-research-data/doj_audit/CONFIRMED_REMOVED.csv"
+)
 URL_LIST_FILE = os.path.join(LOG_DIR, "cdn_urls.txt")
 ARIA2_LOG = os.path.join(LOG_DIR, "aria2c.log")
 
 # aria2c settings
-ARIA2_CONNECTIONS = 10       # Parallel downloads
-ARIA2_MAX_CONCURRENT = 16    # Max active downloads
-ARIA2_RETRIES = 3            # Retry count per file
-ARIA2_TIMEOUT = 30           # Connection timeout (seconds)
-ARIA2_SPLIT = 1              # Single connection per file (many small files)
+ARIA2_CONNECTIONS = 10  # Parallel downloads
+ARIA2_MAX_CONCURRENT = 16  # Max active downloads
+ARIA2_RETRIES = 3  # Retry count per file
+ARIA2_TIMEOUT = 30  # Connection timeout (seconds)
+ARIA2_SPLIT = 1  # Single connection per file (many small files)
 
 
 # =============================================================================
 # Utility Functions
 # =============================================================================
+
 
 def log(msg: str) -> None:
     """Print timestamped log message and append to log file."""
@@ -127,9 +130,17 @@ def get_efta_to_dataset_map() -> dict:
 def _fallback_efta_map() -> dict:
     """Build EFTA mapping from hardcoded ranges if DB unavailable."""
     ranges = {
-        1: (1, 3158), 2: (3159, 3857), 3: (3858, 5586), 4: (5705, 8320),
-        5: (8409, 8528), 6: (8529, 8998), 7: (9016, 9664), 8: (9676, 39023),
-        9: (39025, 1262781), 10: (1262782, 2205654), 11: (2205655, 2730264),
+        1: (1, 3158),
+        2: (3159, 3857),
+        3: (3858, 5586),
+        4: (5705, 8320),
+        5: (8409, 8528),
+        6: (8529, 8998),
+        7: (9016, 9664),
+        8: (9676, 39023),
+        9: (39025, 1262781),
+        10: (1262782, 2205654),
+        11: (2205655, 2730264),
         12: (2730265, 2858497),
     }
     mapping = {}
@@ -153,6 +164,7 @@ def is_valid_pdf(filepath: str) -> bool:
 # =============================================================================
 # URL List Generation
 # =============================================================================
+
 
 def build_url_list(datasets: list[int] = None, test_limit: int = 0) -> tuple:
     """Build aria2c input file with URLs, output dirs, and filenames.
@@ -236,6 +248,7 @@ def build_url_list(datasets: list[int] = None, test_limit: int = 0) -> tuple:
 # Download Execution
 # =============================================================================
 
+
 def run_aria2c(url_file: str) -> int:
     """Run aria2c with the given URL list file.
 
@@ -247,18 +260,25 @@ def run_aria2c(url_file: str) -> int:
     """
     cmd = [
         "aria2c",
-        "--input-file", url_file,
-        "--max-concurrent-downloads", str(ARIA2_MAX_CONCURRENT),
-        "--max-connection-per-server", str(ARIA2_CONNECTIONS),
-        "--retry-wait", "2",
-        "--max-tries", str(ARIA2_RETRIES),
-        "--timeout", str(ARIA2_TIMEOUT),
+        "--input-file",
+        url_file,
+        "--max-concurrent-downloads",
+        str(ARIA2_MAX_CONCURRENT),
+        "--max-connection-per-server",
+        str(ARIA2_CONNECTIONS),
+        "--retry-wait",
+        "2",
+        "--max-tries",
+        str(ARIA2_RETRIES),
+        "--timeout",
+        str(ARIA2_TIMEOUT),
         "--continue=true",
         "--auto-file-renaming=false",
         "--allow-overwrite=false",
         "--summary-interval=10",
         "--download-result=full",
-        "--log", ARIA2_LOG,
+        "--log",
+        ARIA2_LOG,
         "--log-level=notice",
         # Don't overwhelm the CDN
         "--max-overall-download-limit=0",
@@ -287,6 +307,7 @@ def run_aria2c(url_file: str) -> int:
 # Progress Monitoring
 # =============================================================================
 
+
 def count_downloaded() -> dict:
     """Count downloaded PDFs per dataset.
 
@@ -306,7 +327,7 @@ def update_tracker() -> None:
     for ds, count in counts.items():
         subprocess.run(
             [PYTHON, TRACKER, "update", "--id", f"doj-ds{ds}", "--current", str(count)],
-            capture_output=True
+            capture_output=True,
         )
 
 
@@ -323,9 +344,18 @@ def print_status() -> None:
     print()
 
     expected = {
-        1: 3158, 2: 699, 3: 1729, 4: 2616, 5: 120,
-        6: 470, 7: 649, 8: 29348, 9: 103608, 10: 94287,
-        11: 52459, 12: 12820,
+        1: 3158,
+        2: 699,
+        3: 1729,
+        4: 2616,
+        5: 120,
+        6: 470,
+        7: 649,
+        8: 29348,
+        9: 103608,
+        10: 94287,
+        11: 52459,
+        12: 12820,
     }
 
     for ds in range(1, 13):
@@ -360,23 +390,22 @@ def monitor_loop(refresh: int = 15) -> None:
 # Main
 # =============================================================================
 
+
 def main() -> None:
     """Parse arguments and run the CDN downloader."""
     parser = argparse.ArgumentParser(
         description="CDN Downloader - Fast parallel download via RollCall mirror"
     )
     parser.add_argument(
-        "--datasets", type=str, default=None,
-        help="Comma-separated dataset numbers (e.g., '9,10'). Default: all."
+        "--datasets",
+        type=str,
+        default=None,
+        help="Comma-separated dataset numbers (e.g., '9,10'). Default: all.",
     )
     parser.add_argument(
-        "--test", type=int, default=0,
-        help="Test mode: download only N files (e.g., --test 50)"
+        "--test", type=int, default=0, help="Test mode: download only N files (e.g., --test 50)"
     )
-    parser.add_argument(
-        "--monitor", action="store_true",
-        help="Monitor only (no download)"
-    )
+    parser.add_argument("--monitor", action="store_true", help="Monitor only (no download)")
 
     args = parser.parse_args()
 

@@ -24,6 +24,7 @@ python ingest_capitolgains.py run_all --date 2024-01-01
 **Usage**:
 ```python
 from epstein_capitolgains.loader import load_to_db
+
 load_to_db(Path("data/processed/house_2024-01-01.parquet"))
 ```
 

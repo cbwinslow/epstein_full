@@ -1,7 +1,7 @@
 # Technical Roadmap: Epstein Government Data Project
 
-> **Version**: 1.0  
-> **Last Updated**: April 14, 2026  
+> **Version**: 1.0
+> **Last Updated**: April 14, 2026
 > **Status**: IN PROGRESS
 
 ---
@@ -362,5 +362,5 @@ cbwinslow/epstein-government-data/
 
 ---
 
-**Maintained by**: @cbwinslow  
+**Maintained by**: @cbwinslow
 **Contributors welcome**: See CONTRIBUTING.md

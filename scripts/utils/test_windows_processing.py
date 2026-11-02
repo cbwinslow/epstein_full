@@ -27,28 +27,28 @@ def test_database_connection():
             port=config.db_port,
             database=config.db_name,
             user=config.db_user,
-            password=config.db_password
+            password=config.db_password,
         )
 
         cursor = conn.cursor()
 
         # Check if source_system column exists in documents table
         cursor.execute("""
-            SELECT column_name FROM information_schema.columns 
+            SELECT column_name FROM information_schema.columns
             WHERE table_name = 'documents' AND column_name = 'source_system'
         """)
         doc_has_source = cursor.fetchone() is not None
 
         # Check if source_system column exists in pages table
         cursor.execute("""
-            SELECT column_name FROM information_schema.columns 
+            SELECT column_name FROM information_schema.columns
             WHERE table_name = 'pages' AND column_name = 'source_system'
         """)
         pages_has_source = cursor.fetchone() is not None
 
         # Check if source_system column exists in entities table
         cursor.execute("""
-            SELECT column_name FROM information_schema.columns 
+            SELECT column_name FROM information_schema.columns
             WHERE table_name = 'entities' AND column_name = 'source_system'
         """)
         entities_has_source = cursor.fetchone() is not None
@@ -73,6 +73,7 @@ def test_database_connection():
         print(f"❌ Database connection failed: {e}")
         return False
 
+
 def test_file_detection():
     """Test file detection and OCR method selection."""
     print("\n📁 Testing file detection...")
@@ -92,6 +93,7 @@ def test_file_detection():
         print(f"   - {pdf_file.name} ({pdf_file.stat().st_size / 1024:.1f} KB)")
 
     return True
+
 
 def test_processing_pipeline():
     """Test the complete processing pipeline with a single file."""
@@ -126,17 +128,20 @@ def test_processing_pipeline():
                 port=config.db_port,
                 database=config.db_name,
                 user=config.db_user,
-                password=config.db_password
+                password=config.db_password,
             )
             cursor = conn.cursor()
 
             efta_number = test_file.stem
 
             # Check documents table
-            cursor.execute("""
-                SELECT source_system, ocr_method, word_count, page_count 
+            cursor.execute(
+                """
+                SELECT source_system, ocr_method, word_count, page_count
                 FROM documents WHERE efta_number = %s
-            """, (efta_number,))
+            """,
+                (efta_number,),
+            )
             doc_result = cursor.fetchone()
 
             if doc_result:
@@ -149,16 +154,22 @@ def test_processing_pipeline():
                 print("❌ Document not found in database")
 
             # Check pages table
-            cursor.execute("""
+            cursor.execute(
+                """
                 SELECT COUNT(*) FROM pages WHERE efta_number = %s AND source_system = 'Windows_RTX3060'
-            """, (efta_number,))
+            """,
+                (efta_number,),
+            )
             pages_count = cursor.fetchone()[0]
             print(f"📊 Pages saved with Windows RTX 3060 indicator: {pages_count}")
 
             # Check entities table
-            cursor.execute("""
+            cursor.execute(
+                """
                 SELECT COUNT(*) FROM entities WHERE efta_number = %s AND source_system = 'Windows_RTX3060'
-            """, (efta_number,))
+            """,
+                (efta_number,),
+            )
             entities_count = cursor.fetchone()[0]
             print(f"📊 Entities saved with Windows RTX 3060 indicator: {entities_count}")
 
@@ -172,6 +183,7 @@ def test_processing_pipeline():
     else:
         print("❌ Processing failed")
         return False
+
 
 def main():
     """Main test function."""
@@ -200,6 +212,7 @@ def main():
     print("   ✅ File detection working")
     print("   ✅ Processing pipeline operational")
     print("   ✅ Windows RTX 3060 indicators being saved")
+
 
 if __name__ == "__main__":
     main()

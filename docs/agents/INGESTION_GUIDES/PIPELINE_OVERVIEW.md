@@ -394,22 +394,26 @@ vim docs/agents/MASTER_INDEX.md
 Download NEWSOURCE data for Epstein research.
 Usage: python scripts/download/download_NEWSOURCE.py --year 2024
 """
+
 import argparse
 import sys
-sys.path.insert(0, '/home/cbwinslow/workspace/epstein/scripts')
+
+sys.path.insert(0, "/home/cbwinslow/workspace/epstein/scripts")
 from config import DATA_DIR
 
+
 def download_NEWSOURCE(year):
-    output_dir = DATA_DIR / 'raw-files/newsource'
+    output_dir = DATA_DIR / "raw-files/newsource"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # TODO: Implement download logic
     print(f"Downloading NEWSOURCE for {year}...")
     pass
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--year', type=int)
+    parser.add_argument("--year", type=int)
     args = parser.parse_args()
     download_NEWSOURCE(args.year)
 ```
@@ -421,13 +425,13 @@ if __name__ == '__main__':
 Import NEWSOURCE data into PostgreSQL.
 Usage: python scripts/import/import_NEWSOURCE.py
 """
+
 import asyncpg
 import asyncio
 
+
 async def import_NEWSOURCE():
-    conn = await asyncpg.connect(
-        "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
-    )
+    conn = await asyncpg.connect("postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
 
     # Create table
     await conn.execute("""
@@ -443,7 +447,8 @@ async def import_NEWSOURCE():
 
     await conn.close()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     asyncio.run(import_NEWSOURCE())
 ```
 
