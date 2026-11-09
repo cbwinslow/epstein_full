@@ -36,14 +36,15 @@ from pathlib import Path
 # =============================================================================
 
 DB_PATH = "/home/cbwinslow/workspace/epstein-data/logs/progress.db"
-DB_TIMEOUT = 10          # SQLite lock wait timeout (seconds)
-HISTORY_LIMIT = 10       # Max history samples kept per task for rate calculation
-REFRESH_INTERVAL = 2.0   # Watch mode refresh interval (seconds)
+DB_TIMEOUT = 10  # SQLite lock wait timeout (seconds)
+HISTORY_LIMIT = 10  # Max history samples kept per task for rate calculation
+REFRESH_INTERVAL = 2.0  # Watch mode refresh interval (seconds)
 
 
 # =============================================================================
 # Database Layer
 # =============================================================================
+
 
 def get_conn() -> sqlite3.Connection:
     """Open SQLite connection with WAL mode and create tables if needed.
@@ -95,8 +96,8 @@ def get_conn() -> sqlite3.Connection:
 # Task Operations
 # =============================================================================
 
-def register_task(task_id: str, label: str, expected: int = 0,
-                  task_type: str = "download") -> None:
+
+def register_task(task_id: str, label: str, expected: int = 0, task_type: str = "download") -> None:
     """Register a new task or update an existing one.
 
     Args:
@@ -113,7 +114,7 @@ def register_task(task_id: str, label: str, expected: int = 0,
             "INSERT OR REPLACE INTO tasks "
             "(id, label, type, expected, current, rate_bps, status, started_at, last_update) "
             "VALUES (?, ?, ?, ?, 0, 0.0, 'running', ?, ?)",
-            (task_id, label, task_type, expected, now, now)
+            (task_id, label, task_type, expected, now, now),
         )
         conn.commit()
         print(f"Registered: {task_id} ({label})")
@@ -138,14 +139,13 @@ def update_task(task_id: str, current: int) -> None:
 
         # Update the task's current count
         conn.execute(
-            "UPDATE tasks SET current = ?, last_update = ? WHERE id = ?",
-            (current, now, task_id)
+            "UPDATE tasks SET current = ?, last_update = ? WHERE id = ?", (current, now, task_id)
         )
 
         # Append to history for rate calculation
         conn.execute(
             "INSERT INTO task_history (task_id, ts, value) VALUES (?, ?, ?)",
-            (task_id, now, current)
+            (task_id, now, current),
         )
 
         # Prune old history (keep only last N samples)
@@ -153,7 +153,7 @@ def update_task(task_id: str, current: int) -> None:
             "DELETE FROM task_history WHERE task_id = ? AND id NOT IN ("
             "  SELECT id FROM task_history WHERE task_id = ? ORDER BY ts DESC LIMIT ?"
             ")",
-            (task_id, task_id, HISTORY_LIMIT)
+            (task_id, task_id, HISTORY_LIMIT),
         )
 
         conn.commit()
@@ -177,9 +177,8 @@ def _recalculate_rate(conn: sqlite3.Connection, task_id: str) -> None:
     """
     try:
         rows = conn.execute(
-            "SELECT ts, value FROM task_history "
-            "WHERE task_id = ? ORDER BY ts ASC LIMIT ?",
-            (task_id, HISTORY_LIMIT)
+            "SELECT ts, value FROM task_history WHERE task_id = ? ORDER BY ts ASC LIMIT ?",
+            (task_id, HISTORY_LIMIT),
         ).fetchall()
 
         if len(rows) < 2:
@@ -193,10 +192,7 @@ def _recalculate_rate(conn: sqlite3.Connection, task_id: str) -> None:
 
         if dt > 0:
             rate = round((v1 - v0) / dt, 2)
-            conn.execute(
-                "UPDATE tasks SET rate_bps = ? WHERE id = ?",
-                (rate, task_id)
-            )
+            conn.execute("UPDATE tasks SET rate_bps = ? WHERE id = ?", (rate, task_id))
             conn.commit()
     except (sqlite3.Error, ValueError) as e:
         print(f"Error calculating rate for {task_id}: {e}", file=sys.stderr)
@@ -214,8 +210,7 @@ def done_task(task_id: str, status: str = "completed") -> None:
         conn = get_conn()
         now = datetime.now().isoformat()
         conn.execute(
-            "UPDATE tasks SET status = ?, finished_at = ? WHERE id = ?",
-            (status, now, task_id)
+            "UPDATE tasks SET status = ?, finished_at = ? WHERE id = ?", (status, now, task_id)
         )
         conn.commit()
         print(f"Marked {task_id} as {status}")
@@ -266,6 +261,7 @@ def get_tasks() -> dict:
 # =============================================================================
 # Display / Formatting
 # =============================================================================
+
 
 def format_bytes(b) -> str:
     """Format byte count to human-readable string.
@@ -413,8 +409,7 @@ def watch(refresh: float = REFRESH_INTERVAL) -> None:
         print("\nStopped.")
 
 
-def scan_directory(task_id: str, label: str, directory: str,
-                   pattern: str = "*.pdf") -> None:
+def scan_directory(task_id: str, label: str, directory: str, pattern: str = "*.pdf") -> None:
     """Scan a directory and register/update a task with file counts.
 
     Args:
@@ -436,6 +431,7 @@ def scan_directory(task_id: str, label: str, directory: str,
 # =============================================================================
 # CLI Entry Point
 # =============================================================================
+
 
 def main() -> None:
     """Parse CLI arguments and dispatch to the appropriate handler."""
@@ -466,9 +462,12 @@ def main() -> None:
     elif cmd == "done":
         p = argparse.ArgumentParser(description="Mark task as done")
         p.add_argument("--id", required=True, help="Task identifier")
-        p.add_argument("--status", default="completed",
-                       choices=["completed", "failed", "cancelled"],
-                       help="Final status")
+        p.add_argument(
+            "--status",
+            default="completed",
+            choices=["completed", "failed", "cancelled"],
+            help="Final status",
+        )
         args = p.parse_args(sys.argv[2:])
         done_task(args.id, args.status)
     elif cmd == "scan":

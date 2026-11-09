@@ -2,8 +2,8 @@
 
 ## 📊 Executive Summary
 
-**Status:** ✅ All 3 recommended actions completed  
-**GPU Savings:** 64% reduction (15 hours vs 48 hours)  
+**Status:** ✅ All 3 recommended actions completed
+**GPU Savings:** 64% reduction (15 hours vs 48 hours)
 **Data Tracked:** 8 sources, 3 embedding models, 3.4M+ embeddings
 
 ---
@@ -184,8 +184,8 @@ kabasshouse_chunk_embeddings: 1.5M Gemini (768-dim) = DIFFERENT VECTOR SPACE
 **You cannot mix embedding models in semantic search.**
 
 ### 2. GPU Life Preservation
-Current approach (generating Nomic for 2.9M pages): **48 GPU hours**  
-Recommended approach (MiniLM + Nomic for 900K): **15 GPU hours**  
+Current approach (generating Nomic for 2.9M pages): **48 GPU hours**
+Recommended approach (MiniLM + Nomic for 900K): **15 GPU hours**
 **Savings: 33 GPU hours (69% less wear)**
 
 ### 3. Deduplication Opportunity
@@ -226,15 +226,15 @@ Recommended approach (MiniLM + Nomic for 900K): **15 GPU hours**
 
 ```sql
 -- Embedding coverage
-SELECT 
+SELECT
     (SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL) as total_pages,
     (SELECT COUNT(*) FROM page_embeddings) as minilm_covered,
     (SELECT COUNT(*) FROM pages WHERE rtx3060_embedding IS NOT NULL) as nomic_covered,
     (SELECT COUNT(*) FROM v_pages_need_embeddings) as need_embedding;
 
 -- Data source registry
-SELECT source_name, import_status, imported_records 
-FROM master_data_registry 
+SELECT source_name, import_status, imported_records
+FROM master_data_registry
 ORDER BY imported_records DESC;
 
 -- Duplicate tracking (after dedup SQL completes)
@@ -244,6 +244,6 @@ FROM duplicate_registry;
 
 ---
 
-**Created:** April 16, 2026  
-**By:** AI Agent (Cascade)  
+**Created:** April 16, 2026
+**By:** AI Agent (Cascade)
 **Status:** ✅ All 3 actions completed

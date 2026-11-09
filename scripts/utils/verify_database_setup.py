@@ -2,7 +2,8 @@
 """Comprehensive test of database setup and migration scripts."""
 
 import sys
-sys.path.insert(0, '/home/cbwinslow/workspace/epstein')
+
+sys.path.insert(0, "/home/cbwinslow/workspace/epstein")
 
 print("=" * 70)
 print("DATABASE SETUP VERIFICATION")
@@ -12,7 +13,8 @@ print("=" * 70)
 print("\n[1] Testing database connection...")
 try:
     import psycopg2
-    conn = psycopg2.connect('postgresql://cbwinslow:123qweasd@localhost:5432/epstein')
+
+    conn = psycopg2.connect("postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
     print("   ✓ Database connection successful")
 except Exception as e:
     print(f"   ✗ Failed: {e}")
@@ -32,8 +34,8 @@ else:
 # Test 3: Check media tables
 print("\n[3] Checking media tables...")
 cur.execute("""
-    SELECT table_name 
-    FROM information_schema.tables 
+    SELECT table_name
+    FROM information_schema.tables
     WHERE table_schema='public' AND table_name LIKE 'media_%'
     ORDER BY table_name
 """)
@@ -61,7 +63,7 @@ for fk in fks:
 # Test 5: Check views
 print("\n[5] Checking views...")
 cur.execute("""
-    SELECT table_name FROM information_schema.views 
+    SELECT table_name FROM information_schema.views
     WHERE table_schema='public' AND (table_name LIKE 'vw_%' OR table_name LIKE 'mv_%')
     ORDER BY table_name
 """)
@@ -73,8 +75,8 @@ for v in views:
 # Test 6: Check indexes
 print("\n[6] Checking indexes on media tables...")
 cur.execute("""
-    SELECT tablename, indexname 
-    FROM pg_indexes 
+    SELECT tablename, indexname
+    FROM pg_indexes
     WHERE schemaname = 'public' AND tablename LIKE 'media_%'
     ORDER BY tablename, indexname
 """)
@@ -84,10 +86,10 @@ print(f"   Found {len(indexes)} indexes")
 # Test 7: Check functions
 print("\n[7] Checking functions...")
 cur.execute("""
-    SELECT routine_name 
-    FROM information_schema.routines 
+    SELECT routine_name
+    FROM information_schema.routines
     WHERE routine_schema='public' AND routine_type='FUNCTION'
-    AND (routine_name LIKE '%article%' OR routine_name LIKE '%entity%' 
+    AND (routine_name LIKE '%article%' OR routine_name LIKE '%entity%'
          OR routine_name LIKE '%content%' OR routine_name LIKE '%queue%')
     ORDER BY routine_name
 """)
@@ -99,14 +101,22 @@ for f in funcs:
 # Test 8: Verify column structure for articles
 print("\n[8] Checking article table columns (rich metadata)...")
 cur.execute("""
-    SELECT column_name, data_type 
-    FROM information_schema.columns 
+    SELECT column_name, data_type
+    FROM information_schema.columns
     WHERE table_schema='public' AND table_name = 'media_news_articles'
     ORDER BY ordinal_position
 """)
 columns = cur.fetchall()
-important_cols = ['authors', 'author_emails', 'sentiment_score', 'credibility_score', 
-                  'ip_address', 'readability_score', 'entities_mentioned', 'tags']
+important_cols = [
+    "authors",
+    "author_emails",
+    "sentiment_score",
+    "credibility_score",
+    "ip_address",
+    "readability_score",
+    "entities_mentioned",
+    "tags",
+]
 found_important = [c[0] for c in columns if c[0] in important_cols]
 print(f"   ✓ Found {len(columns)} columns total")
 print(f"   ✓ Rich metadata columns: {', '.join(found_important)}")

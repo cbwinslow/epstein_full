@@ -46,6 +46,7 @@ DISK_CRITICAL_PCT = 95
 # Disk Monitoring
 # =============================================================================
 
+
 def get_disk_info(path: str = "/") -> dict:
     """Get disk usage for a mount point.
 
@@ -68,9 +69,11 @@ def get_disk_info(path: str = "/") -> dict:
             "used_gb": round(used / (1024**3), 1),
             "free_gb": round(free / (1024**3), 1),
             "percent": round(pct, 1),
-            "status": "CRITICAL" if pct >= DISK_CRITICAL_PCT
-                      else "WARNING" if pct >= DISK_WARN_PCT
-                      else "OK",
+            "status": "CRITICAL"
+            if pct >= DISK_CRITICAL_PCT
+            else "WARNING"
+            if pct >= DISK_WARN_PCT
+            else "OK",
         }
     except OSError as e:
         return {"path": path, "error": str(e)}
@@ -79,6 +82,7 @@ def get_disk_info(path: str = "/") -> dict:
 # =============================================================================
 # Process Monitoring
 # =============================================================================
+
 
 def get_processes(name_pattern: str = None) -> list[dict]:
     """Get running processes matching a pattern.
@@ -103,13 +107,15 @@ def get_processes(name_pattern: str = None) -> list[dict]:
         for line in lines:
             parts = line.split(None, 10)
             if len(parts) >= 11:
-                procs.append({
-                    "user": parts[0],
-                    "pid": parts[1],
-                    "cpu": parts[2],
-                    "mem": parts[3],
-                    "command": parts[10][:80],
-                })
+                procs.append(
+                    {
+                        "user": parts[0],
+                        "pid": parts[1],
+                        "cpu": parts[2],
+                        "mem": parts[3],
+                        "command": parts[10][:80],
+                    }
+                )
         return procs
     except Exception:
         return []
@@ -120,6 +126,7 @@ import subprocess
 # =============================================================================
 # Display
 # =============================================================================
+
 
 def render_bar(pct: float, width: int = 20) -> str:
     """Render a progress bar."""
@@ -143,10 +150,16 @@ def snapshot() -> str:
         lines.append("")
         lines.append("  ┌─ GPU ─────────────────────────────────────────────┐")
         for gpu in gpus:
-            icon = {"OK": "✓", "WARNING": "⚠", "CRITICAL": "🔴", "SHUTDOWN": "💀"}.get(gpu.temp_status, "?")
+            icon = {"OK": "✓", "WARNING": "⚠", "CRITICAL": "🔴", "SHUTDOWN": "💀"}.get(
+                gpu.temp_status, "?"
+            )
             bar = render_bar(gpu.gpu_utilization, 15)
-            lines.append(f"  │ {icon} GPU{gpu.index} {gpu.name:<25} {gpu.temperature_gpu:>3}°C  [{bar}] {gpu.gpu_utilization:>3}%")
-            lines.append(f"  │   Mem: {gpu.memory_used:>6}/{gpu.memory_total} MiB  Power: {gpu.power_draw:.0f}W")
+            lines.append(
+                f"  │ {icon} GPU{gpu.index} {gpu.name:<25} {gpu.temperature_gpu:>3}°C  [{bar}] {gpu.gpu_utilization:>3}%"
+            )
+            lines.append(
+                f"  │   Mem: {gpu.memory_used:>6}/{gpu.memory_total} MiB  Power: {gpu.power_draw:.0f}W"
+            )
         lines.append("  └────────────────────────────────────────────────────┘")
     except RuntimeError:
         lines.append("  GPU: not available")
@@ -159,43 +172,53 @@ def snapshot() -> str:
         mem_bar = render_bar(cpu.memory_percent, 15)
         load_bar = render_bar(cpu.load_percent, 15)
 
-        lines.extend([
-            "",
-            "  ┌─ CPU ──────────────────────────────────────────────┐",
-            f"  │ {icon} {cpu.model_name[:45]}",
-            f"  │   {cpu.cores_logical} cores  Temp: {temp_str}  Uptime: {int(cpu.uptime_seconds//3600)}h",
-            f"  │   Load: [{load_bar}] {cpu.load_percent:.1f}%",
-            f"  │   Mem:  [{mem_bar}] {cpu.memory_used_gb:.1f}/{cpu.memory_total_gb:.1f} GB ({cpu.memory_percent:.1f}%)",
-            f"  │   Swap: {cpu.swap_used_gb:.1f}/{cpu.swap_total_gb:.1f} GB",
-            "  └────────────────────────────────────────────────────┘",
-        ])
+        lines.extend(
+            [
+                "",
+                "  ┌─ CPU ──────────────────────────────────────────────┐",
+                f"  │ {icon} {cpu.model_name[:45]}",
+                f"  │   {cpu.cores_logical} cores  Temp: {temp_str}  Uptime: {int(cpu.uptime_seconds // 3600)}h",
+                f"  │   Load: [{load_bar}] {cpu.load_percent:.1f}%",
+                f"  │   Mem:  [{mem_bar}] {cpu.memory_used_gb:.1f}/{cpu.memory_total_gb:.1f} GB ({cpu.memory_percent:.1f}%)",
+                f"  │   Swap: {cpu.swap_used_gb:.1f}/{cpu.swap_total_gb:.1f} GB",
+                "  └────────────────────────────────────────────────────┘",
+            ]
+        )
     except Exception as e:
         lines.append(f"  CPU: error - {e}")
 
     # Disk
-    lines.extend([
-        "",
-        "  ┌─ DISK ─────────────────────────────────────────────┐",
-    ])
+    lines.extend(
+        [
+            "",
+            "  ┌─ DISK ─────────────────────────────────────────────┐",
+        ]
+    )
     for path in ["/", "/mnt/data"]:
         disk = get_disk_info(path)
         if "error" not in disk:
             icon = {"OK": "✓", "WARNING": "⚠", "CRITICAL": "🔴"}.get(disk["status"], "?")
             bar = render_bar(disk["percent"], 15)
-            lines.append(f"  │ {icon} {path:<20} [{bar}] {disk['percent']}%  {disk['free_gb']:.0f}GB free")
+            lines.append(
+                f"  │ {icon} {path:<20} [{bar}] {disk['percent']}%  {disk['free_gb']:.0f}GB free"
+            )
         else:
             lines.append(f"  │ {path}: {disk['error']}")
     lines.append("  └────────────────────────────────────────────────────┘")
 
     # Active processes
-    lines.extend([
-        "",
-        "  ┌─ PROCESSES ─────────────────────────────────────────┐",
-    ])
+    lines.extend(
+        [
+            "",
+            "  ┌─ PROCESSES ─────────────────────────────────────────┐",
+        ]
+    )
     procs = get_processes("download|aria2c|python")
     if procs:
         for p in procs[:8]:
-            lines.append(f"  │ {p['pid']:>7} {p['cpu']:>5}% CPU  {p['mem']:>5}% MEM  {p['command'][:50]}")
+            lines.append(
+                f"  │ {p['pid']:>7} {p['cpu']:>5}% CPU  {p['mem']:>5}% MEM  {p['command'][:50]}"
+            )
     else:
         lines.append("  │ No matching processes")
     lines.append("  └────────────────────────────────────────────────────┘")

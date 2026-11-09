@@ -2,9 +2,10 @@
 """
 Download jmail and ICIJ datasets using correct official URLs.
 """
+
 import os
-import urllib.request
 import ssl
+import urllib.request
 from pathlib import Path
 
 # Create SSL context that allows us to download
@@ -15,12 +16,13 @@ ssl_context.verify_mode = ssl.CERT_NONE
 DATA_DIR = Path("/home/cbwinslow/workspace/epstein-data/downloads")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
+
 def download_file(url, output_path, description):
     """Download a file with progress."""
     print(f"\n[DOWNLOADING] {description}")
     print(f"  From: {url}")
     print(f"  To: {output_path}")
-    
+
     try:
         urllib.request.urlretrieve(url, output_path)
         size = os.path.getsize(output_path)
@@ -29,6 +31,7 @@ def download_file(url, output_path, description):
     except Exception as e:
         print(f"  ✗ Failed: {e}")
         return False
+
 
 # Download jmail datasets
 print("=" * 60)
@@ -53,7 +56,7 @@ print("=" * 60)
 download_file(
     "https://offshoreleaks-data.icij.org/offshoreleaks/csv/full-oldb.LATEST.zip",
     DATA_DIR / "icij_offshore_leaks_full.zip",
-    "ICIJ Offshore Leaks Full Database"
+    "ICIJ Offshore Leaks Full Database",
 )
 
 print("\n" + "=" * 60)
