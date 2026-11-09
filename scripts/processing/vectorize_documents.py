@@ -15,13 +15,12 @@ Usage:
     python scripts/vectorize_documents.py status      # Check progress
 """
 
-import json
 import os
-import sys
-import time
 import signal
+import sys
 import threading
-from queue import Queue, Empty
+import time
+from queue import Empty, Queue
 
 import psycopg2
 import requests
@@ -112,12 +111,15 @@ def reader_thread(config, read_q, total, log_f):
     read_count = 0
 
     while not shutdown:
-        cur.execute(f"""
+        cur.execute(
+            f"""
             SELECT id, LEFT(text_content, %s) FROM pages
             WHERE {col} IS NULL AND text_content IS NOT NULL
               AND length(text_content) > 10 AND id > %s
             ORDER BY id LIMIT %s
-        """, (config["max_text_len"], last_id, batch_size))
+        """,
+            (config["max_text_len"], last_id, batch_size),
+        )
 
         rows = cur.fetchall()
         if not rows:
@@ -159,7 +161,7 @@ def embedder_thread(config, read_q, embed_q, log_f):
 
         bnum, rows = item
         page_ids = [r[0] for r in rows]
-        texts = [(r[1] or "")[:config["max_text_len"]] for r in rows]
+        texts = [(r[1] or "")[: config["max_text_len"]] for r in rows]
 
         try:
             resp = requests.post(
@@ -169,7 +171,7 @@ def embedder_thread(config, read_q, embed_q, log_f):
             )
             if resp.status_code == 400:
                 # Token limit - retry with shorter texts
-                shorter = [t[:config["fallback_text_len"]] for t in texts]
+                shorter = [t[: config["fallback_text_len"]] for t in texts]
                 resp = requests.post(
                     url,
                     json={"input": shorter, "model": model_id},
@@ -239,12 +241,9 @@ def writer_thread(config, embed_q, total, log_f):
                     cur.execute(
                         f"CREATE TEMP TABLE _tmp_emb (id INTEGER PRIMARY KEY, emb vector({dims}))"
                     )
-                    execute_values(
-                        cur, "INSERT INTO _tmp_emb (id, emb) VALUES %s", rows
-                    )
+                    execute_values(cur, "INSERT INTO _tmp_emb (id, emb) VALUES %s", rows)
                     cur.execute(
-                        f"UPDATE pages SET {col} = te.emb "
-                        f"FROM _tmp_emb te WHERE pages.id = te.id"
+                        f"UPDATE pages SET {col} = te.emb FROM _tmp_emb te WHERE pages.id = te.id"
                     )
                     cur.execute("DROP TABLE IF EXISTS _tmp_emb")
                     conn.commit()
@@ -279,8 +278,8 @@ def writer_thread(config, embed_q, total, log_f):
 
     elapsed = time.time() - t0
     summary = (
-        f"Done: {written:,} written in {elapsed/3600:.1f}h "
-        f"({written/elapsed:.1f}/sec) | Errors: {errors}"
+        f"Done: {written:,} written in {elapsed / 3600:.1f}h "
+        f"({written / elapsed:.1f}/sec) | Errors: {errors}"
     )
     print(f"\n  {summary}")
     log_f.write(f"{time.strftime('%H:%M:%S')} {summary}\n")
@@ -294,17 +293,17 @@ def run_model(model_name):
     col = config["column"]
 
     log_f = setup_logging(model_name)
-    log_f.write(f"\n{'='*60}\n")
+    log_f.write(f"\n{'=' * 60}\n")
     log_f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} Starting {model_name}\n")
-    log_f.write(f"{'='*60}\n")
+    log_f.write(f"{'=' * 60}\n")
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Vectorizing: {model_name}")
     print(f"  Column: {col} ({config['dims']}-dim)")
     print(f"  Server: {config['url']}")
     print(f"  Batch: {config['batch_size']}")
     print(f"  Log: {LOG_DIR}/vectorize_{model_name}.log")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     conn = get_conn()
     ensure_column(conn, col, config["dims"])
@@ -351,12 +350,14 @@ def show_status():
     conn = get_conn()
     cur = conn.cursor()
 
-    cur.execute("SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10")
+    cur.execute(
+        "SELECT COUNT(*) FROM pages WHERE text_content IS NOT NULL AND length(text_content) > 10"
+    )
     total = cur.fetchone()[0]
 
     print(f"\nEmbedding Status ({total:,} eligible pages)\n")
     print(f"  {'Model':<20} {'Filled':>12} {'Remaining':>12} {'%':>8}")
-    print(f"  {'-'*54}")
+    print(f"  {'-' * 54}")
 
     for name, config in MODELS.items():
         col = config["column"]

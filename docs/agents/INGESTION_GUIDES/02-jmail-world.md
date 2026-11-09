@@ -1,10 +1,10 @@
 # Data Source: jMail World Emails
 
-> **Source:** https://jmail.world  
-> **Type:** Email Archive  
-> **License:** Public Records  
-> **Status:** ✅ Complete (1.78M emails + 1.41M documents)  
-> **Size:** 344 MB total  
+> **Source:** https://jmail.world
+> **Type:** Email Archive
+> **License:** Public Records
+> **Status:** ✅ Complete (1.78M emails + 1.41M documents)
+> **Size:** 344 MB total
 
 ---
 
@@ -203,14 +203,14 @@ tail -f /tmp/jmail_docs_import.log
 
 ```sql
 -- Find emails from specific sender
-SELECT * FROM jmail_emails_full 
+SELECT * FROM jmail_emails_full
 WHERE sender ILIKE '%lesley groff%'
 ORDER BY date DESC
 LIMIT 100;
 
 -- Find Epstein's outgoing emails by date
-SELECT * FROM jmail_emails_full 
-WHERE epstein_as_sender = true 
+SELECT * FROM jmail_emails_full
+WHERE epstein_as_sender = true
 AND date BETWEEN '2005-01-01' AND '2008-12-31'
 ORDER BY date;
 

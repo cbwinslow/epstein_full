@@ -29,9 +29,7 @@ PG_DB = "epstein"
 
 def get_conn():
     return psycopg2.connect(
-        host=PG_HOST, port=PG_PORT,
-        user=PG_USER, password=PG_PASS,
-        dbname=PG_DB
+        host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASS, dbname=PG_DB
     )
 
 
@@ -89,7 +87,8 @@ def show_relationship_types(conn):
 def show_top_entities(conn, limit=10):
     """Show top connected entities."""
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT e.name, e.entity_type,
                COUNT(DISTINCT r.id) AS connections,
                SUM(r.weight::numeric) AS total_weight
@@ -98,7 +97,9 @@ def show_top_entities(conn, limit=10):
         GROUP BY e.id, e.name, e.entity_type
         ORDER BY connections DESC
         LIMIT %s
-    """, (limit,))
+    """,
+        (limit,),
+    )
 
     print(f"\n  Top {limit} Entities by Connections:")
     for name, etype, conns, weight in cur.fetchall():
@@ -110,13 +111,16 @@ def show_entity_details(conn, name):
     cur = conn.cursor()
 
     # Find entity
-    cur.execute("""
+    cur.execute(
+        """
         SELECT id, name, entity_type, aliases::text, metadata::text, mention_count
         FROM entities
         WHERE name ILIKE %s
         ORDER BY mention_count DESC
         LIMIT 1
-    """, (f"%{name}%",))
+    """,
+        (f"%{name}%",),
+    )
 
     row = cur.fetchone()
     if not row:
@@ -131,13 +135,16 @@ def show_entity_details(conn, name):
     print(f"  Metadata: {metadata[:200] if metadata else 'N/A'}")
 
     # Relationships
-    cur.execute("""
+    cur.execute(
+        """
         SELECT e2.name, r.relationship_type, r.weight, r.date_first, r.date_last
         FROM relationships r
         JOIN entities e2 ON r.target_entity_id = e2.id
         WHERE r.source_entity_id = %s
         ORDER BY r.weight DESC
-    """, (eid,))
+    """,
+        (eid,),
+    )
 
     rels = cur.fetchall()
     if rels:
@@ -147,13 +154,16 @@ def show_entity_details(conn, name):
             print(f"    → {rtype}: {rel_name} (weight: {weight}){dates}")
 
     # Reverse relationships
-    cur.execute("""
+    cur.execute(
+        """
         SELECT e1.name, r.relationship_type, r.weight
         FROM relationships r
         JOIN entities e1 ON r.source_entity_id = e1.id
         WHERE r.target_entity_id = %s
         ORDER BY r.weight DESC
-    """, (eid,))
+    """,
+        (eid,),
+    )
 
     rev_rels = cur.fetchall()
     if rev_rels:

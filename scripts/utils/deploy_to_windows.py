@@ -39,30 +39,34 @@ def run_ssh_command(host, user, command, description):
         print(f"✗ Exception: {e}")
         return False
 
+
 def transfer_files(host, user):
     """Transfer necessary files to Windows machine."""
     print("\\nTransferring files to Windows machine...")
 
     # Create remote directory structure
-    run_ssh_command(host, user, 'mkdir -p C:\\\\epstein_pipeline\\\\scripts', "Creating remote directories")
+    run_ssh_command(
+        host, user, "mkdir -p C:\\\\epstein_pipeline\\\\scripts", "Creating remote directories"
+    )
 
     # Transfer setup script
-    local_setup = '/home/cbwinslow/workspace/epstein/scripts/setup_windows_gpu.py'
-    remote_setup = 'C:\\\\epstein_pipeline\\\\scripts\\\\setup_windows_gpu.py'
+    local_setup = "/home/cbwinslow/workspace/epstein/scripts/setup_windows_gpu.py"
+    remote_setup = "C:\\\\epstein_pipeline\\\\scripts\\\\setup_windows_gpu.py"
 
-    scp_cmd = f'scp {local_setup} {user}@{host}:{remote_setup}'
+    scp_cmd = f"scp {local_setup} {user}@{host}:{remote_setup}"
     print(f"Transferring setup script: {scp_cmd}")
     os.system(scp_cmd)
 
     # Transfer processing script
-    local_processing = '/home/cbwinslow/workspace/epstein/scripts/windows_processing.py'
-    remote_processing = 'C:\\\\epstein_pipeline\\\\scripts\\\\windows_processing.py'
+    local_processing = "/home/cbwinslow/workspace/epstein/scripts/windows_processing.py"
+    remote_processing = "C:\\\\epstein_pipeline\\\\scripts\\\\windows_processing.py"
 
-    scp_cmd = f'scp {local_processing} {user}@{host}:{remote_processing}'
+    scp_cmd = f"scp {local_processing} {user}@{host}:{remote_processing}"
     print(f"Transferring processing script: {scp_cmd}")
     os.system(scp_cmd)
 
     print("✓ Files transferred successfully")
+
 
 def setup_windows_environment(host, user):
     """Set up the Windows environment."""
@@ -70,40 +74,42 @@ def setup_windows_environment(host, user):
 
     # Install Python packages
     packages = [
-        'torch==2.3.1+cu118',
-        'torchvision==0.18.1+cu118',
-        'torchaudio==2.3.1+cu118',
-        'spacy==3.7.5',
-        'fitz==1.24.4',
-        'insightface==0.7.3',
-        'onnxruntime-gpu==1.21.0',
-        'faster-whisper==0.10.1',
-        'sentence-transformers==3.0.1',
-        'psycopg2-binary==2.9.9',
-        'sqlalchemy==2.0.35',
-        'pandas==2.2.2',
-        'numpy==1.26.4',
-        'opencv-python-headless==4.10.0.84',
-        'pillow==11.1.0',
-        'pyarrow==17.0.0',
-        'huggingface-hub==0.26.2',
-        'requests==2.32.3',
-        'tqdm==4.66.5',
-        'rapidfuzz==3.10.2',
-        'scikit-learn==1.5.2',
-        'networkx==3.4.2',
-        'matplotlib==3.9.3',
-        'seaborn==0.13.2'
+        "torch==2.3.1+cu118",
+        "torchvision==0.18.1+cu118",
+        "torchaudio==2.3.1+cu118",
+        "spacy==3.7.5",
+        "fitz==1.24.4",
+        "insightface==0.7.3",
+        "onnxruntime-gpu==1.21.0",
+        "faster-whisper==0.10.1",
+        "sentence-transformers==3.0.1",
+        "psycopg2-binary==2.9.9",
+        "sqlalchemy==2.0.35",
+        "pandas==2.2.2",
+        "numpy==1.26.4",
+        "opencv-python-headless==4.10.0.84",
+        "pillow==11.1.0",
+        "pyarrow==17.0.0",
+        "huggingface-hub==0.26.2",
+        "requests==2.32.3",
+        "tqdm==4.66.5",
+        "rapidfuzz==3.10.2",
+        "scikit-learn==1.5.2",
+        "networkx==3.4.2",
+        "matplotlib==3.9.3",
+        "seaborn==0.13.2",
     ]
 
     for package in packages:
-        run_ssh_command(host, user, f'pip install {package}', f"Installing {package}")
+        run_ssh_command(host, user, f"pip install {package}", f"Installing {package}")
 
     # Download spaCy model
-    run_ssh_command(host, user, 'python -m spacy download en_core_web_trf', "Downloading spaCy model")
+    run_ssh_command(
+        host, user, "python -m spacy download en_core_web_trf", "Downloading spaCy model"
+    )
 
     # Create PostgreSQL database schema
-    schema_sql = '''
+    schema_sql = """
     CREATE TABLE IF NOT EXISTS documents (
         id SERIAL PRIMARY KEY,
         efta_number VARCHAR(20) UNIQUE NOT NULL,
@@ -177,10 +183,10 @@ def setup_windows_environment(host, user):
     CREATE INDEX IF NOT EXISTS idx_relationships_source ON relationships(source_entity_id);
     CREATE INDEX IF NOT EXISTS idx_relationships_target ON relationships(target_entity_id);
     CREATE INDEX IF NOT EXISTS idx_face_document ON face_detections(source_document);
-    '''
+    """
 
     # Create database setup script
-    db_setup_script = f'''
+    db_setup_script = f"""
 import psycopg2
 import json
 
@@ -204,20 +210,26 @@ try:
     print("✓ PostgreSQL schema created successfully")
 except Exception as e:
     print(f"✗ PostgreSQL setup failed: {{e}}")
-'''
+"""
 
     # Transfer and run database setup
-    with open('/tmp/setup_db.py', 'w') as f:
+    with open("/tmp/setup_db.py", "w") as f:
         f.write(db_setup_script)
 
-    scp_cmd = f'scp /tmp/setup_db.py {user}@{host}:C:\\\\epstein_pipeline\\\\scripts\\\\setup_db.py'
+    scp_cmd = f"scp /tmp/setup_db.py {user}@{host}:C:\\\\epstein_pipeline\\\\scripts\\\\setup_db.py"
     os.system(scp_cmd)
 
-    run_ssh_command(host, user, 'python C:\\\\epstein_pipeline\\\\scripts\\\\setup_db.py', "Setting up PostgreSQL database")
+    run_ssh_command(
+        host,
+        user,
+        "python C:\\\\epstein_pipeline\\\\scripts\\\\setup_db.py",
+        "Setting up PostgreSQL database",
+    )
+
 
 def create_windows_launcher():
     """Create a Windows batch file for easy execution."""
-    batch_content = '''@echo off
+    batch_content = """@echo off
 echo Epstein Files Processing Pipeline - Windows RTX 3060 Edition
 echo ============================================================
 echo.
@@ -242,25 +254,28 @@ echo Processing complete. Check the logs for details.
 echo Report saved to: C:\\epstein_pipeline\\processed_windows\report.json
 echo.
 pause
-'''
+"""
 
-    with open('/tmp/epstein_pipeline.bat', 'w') as f:
+    with open("/tmp/epstein_pipeline.bat", "w") as f:
         f.write(batch_content)
 
     print("✓ Windows launcher created")
 
+
 def main():
     """Main deployment function."""
-    host = '192.168.4.101'
-    user = 'blain'
+    host = "192.168.4.101"
+    user = "blain"
 
     print("Epstein Files - Windows RTX 3060 Deployment")
-    print("="*50)
+    print("=" * 50)
     print(f"Target: {user}@{host}")
     print()
 
     # Check SSH connectivity
-    if not run_ssh_command(host, user, 'echo "SSH connection test successful"', "Testing SSH connection"):
+    if not run_ssh_command(
+        host, user, 'echo "SSH connection test successful"', "Testing SSH connection"
+    ):
         print("\\n✗ SSH connection failed")
         print("Please ensure:")
         print("1. SSH is enabled on the Windows machine")
@@ -277,9 +292,9 @@ def main():
     # Create launcher
     create_windows_launcher()
 
-    print("\\n" + "="*60)
+    print("\\n" + "=" * 60)
     print("WINDOWS DEPLOYMENT COMPLETE")
-    print("="*60)
+    print("=" * 60)
     print("\\nNext steps on Windows machine:")
     print("1. Open Command Prompt as Administrator")
     print("2. Navigate to C:\\\\epstein_pipeline\\\\scripts")
@@ -298,6 +313,7 @@ def main():
     print("- View reports in C:\\\\epstein_pipeline\\\\processed_windows")
 
     return True
+
 
 if __name__ == "__main__":
     success = main()

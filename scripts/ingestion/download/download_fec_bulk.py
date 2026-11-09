@@ -5,94 +5,89 @@ Downloads bulk FEC data and ingests into PostgreSQL
 Uses API for targeted Epstein-related entity searches
 """
 
-import os
-import sys
-import zipfile
 import csv
-import psycopg2
-import requests
 import logging
+import os
+import zipfile
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Optional
-from concurrent.futures import ThreadPoolExecutor
+from typing import Dict, List, Optional
+
 import pandas as pd
-from io import StringIO
+import psycopg2
+import requests
 
 # Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration
-API_KEY = os.getenv('FEC_API_KEY', 'FpB5TzG4hjf7W9IwjBsdTKGyQImqhhidMKRLDXFm')
-BASE_URL = 'https://www.fec.gov/files/bulk-downloads'
-API_BASE = 'https://api.open.fec.gov/v1'
-DATA_DIR = Path('/home/cbwinslow/workspace/epstein-data/raw-files/fec')
+API_KEY = os.getenv("FEC_API_KEY", "FpB5TzG4hjf7W9IwjBsdTKGyQImqhhidMKRLDXFm")
+BASE_URL = "https://www.fec.gov/files/bulk-downloads"
+API_BASE = "https://api.open.fec.gov/v1"
+DATA_DIR = Path("/home/cbwinslow/workspace/epstein-data/raw-files/fec")
 YEARS = list(range(1980, 2027, 2))  # 1980-2026 (FEC cycles are 2-year periods)
 
 # Database connection
 DB_CONFIG = {
-    'host': 'localhost',
-    'port': 5432,
-    'database': 'epstein',
-    'user': 'cbwinslow',
-    'password': '123qweasd'
+    "host": "localhost",
+    "port": 5432,
+    "database": "epstein",
+    "user": "cbwinslow",
+    "password": "123qweasd",
 }
 
 # FEC bulk file types to download
 BULK_FILES = {
-    'indiv': {  # Individual contributions - MOST IMPORTANT
-        'description': 'Contributions by individuals',
-        'filename': 'indiv{}.zip',
-        'format': 'two_digit',  # Uses 2-digit year (e.g., 26 for 2026)
-        'size_gb': 2.5,  # Approximate per cycle
-        'priority': 1
+    "indiv": {  # Individual contributions - MOST IMPORTANT
+        "description": "Contributions by individuals",
+        "filename": "indiv{}.zip",
+        "format": "two_digit",  # Uses 2-digit year (e.g., 26 for 2026)
+        "size_gb": 2.5,  # Approximate per cycle
+        "priority": 1,
     },
-    'cm': {  # Committee master
-        'description': 'Committee master file',
-        'filename': 'cm{}.zip',
-        'format': 'two_digit',
-        'size_gb': 0.1,
-        'priority': 2
+    "cm": {  # Committee master
+        "description": "Committee master file",
+        "filename": "cm{}.zip",
+        "format": "two_digit",
+        "size_gb": 0.1,
+        "priority": 2,
     },
-    'cn': {  # Candidate master
-        'description': 'Candidate master file',
-        'filename': 'cn{}.zip',
-        'format': 'two_digit',
-        'size_gb': 0.05,
-        'priority': 2
+    "cn": {  # Candidate master
+        "description": "Candidate master file",
+        "filename": "cn{}.zip",
+        "format": "two_digit",
+        "size_gb": 0.05,
+        "priority": 2,
     },
-    'ccl': {  # Candidate-committee linkage
-        'description': 'Candidate-committee linkage',
-        'filename': 'ccl{}.zip',
-        'format': 'two_digit',
-        'size_gb': 0.05,
-        'priority': 3
+    "ccl": {  # Candidate-committee linkage
+        "description": "Candidate-committee linkage",
+        "filename": "ccl{}.zip",
+        "format": "two_digit",
+        "size_gb": 0.05,
+        "priority": 3,
     },
-    'oth': {  # Committee-to-committee contributions
-        'description': 'Contributions from committees',
-        'filename': 'oth{}.zip',
-        'format': 'two_digit',
-        'size_gb': 0.2,
-        'priority': 3
+    "oth": {  # Committee-to-committee contributions
+        "description": "Contributions from committees",
+        "filename": "oth{}.zip",
+        "format": "two_digit",
+        "size_gb": 0.2,
+        "priority": 3,
     },
-    'pas2': {  # Contributions to candidates
-        'description': 'Contributions to candidates',
-        'filename': 'pas2{}.zip',
-        'format': 'two_digit',
-        'size_gb': 0.5,
-        'priority': 3
+    "pas2": {  # Contributions to candidates
+        "description": "Contributions to candidates",
+        "filename": "pas2{}.zip",
+        "format": "two_digit",
+        "size_gb": 0.5,
+        "priority": 3,
     },
-    'oppexp': {  # Operating expenditures
-        'description': 'Operating expenditures',
-        'filename': 'oppexp{}.zip',
-        'format': 'two_digit',
-        'size_gb': 1.0,
-        'priority': 4
-    }
+    "oppexp": {  # Operating expenditures
+        "description": "Operating expenditures",
+        "filename": "oppexp{}.zip",
+        "format": "two_digit",
+        "size_gb": 1.0,
+        "priority": 4,
+    },
 }
 
 
@@ -294,17 +289,19 @@ class FECDownloader:
             response = requests.get(url, stream=True, timeout=300)
             response.raise_for_status()
 
-            total_size = int(response.headers.get('content-length', 0))
+            total_size = int(response.headers.get("content-length", 0))
             downloaded = 0
 
-            with open(dest_path, 'wb') as f:
+            with open(dest_path, "wb") as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     if chunk:
                         f.write(chunk)
                         downloaded += len(chunk)
                         if total_size > 0 and downloaded % (1024 * 1024) == 0:  # Every MB
                             progress = (downloaded / total_size) * 100
-                            logger.info(f"Progress: {progress:.1f}% ({downloaded // 1024 // 1024}MB / {total_size // 1024 // 1024}MB)")
+                            logger.info(
+                                f"Progress: {progress:.1f}% ({downloaded // 1024 // 1024}MB / {total_size // 1024 // 1024}MB)"
+                            )
 
             logger.info(f"Downloaded: {dest_path} ({downloaded // 1024 // 1024}MB)")
             return True
@@ -319,20 +316,20 @@ class FECDownloader:
         chunk_size = 100000  # Process 100K rows at a time
 
         try:
-            with zipfile.ZipFile(zip_path, 'r') as z:
+            with zipfile.ZipFile(zip_path, "r") as z:
                 for filename in z.namelist():
-                    if not filename.endswith('.txt'):
+                    if not filename.endswith(".txt"):
                         continue
 
                     logger.info(f"Processing {filename} in chunks of {chunk_size}")
 
                     with z.open(filename) as f:
                         # Read first line to detect delimiter
-                        first_line = f.readline().decode('utf-8', errors='ignore')
+                        first_line = f.readline().decode("utf-8", errors="ignore")
                         f.seek(0)
 
                         # Determine delimiter (usually | for FEC files)
-                        delimiter = '|' if '|' in first_line else ','
+                        delimiter = "|" if "|" in first_line else ","
 
                         # Process in chunks
                         chunk_iter = pd.read_csv(
@@ -341,28 +338,30 @@ class FECDownloader:
                             quoting=csv.QUOTE_NONE,
                             dtype=str,
                             low_memory=False,
-                            on_bad_lines='skip',
-                            encoding='utf-8',
-                            chunksize=chunk_size
+                            on_bad_lines="skip",
+                            encoding="utf-8",
+                            chunksize=chunk_size,
                         )
 
                         for i, chunk in enumerate(chunk_iter):
                             # Clean column names
-                            chunk.columns = [col.strip().lower().replace(' ', '_') for col in chunk.columns]
-                            chunk['cycle'] = cycle
+                            chunk.columns = [
+                                col.strip().lower().replace(" ", "_") for col in chunk.columns
+                            ]
+                            chunk["cycle"] = cycle
 
                             # Insert data based on file type
-                            if file_type == 'indiv':
+                            if file_type == "indiv":
                                 rows = self.ingest_individual_contributions_chunk(chunk)
-                            elif file_type == 'cm':
+                            elif file_type == "cm":
                                 rows = self.ingest_committees_chunk(chunk)
-                            elif file_type == 'cn':
+                            elif file_type == "cn":
                                 rows = self.ingest_candidates_chunk(chunk)
-                            elif file_type == 'oth':
+                            elif file_type == "oth":
                                 rows = self.ingest_committee_contributions_chunk(chunk)
-                            elif file_type == 'pas2':
+                            elif file_type == "pas2":
                                 rows = self.ingest_candidate_contributions_chunk(chunk)
-                            elif file_type == 'oppexp':
+                            elif file_type == "oppexp":
                                 rows = self.ingest_operating_expenditures_chunk(chunk)
                             else:
                                 rows = 0
@@ -370,13 +369,16 @@ class FECDownloader:
                             rows_imported += rows
 
                             if (i + 1) % 10 == 0:
-                                logger.info(f"  Processed chunk {i+1}, total rows: {rows_imported:,}")
+                                logger.info(
+                                    f"  Processed chunk {i + 1}, total rows: {rows_imported:,}"
+                                )
 
                         logger.info(f"Finished processing {filename}: {rows_imported:,} total rows")
 
         except Exception as e:
             logger.error(f"Error processing {zip_path}: {e}")
             import traceback
+
             logger.error(traceback.format_exc())
 
         return rows_imported
@@ -387,41 +389,46 @@ class FECDownloader:
         for _, row in df.iterrows():
             try:
                 transaction_dt = None
-                if 'transaction_dt' in row and pd.notna(row['transaction_dt']):
+                if "transaction_dt" in row and pd.notna(row["transaction_dt"]):
                     try:
-                        transaction_dt = pd.to_datetime(row['transaction_dt'], format='%m%d%Y', errors='coerce')
+                        transaction_dt = pd.to_datetime(
+                            row["transaction_dt"], format="%m%d%Y", errors="coerce"
+                        )
                     except:
                         pass
 
-                rows.append((
-                    row.get('cmte_id', ''),
-                    row.get('amndt_ind', ''),
-                    row.get('rpt_tp', ''),
-                    row.get('transaction_pgi', ''),
-                    row.get('image_num', ''),
-                    row.get('transaction_tp', ''),
-                    row.get('entity_tp', ''),
-                    row.get('name', ''),
-                    row.get('city', ''),
-                    row.get('state', ''),
-                    row.get('zip_code', ''),
-                    row.get('employer', ''),
-                    row.get('occupation', ''),
-                    transaction_dt,
-                    float(row.get('transaction_amt', 0) or 0),
-                    row.get('other_id', ''),
-                    row.get('tran_id', ''),
-                    int(row.get('file_num', 0) or 0) if pd.notna(row.get('file_num')) else None,
-                    row.get('memo_cd', ''),
-                    row.get('memo_text', ''),
-                    int(row.get('sub_id', 0) or 0) if pd.notna(row.get('sub_id')) else None,
-                    int(row.get('cycle', 0))
-                ))
-            except Exception as e:
+                rows.append(
+                    (
+                        row.get("cmte_id", ""),
+                        row.get("amndt_ind", ""),
+                        row.get("rpt_tp", ""),
+                        row.get("transaction_pgi", ""),
+                        row.get("image_num", ""),
+                        row.get("transaction_tp", ""),
+                        row.get("entity_tp", ""),
+                        row.get("name", ""),
+                        row.get("city", ""),
+                        row.get("state", ""),
+                        row.get("zip_code", ""),
+                        row.get("employer", ""),
+                        row.get("occupation", ""),
+                        transaction_dt,
+                        float(row.get("transaction_amt", 0) or 0),
+                        row.get("other_id", ""),
+                        row.get("tran_id", ""),
+                        int(row.get("file_num", 0) or 0) if pd.notna(row.get("file_num")) else None,
+                        row.get("memo_cd", ""),
+                        row.get("memo_text", ""),
+                        int(row.get("sub_id", 0) or 0) if pd.notna(row.get("sub_id")) else None,
+                        int(row.get("cycle", 0)),
+                    )
+                )
+            except Exception:
                 continue
 
         if rows:
-            self.cursor.executemany("""
+            self.cursor.executemany(
+                """
                 INSERT INTO fec_individual_contributions (
                     cmte_id, amndt_ind, rpt_tp, transaction_pgi, image_num,
                     transaction_tp, entity_tp, name, city, state, zip_code,
@@ -429,7 +436,9 @@ class FECDownloader:
                     other_id, tran_id, file_num, memo_cd, memo_text, sub_id, cycle
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (sub_id) DO NOTHING
-            """, rows)
+            """,
+                rows,
+            )
             self.conn.commit()
 
         return len(rows)
@@ -439,29 +448,34 @@ class FECDownloader:
         rows = []
         for _, row in df.iterrows():
             try:
-                rows.append((
-                    row.get('cmte_id', ''),
-                    row.get('cmte_nm', ''),
-                    row.get('tres_nm', ''),
-                    row.get('cmte_tp', ''),
-                    row.get('cmte_dsgn', ''),
-                    row.get('cmte_filing_freq', ''),
-                    row.get('org_tp', ''),
-                    row.get('connected_org_nm', ''),
-                    row.get('cand_id', ''),
-                    int(row.get('cycle', 0))
-                ))
+                rows.append(
+                    (
+                        row.get("cmte_id", ""),
+                        row.get("cmte_nm", ""),
+                        row.get("tres_nm", ""),
+                        row.get("cmte_tp", ""),
+                        row.get("cmte_dsgn", ""),
+                        row.get("cmte_filing_freq", ""),
+                        row.get("org_tp", ""),
+                        row.get("connected_org_nm", ""),
+                        row.get("cand_id", ""),
+                        int(row.get("cycle", 0)),
+                    )
+                )
             except:
                 continue
 
         if rows:
-            self.cursor.executemany("""
+            self.cursor.executemany(
+                """
                 INSERT INTO fec_committees (cmte_id, cmte_nm, tres_nm, cmte_tp, cmte_dsgn,
                     cmte_filing_freq, org_tp, connected_org_nm, cand_id, cycle)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (cmte_id) DO UPDATE SET
                     cmte_nm = EXCLUDED.cmte_nm, tres_nm = EXCLUDED.tres_nm, cycle = EXCLUDED.cycle
-            """, rows)
+            """,
+                rows,
+            )
             self.conn.commit()
 
         return len(rows)
@@ -471,30 +485,37 @@ class FECDownloader:
         rows = []
         for _, row in df.iterrows():
             try:
-                rows.append((
-                    row.get('cand_id', ''),
-                    row.get('cand_name', ''),
-                    row.get('cand_pty_affiliation', ''),
-                    int(row.get('cand_election_yr', 0) or 0) if pd.notna(row.get('cand_election_yr')) else None,
-                    row.get('cand_office', ''),
-                    row.get('cand_office_st', ''),
-                    row.get('cand_office_district', ''),
-                    row.get('cand_ici', ''),
-                    row.get('cand_status', ''),
-                    row.get('cand_pcc', ''),
-                    int(row.get('cycle', 0))
-                ))
+                rows.append(
+                    (
+                        row.get("cand_id", ""),
+                        row.get("cand_name", ""),
+                        row.get("cand_pty_affiliation", ""),
+                        int(row.get("cand_election_yr", 0) or 0)
+                        if pd.notna(row.get("cand_election_yr"))
+                        else None,
+                        row.get("cand_office", ""),
+                        row.get("cand_office_st", ""),
+                        row.get("cand_office_district", ""),
+                        row.get("cand_ici", ""),
+                        row.get("cand_status", ""),
+                        row.get("cand_pcc", ""),
+                        int(row.get("cycle", 0)),
+                    )
+                )
             except:
                 continue
 
         if rows:
-            self.cursor.executemany("""
+            self.cursor.executemany(
+                """
                 INSERT INTO fec_candidates (cand_id, cand_name, cand_pty_affiliation, cand_election_yr,
                     cand_office, cand_office_st, cand_office_district, cand_ici, cand_status, cand_pcc, cycle)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (cand_id) DO UPDATE SET
                     cand_name = EXCLUDED.cand_name, cand_election_yr = EXCLUDED.cand_election_yr, cycle = EXCLUDED.cycle
-            """, rows)
+            """,
+                rows,
+            )
             self.conn.commit()
 
         return len(rows)
@@ -505,35 +526,55 @@ class FECDownloader:
         for _, row in df.iterrows():
             try:
                 transaction_dt = None
-                if 'transaction_dt' in row and pd.notna(row['transaction_dt']):
+                if "transaction_dt" in row and pd.notna(row["transaction_dt"]):
                     try:
-                        transaction_dt = pd.to_datetime(row['transaction_dt'], format='%m%d%Y', errors='coerce')
+                        transaction_dt = pd.to_datetime(
+                            row["transaction_dt"], format="%m%d%Y", errors="coerce"
+                        )
                     except:
                         pass
 
-                rows.append((
-                    row.get('cmte_id', ''), row.get('amndt_ind', ''), row.get('rpt_tp', ''),
-                    row.get('transaction_pgi', ''), row.get('image_num', ''), row.get('transaction_tp', ''),
-                    row.get('entity_tp', ''), row.get('name', ''), row.get('city', ''), row.get('state', ''),
-                    row.get('zip_code', ''), row.get('employer', ''), row.get('occupation', ''),
-                    transaction_dt, float(row.get('transaction_amt', 0) or 0), row.get('other_id', ''),
-                    row.get('tran_id', ''), int(row.get('file_num', 0) or 0) if pd.notna(row.get('file_num')) else None,
-                    row.get('memo_cd', ''), row.get('memo_text', ''),
-                    int(row.get('sub_id', 0) or 0) if pd.notna(row.get('sub_id')) else None,
-                    int(row.get('cycle', 0))
-                ))
+                rows.append(
+                    (
+                        row.get("cmte_id", ""),
+                        row.get("amndt_ind", ""),
+                        row.get("rpt_tp", ""),
+                        row.get("transaction_pgi", ""),
+                        row.get("image_num", ""),
+                        row.get("transaction_tp", ""),
+                        row.get("entity_tp", ""),
+                        row.get("name", ""),
+                        row.get("city", ""),
+                        row.get("state", ""),
+                        row.get("zip_code", ""),
+                        row.get("employer", ""),
+                        row.get("occupation", ""),
+                        transaction_dt,
+                        float(row.get("transaction_amt", 0) or 0),
+                        row.get("other_id", ""),
+                        row.get("tran_id", ""),
+                        int(row.get("file_num", 0) or 0) if pd.notna(row.get("file_num")) else None,
+                        row.get("memo_cd", ""),
+                        row.get("memo_text", ""),
+                        int(row.get("sub_id", 0) or 0) if pd.notna(row.get("sub_id")) else None,
+                        int(row.get("cycle", 0)),
+                    )
+                )
             except:
                 continue
 
         if rows:
-            self.cursor.executemany("""
+            self.cursor.executemany(
+                """
                 INSERT INTO fec_committee_contributions (
                     cmte_id, amndt_ind, rpt_tp, transaction_pgi, image_num, transaction_tp, entity_tp,
                     name, city, state, zip_code, employer, occupation, transaction_dt, transaction_amt,
                     other_id, tran_id, file_num, memo_cd, memo_text, sub_id, cycle
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (sub_id) DO NOTHING
-            """, rows)
+            """,
+                rows,
+            )
             self.conn.commit()
 
         return len(rows)
@@ -544,36 +585,56 @@ class FECDownloader:
         for _, row in df.iterrows():
             try:
                 transaction_dt = None
-                if 'transaction_dt' in row and pd.notna(row['transaction_dt']):
+                if "transaction_dt" in row and pd.notna(row["transaction_dt"]):
                     try:
-                        transaction_dt = pd.to_datetime(row['transaction_dt'], format='%m%d%Y', errors='coerce')
+                        transaction_dt = pd.to_datetime(
+                            row["transaction_dt"], format="%m%d%Y", errors="coerce"
+                        )
                     except:
                         pass
 
-                rows.append((
-                    row.get('cmte_id', ''), row.get('amndt_ind', ''), row.get('rpt_tp', ''),
-                    row.get('transaction_pgi', ''), row.get('image_num', ''), row.get('transaction_tp', ''),
-                    row.get('entity_tp', ''), row.get('name', ''), row.get('city', ''), row.get('state', ''),
-                    row.get('zip_code', ''), row.get('employer', ''), row.get('occupation', ''),
-                    transaction_dt, float(row.get('transaction_amt', 0) or 0), row.get('other_id', ''),
-                    row.get('cand_id', ''), row.get('tran_id', ''),
-                    int(row.get('file_num', 0) or 0) if pd.notna(row.get('file_num')) else None,
-                    row.get('memo_cd', ''), row.get('memo_text', ''),
-                    int(row.get('sub_id', 0) or 0) if pd.notna(row.get('sub_id')) else None,
-                    int(row.get('cycle', 0))
-                ))
+                rows.append(
+                    (
+                        row.get("cmte_id", ""),
+                        row.get("amndt_ind", ""),
+                        row.get("rpt_tp", ""),
+                        row.get("transaction_pgi", ""),
+                        row.get("image_num", ""),
+                        row.get("transaction_tp", ""),
+                        row.get("entity_tp", ""),
+                        row.get("name", ""),
+                        row.get("city", ""),
+                        row.get("state", ""),
+                        row.get("zip_code", ""),
+                        row.get("employer", ""),
+                        row.get("occupation", ""),
+                        transaction_dt,
+                        float(row.get("transaction_amt", 0) or 0),
+                        row.get("other_id", ""),
+                        row.get("cand_id", ""),
+                        row.get("tran_id", ""),
+                        int(row.get("file_num", 0) or 0) if pd.notna(row.get("file_num")) else None,
+                        row.get("memo_cd", ""),
+                        row.get("memo_text", ""),
+                        int(row.get("sub_id", 0) or 0) if pd.notna(row.get("sub_id")) else None,
+                        int(row.get("cycle", 0)),
+                    )
+                )
             except:
                 continue
 
         if rows:
-            self.cursor.executemany("""
+            self.cursor.executemany(
+                """
                 INSERT INTO fec_candidate_contributions (
                     cmte_id, amndt_ind, rpt_tp, transaction_pgi, image_num, transaction_tp, entity_tp,
                     name, city, state, zip_code, employer, occupation, transaction_dt, transaction_amt,
                     other_id, cand_id, tran_id, file_num, memo_cd, memo_text, sub_id, cycle
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (sub_id) DO NOTHING
-            """, rows)
+            """,
+                rows,
+            )
             self.conn.commit()
 
         return len(rows)
@@ -584,37 +645,57 @@ class FECDownloader:
         for _, row in df.iterrows():
             try:
                 transaction_dt = None
-                if 'transaction_dt' in row and pd.notna(row['transaction_dt']):
+                if "transaction_dt" in row and pd.notna(row["transaction_dt"]):
                     try:
-                        transaction_dt = pd.to_datetime(row['transaction_dt'], format='%m%d%Y', errors='coerce')
+                        transaction_dt = pd.to_datetime(
+                            row["transaction_dt"], format="%m%d%Y", errors="coerce"
+                        )
                     except:
                         pass
 
-                rows.append((
-                    row.get('cmte_id', ''), row.get('amndt_ind', ''),
-                    int(row.get('rpt_yr', 0) or 0) if pd.notna(row.get('rpt_yr')) else None,
-                    row.get('rpt_tp', ''), row.get('image_num', ''), row.get('line_num', ''),
-                    row.get('form_tp_cd', ''), row.get('sched_tp_cd', ''), row.get('name', ''),
-                    row.get('city', ''), row.get('state', ''), row.get('zip_code', ''),
-                    transaction_dt, float(row.get('transaction_amt', 0) or 0), row.get('transaction_pgi', ''),
-                    row.get('purpose', ''), row.get('category', ''), row.get('category_desc', ''),
-                    row.get('memo_cd', ''), row.get('memo_text', ''), row.get('entity_tp', ''),
-                    int(row.get('sub_id', 0) or 0) if pd.notna(row.get('sub_id')) else None,
-                    int(row.get('file_num', 0) or 0) if pd.notna(row.get('file_num')) else None,
-                    int(row.get('cycle', 0))
-                ))
+                rows.append(
+                    (
+                        row.get("cmte_id", ""),
+                        row.get("amndt_ind", ""),
+                        int(row.get("rpt_yr", 0) or 0) if pd.notna(row.get("rpt_yr")) else None,
+                        row.get("rpt_tp", ""),
+                        row.get("image_num", ""),
+                        row.get("line_num", ""),
+                        row.get("form_tp_cd", ""),
+                        row.get("sched_tp_cd", ""),
+                        row.get("name", ""),
+                        row.get("city", ""),
+                        row.get("state", ""),
+                        row.get("zip_code", ""),
+                        transaction_dt,
+                        float(row.get("transaction_amt", 0) or 0),
+                        row.get("transaction_pgi", ""),
+                        row.get("purpose", ""),
+                        row.get("category", ""),
+                        row.get("category_desc", ""),
+                        row.get("memo_cd", ""),
+                        row.get("memo_text", ""),
+                        row.get("entity_tp", ""),
+                        int(row.get("sub_id", 0) or 0) if pd.notna(row.get("sub_id")) else None,
+                        int(row.get("file_num", 0) or 0) if pd.notna(row.get("file_num")) else None,
+                        int(row.get("cycle", 0)),
+                    )
+                )
             except:
                 continue
 
         if rows:
-            self.cursor.executemany("""
+            self.cursor.executemany(
+                """
                 INSERT INTO fec_operating_expenditures (
                     cmte_id, amndt_ind, rpt_yr, rpt_tp, image_num, line_num, form_tp_cd, sched_tp_cd,
                     name, city, state, zip_code, transaction_dt, transaction_amt, transaction_pgi,
                     purpose, category, category_desc, memo_cd, memo_text, entity_tp, sub_id, file_num, cycle
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (sub_id) DO NOTHING
-            """, rows)
+            """,
+                rows,
+            )
             self.conn.commit()
 
         return len(rows)
@@ -624,7 +705,7 @@ class FECDownloader:
         config = BULK_FILES[file_type]
         # FEC uses 2-digit year in filename (e.g., 26 for 2026)
         two_digit_year = cycle % 100
-        filename = config['filename'].format(two_digit_year)
+        filename = config["filename"].format(two_digit_year)
         # URL uses 4-digit cycle year
         url = f"{BASE_URL}/{cycle}/{filename}"
         zip_path = self.data_dir / filename
@@ -643,26 +724,47 @@ class FECDownloader:
         rows = self.extract_and_ingest_zip(zip_path, file_type, cycle)
 
         # Log download
-        self.cursor.execute("""
+        self.cursor.execute(
+            """
             INSERT INTO fec_download_log (file_type, cycle, download_date, file_size, rows_imported, status)
             VALUES (%s, %s, %s, %s, %s, %s)
             ON CONFLICT DO NOTHING
-        """, (file_type, cycle, datetime.now(), zip_path.stat().st_size, rows, 'success'))
+        """,
+            (file_type, cycle, datetime.now(), zip_path.stat().st_size, rows, "success"),
+        )
         self.conn.commit()
 
         logger.info(f"Imported {rows} rows from {filename}")
         return True
 
-    def download_all(self, file_types: Optional[List[str]] = None, cycles: Optional[List[int]] = None):
+    def download_all(
+        self, file_types: Optional[List[str]] = None, cycles: Optional[List[int]] = None
+    ):
         """Download all specified file types and cycles"""
         if file_types is None:
             # Priority order: indiv first (most important), then others
-            file_types = sorted(BULK_FILES.keys(), key=lambda x: BULK_FILES[x]['priority'])
+            file_types = sorted(BULK_FILES.keys(), key=lambda x: BULK_FILES[x]["priority"])
 
         if cycles is None:
             # Focus on recent cycles + Epstein era (1990s-2000s)
             # Epstein was active politically from late 1990s through 2019
-            cycles = [2024, 2022, 2020, 2018, 2016, 2014, 2012, 2010, 2008, 2006, 2004, 2002, 2000, 1998, 1996]
+            cycles = [
+                2024,
+                2022,
+                2020,
+                2018,
+                2016,
+                2014,
+                2012,
+                2010,
+                2008,
+                2006,
+                2004,
+                2002,
+                2000,
+                1998,
+                1996,
+            ]
 
         self.connect_db()
         self.create_tables()
@@ -670,9 +772,9 @@ class FECDownloader:
         try:
             for file_type in file_types:
                 config = BULK_FILES[file_type]
-                logger.info(f"\n{'='*60}")
+                logger.info(f"\n{'=' * 60}")
                 logger.info(f"Processing: {config['description']}")
-                logger.info(f"{'='*60}")
+                logger.info(f"{'=' * 60}")
 
                 for cycle in cycles:
                     try:
@@ -693,20 +795,21 @@ class FECDownloader:
                 # Search individual contributions
                 url = f"{API_BASE}/schedules/schedule_a/"
                 params = {
-                    'api_key': API_KEY,
-                    'contributor_name': name,
-                    'per_page': 100,
-                    'sort': '-contribution_receipt_date'
+                    "api_key": API_KEY,
+                    "contributor_name": name,
+                    "per_page": 100,
+                    "sort": "-contribution_receipt_date",
                 }
 
                 response = requests.get(url, params=params, timeout=30)
                 if response.status_code == 200:
                     data = response.json()
-                    results.extend(data.get('results', []))
+                    results.extend(data.get("results", []))
                     logger.info(f"API search '{name}': {len(data.get('results', []))} results")
 
                 # Respect rate limit (1000/hour = ~1 per 3.6 seconds)
                 import time
+
                 time.sleep(4)
 
             except Exception as e:
@@ -719,12 +822,12 @@ class FECDownloader:
         self.connect_db()
 
         tables = [
-            'fec_individual_contributions',
-            'fec_committees',
-            'fec_candidates',
-            'fec_committee_contributions',
-            'fec_candidate_contributions',
-            'fec_operating_expenditures'
+            "fec_individual_contributions",
+            "fec_committees",
+            "fec_candidates",
+            "fec_committee_contributions",
+            "fec_candidate_contributions",
+            "fec_operating_expenditures",
         ]
 
         stats = {}
@@ -741,15 +844,20 @@ def main():
     """Main entry point"""
     import argparse
 
-    parser = argparse.ArgumentParser(description='Download and ingest FEC bulk data')
-    parser.add_argument('--download', action='store_true', help='Download all FEC data')
-    parser.add_argument('--file-types', nargs='+', choices=list(BULK_FILES.keys()),
-                        help='Specific file types to download')
-    parser.add_argument('--cycles', nargs='+', type=int,
-                        help='Specific cycles to download (e.g., 2024 2022)')
-    parser.add_argument('--stats', action='store_true', help='Show database statistics')
-    parser.add_argument('--search', nargs='+', help='Search API for specific names')
-    parser.add_argument('--setup', action='store_true', help='Create tables only')
+    parser = argparse.ArgumentParser(description="Download and ingest FEC bulk data")
+    parser.add_argument("--download", action="store_true", help="Download all FEC data")
+    parser.add_argument(
+        "--file-types",
+        nargs="+",
+        choices=list(BULK_FILES.keys()),
+        help="Specific file types to download",
+    )
+    parser.add_argument(
+        "--cycles", nargs="+", type=int, help="Specific cycles to download (e.g., 2024 2022)"
+    )
+    parser.add_argument("--stats", action="store_true", help="Show database statistics")
+    parser.add_argument("--search", nargs="+", help="Search API for specific names")
+    parser.add_argument("--setup", action="store_true", help="Create tables only")
 
     args = parser.parse_args()
 
@@ -777,11 +885,13 @@ def main():
         results = downloader.search_epstein_entities_api(args.search)
         logger.info(f"\nFound {len(results)} contributions matching: {args.search}")
         for r in results[:10]:  # Show first 10
-            logger.info(f"  - {r.get('contributor_name')}: ${r.get('contribution_receipt_amount')} to {r.get('committee_name')} on {r.get('contribution_receipt_date')}")
+            logger.info(
+                f"  - {r.get('contributor_name')}: ${r.get('contribution_receipt_amount')} to {r.get('committee_name')} on {r.get('contribution_receipt_date')}"
+            )
 
     else:
         parser.print_help()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

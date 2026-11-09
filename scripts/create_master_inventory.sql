@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS import_log (
 
 -- View for summary
 CREATE OR REPLACE VIEW v_data_source_summary AS
-SELECT 
+SELECT
     ds.id,
     ds.source_name,
     ds.source_type,
@@ -99,7 +99,7 @@ GROUP BY ds.id, ds.source_name, ds.source_type, ds.status, ds.priority, ds.expec
 
 -- View for pending work
 CREATE OR REPLACE VIEW v_pending_imports AS
-SELECT 
+SELECT
     ds.source_name,
     ds.source_type,
     ds.priority,

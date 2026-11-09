@@ -50,21 +50,21 @@
 #### B. Expanded Keywords (Required)
 Current: 4 keywords
 Industry Standard: 50-100 keywords including:
-- Names: Jeffrey Epstein, Ghislaine Maxwell, Virginia Giuffre, Sarah Ransome, 
+- Names: Jeffrey Epstein, Ghislaine Maxwell, Virginia Giuffre, Sarah Ransome,
   Maria Farmer, Annie Farmer, Jane Does 1-15+
-- Locations: Little Saint James, Great St James, Palm Beach, Manhattan, 
+- Locations: Little Saint James, Great St James, Palm Beach, Manhattan,
   US Virgin Islands, Zorro Ranch, New Mexico
-- Organizations: Mossack Fonseca, Epstein VI, Southern Trust, 
+- Organizations: Mossack Fonseca, Epstein VI, Southern Trust,
   Gratitude America, J Epstein & Co
 - Legal terms: sex trafficking, sex offender, plea deal, non-prosecution agreement,
   Acosta, SDNY, civil lawsuit, criminal case
-- Associated figures: Trump, Clinton, Prince Andrew, Alan Dershowitz, 
+- Associated figures: Trump, Clinton, Prince Andrew, Alan Dershowitz,
   Bill Gates, Leslie Wexner, Leon Black
 - Case references: 1:08-cr-00808, 1:15-cv-07433, etc.
 
 #### C. Temporal Coverage (Required)
 - **Full historical span**: 1990-2026 (Epstein's entire public life)
-- **Key periods**: 
+- **Key periods**:
   - 1990s: Early career
   - 2000s: First investigations
   - 2007: Plea deal
@@ -76,7 +76,7 @@ Industry Standard: 50-100 keywords including:
 Current: 7 sources
 Industry Standard: 500+ sources including:
 - **Mainstream**: NYT, WaPo, WSJ, CNN, BBC, Reuters, AP, AFP
-- **Investigative**: Miami Herald, Miami New Times, ProPublica, ICIJ, 
+- **Investigative**: Miami Herald, Miami New Times, ProPublica, ICIJ,
   BuzzFeed News, The Guardian US
 - **Legal**: Law360, Bloomberg Law, Above the Law, SCOTUSblog
 - **Business**: Forbes, Bloomberg, WSJ, Financial Times
@@ -170,17 +170,17 @@ etag VARCHAR(100),
 CREATE EXTENSION IF NOT EXISTS vector;
 
 -- Add embedding columns
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN title_embedding vector(768),
 ADD COLUMN summary_embedding vector(768),
 ADD COLUMN content_embedding vector(768);
 
 -- Create indexes for vector search
-CREATE INDEX idx_news_title_embedding 
+CREATE INDEX idx_news_title_embedding
 ON media_news_articles USING ivfflat(title_embedding vector_cosine_ops);
-CREATE INDEX idx_news_summary_embedding 
+CREATE INDEX idx_news_summary_embedding
 ON media_news_articles USING ivfflat(summary_embedding vector_cosine_ops);
-CREATE INDEX idx_news_content_embedding 
+CREATE INDEX idx_news_content_embedding
 ON media_news_articles USING ivfflat(content_embedding vector_cosine_ops);
 ```
 
@@ -236,7 +236,7 @@ ON media_news_articles USING ivfflat(content_embedding vector_cosine_ops);
 
 #### B. Required Schema Additions
 ```sql
-ALTER TABLE media_news_articles 
+ALTER TABLE media_news_articles
 ADD COLUMN content_hash VARCHAR(64),
 ADD COLUMN title_hash VARCHAR(64),
 ADD COLUMN cluster_id INTEGER,
