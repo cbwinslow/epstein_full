@@ -29,9 +29,7 @@ PG_DB = "epstein"
 
 def get_conn():
     return psycopg2.connect(
-        host=PG_HOST, port=PG_PORT,
-        user=PG_USER, password=PG_PASS,
-        dbname=PG_DB
+        host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASS, dbname=PG_DB
     )
 
 
@@ -40,20 +38,41 @@ def check_foreign_keys(conn):
     print("\n=== Foreign Key Integrity ===")
 
     checks = [
-        ("relationships.source_entity_id", "entities.id",
-         "SELECT COUNT(*) FROM relationships r WHERE NOT EXISTS (SELECT 1 FROM entities e WHERE e.id = r.source_entity_id)"),
-        ("relationships.target_entity_id", "entities.id",
-         "SELECT COUNT(*) FROM relationships r WHERE NOT EXISTS (SELECT 1 FROM entities e WHERE e.id = r.target_entity_id)"),
-        ("edge_sources.relationship_id", "relationships.id",
-         "SELECT COUNT(*) FROM edge_sources es WHERE NOT EXISTS (SELECT 1 FROM relationships r WHERE r.id = es.relationship_id)"),
-        ("email_participants.email_id", "emails.id",
-         "SELECT COUNT(*) FROM email_participants ep WHERE NOT EXISTS (SELECT 1 FROM emails e WHERE e.id = ep.email_id)"),
-        ("rider_clauses.subpoena_id", "subpoenas.id",
-         "SELECT COUNT(*) FROM rider_clauses rc WHERE NOT EXISTS (SELECT 1 FROM subpoenas s WHERE s.id = rc.subpoena_id)"),
-        ("clause_fulfillment.clause_id", "rider_clauses.id",
-         "SELECT COUNT(*) FROM clause_fulfillment cf WHERE NOT EXISTS (SELECT 1 FROM rider_clauses rc WHERE rc.id = cf.clause_id)"),
-        ("clause_fulfillment.return_id", "returns.id",
-         "SELECT COUNT(*) FROM clause_fulfillment cf WHERE cf.return_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM returns r WHERE r.id = cf.return_id)"),
+        (
+            "relationships.source_entity_id",
+            "entities.id",
+            "SELECT COUNT(*) FROM relationships r WHERE NOT EXISTS (SELECT 1 FROM entities e WHERE e.id = r.source_entity_id)",
+        ),
+        (
+            "relationships.target_entity_id",
+            "entities.id",
+            "SELECT COUNT(*) FROM relationships r WHERE NOT EXISTS (SELECT 1 FROM entities e WHERE e.id = r.target_entity_id)",
+        ),
+        (
+            "edge_sources.relationship_id",
+            "relationships.id",
+            "SELECT COUNT(*) FROM edge_sources es WHERE NOT EXISTS (SELECT 1 FROM relationships r WHERE r.id = es.relationship_id)",
+        ),
+        (
+            "email_participants.email_id",
+            "emails.id",
+            "SELECT COUNT(*) FROM email_participants ep WHERE NOT EXISTS (SELECT 1 FROM emails e WHERE e.id = ep.email_id)",
+        ),
+        (
+            "rider_clauses.subpoena_id",
+            "subpoenas.id",
+            "SELECT COUNT(*) FROM rider_clauses rc WHERE NOT EXISTS (SELECT 1 FROM subpoenas s WHERE s.id = rc.subpoena_id)",
+        ),
+        (
+            "clause_fulfillment.clause_id",
+            "rider_clauses.id",
+            "SELECT COUNT(*) FROM clause_fulfillment cf WHERE NOT EXISTS (SELECT 1 FROM rider_clauses rc WHERE rc.id = cf.clause_id)",
+        ),
+        (
+            "clause_fulfillment.return_id",
+            "returns.id",
+            "SELECT COUNT(*) FROM clause_fulfillment cf WHERE cf.return_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM returns r WHERE r.id = cf.return_id)",
+        ),
     ]
 
     passed = 0
@@ -167,7 +186,9 @@ def check_cross_references(conn):
     missing_external = cur.fetchone()[0]
 
     print(f"  {'✓' if missing_efta == 0 else '⚠'} Email EFTAs not in documents: {missing_efta:,}")
-    print(f"  ✓ Email external IDs (non-EFTA): {missing_external:,} (House Oversight, DOJ-OGR — expected)")
+    print(
+        f"  ✓ Email external IDs (non-EFTA): {missing_external:,} (House Oversight, DOJ-OGR — expected)"
+    )
 
     return missing_efta == 0
 

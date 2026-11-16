@@ -1,7 +1,7 @@
 # News Data Acquisition Implementation Plan
 
-> **Phase 21 Implementation Document**  
-> **Created:** April 4, 2026  
+> **Phase 21 Implementation Document**
+> **Created:** April 4, 2026
 > **Status:** Planning Phase
 
 ---
@@ -134,12 +134,12 @@
 ```sql
 CREATE TABLE news_articles (
     id SERIAL PRIMARY KEY,
-    
+
     -- Source information
     source_domain VARCHAR(100) NOT NULL,  -- cnn.com
     source_name VARCHAR(100),              -- CNN
     source_category VARCHAR(50),           -- mainstream, investigative, tabloid
-    
+
     -- Article metadata
     article_url TEXT NOT NULL,
     wayback_url TEXT,                      -- Archive.org snapshot
@@ -147,26 +147,26 @@ CREATE TABLE news_articles (
     authors TEXT[],
     publish_date DATE,
     publish_timestamp TIMESTAMP,
-    
+
     -- Content
     content TEXT,                          -- Full article text
     summary TEXT,                          -- Auto summary
     keywords TEXT[],
     word_count INTEGER,
-    
+
     -- Analysis
     sentiment_score FLOAT,                 -- -1.0 to 1.0
     subjectivity_score FLOAT,              -- 0.0 to 1.0
-    
+
     -- Cross-references
     entities_mentioned JSONB,              -- {persons: [], locations: []}
     related_person_ids INTEGER[],          -- FK to exposed_persons
-    
+
     -- Source tracking
     gdelt_event_id BIGINT,                 -- Link to GDELT
     extraction_method VARCHAR(50),           -- newspaper3k, news-please
     extraction_confidence FLOAT,
-    
+
     -- Timestamps
     extracted_at TIMESTAMP DEFAULT NOW(),
     created_at TIMESTAMP DEFAULT NOW(),
@@ -185,41 +185,41 @@ CREATE INDEX idx_news_entities ON news_articles USING GIN(entities_mentioned);
 ```sql
 CREATE TABLE news_gdelt_raw (
     id SERIAL PRIMARY KEY,
-    
+
     -- GDELT Event fields
     event_id BIGINT,
     event_date DATE,
     event_month INTEGER,
     event_year INTEGER,
-    
+
     -- Actors
     actor1_code VARCHAR(50),
     actor1_name VARCHAR(255),
     actor1_country VARCHAR(3),
     actor1_type VARCHAR(50),
-    
+
     actor2_code VARCHAR(50),
     actor2_name VARCHAR(255),
     actor2_country VARCHAR(3),
     actor2_type VARCHAR(50),
-    
+
     -- Event details
     event_code VARCHAR(10),
     event_base_code VARCHAR(10),
     event_root_code VARCHAR(10),
     quad_class INTEGER,
     goldstein_scale FLOAT,
-    
+
     -- Mentions
     num_mentions INTEGER,
     num_sources INTEGER,
     num_articles INTEGER,
     avg_tone FLOAT,
-    
+
     -- Source URLs
     source_url TEXT,
     document_source VARCHAR(100),
-    
+
     -- Timestamps
     imported_at TIMESTAMP DEFAULT NOW()
 );
@@ -341,5 +341,5 @@ This Phase 21 builds on Phase 20's enterprise architecture:
 
 ---
 
-*Document created as part of Epstein Files Analysis Project*  
+*Document created as part of Epstein Files Analysis Project*
 *Phase 21: News Data Acquisition*

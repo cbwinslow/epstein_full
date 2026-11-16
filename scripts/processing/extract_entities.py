@@ -20,19 +20,15 @@ Author: Epstein Files Analysis Project
 Date: 2026-03-24
 """
 
-import os
-import sys
-import logging
 import argparse
+import logging
+import sys
 import time
-import json
-from datetime import datetime
-from typing import List, Dict, Tuple, Optional
+from typing import Dict, List, Optional, Tuple
+
 import psycopg2
-from psycopg2 import sql
-from psycopg2.extras import execute_values
 import spacy
-from spacy.tokens import Doc
+from psycopg2.extras import execute_values
 
 # Configure logging
 logging.basicConfig(
@@ -201,8 +197,8 @@ def insert_entities_batch(entities: List[Dict], conn) -> int:
 
             # Insert with ON CONFLICT DO NOTHING (skip duplicates)
             query = """
-                INSERT INTO document_entities 
-                (document_id, entity_text, entity_type, start_char, end_char, 
+                INSERT INTO document_entities
+                (document_id, entity_text, entity_type, start_char, end_char,
                  confidence, extraction_method)
                 VALUES %s
                 ON CONFLICT (document_id, entity_text, entity_type, start_char) DO NOTHING
@@ -247,7 +243,7 @@ def process_documents(
         FROM documents_content dc
         JOIN documents d ON dc.document_id = d.id
         WHERE dc.document_id NOT IN %s
-        AND dc.content IS NOT NULL 
+        AND dc.content IS NOT NULL
         AND dc.char_count > 0
         ORDER BY dc.document_id
     """

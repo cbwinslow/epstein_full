@@ -12,7 +12,7 @@ Components:
 
 Usage:
     from media_acquisition import MediaAcquisitionSystem
-    
+
     system = MediaAcquisitionSystem()
     system.run_historical_collection(
         start_date='2024-01-01',
@@ -21,38 +21,37 @@ Usage:
     )
 """
 
-__version__ = '1.0.0'
-__author__ = 'Epstein Files Analysis Project'
+__version__ = "1.0.0"
+__author__ = "Epstein Files Analysis Project"
 
 from media_acquisition.base import (
     AgentConfig,
-    StorageManager,
-    DiscoveryAgent,
-    CollectionAgent,
-    ProcessingAgent,
+    AgentState,
     BaseAgent,
-    TaskResult,
+    CollectionAgent,
+    DiscoveryAgent,
+    DocumentMetadata,
     MediaURL,
     NewsArticleURL,
+    ProcessingAgent,
+    StorageManager,
+    TaskResult,
     VideoMetadata,
-    DocumentMetadata,
-    AgentState,
 )
-
 from media_acquisition.master import MediaAcquisitionSystem
 
 __all__ = [
-    'AgentConfig',
-    'StorageManager',
-    'DiscoveryAgent',
-    'CollectionAgent',
-    'ProcessingAgent',
-    'BaseAgent',
-    'TaskResult',
-    'MediaURL',
-    'NewsArticleURL',
-    'VideoMetadata',
-    'DocumentMetadata',
-    'AgentState',
-    'MediaAcquisitionSystem',
+    "AgentConfig",
+    "StorageManager",
+    "DiscoveryAgent",
+    "CollectionAgent",
+    "ProcessingAgent",
+    "BaseAgent",
+    "TaskResult",
+    "MediaURL",
+    "NewsArticleURL",
+    "VideoMetadata",
+    "DocumentMetadata",
+    "AgentState",
+    "MediaAcquisitionSystem",
 ]

@@ -13,7 +13,6 @@ Datasets to download:
 
 import json
 import os
-import sys
 import time
 from pathlib import Path
 
@@ -145,7 +144,7 @@ def download_parquet_dataset(ds_config):
                 parquet_files.append(pf["url"])
 
     if not parquet_files:
-        print(f"  No train split parquet files found")
+        print("  No train split parquet files found")
         print(
             f"  Available splits: {[pf.get('split') for pf in parquet_info.get('parquet_files', [])]}"
         )
@@ -238,8 +237,8 @@ def download_imagefolder_dataset(ds_config):
             else:
                 print(f"    FAILED to download {filename}")
     else:
-        print(f"  No parquet conversion available for this imagefolder dataset")
-        print(f"  Would need to download individual image files (8,404 files)")
+        print("  No parquet conversion available for this imagefolder dataset")
+        print("  Would need to download individual image files (8,404 files)")
 
     # Save metadata
     meta_path = output / "metadata.json"
@@ -262,7 +261,7 @@ def main():
     print(f"HF Token: {'SET' if HF_TOKEN else 'NOT SET'}")
 
     # Show what will be downloaded
-    print(f"\nDatasets to download:")
+    print("\nDatasets to download:")
     for i, ds in enumerate(DATASETS, 1):
         print(f"  {i}. {ds['name']} - {ds['description']}")
 
@@ -278,7 +277,7 @@ def main():
     print(f"All datasets saved to: {OUTPUT_DIR}")
 
     # List results
-    print(f"\nDownloaded datasets:")
+    print("\nDownloaded datasets:")
     for d in sorted(OUTPUT_DIR.iterdir()):
         if d.is_dir():
             total_size = sum(f.stat().st_size for f in d.rglob("*") if f.is_file())
