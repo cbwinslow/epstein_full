@@ -3,7 +3,7 @@
 
 -- FEC 2025 Data
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'FEC 2025 Individual Contributions',
@@ -19,7 +19,7 @@ INSERT INTO data_inventory (
 
 -- SEC EDGAR Form 4
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'SEC EDGAR Form 4 Insider Trading',
@@ -35,7 +35,7 @@ INSERT INTO data_inventory (
 
 -- SEC EDGAR Form 13F
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'SEC EDGAR Form 13F Institutional Holdings',
@@ -51,7 +51,7 @@ INSERT INTO data_inventory (
 
 -- White House Visitor Logs
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'White House Visitor Logs',
@@ -67,7 +67,7 @@ INSERT INTO data_inventory (
 
 -- Congress.gov Bills
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'Congress.gov Bills & Legislation',
@@ -83,7 +83,7 @@ INSERT INTO data_inventory (
 
 -- Congress.gov Members
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'Congress.gov Members & Votes',
@@ -99,7 +99,7 @@ INSERT INTO data_inventory (
 
 -- GovInfo Federal Register
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'GovInfo Federal Register',
@@ -115,7 +115,7 @@ INSERT INTO data_inventory (
 
 -- GovInfo Court Opinions
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'GovInfo Court Opinions',
@@ -131,7 +131,7 @@ INSERT INTO data_inventory (
 
 -- FARA
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'FARA Registrations',
@@ -147,7 +147,7 @@ INSERT INTO data_inventory (
 
 -- Lobbying
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'Lobbying Disclosure Database',
@@ -163,7 +163,7 @@ INSERT INTO data_inventory (
 
 -- USA Spending
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
+    source_name, source_type, description, target_table,
     expected_records, status, priority, source_path, metadata
 ) VALUES (
     'USA Spending Federal Awards',
@@ -178,13 +178,13 @@ INSERT INTO data_inventory (
 ) ON CONFLICT (source_name) DO NOTHING;
 
 -- Show summary
-SELECT 
+SELECT
     source_type,
     COUNT(*) as datasets,
     SUM(expected_records) as total_expected_records,
     COUNT(*) FILTER (WHERE metadata->>'api_required' = 'true') as api_key_required,
     COUNT(*) FILTER (WHERE metadata->>'api_required' = 'false') as no_api_key_required
-FROM data_inventory 
+FROM data_inventory
 WHERE source_type IN ('fec', 'sec_edgar', 'whitehouse', 'congress', 'govinfo', 'fara', 'lobbying', 'usaspending')
 GROUP BY source_type
 ORDER BY datasets DESC;

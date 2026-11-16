@@ -114,12 +114,13 @@ pytest tests/integration -v
 # tests/unit/test_my_feature.py
 import pytest
 
+
 class TestMyFeature:
     def test_something(self, storage_manager):
         # Use fixtures from conftest.py
         result = storage_manager.do_something()
         assert result is not None
-    
+
     @pytest.mark.asyncio
     async def test_async_feature(self, news_discovery_agent):
         result = await news_discovery_agent.search(...)
@@ -131,6 +132,7 @@ class TestMyFeature:
 ```python
 # tests/integration/test_feature.py
 import pytest
+
 
 @pytest.mark.integration
 class TestDatabaseFeature:
@@ -147,13 +149,14 @@ class TestDatabaseFeature:
 ```python
 from unittest.mock import Mock, patch
 
-@patch('media_acquisition.agents.discovery.news.requests.get')
+
+@patch("media_acquisition.agents.discovery.news.requests.get")
 def test_gdelt_search(mock_get, agent_config):
     mock_response = Mock()
     mock_response.json.return_value = {"articles": []}
     mock_response.status_code = 200
     mock_get.return_value = mock_response
-    
+
     agent = NewsDiscoveryAgent(agent_config)
     results = agent.search(...)
     assert len(results) == 0

@@ -33,21 +33,40 @@ REFRESH_INTERVAL = 3  # seconds
 
 # Actual corpus counts
 EXPECTED = {
-    1: 3158, 2: 574, 3: 67, 4: 152, 5: 120,
-    6: 13, 7: 17, 8: 10595, 9: 531283, 10: 498702,
-    11: 336107, 12: 12080,
+    1: 3158,
+    2: 574,
+    3: 67,
+    4: 152,
+    5: 120,
+    6: 13,
+    7: 17,
+    8: 10595,
+    9: 531283,
+    10: 498702,
+    11: 336107,
+    12: 12080,
 }
 
 DATASET_NAMES = {
-    1: "DS1 (Small)", 2: "DS2 (Small)", 3: "DS3 (Tiny)", 4: "DS4 (Tiny)",
-    5: "DS5 (Tiny)", 6: "DS6 (Tiny)", 7: "DS7 (Tiny)", 8: "DS8 (Medium)",
-    9: "DS9 (LARGE)", 10: "DS10 (LARGE)", 11: "DS11 (LARGE)", 12: "DS12 (Medium)",
+    1: "DS1 (Small)",
+    2: "DS2 (Small)",
+    3: "DS3 (Tiny)",
+    4: "DS4 (Tiny)",
+    5: "DS5 (Tiny)",
+    6: "DS6 (Tiny)",
+    7: "DS7 (Tiny)",
+    8: "DS8 (Medium)",
+    9: "DS9 (LARGE)",
+    10: "DS10 (LARGE)",
+    11: "DS11 (LARGE)",
+    12: "DS12 (Medium)",
 }
 
 
 # =============================================================================
 # Data Collection
 # =============================================================================
+
 
 def get_file_counts() -> dict:
     """Count PDFs per dataset."""
@@ -69,17 +88,17 @@ def get_disk_usage() -> tuple:
 def get_process_count() -> tuple:
     """Get (download_procs, aria2c_procs)."""
     try:
-        dl = int(subprocess.run(
-            ["pgrep", "-cf", "download_(cdn|doj)"],
-            capture_output=True, text=True
-        ).stdout.strip())
+        dl = int(
+            subprocess.run(
+                ["pgrep", "-cf", "download_(cdn|doj)"], capture_output=True, text=True
+            ).stdout.strip()
+        )
     except Exception:
         dl = 0
     try:
-        aria = int(subprocess.run(
-            ["pgrep", "-c", "aria2c"],
-            capture_output=True, text=True
-        ).stdout.strip())
+        aria = int(
+            subprocess.run(["pgrep", "-c", "aria2c"], capture_output=True, text=True).stdout.strip()
+        )
     except Exception:
         aria = 0
     return dl, aria
@@ -88,6 +107,7 @@ def get_process_count() -> tuple:
 # =============================================================================
 # Formatting
 # =============================================================================
+
 
 def format_bytes(b) -> str:
     for unit in ["B", "KB", "MB", "GB", "TB"]:
@@ -226,8 +246,11 @@ def build_dashboard() -> Panel:
     content.add_row(Text())
     content.add_row(table)
     content.add_row(Text())
-    content.add_row(Text("  Overall: ", style="bold"), overall_bar,
-                    Text(f"  {overall_pct:.1f}%", style="bold green"))
+    content.add_row(
+        Text("  Overall: ", style="bold"),
+        overall_bar,
+        Text(f"  {overall_pct:.1f}%", style="bold green"),
+    )
     content.add_row(Text())
     content.add_row(Text("  Ctrl+C to quit  │  Refreshes every 3s", style="dim"))
 
@@ -259,11 +282,12 @@ def run_once():
 
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description="Live download dashboard")
-    parser.add_argument("--refresh", type=int, default=REFRESH_INTERVAL,
-                        help="Refresh interval in seconds")
-    parser.add_argument("--once", action="store_true",
-                        help="Single snapshot (no loop)")
+    parser.add_argument(
+        "--refresh", type=int, default=REFRESH_INTERVAL, help="Refresh interval in seconds"
+    )
+    parser.add_argument("--once", action="store_true", help="Single snapshot (no loop)")
     args = parser.parse_args()
 
     if args.once:

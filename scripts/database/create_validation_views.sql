@@ -9,7 +9,7 @@
 -- Shows row counts and completeness percentages for all major tables
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_dataset_completeness AS
-SELECT 
+SELECT
     'Core Documents' as category,
     'documents' as table_name,
     COUNT(*) as row_count,
@@ -18,7 +18,7 @@ SELECT
     'DOJ EFTA documents' as description
 FROM documents
 UNION ALL
-SELECT 
+SELECT
     'Core Documents',
     'pages',
     COUNT(*),
@@ -27,7 +27,7 @@ SELECT
     'OCR text pages with FTS'
 FROM pages
 UNION ALL
-SELECT 
+SELECT
     'Emails',
     'jmail_emails_full',
     COUNT(*),
@@ -36,7 +36,7 @@ SELECT
     'jMail world emails'
 FROM jmail_emails_full
 UNION ALL
-SELECT 
+SELECT
     'Emails',
     'jmail_documents',
     COUNT(*),
@@ -45,7 +45,7 @@ SELECT
     'jMail world documents'
 FROM jmail_documents
 UNION ALL
-SELECT 
+SELECT
     'ICIJ Offshore Leaks',
     'icij_entities',
     COUNT(*),
@@ -54,7 +54,7 @@ SELECT
     'Offshore companies/entities'
 FROM icij_entities
 UNION ALL
-SELECT 
+SELECT
     'ICIJ Offshore Leaks',
     'icij_officers',
     COUNT(*),
@@ -63,7 +63,7 @@ SELECT
     'ICIJ officers/people'
 FROM icij_officers
 UNION ALL
-SELECT 
+SELECT
     'ICIJ Offshore Leaks',
     'icij_relationships',
     COUNT(*),
@@ -72,7 +72,7 @@ SELECT
     'Entity relationships'
 FROM icij_relationships
 UNION ALL
-SELECT 
+SELECT
     'Financial',
     'fec_individual_contributions',
     COUNT(*),
@@ -81,7 +81,7 @@ SELECT
     'FEC individual donations'
 FROM fec_individual_contributions
 UNION ALL
-SELECT 
+SELECT
     'Entity Extraction',
     'document_entities',
     COUNT(*),
@@ -90,7 +90,7 @@ SELECT
     'NER-extracted entities'
 FROM document_entities
 UNION ALL
-SELECT 
+SELECT
     'Knowledge Graph',
     'entities',
     COUNT(*),
@@ -99,7 +99,7 @@ SELECT
     'Curated KG entities'
 FROM entities
 UNION ALL
-SELECT 
+SELECT
     'Knowledge Graph',
     'relationships',
     COUNT(*),
@@ -108,7 +108,7 @@ SELECT
     'Curated KG relationships'
 FROM relationships
 UNION ALL
-SELECT 
+SELECT
     'Redactions',
     'redactions',
     COUNT(*),
@@ -127,7 +127,7 @@ COMMENT ON VIEW v_dataset_completeness IS 'Summary of all major datasets with co
 CREATE OR REPLACE VIEW v_person_cross_reference AS
 WITH all_persons AS (
     -- From exposed_persons (epsteinexposed.com)
-    SELECT 
+    SELECT
         name,
         'exposed_persons' as source,
         id as source_id,
@@ -137,11 +137,11 @@ WITH all_persons AS (
             'connected_to', connected_to
         ) as metadata
     FROM exposed_persons
-    
+
     UNION ALL
-    
+
     -- From ICIJ officers
-    SELECT 
+    SELECT
         name,
         'icij_officers' as source,
         node_id::text as source_id,
@@ -151,11 +151,11 @@ WITH all_persons AS (
         ) as metadata
     FROM icij_officers
     WHERE name IS NOT NULL
-    
+
     UNION ALL
-    
+
     -- From jMail email senders (top 100 by volume)
-    SELECT 
+    SELECT
         sender as name,
         'jmail_emails' as source,
         COUNT(*)::text as source_id,
@@ -170,7 +170,7 @@ WITH all_persons AS (
     ORDER BY COUNT(*) DESC
     LIMIT 100
 )
-SELECT 
+SELECT
     name,
     COUNT(DISTINCT source) as source_count,
     array_agg(DISTINCT source) as sources,
@@ -188,7 +188,7 @@ COMMENT ON VIEW v_person_cross_reference IS 'Persons appearing in multiple data 
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_orphaned_records AS
 -- Pages without documents
-SELECT 
+SELECT
     'pages' as table_name,
     'missing_document' as issue_type,
     COUNT(*) as orphan_count,
@@ -200,7 +200,7 @@ WHERE d.id IS NULL
 UNION ALL
 
 -- Document entities without documents
-SELECT 
+SELECT
     'document_entities',
     'missing_document',
     COUNT(*),
@@ -212,7 +212,7 @@ WHERE d.id IS NULL
 UNION ALL
 
 -- Emails without file registry entries
-SELECT 
+SELECT
     'jmail_emails_full',
     'missing_file_registry',
     COUNT(*),
@@ -224,7 +224,7 @@ WHERE fr.id IS NULL AND je.doc_id IS NOT NULL
 UNION ALL
 
 -- ICIJ relationships with missing entities
-SELECT 
+SELECT
     'icij_relationships',
     'missing_entity',
     COUNT(*),
@@ -240,7 +240,7 @@ COMMENT ON VIEW v_orphaned_records IS 'Data integrity check for orphaned/orphane
 -- Shows all indexes and their usage statistics
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_index_health AS
-SELECT 
+SELECT
     schemaname,
     tablename,
     indexname,
@@ -259,7 +259,7 @@ COMMENT ON VIEW v_index_health IS 'Index usage statistics for performance monito
 -- Shows storage usage per table
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_table_storage AS
-SELECT 
+SELECT
     schemaname,
     relname as table_name,
     pg_size_pretty(pg_total_relation_size(relid)) as total_size,
@@ -282,7 +282,7 @@ COMMENT ON VIEW v_table_storage IS 'Storage statistics and vacuum status for all
 -- Analyzes email communication patterns
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_jmail_email_patterns AS
-SELECT 
+SELECT
     sender,
     COUNT(*) as email_count,
     COUNT(DISTINCT email_drop_id) as unique_drops,
@@ -304,7 +304,7 @@ COMMENT ON VIEW v_jmail_email_patterns IS 'Email communication patterns and stat
 -- Cross-reference FEC data with Epstein entities
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_fec_top_donors AS
-SELECT 
+SELECT
     name,
     employer,
     occupation,
@@ -328,7 +328,7 @@ COMMENT ON VIEW v_fec_top_donors IS 'Top 1000 FEC donors by total contribution a
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_flight_email_crossref AS
 WITH flight_passengers AS (
-    SELECT DISTINCT 
+    SELECT DISTINCT
         unnest(string_to_array(people_on_flight, ',')) as person_name,
         flight_date,
         departure,
@@ -337,21 +337,21 @@ WITH flight_passengers AS (
     WHERE people_on_flight IS NOT NULL
 ),
 email_participants AS (
-    SELECT DISTINCT 
+    SELECT DISTINCT
         sender as person_name,
         'sender' as role
     FROM jmail_emails_full
     WHERE sender IS NOT NULL
-    
+
     UNION
-    
-    SELECT DISTINCT 
+
+    SELECT DISTINCT
         trim(jsonb_array_elements_text(to_recipients)),
         'recipient'
     FROM jmail_emails_full
     WHERE to_recipients IS NOT NULL
 )
-SELECT 
+SELECT
     fp.person_name as flight_passenger,
     fp.flight_date,
     fp.departure,
@@ -359,7 +359,7 @@ SELECT
     ep.person_name as email_participant,
     ep.role as email_role
 FROM flight_passengers fp
-INNER JOIN email_participants ep 
+INNER JOIN email_participants ep
     ON lower(trim(fp.person_name)) = lower(trim(ep.person_name))
 ORDER BY fp.flight_date DESC, fp.person_name;
 
@@ -371,25 +371,25 @@ COMMENT ON VIEW v_flight_email_crossref IS 'Cross-reference between flight passe
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_document_coverage AS
 WITH doc_sources AS (
-    SELECT 
+    SELECT
         d.id,
         d.efta_number,
         d.dataset_id,
-        CASE 
-            WHEN p.id IS NOT NULL THEN true 
-            ELSE false 
+        CASE
+            WHEN p.id IS NOT NULL THEN true
+            ELSE false
         END as has_pages,
-        CASE 
-            WHEN dc.id IS NOT NULL THEN true 
-            ELSE false 
+        CASE
+            WHEN dc.id IS NOT NULL THEN true
+            ELSE false
         END as has_classification,
-        CASE 
-            WHEN de.cnt > 0 THEN true 
-            ELSE false 
+        CASE
+            WHEN de.cnt > 0 THEN true
+            ELSE false
         END as has_entities,
-        CASE 
-            WHEN r.cnt > 0 THEN true 
-            ELSE false 
+        CASE
+            WHEN r.cnt > 0 THEN true
+            ELSE false
         END as has_redactions
     FROM documents d
     LEFT JOIN pages p ON d.id = p.document_id
@@ -397,7 +397,7 @@ WITH doc_sources AS (
     LEFT JOIN (SELECT document_id, COUNT(*) as cnt FROM document_entities GROUP BY document_id) de ON d.id = de.document_id
     LEFT JOIN (SELECT document_id, COUNT(*) as cnt FROM redactions GROUP BY document_id) r ON d.id = r.document_id
 )
-SELECT 
+SELECT
     dataset_id,
     COUNT(*) as total_docs,
     COUNT(*) FILTER (WHERE has_pages) as with_pages,
@@ -418,7 +418,7 @@ COMMENT ON VIEW v_document_coverage IS 'Document enrichment coverage by dataset 
 -- Shows entity co-occurrences across documents for network analysis
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_entity_cooccurrence AS
-SELECT 
+SELECT
     de1.entity_value as entity_1,
     de1.entity_type as entity_1_type,
     de2.entity_value as entity_2,
@@ -426,8 +426,8 @@ SELECT
     COUNT(DISTINCT de1.document_id) as cooccurrence_count,
     array_agg(DISTINCT de1.document_id) as document_ids
 FROM document_entities de1
-INNER JOIN document_entities de2 
-    ON de1.document_id = de2.document_id 
+INNER JOIN document_entities de2
+    ON de1.document_id = de2.document_id
     AND de1.entity_value < de2.entity_value
 WHERE de1.entity_type IN ('PERSON', 'ORGANIZATION')
     AND de2.entity_type IN ('PERSON', 'ORGANIZATION')

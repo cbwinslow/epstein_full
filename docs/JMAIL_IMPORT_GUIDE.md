@@ -200,7 +200,7 @@ INSERT INTO jmail_emails (...) VALUES (
 def safe_json(val):
     """Convert value to valid JSON string safely."""
     if pd.isna(val) or val is None:
-        return '[]'  # Default to empty array
+        return "[]"  # Default to empty array
 
     if isinstance(val, list):
         return json.dumps(val)
@@ -210,8 +210,8 @@ def safe_json(val):
             json.loads(val)  # Validate it's valid JSON
             return val
         except (json.JSONDecodeError, ValueError):
-            return '[]'  # Invalid JSON → empty array
-    return '[]'
+            return "[]"  # Invalid JSON → empty array
+    return "[]"
 ```
 
 **Examples of invalid data fixed:**
@@ -235,7 +235,7 @@ def parse_timestamp(val):
                     year = int(year_str)
                     if year < 1990 or year > 2030:
                         return None  # Filter out invalid years
-            dt = pd.to_datetime(val, utc=True, errors='coerce')
+            dt = pd.to_datetime(val, utc=True, errors="coerce")
             if pd.isna(dt):
                 return None
             return dt.to_pydatetime()

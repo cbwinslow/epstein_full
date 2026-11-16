@@ -9,7 +9,7 @@
 -- Shows summary statistics for all tables
 -- =============================================================================
 CREATE OR REPLACE VIEW data_quality_overview AS
-SELECT 
+SELECT
     schemaname,
     relname AS table_name,
     n_live_tup AS row_count,
@@ -28,7 +28,7 @@ ORDER BY n_live_tup DESC;
 CREATE OR REPLACE VIEW orphaned_records AS
 
 -- Orphaned relationships (source_entity_id)
-SELECT 
+SELECT
     'relationships.source_entity_id' AS reference_column,
     'entities.id' AS parent_column,
     COUNT(*) AS orphan_count,
@@ -40,7 +40,7 @@ WHERE e.id IS NULL AND r.source_entity_id IS NOT NULL
 UNION ALL
 
 -- Orphaned relationships (target_entity_id)
-SELECT 
+SELECT
     'relationships.target_entity_id',
     'entities.id',
     COUNT(*),
@@ -52,7 +52,7 @@ WHERE e.id IS NULL AND r.target_entity_id IS NOT NULL
 UNION ALL
 
 -- Orphaned rider_clauses
-SELECT 
+SELECT
     'rider_clauses.subpoena_id',
     'subpoenas.id',
     COUNT(*),
@@ -64,7 +64,7 @@ WHERE s.id IS NULL AND rc.subpoena_id IS NOT NULL
 UNION ALL
 
 -- Orphaned email_participants
-SELECT 
+SELECT
     'email_participants.email_id',
     'emails.id',
     COUNT(*),
@@ -76,7 +76,7 @@ WHERE e.id IS NULL AND ep.email_id IS NOT NULL
 UNION ALL
 
 -- Orphaned pages
-SELECT 
+SELECT
     'pages.efta_number',
     'documents.efta_number',
     COUNT(*),
@@ -91,7 +91,7 @@ WHERE d.efta_number IS NULL AND p.efta_number IS NOT NULL;
 CREATE OR REPLACE VIEW duplicate_detection AS
 
 -- Duplicate documents by efta_number
-SELECT 
+SELECT
     'documents' AS table_name,
     'efta_number' AS duplicate_columns,
     efta_number AS duplicate_value,
@@ -104,7 +104,7 @@ HAVING COUNT(*) > 1
 UNION ALL
 
 -- Duplicate entities by name+type
-SELECT 
+SELECT
     'entities',
     'name, entity_type',
     name || ' (' || entity_type || ')',
@@ -117,7 +117,7 @@ HAVING COUNT(*) > 1
 UNION ALL
 
 -- Duplicate emails
-SELECT 
+SELECT
     'emails',
     'efta_number, subject',
     efta_number || ' - ' || LEFT(subject, 50),
@@ -133,7 +133,7 @@ HAVING COUNT(*) > 1;
 CREATE OR REPLACE VIEW data_completeness AS
 
 -- Documents completeness
-SELECT 
+SELECT
     'documents' AS table_name,
     COUNT(*) AS total_rows,
     COUNT(efta_number) AS has_efta,
@@ -146,7 +146,7 @@ FROM documents
 UNION ALL
 
 -- Entities completeness
-SELECT 
+SELECT
     'entities',
     COUNT(*),
     COUNT(name),
@@ -159,7 +159,7 @@ FROM entities
 UNION ALL
 
 -- Relationships completeness
-SELECT 
+SELECT
     'relationships',
     COUNT(*),
     COUNT(source_entity_id),
@@ -172,7 +172,7 @@ FROM relationships
 UNION ALL
 
 -- Emails completeness
-SELECT 
+SELECT
     'emails',
     COUNT(*),
     COUNT(efta_number),
@@ -186,23 +186,23 @@ FROM emails;
 -- VIEW: Document Processing Status
 -- =============================================================================
 CREATE OR REPLACE VIEW document_processing_status AS
-SELECT 
+SELECT
     d.efta_number,
     d.title,
-    CASE 
+    CASE
         WHEN o.ocr_text IS NOT NULL THEN 'OCR_COMPLETE'
         ELSE 'OCR_PENDING'
     END AS ocr_status,
-    CASE 
+    CASE
         WHEN dc.classification IS NOT NULL THEN 'CLASSIFIED'
         ELSE 'UNCLASSIFIED'
     END AS classification_status,
-    CASE 
+    CASE
         WHEN de.entity_count > 0 THEN 'ENTITIES_EXTRACTED'
         WHEN de.entity_count = 0 THEN 'NO_ENTITIES'
         ELSE 'NOT_PROCESSED'
     END AS entity_extraction_status,
-    CASE 
+    CASE
         WHEN r.redaction_count > 0 THEN 'REDACTIONS_FOUND'
         WHEN r.redaction_count = 0 THEN 'NO_REDACTIONS'
         ELSE 'NOT_ANALYZED'
@@ -212,13 +212,13 @@ FROM documents d
 LEFT JOIN ocr_results o ON d.efta_number = o.efta_number
 LEFT JOIN document_classification dc ON d.efta_number = dc.efta_number
 LEFT JOIN (
-    SELECT efta_number, COUNT(*) AS entity_count 
-    FROM document_entities 
+    SELECT efta_number, COUNT(*) AS entity_count
+    FROM document_entities
     GROUP BY efta_number
 ) de ON d.efta_number = de.efta_number
 LEFT JOIN (
-    SELECT efta_number, COUNT(*) AS redaction_count 
-    FROM redactions 
+    SELECT efta_number, COUNT(*) AS redaction_count
+    FROM redactions
     GROUP BY efta_number
 ) r ON d.efta_number = r.efta_number
 LEFT JOIN document_summary ds ON d.efta_number = ds.efta_number;
@@ -237,17 +237,17 @@ RETURNS TABLE (
 BEGIN
     -- Foreign Key Integrity
     RETURN QUERY
-    SELECT 
+    SELECT
         'FK Integrity'::TEXT,
         reference_column::TEXT,
         CASE WHEN orphan_count = 0 THEN 'PASS' ELSE 'FAIL' END,
         orphan_count::TEXT || ' orphaned records',
         CASE WHEN orphan_count = 0 THEN 'INFO' ELSE 'HIGH' END
     FROM orphaned_records;
-    
+
     -- Duplicate Detection
     RETURN QUERY
-    SELECT 
+    SELECT
         'Duplicates'::TEXT,
         table_name::TEXT || ' (' || duplicate_columns::TEXT || ')',
         'WARNING',
@@ -255,25 +255,25 @@ BEGIN
         'MEDIUM'
     FROM duplicate_detection
     WHERE duplicate_count > 1;
-    
+
     -- Completeness Checks
     RETURN QUERY
-    SELECT 
+    SELECT
         'Completeness'::TEXT,
         table_name::TEXT,
-        CASE 
+        CASE
             WHEN title_completeness_pct >= 95 THEN 'PASS'
             WHEN title_completeness_pct >= 80 THEN 'WARNING'
             ELSE 'FAIL'
         END,
         title_completeness_pct::TEXT || '% complete',
-        CASE 
+        CASE
             WHEN title_completeness_pct >= 95 THEN 'INFO'
             WHEN title_completeness_pct >= 80 THEN 'MEDIUM'
             ELSE 'HIGH'
         END
     FROM data_completeness;
-    
+
     RETURN;
 END;
 $$ LANGUAGE plpgsql;
@@ -296,21 +296,21 @@ DECLARE
 BEGIN
     -- Get total row count
     EXECUTE format('SELECT COUNT(*) FROM %I', p_table_name) INTO v_total;
-    
+
     -- For each column, get statistics
-    FOR v_column IN 
+    FOR v_column IN
         SELECT a.attname, format_type(a.atttypid, a.atttypmod) AS dtype
         FROM pg_attribute a
         JOIN pg_class c ON a.attrelid = c.oid
         JOIN pg_namespace n ON c.relnamespace = n.oid
-        WHERE c.relname = p_table_name 
+        WHERE c.relname = p_table_name
           AND n.nspname = 'public'
-          AND a.attnum > 0 
+          AND a.attnum > 0
           AND NOT a.attisdropped
         ORDER BY a.attnum
     LOOP
         RETURN QUERY EXECUTE format(
-            'SELECT 
+            'SELECT
                 %L::TEXT,
                 %L::TEXT,
                 %s::BIGINT,
@@ -365,13 +365,13 @@ DECLARE
     v_id INTEGER;
 BEGIN
     INSERT INTO data_quality_runs (
-        total_tables, total_issues, critical_issues, 
+        total_tables, total_issues, critical_issues,
         warning_issues, info_issues, report_json, notes
     ) VALUES (
         p_total_tables, p_total_issues, p_critical,
         p_warning, p_info, p_report, p_notes
     ) RETURNING id INTO v_id;
-    
+
     RETURN v_id;
 END;
 $$ LANGUAGE plpgsql;

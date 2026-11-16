@@ -77,7 +77,7 @@ The Epstein Research System is a multi-agent architecture for discovering, colle
   - Tables: media_news_articles, media_videos, media_documents
   - Extensions: pgvector for embeddings, pg_trgm for fuzzy search
   - Location: Separate partition on RAID array
-  
+
 - **File System**: Raw content storage
   - Path: `/home/cbwinslow/workspace/epstein-data/media/`
   - Subdirectories: articles/, videos/, documents/
@@ -105,7 +105,7 @@ Agents responsible for downloading content:
 - **NewsCollector** (`media_acquisition/agents/collection/news.py`)
   - Tools: newspaper3k, requests+BeautifulSoup
   - Output: Parsed articles in `media_news_articles`
-  
+
 - **VideoCollector** (`media_acquisition/agents/collection/video.py`)
   - Tools: yt-dlp, faster-whisper
   - Output: Videos with transcripts in `media_videos`
@@ -120,15 +120,15 @@ Agents responsible for analyzing content:
 - **NERAgent** (planned)
   - Tools: spaCy en_core_web_trf, GLiNER
   - Output: Entities in `entities_mentioned` JSONB
-  
+
 - **EmbeddingsAgent** (remote)
   - Tools: nomic-embed-text-v2-moe on Windows RTX3060
   - Output: 768-dim vectors in pgvector columns
-  
+
 - **SentimentAgent** (planned)
   - Tools: TextBlob, VADER
   - Output: sentiment_score, subjectivity_score
-  
+
 - **DeduplicationAgent** (planned)
   - Tools: MinHash/LSH, semantic clustering
   - Output: cluster_id, canonical_article_id
@@ -150,16 +150,16 @@ Agents responsible for analyzing content:
 
 ```
 1. Discovery Phase:
-   User/Script → NewsDiscoveryAgent → GDELT/Wayback/RSS 
+   User/Script → NewsDiscoveryAgent → GDELT/Wayback/RSS
    → media_collection_queue (status: pending)
 
 2. Collection Phase:
-   Orchestrator → NewsCollector → Download/Parse 
+   Orchestrator → NewsCollector → Download/Parse
    → media_news_articles + file storage
    → media_collection_queue (status: completed)
 
 3. Processing Phase:
-   Orchestrator → EmbeddingsAgent (Windows GPU) 
+   Orchestrator → EmbeddingsAgent (Windows GPU)
    → media_news_articles (title_embedding, etc.)
    → NERAgent → media_news_articles (entities_mentioned)
    → SentimentAgent → media_news_articles (sentiment_score)

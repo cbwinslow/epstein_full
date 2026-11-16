@@ -66,17 +66,25 @@ class ChunkDownloader:
         filename = f"EFTA{efta:08d}.pdf"
         out_path = os.path.join(out_dir, filename)
 
-        if os.path.exists(out_path) and os.path.getsize(out_path) > 100 and self.is_valid_pdf(out_path):
+        if (
+            os.path.exists(out_path)
+            and os.path.getsize(out_path) > 100
+            and self.is_valid_pdf(out_path)
+        ):
             return True
 
         url = f"https://www.justice.gov/epstein/files/DataSet%20{self.ds}/EFTA{efta:08d}.pdf"
 
         for attempt in range(MAX_RETRIES):
             try:
-                resp = await ctx.request.get(url, timeout=60000, headers={
-                    "Referer": "https://www.justice.gov/epstein/",
-                    "Accept": "application/pdf,*/*"
-                })
+                resp = await ctx.request.get(
+                    url,
+                    timeout=60000,
+                    headers={
+                        "Referer": "https://www.justice.gov/epstein/",
+                        "Accept": "application/pdf,*/*",
+                    },
+                )
                 if resp.status == 404:
                     return False
                 if resp.status != 200:
@@ -92,7 +100,7 @@ class ChunkDownloader:
                 return True
             except:
                 if attempt < MAX_RETRIES - 1:
-                    await asyncio.sleep(2 ** attempt)
+                    await asyncio.sleep(2**attempt)
         return False
 
     async def run(self, ctx):
@@ -112,7 +120,9 @@ class ChunkDownloader:
 
             if (self.downloaded + self.failed) % 500 == 0:
                 self.save_state(start_idx + i + 1)
-                self.log(f"Progress: {start_idx + i + 1:,}/{len(self.efta_list):,} (+{self.downloaded} ok, +{self.failed} fail)")
+                self.log(
+                    f"Progress: {start_idx + i + 1:,}/{len(self.efta_list):,} (+{self.downloaded} ok, +{self.failed} fail)"
+                )
 
             await asyncio.sleep(DELAY)
 
@@ -123,7 +133,7 @@ class ChunkDownloader:
 def split_list(lst: list, n: int) -> list[list]:
     """Split a list into n roughly equal chunks."""
     k, m = divmod(len(lst), n)
-    return [lst[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n)]
+    return [lst[i * k + min(i, m) : (i + 1) * k + min(i + 1, m)] for i in range(n)]
 
 
 async def run_chunks(chunk_configs: list[dict]):
@@ -133,8 +143,7 @@ async def run_chunks(chunk_configs: list[dict]):
     pw_cm = async_playwright()
     pw = await pw_cm.__aenter__()
     browser = await pw.chromium.launch(
-        headless=True,
-        args=['--disable-blink-features=AutomationControlled', '--no-sandbox']
+        headless=True, args=["--disable-blink-features=AutomationControlled", "--no-sandbox"]
     )
 
     # Create one context per chunk
@@ -143,14 +152,19 @@ async def run_chunks(chunk_configs: list[dict]):
         ctx = await browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"
         )
-        await ctx.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        await ctx.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
         contexts.append(ctx)
 
     # Warm up: visit site once per context
     for ctx in contexts:
         page = await ctx.new_page()
-        await page.goto("https://www.justice.gov/epstein/doj-disclosures/data-set-1-files?page=0",
-                        wait_until="domcontentloaded", timeout=30000)
+        await page.goto(
+            "https://www.justice.gov/epstein/doj-disclosures/data-set-1-files?page=0",
+            wait_until="domcontentloaded",
+            timeout=30000,
+        )
         age = await page.query_selector("#age-button-yes")
         if age and await age.is_visible():
             await age.click()
@@ -211,11 +225,7 @@ def main():
 
         for sub in sub_lists:
             chunk_num += 1
-            chunk_configs.append({
-                "id": f"c{chunk_num:02d}",
-                "ds": ds,
-                "eftas": sub
-            })
+            chunk_configs.append({"id": f"c{chunk_num:02d}", "ds": ds, "eftas": sub})
 
     print(f"Created {len(chunk_configs)} chunks across {len(efta_lists)} datasets")
     for c in chunk_configs:
