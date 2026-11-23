@@ -25,11 +25,13 @@ PG_CONFIG = {
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
+    format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler(f"{LOG_DIR}/json_batch_import_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"),
-        logging.StreamHandler()
-    ]
+        logging.FileHandler(
+            f"{LOG_DIR}/json_batch_import_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        ),
+        logging.StreamHandler(),
+    ],
 )
 
 
@@ -41,46 +43,46 @@ def find_json_files():
         f"{DATA_ROOT}/supplementary-datasets/*.json",
         f"{DATA_ROOT}/knowledge-graph/*.json",
     ]
-    
+
     files = []
     for pattern in patterns:
         files.extend(glob.glob(pattern, recursive=True))
-    
+
     # Filter to reasonable size files (skip tiny metadata files)
     files = [f for f in files if os.path.getsize(f) > 100]
-    
+
     return sorted(files)
 
 
 def get_file_type(file_path):
     """Guess the type of data in the JSON file."""
     basename = os.path.basename(file_path).lower()
-    
-    if 'entity' in basename or 'person' in basename:
-        return 'entities'
-    elif 'email' in basename or 'communication' in basename:
-        return 'emails'
-    elif 'flight' in basename:
-        return 'flights'
-    elif 'location' in basename:
-        return 'locations'
-    elif 'redaction' in basename:
-        return 'redactions'
-    elif 'alteration' in basename:
-        return 'alterations'
+
+    if "entity" in basename or "person" in basename:
+        return "entities"
+    elif "email" in basename or "communication" in basename:
+        return "emails"
+    elif "flight" in basename:
+        return "flights"
+    elif "location" in basename:
+        return "locations"
+    elif "redaction" in basename:
+        return "redactions"
+    elif "alteration" in basename:
+        return "alterations"
     else:
-        return 'generic'
+        return "generic"
 
 
 def import_json_file(file_path, conn):
     """Import a JSON file to json_import_staging."""
     try:
         file_size = os.path.getsize(file_path)
-        
+
         # Load JSON
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        
+
         # Handle both single objects and arrays
         if isinstance(data, dict):
             records = [data]
@@ -89,28 +91,33 @@ def import_json_file(file_path, conn):
         else:
             logging.warning(f"Unknown JSON structure in {file_path}")
             return 0
-        
+
         file_type = get_file_type(file_path)
         imported = 0
-        
+
         with conn.cursor() as cur:
             for record in records:
                 try:
-                    cur.execute("""
+                    cur.execute(
+                        """
                         INSERT INTO json_import_staging (source_file, file_type, json_data)
                         VALUES (%s, %s, %s::jsonb)
                         ON CONFLICT DO NOTHING
-                    """, (file_path, file_type, json.dumps(record)))
+                    """,
+                        (file_path, file_type, json.dumps(record)),
+                    )
                     imported += 1
-                except Exception as e:
+                except Exception:
                     # Skip problematic records
                     continue
-            
+
             conn.commit()
-        
-        logging.info(f"  Imported {imported} records from {os.path.basename(file_path)} ({file_size} bytes)")
+
+        logging.info(
+            f"  Imported {imported} records from {os.path.basename(file_path)} ({file_size} bytes)"
+        )
         return imported
-        
+
     except json.JSONDecodeError as e:
         logging.error(f"  JSON parse error in {file_path}: {e}")
         return 0
@@ -123,18 +130,18 @@ def main():
     logging.info("=" * 60)
     logging.info("BATCH JSON IMPORTER")
     logging.info("=" * 60)
-    
+
     # Find all JSON files
     json_files = find_json_files()
     logging.info(f"Found {len(json_files)} JSON files to process")
-    
+
     if not json_files:
         logging.info("No JSON files found")
         return 0
-    
+
     # Connect to PostgreSQL
     conn = psycopg2.connect(**PG_CONFIG)
-    
+
     # Ensure staging table exists
     with conn.cursor() as cur:
         cur.execute("""
@@ -148,20 +155,20 @@ def main():
             )
         """)
         conn.commit()
-    
+
     # Process each file
     total_imported = 0
     for i, file_path in enumerate(json_files, 1):
         logging.info(f"[{i}/{len(json_files)}] Processing: {file_path}")
         count = import_json_file(file_path, conn)
         total_imported += count
-    
+
     conn.close()
-    
+
     logging.info("\n" + "=" * 60)
     logging.info(f"IMPORT COMPLETE: {len(json_files)} files, {total_imported} total records")
     logging.info("=" * 60)
-    
+
     return 0
 
 

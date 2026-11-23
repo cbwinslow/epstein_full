@@ -1,7 +1,7 @@
 # Master Registry System Guide
 
-> **Created:** April 16, 2026  
-> **Purpose:** Centralized tracking system for all data sources, embeddings, and processing operations  
+> **Created:** April 16, 2026
+> **Purpose:** Centralized tracking system for all data sources, embeddings, and processing operations
 > **Location:** `/home/cbwinslow/workspace/epstein/scripts/processing/create_master_registry.sql`
 
 ---
@@ -35,8 +35,8 @@ The Master Registry System provides a single source of truth for:
 
 **Current Data:**
 ```sql
-SELECT source_name, import_status, imported_records 
-FROM master_data_registry 
+SELECT source_name, import_status, imported_records
+FROM master_data_registry
 ORDER BY imported_records DESC;
 ```
 
@@ -215,8 +215,8 @@ SELECT * FROM get_source_status('DOJ_Epstein_Library');
 
 ### Check All Data Sources
 ```sql
-SELECT 
-    source_name, 
+SELECT
+    source_name,
     source_type,
     download_status,
     import_status,
@@ -228,7 +228,7 @@ ORDER BY imported_records DESC;
 
 ### Check Embedding Coverage
 ```sql
-SELECT 
+SELECT
     model_name,
     model_dimensions,
     compute_device,
@@ -242,7 +242,7 @@ ORDER BY total_pages DESC;
 
 ### Check for Duplicates
 ```sql
-SELECT 
+SELECT
     duplicate_type,
     COUNT(*) as groups,
     SUM(duplicate_count) as total_duplicates,
@@ -254,7 +254,7 @@ GROUP BY duplicate_type;
 
 ### Recent Processing Activity
 ```sql
-SELECT 
+SELECT
     operation_name,
     status,
     processed_items || '/' || total_items as progress,
@@ -291,7 +291,7 @@ Link registry entries to issues:
 ALTER TABLE master_data_registry ADD COLUMN github_issue_number INTEGER;
 
 -- Example: Link Issue #50 (RTX 3060 embeddings)
-UPDATE master_data_registry 
+UPDATE master_data_registry
 SET github_issue_number = 50
 WHERE source_name = 'DOJ_Epstein_Library';
 ```

@@ -1,5 +1,5 @@
 # Final Data Import Summary
-**Date:** April 13, 2026  
+**Date:** April 13, 2026
 **Status:** ✅ ALL MAJOR IMPORTS COMPLETE
 
 ---
@@ -78,7 +78,7 @@
 
 **Major Tables:**
 - 8 HF dataset tables
-- 6 ICIJ tables  
+- 6 ICIJ tables
 - 3 jMail/FEC tables
 - Master inventory table
 - Import progress tracking

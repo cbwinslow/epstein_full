@@ -51,12 +51,12 @@ All agents use the `AgentConfig` class for configuration:
 from media_acquisition.base import AgentConfig
 
 config = AgentConfig(
-    agent_id='my-agent',
-    database_url='postgresql://user:pass@localhost:5432/db',
-    storage_path='/path/to/storage',
+    agent_id="my-agent",
+    database_url="postgresql://user:pass@localhost:5432/db",
+    storage_path="/path/to/storage",
     request_timeout=30,
     max_retries=3,
-    log_level='INFO'
+    log_level="INFO",
 )
 ```
 
@@ -69,9 +69,7 @@ from media_acquisition.master import MediaAcquisitionSystem
 
 system = MediaAcquisitionSystem(config)
 results = await system.run_pipeline(
-    discovery_agent='news',
-    collection_agent='news',
-    processing_agents=['ner', 'embeddings']
+    discovery_agent="news", collection_agent="news", processing_agents=["ner", "embeddings"]
 )
 ```
 

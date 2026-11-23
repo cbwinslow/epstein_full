@@ -80,6 +80,7 @@ from datasets import load_dataset
 import asyncpg
 import asyncio
 
+
 async def ingest_huggingface_dataset():
     # Load dataset
     dataset = load_dataset("thelde/remo/FULL_EPSTEIN_INDEX", split="train")
@@ -89,13 +90,19 @@ async def ingest_huggingface_dataset():
 
     # Insert records
     for item in dataset:
-        await conn.execute("""
+        await conn.execute(
+            """
             INSERT INTO documents (source, content, metadata)
             VALUES ($1, $2, $3)
             ON CONFLICT DO NOTHING
-        """, "huggingface", item['text'], item['metadata'])
+        """,
+            "huggingface",
+            item["text"],
+            item["metadata"],
+        )
 
     await conn.close()
+
 
 asyncio.run(ingest_huggingface_dataset())
 ```
@@ -113,13 +120,12 @@ from datasets import load_dataset
 import asyncpg
 import asyncio
 
+
 async def import_full_index():
     print("Loading FULL_EPSTEIN_INDEX dataset...")
     dataset = load_dataset("thelde/remo/FULL_EPSTEIN_INDEX", split="train")
 
-    conn = await asyncpg.connect(
-        "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
-    )
+    conn = await asyncpg.connect("postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
 
     # Create table if not exists
     await conn.execute("""
@@ -136,16 +142,17 @@ async def import_full_index():
 
     count = 0
     for item in dataset:
-        await conn.execute("""
+        await conn.execute(
+            """
             INSERT INTO hf_epstein_index
             (source, document_type, content, metadata, page_number)
             VALUES ($1, $2, $3, $4, $5)
         """,
-            item.get('source', 'unknown'),
-            item.get('document_type', 'unknown'),
-            item.get('text', ''),
-            item.get('metadata', {}),
-            item.get('page_number', 0)
+            item.get("source", "unknown"),
+            item.get("document_type", "unknown"),
+            item.get("text", ""),
+            item.get("metadata", {}),
+            item.get("page_number", 0),
         )
         count += 1
 
@@ -154,6 +161,7 @@ async def import_full_index():
 
     print(f"Complete! Imported {count} records")
     await conn.close()
+
 
 if __name__ == "__main__":
     asyncio.run(import_full_index())
@@ -168,13 +176,12 @@ from datasets import load_dataset
 import asyncpg
 import asyncio
 
+
 async def import_cc_data():
     print("Loading epstein-data credit card dataset...")
     dataset = load_dataset("kabasshouse/epstein-data", split="train")
 
-    conn = await asyncpg.connect(
-        "postgresql://cbwinslow:123qweasd@localhost:5432/epstein"
-    )
+    conn = await asyncpg.connect("postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
 
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS hf_credit_card_transactions (
@@ -193,25 +200,27 @@ async def import_cc_data():
     """)
 
     for item in dataset:
-        await conn.execute("""
+        await conn.execute(
+            """
             INSERT INTO hf_credit_card_transactions
             (cardholder_name, transaction_date, merchant, merchant_category,
              amount, flight_origin, flight_destination, carrier, passengers, metadata)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         """,
-            item.get('cardholder'),
-            item.get('date'),
-            item.get('merchant'),
-            item.get('merchant_category'),
-            item.get('amount'),
-            item.get('flight_origin'),
-            item.get('flight_destination'),
-            item.get('carrier'),
-            item.get('passengers', []),
-            item
+            item.get("cardholder"),
+            item.get("date"),
+            item.get("merchant"),
+            item.get("merchant_category"),
+            item.get("amount"),
+            item.get("flight_origin"),
+            item.get("flight_destination"),
+            item.get("carrier"),
+            item.get("passengers", []),
+            item,
         )
 
     await conn.close()
+
 
 if __name__ == "__main__":
     asyncio.run(import_cc_data())

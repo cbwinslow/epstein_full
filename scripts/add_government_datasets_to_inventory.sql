@@ -3,9 +3,9 @@
 
 -- FEC 2025 Data (Phase 1 - No API Key)
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -29,9 +29,9 @@ INSERT INTO data_inventory (
 
 -- SEC EDGAR Insider Trading (Phase 1 - No API Key)
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -54,9 +54,9 @@ INSERT INTO data_inventory (
 );
 
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -80,9 +80,9 @@ INSERT INTO data_inventory (
 
 -- White House Visitor Logs (Phase 1 - No API Key)
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -106,9 +106,9 @@ INSERT INTO data_inventory (
 
 -- Congress.gov (Phase 2 - API Key Required)
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -131,9 +131,9 @@ INSERT INTO data_inventory (
 );
 
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -157,9 +157,9 @@ INSERT INTO data_inventory (
 
 -- GovInfo.gov (Phase 2 - API Key Required)
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -182,9 +182,9 @@ INSERT INTO data_inventory (
 );
 
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -208,9 +208,9 @@ INSERT INTO data_inventory (
 
 -- FARA (Phase 1 - Web Scraping)
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -234,9 +234,9 @@ INSERT INTO data_inventory (
 
 -- Lobbying (Phase 1 - Web Download)
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -260,9 +260,9 @@ INSERT INTO data_inventory (
 
 -- USA Spending (Phase 1 - API No Key)
 INSERT INTO data_inventory (
-    source_name, source_type, description, target_table, 
-    expected_records, status, priority, source_path, 
-    github_issue_url, api_key_required, api_key_location, 
+    source_name, source_type, description, target_table,
+    expected_records, status, priority, source_path,
+    github_issue_url, api_key_required, api_key_location,
     cost, update_frequency, historical_start, historical_end,
     metadata
 ) VALUES (
@@ -285,13 +285,13 @@ INSERT INTO data_inventory (
 );
 
 -- Update summary
-SELECT 
+SELECT
     source_type,
     COUNT(*) as datasets,
     SUM(expected_records) as total_expected_records,
     COUNT(*) FILTER (WHERE api_key_required) as api_key_required,
     COUNT(*) FILTER (WHERE NOT api_key_required) as no_api_key_required
-FROM data_inventory 
+FROM data_inventory
 WHERE source_type IN ('fec', 'sec_edgar', 'whitehouse', 'congress', 'govinfo', 'fara', 'lobbying', 'usaspending')
 GROUP BY source_type
 ORDER BY datasets DESC;
