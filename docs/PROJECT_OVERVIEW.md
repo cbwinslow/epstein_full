@@ -152,7 +152,7 @@ epstein/
 
 ```sql
 -- Fuzzy name matching with confidence scores
-SELECT 
+SELECT
     cm.bioguide_id,
     cm.first_name || ' ' || cm.last_name as name,
     fc.candidate_id,

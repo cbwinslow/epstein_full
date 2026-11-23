@@ -18,7 +18,7 @@ run_download() {
     local name=$1
     local script=$2
     local log_file="$LOG_DIR/${name}_$(date +%Y%m%d_%H%M%S).log"
-    
+
     echo "[$name] Starting download..."
     if "$BASE_DIR/scripts/ingestion/$script" > "$log_file" 2>&1; then
         echo "[$name] ✅ SUCCESS"
@@ -68,11 +68,11 @@ urls = [
 for url in urls:
     filename = url.split('/')[-1]
     output = BASE_DIR / filename
-    
+
     if output.exists():
         logger.info(f"{filename} already exists, skipping")
         continue
-    
+
     logger.info(f"Downloading {filename}...")
     try:
         r = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=60)
@@ -122,19 +122,19 @@ output_dir.mkdir(exist_ok=True)
 for i in range(7):
     date = (datetime.now() - timedelta(days=i)).strftime("%Y-%m-%d")
     logger.info(f"Fetching Form 4 for {date}...")
-    
+
     try:
         time.sleep(0.2)  # Rate limiting
         url = f"{base_url}?action=getcurrent&type=4&date={date}&count=100&output=atom"
         r = requests.get(url, headers=HEADERS, timeout=30)
-        
+
         if r.status_code == 200:
             output_file = output_dir / f"form4_{date}.xml"
             output_file.write_text(r.text)
             logger.info(f"✅ Saved {output_file.name}")
         else:
             logger.warning(f"⚠️ Status {r.status_code} for {date}")
-            
+
     except Exception as e:
         logger.error(f"❌ Error for {date}: {e}")
 
@@ -171,12 +171,12 @@ logger.info("Checking FARA data availability...")
 try:
     r = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=30)
     logger.info(f"FARA site status: {r.status_code}")
-    
+
     # Save info file
     info_file = BASE_DIR / "fara_info.txt"
     info_file.write_text(f"FARA check: {datetime.now()}\nStatus: {r.status_code}\n")
     logger.info("✅ FARA info saved")
-    
+
 except Exception as e:
     logger.error(f"❌ FARA check failed: {e}")
 
@@ -212,11 +212,11 @@ logger.info("Checking lobbying data sources...")
 try:
     r = requests.get(base_url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=30)
     logger.info(f"Lobbying site status: {r.status_code}")
-    
+
     info_file = BASE_DIR / "lobbying_sources.txt"
     info_file.write_text(f"Lobbying Disclosure Database\nSource: {base_url}\nStatus: {r.status_code}\n")
     logger.info("✅ Lobbying info saved")
-    
+
 except Exception as e:
     logger.error(f"❌ Lobbying check failed: {e}")
 
@@ -269,14 +269,14 @@ try:
     r = requests.post(url, headers=headers, json=payload, timeout=60)
     r.raise_for_status()
     data = r.json()
-    
+
     output_file = BASE_DIR / f"usa_spending_{datetime.now().strftime('%Y%m%d')}.json"
     with open(output_file, 'w') as f:
         json.dump(data, f, indent=2)
-    
+
     results_count = len(data.get('results', []))
     logger.info(f"✅ Downloaded {results_count} awards to {output_file}")
-    
+
 except Exception as e:
     logger.error(f"❌ USA Spending download failed: {e}")
 
@@ -324,14 +324,14 @@ try:
     r = requests.get(url, headers=headers, timeout=30)
     r.raise_for_status()
     data = r.json()
-    
+
     output_file = BASE_DIR / f"congress_bills_{datetime.now().strftime('%Y%m%d')}.json"
     with open(output_file, 'w') as f:
         json.dump(data, f, indent=2)
-    
+
     bills_count = len(data.get('bills', []))
     logger.info(f"✅ Downloaded {bills_count} bills to {output_file}")
-    
+
 except Exception as e:
     logger.error(f"❌ Congress download failed: {e}")
 
@@ -379,14 +379,14 @@ try:
     r = requests.get(url, headers=headers, timeout=30)
     r.raise_for_status()
     data = r.json()
-    
+
     output_file = BASE_DIR / f"govinfo_collections_{datetime.now().strftime('%Y%m%d')}.json"
     with open(output_file, 'w') as f:
         json.dump(data, f, indent=2)
-    
+
     packages_count = len(data.get('packages', []))
     logger.info(f"✅ Downloaded {packages_count} packages to {output_file}")
-    
+
 except Exception as e:
     logger.error(f"❌ GovInfo download failed: {e}")
 

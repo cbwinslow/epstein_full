@@ -9,7 +9,7 @@
 -- Find politicians who appear in multiple datasets
 -- Links: Congress members -> FEC candidates -> Lobbying clients -> White House visitors
 CREATE OR REPLACE VIEW cross_ref_politicians AS
-SELECT 
+SELECT
     cm.bioguide_id,
     cm.first_name || ' ' || cm.last_name as politician_name,
     cm.state as congress_state,
@@ -30,18 +30,18 @@ SELECT
     -- Check FARA (if they or their firm is a foreign agent)
     fr.registrant_name as fara_registrant
 FROM congress_members cm
-LEFT JOIN fec_candidates fc ON 
+LEFT JOIN fec_candidates fc ON
     LOWER(cm.first_name || ' ' || cm.last_name) = LOWER(fc.candidate_name)
     OR LOWER(cm.last_name) = LOWER(SPLIT_PART(fc.candidate_name, ' ', -1))
-LEFT JOIN lobbying_registrations lr ON 
+LEFT JOIN lobbying_registrations lr ON
     LOWER(cm.first_name || ' ' || cm.last_name) LIKE '%' || LOWER(lr.client_name) || '%'
     OR LOWER(lr.registrant_name) LIKE '%' || LOWER(cm.last_name) || '%'
-LEFT JOIN whitehouse_visitors wv ON 
+LEFT JOIN whitehouse_visitors wv ON
     LOWER(wv.name) LIKE '%' || LOWER(cm.last_name) || '%'
 LEFT JOIN fara_registrations fr ON
     LOWER(fr.registrant_name) LIKE '%' || LOWER(cm.last_name) || '%'
-WHERE fc.candidate_id IS NOT NULL 
-   OR lr.registration_id IS NOT NULL 
+WHERE fc.candidate_id IS NOT NULL
+   OR lr.registration_id IS NOT NULL
    OR wv.id IS NOT NULL
    OR fr.id IS NOT NULL;
 
@@ -62,10 +62,10 @@ SELECT DISTINCT
     fr.foreign_principal_country as fara_country,
     fr.registration_date as fara_registration_date,
     -- Calculate overlap period
-    CASE 
-        WHEN lr.termination_date IS NULL OR fr.inactivation_date IS NULL 
+    CASE
+        WHEN lr.termination_date IS NULL OR fr.inactivation_date IS NULL
         THEN 'Active overlap'
-        WHEN lr.registration_date < fr.inactivation_date 
+        WHEN lr.registration_date < fr.inactivation_date
         THEN 'Historical overlap'
         ELSE 'No overlap'
     END as overlap_status
@@ -78,7 +78,7 @@ INNER JOIN fara_registrations fr ON
         OR SOUNDEX(lr.registrant_name) = SOUNDEX(fr.registrant_name)
     )
     AND (
-        lr.termination_date IS NULL 
+        lr.termination_date IS NULL
         OR fr.inactivation_date IS NULL
         OR lr.registration_date < fr.inactivation_date
     );
@@ -90,7 +90,7 @@ INNER JOIN fara_registrations fr ON
 -- Track money flow: Contributors -> Politicians -> Lobbying by same entities
 CREATE OR REPLACE VIEW cross_ref_money_flow AS
 WITH politician_lobbying AS (
-    SELECT 
+    SELECT
         cm.bioguide_id,
         cm.first_name || ' ' || cm.last_name as politician,
         lr.client_name as lobbying_client,
@@ -103,7 +103,7 @@ WITH politician_lobbying AS (
         LOWER(lr.client_name) LIKE '%' || LOWER(cm.last_name) || '%'
 ),
 campaign_contributions AS (
-    SELECT 
+    SELECT
         contributor_name,
         recipient_candidate_name,
         election_type,
@@ -113,7 +113,7 @@ campaign_contributions AS (
     FROM fec_contributions
     WHERE contribution_receipt_amount > 5000  -- Significant contributions
 )
-SELECT 
+SELECT
     cc.contributor_name,
     cc.recipient_candidate_name,
     cc.contribution_receipt_amount,
@@ -122,7 +122,7 @@ SELECT
     pl.income_amount as lobbying_spending,
     pl.issues as lobbied_issues,
     -- Flag if contributor also lobbies
-    CASE 
+    CASE
         WHEN lr.client_id IS NOT NULL THEN 'Contributor is Lobbying Client'
         WHEN lr.registrant_id IS NOT NULL THEN 'Contributor is Lobbying Firm'
         ELSE 'No direct lobbying link'
@@ -140,7 +140,7 @@ ORDER BY cc.contribution_receipt_amount DESC;
 
 -- Comprehensive view of foreign influence through multiple channels
 CREATE OR REPLACE VIEW cross_ref_foreign_influence AS
-SELECT 
+SELECT
     fp.principal_country as country,
     COUNT(DISTINCT fr.registration_number) as fara_registrations,
     COUNT(DISTINCT CASE WHEN lr.id IS NOT NULL THEN fr.registration_number END) as fara_with_lobbying,
@@ -148,9 +148,9 @@ SELECT
     COUNT(DISTINCT lr.registrant_name) as linked_lobbying_firms,
     STRING_AGG(DISTINCT fp.principal_name, '; ') as foreign_principals,
     STRING_AGG(DISTINCT lr.registrant_name, '; ') as lobbying_firms,
-    SUM(CASE WHEN lr.income_amount ~ '^[0-9.,]+$' 
-        THEN REPLACE(REPLACE(lr.income_amount, ',', ''), '$', '')::numeric 
-        ELSE 0 
+    SUM(CASE WHEN lr.income_amount ~ '^[0-9.,]+$'
+        THEN REPLACE(REPLACE(lr.income_amount, ',', ''), '$', '')::numeric
+        ELSE 0
     END) as total_lobbying_income
 FROM fara_registrations fr
 INNER JOIN fara_foreign_principals fp ON fr.registration_number = fp.registration_number
@@ -169,7 +169,7 @@ ORDER BY COUNT(DISTINCT fr.registration_number) DESC;
 -- Identify high-frequency visitors and their connections
 CREATE OR REPLACE VIEW cross_ref_wh_visitor_network AS
 WITH frequent_visitors AS (
-    SELECT 
+    SELECT
         name,
         COUNT(*) as visit_count,
         STRING_AGG(DISTINCT visitee_name, '; ') as met_with,
@@ -181,7 +181,7 @@ WITH frequent_visitors AS (
     GROUP BY name
     HAVING COUNT(*) >= 5  -- At least 5 visits
 )
-SELECT 
+SELECT
     fv.name,
     fv.visit_count,
     fv.met_with,
@@ -215,7 +215,7 @@ ORDER BY fv.visit_count DESC;
 
 -- Find SEC filings by politically connected executives
 CREATE OR REPLACE VIEW cross_ref_sec_political AS
-SELECT 
+SELECT
     sit.issuer_name as company,
     sit.issuer_ticker_symbol as ticker,
     sit.reporting_owner_name as insider_name,
@@ -251,7 +251,7 @@ ORDER BY sit.transaction_shares * sit.transaction_price_per_share DESC;
 
 -- Track bills from sponsorship through lobbying to passage
 CREATE OR REPLACE VIEW cross_ref_bill_influence AS
-SELECT 
+SELECT
     cb.bill_number,
     cb.title as bill_title,
     cb.introduced_date,
@@ -290,7 +290,7 @@ ORDER BY cb.introduced_date DESC;
 -- Master entity lookup across all datasets
 CREATE OR REPLACE VIEW entity_master_lookup AS
 -- Congress Members
-SELECT 
+SELECT
     'congress_member' as entity_type,
     cm.bioguide_id as entity_id,
     cm.first_name || ' ' || cm.last_name as entity_name,
@@ -303,7 +303,7 @@ SELECT
 FROM congress_members cm
 UNION ALL
 -- FEC Candidates
-SELECT 
+SELECT
     'fec_candidate' as entity_type,
     fc.candidate_id as entity_id,
     fc.candidate_name as entity_name,
@@ -316,7 +316,7 @@ SELECT
 FROM fec_candidates fc
 UNION ALL
 -- Lobbying Firms
-SELECT 
+SELECT
     'lobbying_firm' as entity_type,
     lr.registrant_id as entity_id,
     lr.registrant_name as entity_name,
@@ -329,7 +329,7 @@ SELECT
 FROM lobbying_registrations lr
 UNION ALL
 -- Lobbying Clients
-SELECT 
+SELECT
     'lobbying_client' as entity_type,
     lr.client_id as entity_id,
     lr.client_name as entity_name,
@@ -343,7 +343,7 @@ FROM lobbying_registrations lr
 WHERE lr.client_id IS NOT NULL
 UNION ALL
 -- FARA Registrants
-SELECT 
+SELECT
     'fara_registrant' as entity_type,
     fr.registration_number as entity_id,
     fr.registrant_name as entity_name,
@@ -356,7 +356,7 @@ SELECT
 FROM fara_registrations fr
 UNION ALL
 -- FARA Foreign Principals
-SELECT 
+SELECT
     'fara_foreign_principal' as entity_type,
     fp.id::text as entity_id,
     fp.principal_name as entity_name,
@@ -369,7 +369,7 @@ SELECT
 FROM fara_foreign_principals fp
 UNION ALL
 -- SEC Companies
-SELECT 
+SELECT
     'sec_company' as entity_type,
     sit.issuer_cik as entity_id,
     sit.issuer_name as entity_name,
@@ -397,20 +397,20 @@ CREATE OR REPLACE FUNCTION find_entity_connections(
 ) AS $$
 BEGIN
     RETURN QUERY
-    
+
     -- Direct connections (same person)
-    SELECT 
+    SELECT
         entity_name_1 || ' <-> ' || entity_name_2,
         'Direct Match',
         'Names match directly or partially'
     WHERE LOWER(entity_name_1) = LOWER(entity_name_2)
        OR LOWER(entity_name_1) LIKE '%' || LOWER(entity_name_2) || '%'
        OR LOWER(entity_name_2) LIKE '%' || LOWER(entity_name_1) || '%'
-    
+
     UNION ALL
-    
+
     -- Connection through lobbying (entity1 lobbies for entity2)
-    SELECT 
+    SELECT
         entity_name_1 || ' -> (lobbies for) -> ' || entity_name_2,
         'Lobbying Relationship',
         lr.registrant_name || ' lobbies for ' || lr.client_name
@@ -419,11 +419,11 @@ BEGIN
            AND LOWER(lr.client_name) LIKE '%' || LOWER(entity_name_2) || '%')
        OR (LOWER(lr.registrant_name) LIKE '%' || LOWER(entity_name_2) || '%'
            AND LOWER(lr.client_name) LIKE '%' || LOWER(entity_name_1) || '%')
-    
+
     UNION ALL
-    
+
     -- Connection through FARA (entity1 represents entity2's foreign principal)
-    SELECT 
+    SELECT
         entity_name_1 || ' -> (represents) -> ' || entity_name_2,
         'FARA Representation',
         fr.registrant_name || ' represents ' || fr.foreign_principal
@@ -432,11 +432,11 @@ BEGIN
            AND LOWER(fr.foreign_principal) LIKE '%' || LOWER(entity_name_2) || '%')
        OR (LOWER(fr.registrant_name) LIKE '%' || LOWER(entity_name_2) || '%'
            AND LOWER(fr.foreign_principal) LIKE '%' || LOWER(entity_name_1) || '%')
-    
+
     UNION ALL
-    
+
     -- Connection through campaign finance (entity1 contributes to entity2)
-    SELECT 
+    SELECT
         entity_name_1 || ' -> (contributes to) -> ' || entity_name_2,
         'Campaign Finance',
         fc.contributor_name || ' contributed $' || fc.contribution_receipt_amount || ' to ' || fc.recipient_candidate_name
@@ -445,7 +445,7 @@ BEGIN
            AND LOWER(fc.recipient_candidate_name) LIKE '%' || LOWER(entity_name_2) || '%')
        OR (LOWER(fc.contributor_name) LIKE '%' || LOWER(entity_name_2) || '%'
            AND LOWER(fc.recipient_candidate_name) LIKE '%' || LOWER(entity_name_1) || '%');
-           
+
 END;
 $$ LANGUAGE plpgsql;
 
@@ -455,7 +455,7 @@ $$ LANGUAGE plpgsql;
 
 -- Generate daily summary of cross-dataset activity
 CREATE OR REPLACE VIEW cross_ref_daily_summary AS
-SELECT 
+SELECT
     CURRENT_DATE as report_date,
     (SELECT COUNT(*) FROM congress_members WHERE imported_at > CURRENT_DATE - INTERVAL '1 day') as new_congress_members,
     (SELECT COUNT(*) FROM congress_bills WHERE imported_at > CURRENT_DATE - INTERVAL '1 day') as new_bills,

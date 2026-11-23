@@ -26,23 +26,22 @@ Author: Epstein Files Analysis Project
 Date: 2026-03-23
 """
 
-import os
-import sys
-import hashlib
-import logging
 import argparse
-import json
 import csv
+import hashlib
+import json
+import logging
+import sys
 import time
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
 from multiprocessing import Pool, cpu_count
-from tqdm import tqdm
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import psycopg2
-from psycopg2 import sql
 from psycopg2.extras import execute_values
+from tqdm import tqdm
 
 # Configure logging
 logging.basicConfig(
@@ -312,8 +311,8 @@ def insert_batch_to_registry(records: List[FileMetadata], conn) -> int:
 
             # Use INSERT ... ON CONFLICT for upsert behavior
             query = """
-                INSERT INTO file_registry 
-                (file_path, sha256_hash, efta_number, dataset, file_size_bytes, 
+                INSERT INTO file_registry
+                (file_path, sha256_hash, efta_number, dataset, file_size_bytes,
                  source, downloaded_at, validated, notes)
                 VALUES %s
                 ON CONFLICT (file_path) DO UPDATE SET
@@ -434,7 +433,7 @@ def generate_verification_report(conn) -> Dict[str, Any]:
 
             # Documents with files
             cur.execute("""
-                SELECT COUNT(DISTINCT d.efta_number) 
+                SELECT COUNT(DISTINCT d.efta_number)
                 FROM documents d
                 JOIN file_registry r ON d.efta_number = r.efta_number
             """)
@@ -454,11 +453,11 @@ def generate_verification_report(conn) -> Dict[str, Any]:
 
             # Duplicate SHA-256 hashes
             cur.execute("""
-                SELECT sha256_hash, COUNT(*) as count, 
+                SELECT sha256_hash, COUNT(*) as count,
                        STRING_AGG(efta_number, ', ') as efta_numbers
-                FROM file_registry 
+                FROM file_registry
                 WHERE sha256_hash IS NOT NULL
-                GROUP BY sha256_hash 
+                GROUP BY sha256_hash
                 HAVING COUNT(*) > 1
             """)
             duplicate_hashes = cur.fetchall()
@@ -478,7 +477,7 @@ def generate_verification_report(conn) -> Dict[str, Any]:
                             "efta_number": doc[0],
                             "dataset": doc[1],
                             "file_path": doc[2],
-                            "description": f"Document has no corresponding file in registry",
+                            "description": "Document has no corresponding file in registry",
                         }
                     )
 
@@ -538,7 +537,10 @@ def main():
     parser.add_argument(
         "--scan-dirs",
         nargs="+",
-        default=["/home/cbwinslow/workspace/epstein-data/raw-files", "/home/cbwinslow/workspace/epstein-data/hf-parquet"],
+        default=[
+            "/home/cbwinslow/workspace/epstein-data/raw-files",
+            "/home/cbwinslow/workspace/epstein-data/hf-parquet",
+        ],
         help="Directories to scan",
     )
     parser.add_argument(
@@ -555,7 +557,9 @@ def main():
     )
     parser.add_argument("--resume", action="store_true", help="Resume from last processed file")
     parser.add_argument(
-        "--output-dir", default="/home/cbwinslow/workspace/epstein-data/logs", help="Directory to save reports"
+        "--output-dir",
+        default="/home/cbwinslow/workspace/epstein-data/logs",
+        help="Directory to save reports",
     )
 
     args = parser.parse_args()

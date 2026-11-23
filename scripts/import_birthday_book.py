@@ -17,17 +17,20 @@ Tables created:
 - birthday_book_signatures (signatures found)
 """
 
+import asyncio
+import json
 import os
 import sys
-import json
-import asyncio
-import asyncpg
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from pathlib import Path
+from typing import Dict
+
+import asyncpg
 
 # Base path to extracted birthday book data
-BASE_DIR = Path("/home/cbwinslow/workspace/epstein-data/external_repos/epstein-network-data/data/extracted/v1 - first pass/birthday_book")
+BASE_DIR = Path(
+    "/home/cbwinslow/workspace/epstein-data/external_repos/epstein-network-data/data/extracted/v1 - first pass/birthday_book"
+)
 
 # PostgreSQL connection
 DB_URL = os.environ.get("EPSTEIN_DB_URL", "postgresql://cbwinslow:123qweasd@localhost:5432/epstein")
@@ -36,14 +39,14 @@ DB_URL = os.environ.get("EPSTEIN_DB_URL", "postgresql://cbwinslow:123qweasd@loca
 async def create_tables(conn: asyncpg.Connection):
     """Create Birthday Book tables."""
     print("Creating Birthday Book tables...")
-    
+
     # Drop existing tables
     await conn.execute("DROP TABLE IF EXISTS birthday_book_entities CASCADE")
     await conn.execute("DROP TABLE IF EXISTS birthday_book_photos CASCADE")
     await conn.execute("DROP TABLE IF EXISTS birthday_book_signatures CASCADE")
     await conn.execute("DROP TABLE IF EXISTS birthday_book_redactions CASCADE")
     await conn.execute("DROP TABLE IF EXISTS birthday_book_pages CASCADE")
-    
+
     # Main pages table
     await conn.execute("""
         CREATE TABLE birthday_book_pages (
@@ -75,7 +78,7 @@ async def create_tables(conn: asyncpg.Connection):
             created_at TIMESTAMP DEFAULT NOW()
         )
     """)
-    
+
     # Entities (people mentioned)
     await conn.execute("""
         CREATE TABLE birthday_book_entities (
@@ -90,7 +93,7 @@ async def create_tables(conn: asyncpg.Connection):
             created_at TIMESTAMP DEFAULT NOW()
         )
     """)
-    
+
     # Photos found on pages
     await conn.execute("""
         CREATE TABLE birthday_book_photos (
@@ -103,7 +106,7 @@ async def create_tables(conn: asyncpg.Connection):
             created_at TIMESTAMP DEFAULT NOW()
         )
     """)
-    
+
     # Signatures found
     await conn.execute("""
         CREATE TABLE birthday_book_signatures (
@@ -115,7 +118,7 @@ async def create_tables(conn: asyncpg.Connection):
             created_at TIMESTAMP DEFAULT NOW()
         )
     """)
-    
+
     # Redactions
     await conn.execute("""
         CREATE TABLE birthday_book_redactions (
@@ -126,55 +129,60 @@ async def create_tables(conn: asyncpg.Connection):
             created_at TIMESTAMP DEFAULT NOW()
         )
     """)
-    
+
     # Create indexes
     await conn.execute("CREATE INDEX idx_bb_entities_name ON birthday_book_entities(name)")
     await conn.execute("CREATE INDEX idx_bb_entities_page ON birthday_book_entities(page_number)")
     await conn.execute("CREATE INDEX idx_bb_photos_page ON birthday_book_photos(page_number)")
-    await conn.execute("CREATE INDEX idx_bb_signatures_name ON birthday_book_signatures(signer_name)")
-    
+    await conn.execute(
+        "CREATE INDEX idx_bb_signatures_name ON birthday_book_signatures(signer_name)"
+    )
+
     print("✓ Tables created")
 
 
 async def import_pages(conn: asyncpg.Connection) -> Dict[str, int]:
     """Import all birthday book pages."""
     print(f"Importing pages from {BASE_DIR}...")
-    
+
     counts = {"pages": 0, "entities": 0, "photos": 0, "signatures": 0, "redactions": 0}
-    
+
     # Get all analysis JSON files
     json_files = sorted(BASE_DIR.glob("page_*_analysis.json"))
     print(f"Found {len(json_files)} analysis files")
-    
+
     for json_file in json_files:
         try:
-            with open(json_file, 'r', encoding='utf-8') as f:
+            with open(json_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            
-            page_number = data.get('page_number')
+
+            page_number = data.get("page_number")
             if not page_number:
                 continue
-            
+
             # Parse date if available
             page_date = None
-            if data.get('metadata', {}).get('date'):
-                date_str = data['metadata']['date']
+            if data.get("metadata", {}).get("date"):
+                date_str = data["metadata"]["date"]
                 # Try to extract date from string like "January 20, 2003"
                 try:
-                    page_date = datetime.strptime(date_str.split('(')[0].strip(), "%B %d, %Y").date()
+                    page_date = datetime.strptime(
+                        date_str.split("(")[0].strip(), "%B %d, %Y"
+                    ).date()
                 except:
                     pass
-            
+
             # Parse processed_at
             processed_at = None
-            if data.get('processed_at'):
+            if data.get("processed_at"):
                 try:
-                    processed_at = datetime.fromisoformat(data['processed_at'].replace(' ', 'T'))
+                    processed_at = datetime.fromisoformat(data["processed_at"].replace(" ", "T"))
                 except:
                     pass
-            
+
             # Insert page
-            await conn.execute("""
+            await conn.execute(
+                """
                 INSERT INTO birthday_book_pages (
                     page_number, file_path, file_size_mb, page_type,
                     full_text, transcription, annotations,
@@ -192,108 +200,123 @@ async def import_pages(conn: asyncpg.Connection) -> Dict[str, int]:
                 RETURNING page_number
             """,
                 page_number,
-                data.get('file_path'),
-                data.get('file_size_mb'),
-                data.get('type'),
-                data.get('content', {}).get('text'),
-                data.get('content', {}).get('text_sections', {}).get('full_transcription'),
-                data.get('content', {}).get('text_sections', {}).get('annotations'),
-                data.get('metadata', {}).get('sender'),
-                data.get('metadata', {}).get('recipient'),
+                data.get("file_path"),
+                data.get("file_size_mb"),
+                data.get("type"),
+                data.get("content", {}).get("text"),
+                data.get("content", {}).get("text_sections", {}).get("full_transcription"),
+                data.get("content", {}).get("text_sections", {}).get("annotations"),
+                data.get("metadata", {}).get("sender"),
+                data.get("metadata", {}).get("recipient"),
                 page_date,
-                data.get('metadata', {}).get('subject'),
-                data.get('metadata', {}).get('significance'),
-                data.get('metadata', {}).get('theme'),
-                data.get('metadata', {}).get('document_type'),
-                data.get('insights'),
-                data.get('document_id'),
+                data.get("metadata", {}).get("subject"),
+                data.get("metadata", {}).get("significance"),
+                data.get("metadata", {}).get("theme"),
+                data.get("metadata", {}).get("document_type"),
+                data.get("insights"),
+                data.get("document_id"),
                 processed_at,
-                data.get('extraction_version'),
-                data.get('flags', {}).get('quality_score'),
-                data.get('flags', {}).get('requires_second_review'),
-                data.get('flags', {}).get('contains_sensitive_info'),
-                data.get('flags', {}).get('extraction_complete'),
-                data.get('flags', {}).get('review_notes'),
-                data.get('forensic_notes')
+                data.get("extraction_version"),
+                data.get("flags", {}).get("quality_score"),
+                data.get("flags", {}).get("requires_second_review"),
+                data.get("flags", {}).get("contains_sensitive_info"),
+                data.get("flags", {}).get("extraction_complete"),
+                data.get("flags", {}).get("review_notes"),
+                data.get("forensic_notes"),
             )
             counts["pages"] += 1
-            
+
             # Insert entities (people)
-            for person in data.get('entities', {}).get('people', []):
-                await conn.execute("""
+            for person in data.get("entities", {}).get("people", []):
+                await conn.execute(
+                    """
                     INSERT INTO birthday_book_entities (
                         page_number, name, title, relationship, context,
                         confidence, page_appearances
                     ) VALUES ($1, $2, $3, $4, $5, $6, $7)
                 """,
                     page_number,
-                    person.get('name'),
-                    person.get('title'),
-                    person.get('relationship'),
-                    person.get('context'),
-                    person.get('confidence'),
-                    person.get('page_appearances')
+                    person.get("name"),
+                    person.get("title"),
+                    person.get("relationship"),
+                    person.get("context"),
+                    person.get("confidence"),
+                    person.get("page_appearances"),
                 )
                 counts["entities"] += 1
-            
+
             # Insert photos
-            for photo in data.get('visual_analysis', {}).get('photos', []):
+            for photo in data.get("visual_analysis", {}).get("photos", []):
                 if isinstance(photo, dict):
-                    await conn.execute("""
+                    await conn.execute(
+                        """
                         INSERT INTO birthday_book_photos (
                             page_number, photo_description, photo_type,
                             people_in_photo, location_in_photo
                         ) VALUES ($1, $2, $3, $4, $5)
                     """,
                         page_number,
-                        photo.get('description'),
-                        photo.get('type'),
-                        photo.get('people'),
-                        photo.get('location')
+                        photo.get("description"),
+                        photo.get("type"),
+                        photo.get("people"),
+                        photo.get("location"),
                     )
                 else:
                     # Handle string descriptions
-                    await conn.execute("""
+                    await conn.execute(
+                        """
                         INSERT INTO birthday_book_photos (page_number, photo_description)
                         VALUES ($1, $2)
-                    """, page_number, str(photo))
+                    """,
+                        page_number,
+                        str(photo),
+                    )
                 counts["photos"] += 1
-            
+
             # Insert signatures
-            for sig in data.get('visual_analysis', {}).get('signatures', []):
+            for sig in data.get("visual_analysis", {}).get("signatures", []):
                 if isinstance(sig, dict):
-                    await conn.execute("""
+                    await conn.execute(
+                        """
                         INSERT INTO birthday_book_signatures (
                             page_number, signer_name, signature_type, confidence
                         ) VALUES ($1, $2, $3, $4)
                     """,
                         page_number,
-                        sig.get('name'),
-                        sig.get('type'),
-                        sig.get('confidence')
+                        sig.get("name"),
+                        sig.get("type"),
+                        sig.get("confidence"),
                     )
                 else:
-                    await conn.execute("""
+                    await conn.execute(
+                        """
                         INSERT INTO birthday_book_signatures (page_number, signer_name)
                         VALUES ($1, $2)
-                    """, page_number, str(sig))
+                    """,
+                        page_number,
+                        str(sig),
+                    )
                 counts["signatures"] += 1
-            
+
             # Insert redactions
-            for redaction in data.get('visual_analysis', {}).get('redactions', []):
-                await conn.execute("""
+            for redaction in data.get("visual_analysis", {}).get("redactions", []):
+                await conn.execute(
+                    """
                     INSERT INTO birthday_book_redactions (page_number, redaction_description)
                     VALUES ($1, $2)
-                """, page_number, str(redaction))
+                """,
+                    page_number,
+                    str(redaction),
+                )
                 counts["redactions"] += 1
-            
+
             if counts["pages"] % 10 == 0:
                 print(f"  Progress: {counts['pages']} pages...")
-                
+
         except Exception as e:
             print(f"  Error processing {json_file}: {e}")
             continue
-    
+
     print(f"✓ Imported {counts['pages']} pages")
     print(f"  - Entities: {counts['entities']}")
     print(f"  - Photos: {counts['photos']}")
@@ -305,15 +328,15 @@ async def import_pages(conn: asyncpg.Connection) -> Dict[str, int]:
 async def verify_import(conn: asyncpg.Connection):
     """Verify the import."""
     print("\n--- Import Verification ---")
-    
+
     # Page count
     page_count = await conn.fetchval("SELECT COUNT(*) FROM birthday_book_pages")
     print(f"Total pages: {page_count}")
-    
+
     # Entity count
     entity_count = await conn.fetchval("SELECT COUNT(*) FROM birthday_book_entities")
     print(f"Total entities (people): {entity_count}")
-    
+
     # Top people mentioned
     top_people = await conn.fetch("""
         SELECT name, COUNT(*) as mentions
@@ -325,7 +348,7 @@ async def verify_import(conn: asyncpg.Connection):
     print("\nTop 10 people mentioned:")
     for row in top_people:
         print(f"  {row['name']}: {row['mentions']} mentions")
-    
+
     # Page types
     page_types = await conn.fetch("""
         SELECT page_type, COUNT(*) as cnt
@@ -336,16 +359,16 @@ async def verify_import(conn: asyncpg.Connection):
     print("\nPage types:")
     for row in page_types:
         print(f"  {row['page_type']}: {row['cnt']}")
-    
+
     # Photos and signatures
     photo_count = await conn.fetchval("SELECT COUNT(*) FROM birthday_book_photos")
     sig_count = await conn.fetchval("SELECT COUNT(*) FROM birthday_book_signatures")
     redaction_count = await conn.fetchval("SELECT COUNT(*) FROM birthday_book_redactions")
-    print(f"\nVisual elements:")
+    print("\nVisual elements:")
     print(f"  Photos: {photo_count}")
     print(f"  Signatures: {sig_count}")
     print(f"  Redactions: {redaction_count}")
-    
+
     # Sample insights
     sample_insights = await conn.fetch("""
         SELECT page_number, insights
@@ -353,10 +376,10 @@ async def verify_import(conn: asyncpg.Connection):
         WHERE insights IS NOT NULL AND array_length(insights, 1) > 0
         LIMIT 3
     """)
-    print(f"\n--- Sample Insights ---")
+    print("\n--- Sample Insights ---")
     for row in sample_insights:
         print(f"\nPage {row['page_number']}:")
-        for insight in row['insights'][:3]:
+        for insight in row["insights"][:3]:
             print(f"  • {insight[:100]}...")
 
 
@@ -367,21 +390,21 @@ async def main():
     print(f"Source: {BASE_DIR}")
     print(f"Database: {DB_URL.replace('://', '://***:***@')}")
     print()
-    
+
     try:
         conn = await asyncpg.connect(DB_URL)
-        
+
         # Create tables
         await create_tables(conn)
-        
+
         # Import data
         counts = await import_pages(conn)
-        
+
         # Verify
         await verify_import(conn)
-        
+
         await conn.close()
-        
+
         print("\n" + "=" * 60)
         print("Import Complete!")
         print(f"Pages: {counts['pages']}")
@@ -390,10 +413,11 @@ async def main():
         print(f"Signatures: {counts['signatures']}")
         print(f"Redactions: {counts['redactions']}")
         print("=" * 60)
-        
+
     except Exception as e:
         print(f"\n❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 
